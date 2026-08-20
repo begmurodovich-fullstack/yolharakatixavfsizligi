@@ -7,8 +7,6 @@
  * ============================================================================
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
-
 export class ApiError extends Error {
   public status: number;
   public data: any;
@@ -28,7 +26,12 @@ interface RequestOptions extends RequestInit {
 export async function apiClient<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
   const { params, headers, ...restOptions } = options;
 
-  let url = `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
+  let cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  if (!cleanEndpoint.startsWith('/api')) {
+    cleanEndpoint = `/api${cleanEndpoint}`;
+  }
+
+  let url = cleanEndpoint;
 
   if (params) {
     const searchParams = new URLSearchParams();
@@ -59,41 +62,47 @@ export async function apiClient<T>(endpoint: string, options: RequestOptions = {
 
   const defaultHeaders: Record<string, string> = {
     'Content-Type': 'application/json',
-    Accept: 'application/json',
   };
 
   if (token) {
     defaultHeaders['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(url, {
-    headers: {
-      ...defaultHeaders,
-      ...headers,
-    },
-    ...restOptions,
-  });
+  const mergedHeaders = {
+    ...defaultHeaders,
+    ...(headers as Record<string, string>),
+  };
 
-  if (!response.ok) {
-    let errorData: any = null;
-    let errorMessage = `HTTP xatosi: ${response.status} ${response.statusText}`;
+  try {
+    const response = await fetch(url, {
+      ...restOptions,
+      headers: mergedHeaders,
+    });
 
-    try {
-      errorData = await response.json();
-      if (errorData?.message) {
-        errorMessage = errorData.message;
+    if (!response.ok) {
+      let errorData: any = null;
+      try {
+        errorData = await response.json();
+      } catch {
+        // Fallback for non-JSON responses
       }
-    } catch {
-      // Body is not JSON
+      throw new ApiError(
+        errorData?.message || `HTTP xatosi: ${response.status} ${response.statusText}`,
+        response.status,
+        errorData
+      );
     }
 
-    throw new ApiError(errorMessage, response.status, errorData);
-  }
+    // Handle 204 No Content
+    if (response.status === 204) {
+      return {} as T;
+    }
 
-  // If response has no content (204 No Content)
-  if (response.status === 204) {
-    return {} as T;
+    return (await response.json()) as T;
+  } catch (error: any) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(error.message || 'Server bilan ulanishda kutilmagan xatolik', 500, error);
   }
-
-  return response.json();
 }

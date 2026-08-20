@@ -9,24 +9,28 @@ declare global {
 
 const connectionString =
   process.env.DATABASE_URL ||
-  'postgresql://postgres:dinara2002@localhost:5432/school_road_safety_db';
+  'postgresql://neondb_owner:npg_KyZTrp7XQ8xl@ep-spring-snow-azgi3kt1.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=require';
+
+const isCloudOrProd =
+  process.env.NODE_ENV === 'production' ||
+  connectionString.includes('neon.tech') ||
+  connectionString.includes('sslmode=require') ||
+  connectionString.includes('aws.neon.tech');
+
+const poolConfig = {
+  connectionString,
+  max: 10,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 10000,
+  ssl: isCloudOrProd ? { rejectUnauthorized: false } : undefined,
+};
 
 if (process.env.NODE_ENV === 'production') {
-  pool = new Pool({
-    connectionString,
-    max: 20,
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 5000,
-  });
+  pool = new Pool(poolConfig);
 } else {
   // In development, preserve pool across hot reloads
   if (!global._pgPool) {
-    global._pgPool = new Pool({
-      connectionString,
-      max: 10,
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 5000,
-    });
+    global._pgPool = new Pool(poolConfig);
   }
   pool = global._pgPool;
 }
