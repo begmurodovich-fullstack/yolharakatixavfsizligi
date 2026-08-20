@@ -1,0 +1,91 @@
+import { Assessment, AssessmentStatus } from '@/types';
+import { MOCK_EVIDENCE } from './evidence';
+
+export const MOCK_ASSESSMENTS: Assessment[] = [
+  // 1. 24-maktab (Current Period - Verified)
+  {
+    id: 'ass-bux-24-curr',
+    schoolId: 'sch-bux-gij-24',
+    periodId: 'period-2025-spring',
+    status: AssessmentStatus.VERIFIED,
+    score: 84,
+    maxScore: 100,
+    percentage: 84,
+    answers: {
+      'q-sign-1': { questionId: 'q-sign-1', selectedOptionId: 'opt-sign-1-full', pointsAwarded: 5, evidenceIds: ['ev-bux-24-1'] },
+      'q-sign-2': { questionId: 'q-sign-2', selectedOptionId: 'opt-sign-2-full', pointsAwarded: 5, evidenceIds: [] },
+      'q-sign-3': { questionId: 'q-sign-3', selectedOptionId: 'opt-sign-3-full', pointsAwarded: 5, evidenceIds: [] },
+      'q-cross-1': { questionId: 'q-cross-1', selectedOptionId: 'opt-cross-1-full', pointsAwarded: 8, evidenceIds: ['ev-bux-24-2'] },
+      'q-cross-2': { questionId: 'q-cross-2', selectedOptionId: 'opt-cross-2-full', pointsAwarded: 7, evidenceIds: [] },
+      'q-cross-3': { questionId: 'q-cross-3', selectedOptionId: 'opt-cross-3-full', pointsAwarded: 5, evidenceIds: [] },
+      'q-speed-1': { questionId: 'q-speed-1', selectedOptionId: 'opt-speed-1-full', pointsAwarded: 8, evidenceIds: ['ev-bux-24-3'] },
+      'q-speed-2': { questionId: 'q-speed-2', selectedOptionId: 'opt-speed-2-full', pointsAwarded: 7, evidenceIds: [] },
+      'q-fence-1': { questionId: 'q-fence-1', selectedOptionId: 'opt-fence-1-full', pointsAwarded: 6, evidenceIds: [] },
+      'q-fence-2': { questionId: 'q-fence-2', selectedOptionId: 'opt-fence-2-full', pointsAwarded: 4, evidenceIds: [] },
+      'q-side-1': { questionId: 'q-side-1', selectedOptionId: 'opt-side-1-part', pointsAwarded: 4, evidenceIds: [] },
+      'q-side-2': { questionId: 'q-side-2', selectedOptionId: 'opt-side-2-full', pointsAwarded: 7, evidenceIds: [] },
+      'q-drop-1': { questionId: 'q-drop-1', selectedOptionId: 'opt-drop-1-part', pointsAwarded: 3, evidenceIds: [] },
+      'q-drop-2': { questionId: 'q-drop-2', selectedOptionId: 'opt-drop-2-full', pointsAwarded: 4, evidenceIds: [] },
+      'q-patrol-1': { questionId: 'q-patrol-1', selectedOptionId: 'opt-patrol-1-full', pointsAwarded: 5, evidenceIds: [] },
+      'q-edu-1': { questionId: 'q-edu-1', selectedOptionId: 'opt-edu-1-part', pointsAwarded: 3, evidenceIds: [] },
+      'q-edu-2': { questionId: 'q-edu-2', selectedOptionId: 'opt-edu-2-part', pointsAwarded: 3, evidenceIds: [] },
+    },
+    evidence: MOCK_EVIDENCE.filter((e) => e.schoolId === 'sch-bux-gij-24'),
+    submittedAt: '2026-02-05T11:00:00Z',
+    verifiedAt: '2026-02-06T15:00:00Z',
+    verifiedBy: 'usr-admin-bux',
+    reviewerNotes: 'Barcha talab qilingan dalillar tekshirildi va tasdiqlandi. Yo‘lakcha qismini kengaytirish tavsiya etiladi.',
+    createdAt: '2026-02-02T08:00:00Z',
+    updatedAt: '2026-02-06T15:00:00Z',
+  },
+
+  // 2. 24-maktab (Historical Period - for period isolation testing)
+  {
+    id: 'ass-bux-24-hist',
+    schoolId: 'sch-bux-gij-24',
+    periodId: 'period-2024-autumn',
+    status: AssessmentStatus.VERIFIED,
+    score: 72,
+    maxScore: 100,
+    percentage: 72,
+    answers: {},
+    evidence: [],
+    submittedAt: '2024-11-10T11:00:00Z',
+    verifiedAt: '2024-11-15T15:00:00Z',
+    verifiedBy: 'usr-admin-bux',
+    reviewerNotes: 'Tarixiy baholash natijasi.',
+    createdAt: '2024-11-01T08:00:00Z',
+    updatedAt: '2024-11-15T15:00:00Z',
+  },
+
+  // 3. 5-maktab (Current Period - In Progress)
+  {
+    id: 'ass-bux-5-curr',
+    schoolId: 'sch-bux-gij-5',
+    periodId: 'period-2025-spring',
+    status: AssessmentStatus.IN_PROGRESS,
+    score: 68,
+    maxScore: 100,
+    percentage: 68,
+    answers: {},
+    evidence: MOCK_EVIDENCE.filter((e) => e.schoolId === 'sch-bux-gij-5'),
+    createdAt: '2026-02-10T09:00:00Z',
+    updatedAt: '2026-02-12T11:00:00Z',
+  },
+
+  // 4. 12-maktab (Current Period - Submitted, awaiting review)
+  {
+    id: 'ass-bux-12-curr',
+    schoolId: 'sch-bux-gij-12',
+    periodId: 'period-2025-spring',
+    status: AssessmentStatus.SUBMITTED,
+    score: 42,
+    maxScore: 100,
+    percentage: 42,
+    answers: {},
+    evidence: MOCK_EVIDENCE.filter((e) => e.schoolId === 'sch-bux-gij-12'),
+    submittedAt: '2026-02-07T10:00:00Z',
+    createdAt: '2026-02-03T09:00:00Z',
+    updatedAt: '2026-02-07T10:00:00Z',
+  },
+];

@@ -1,0 +1,50 @@
+import { User, UserRole } from '@/types';
+
+export const MOCK_USERS: User[] = [
+  {
+    id: 'usr-school-24',
+    email: 'school24@gijduvon.demo',
+    name: 'Demo Director (24-maktab)',
+    role: UserRole.SCHOOL_USER,
+    schoolId: 'sch-bux-gij-24',
+    regionId: 'reg-bukhara',
+    districtId: 'dist-gijduvon',
+    isActive: true,
+    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
+    createdAt: '2025-01-15T08:00:00Z',
+    updatedAt: '2026-02-10T10:00:00Z',
+  },
+  {
+    id: 'usr-admin-bux',
+    email: 'admin@demo.local',
+    name: 'Alisher Qodirov (Viloyat Admin)',
+    role: UserRole.ADMIN,
+    regionId: 'reg-bukhara',
+    isActive: true,
+    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
+    createdAt: '2024-11-01T09:00:00Z',
+    updatedAt: '2026-01-20T11:30:00Z',
+  },
+  {
+    id: 'usr-superadmin',
+    email: 'superadmin@demo.local',
+    name: 'Rustam Karimov (Bosh Boshqarma)',
+    role: UserRole.SUPER_ADMIN,
+    isActive: true,
+    avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80',
+    createdAt: '2024-09-01T08:00:00Z',
+    updatedAt: '2026-02-01T09:00:00Z',
+  },
+  // Additional regional admin personas
+  {
+    id: 'usr-admin-tas',
+    email: 'admin.tashkent@demo.local',
+    name: 'Nodira Azimova (Toshkent Admin)',
+    role: UserRole.ADMIN,
+    regionId: 'reg-tashkent-city',
+    isActive: true,
+    avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=80',
+    createdAt: '2025-02-01T09:00:00Z',
+    updatedAt: '2026-02-01T09:00:00Z',
+  },
+];
