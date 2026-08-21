@@ -95,8 +95,9 @@ export function GenericStatusBadge({ status, className }: GenericStatusBadgeProp
       Icon = XCircle;
       break;
 
+    case CoordinateStatus.NOT_SUBMITTED:
     case AssessmentStatus.NOT_STARTED:
-      label = 'Boshlanmagan';
+      label = 'Kiritilmagan / Yuborilmagan';
       colorClass = 'bg-slate-100 text-slate-600 border-slate-200';
       Icon = Clock;
       break;

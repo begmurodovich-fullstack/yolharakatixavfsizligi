@@ -34,13 +34,13 @@ export default function AdminCoordinatesPage() {
     setHasError(false);
 
     try {
-      const [allSchools, allRegions] = await Promise.all([
-        schoolService.getSchools({ limit: 500 }),
+      // Query ONLY schools with PENDING coordinates from PostgreSQL API
+      const [pendingSchools, allRegions] = await Promise.all([
+        schoolService.getSchools({ coordinateStatus: CoordinateStatus.PENDING }),
         schoolService.getRegions(),
       ]);
 
-      // Only show schools where the director actually SUBMITTED real coordinates (latitude is NOT null)
-      const submittedCoords = allSchools.filter(
+      const submittedCoords = (pendingSchools || []).filter(
         (s) => s.coordinates?.latitude != null && s.coordinates?.longitude != null
       );
 
@@ -68,7 +68,7 @@ export default function AdminCoordinatesPage() {
         CoordinateStatus.VERIFIED,
         user
       );
-      setSchools((prev) => prev.map((s) => (s.id === schoolId ? updated : s)));
+      setSchools((prev) => prev.filter((s) => s.id !== schoolId));
       success(
         `${updated.name} koordinatalari tasdiqlandi va ommaviy xaritaga qo‘shildi!`,
         'Tasdiqlandi'
@@ -87,7 +87,7 @@ export default function AdminCoordinatesPage() {
         CoordinateStatus.REJECTED,
         user
       );
-      setSchools((prev) => prev.map((s) => (s.id === schoolId ? updated : s)));
+      setSchools((prev) => prev.filter((s) => s.id !== schoolId));
       success(
         `${updated.name} koordinatalari rad etildi va qayta kiritish uchun maktabga yuborildi.`,
         'Rad etildi'
@@ -107,11 +107,7 @@ export default function AdminCoordinatesPage() {
     });
   }, [schools, statusFilter, regionFilter]);
 
-  const pendingCount = schools.filter(
-    (s) =>
-      s.coordinateStatus === CoordinateStatus.PENDING &&
-      s.coordinates?.latitude != null
-  ).length;
+  const pendingCount = schools.length;
 
   if (isLoading) {
     return (
@@ -165,8 +161,8 @@ export default function AdminCoordinatesPage() {
             <span>{pendingCount} ta maktab tekshiruv kutmoqda</span>
           </span>
         ) : (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-mono font-bold w-fit">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+          <span className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold w-fit">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
             <span>Kutilayotgan navbat toza (0 ta)</span>
           </span>
         )}
@@ -184,31 +180,7 @@ export default function AdminCoordinatesPage() {
                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
             )}
           >
-            Barchasi ({schools.length})
-          </button>
-
-          <button
-            onClick={() => setStatusFilter(CoordinateStatus.PENDING)}
-            className={cn(
-              'px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all',
-              statusFilter === CoordinateStatus.PENDING
-                ? 'bg-amber-600 text-white shadow-2xs'
-                : 'bg-amber-50 text-amber-900 border border-amber-200 hover:bg-amber-100'
-            )}
-          >
             Tasdiqlash kutilmoqda ({pendingCount})
-          </button>
-
-          <button
-            onClick={() => setStatusFilter(CoordinateStatus.VERIFIED)}
-            className={cn(
-              'px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all',
-              statusFilter === CoordinateStatus.VERIFIED
-                ? 'bg-emerald-600 text-white shadow-2xs'
-                : 'bg-emerald-50 text-emerald-900 border border-emerald-200 hover:bg-emerald-100'
-            )}
-          >
-            Tasdiqlangan ({schools.filter((s) => s.coordinateStatus === CoordinateStatus.VERIFIED).length})
           </button>
         </div>
 
@@ -232,11 +204,11 @@ export default function AdminCoordinatesPage() {
 
       {/* 3. Cards Grid */}
       {filteredSchools.length === 0 ? (
-        <div className="py-12 bg-white rounded-2xl border border-slate-200">
+        <div className="py-16 bg-white rounded-2xl border border-slate-200 text-center">
           <EmptyState
             icon={CheckCircle2}
-            title="Tasdiqlash kutilayotgan geolokatsiyalar yo‘q"
-            description="Hozircha hech bir maktab o‘z GPS lokatsiyasini yubormadi. Maktab direktori birinchi marta tizimga kirib yoki profilingizdan koordinata yuborganda, ushbu navbatda tekshirish uchun paydo bo‘ladi."
+            title="Tasdiqlash kutilayotgan geolokatsiyalar yo‘q (0 ta)"
+            description="Hozircha hech bir maktab o‘z GPS lokatsiyasini yubormadi. Maktab direktori birinchi marta tizimga kirib yoki profilidan koordinata yuborganda, ushbu navbatda tekshirish uchun paydo bo‘ladi."
           />
         </div>
       ) : (
