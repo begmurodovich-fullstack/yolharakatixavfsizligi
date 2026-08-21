@@ -21,7 +21,8 @@ import {
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { ErrorState } from '@/components/ui/error-state';
-import { School as SchoolIcon } from 'lucide-react';
+import { School as SchoolIcon, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function AdminSchoolsPage() {
   const { user } = useAuth();
@@ -38,6 +39,10 @@ export default function AdminSchoolsPage() {
   const [selectedCoordStatus, setSelectedCoordStatus] = useState<CoordinateStatus | 'ALL'>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Pagination
+  const [page, setPage] = useState(1);
+  const pageSize = 50;
+
   // Modals
   const [selectedSchool, setSelectedSchool] = useState<School | null>(null);
 
@@ -45,19 +50,32 @@ export default function AdminSchoolsPage() {
   const [hasError, setHasError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const loadData = useCallback(async () => {
+  // 1. Initial load regions & districts
+  useEffect(() => {
+    Promise.all([schoolService.getRegions(), schoolService.getDistricts()])
+      .then(([regList, distList]) => {
+        setRegions(regList);
+        setDistricts(distList);
+      })
+      .catch((err) => console.error('Error loading regions/districts:', err));
+  }, []);
+
+  // 2. Fetch schools dynamically from PostgreSQL on filter / search / page change
+  const fetchSchools = useCallback(async () => {
     setIsLoading(true);
     setHasError(false);
 
     try {
-      const [allSchools, allRegions, allDistricts] = await Promise.all([
-        schoolService.getSchools(),
-        schoolService.getRegions(),
-        schoolService.getDistricts(),
-      ]);
-      setSchools(allSchools);
-      setRegions(allRegions);
-      setDistricts(allDistricts);
+      const data = await schoolService.getSchools({
+        regionId: selectedRegionId !== 'ALL' ? selectedRegionId : undefined,
+        districtId: selectedDistrictId !== 'ALL' ? selectedDistrictId : undefined,
+        scoreStatus: selectedScoreStatus !== 'ALL' ? selectedScoreStatus : undefined,
+        coordinateStatus: selectedCoordStatus !== 'ALL' ? selectedCoordStatus : undefined,
+        searchQuery: searchQuery.trim() || undefined,
+        limit: pageSize,
+        offset: (page - 1) * pageSize,
+      });
+      setSchools(data);
     } catch (err: any) {
       console.error('Admin schools load error:', err);
       setHasError(true);
@@ -65,58 +83,25 @@ export default function AdminSchoolsPage() {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [
+    selectedRegionId,
+    selectedDistrictId,
+    selectedScoreStatus,
+    selectedCoordStatus,
+    searchQuery,
+    page,
+    pageSize,
+  ]);
 
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    fetchSchools();
+  }, [fetchSchools]);
 
   // Handle cascading districts
   const filteredDistricts = useMemo(() => {
     if (selectedRegionId === 'ALL') return districts;
     return districts.filter((d) => d.regionId === selectedRegionId);
   }, [districts, selectedRegionId]);
-
-  // Handle multi-level filter matching
-  const filteredSchools = useMemo(() => {
-    return schools.filter((school) => {
-      // Region filter
-      if (selectedRegionId !== 'ALL' && school.regionId !== selectedRegionId) return false;
-
-      // District filter
-      if (selectedDistrictId !== 'ALL' && school.districtId !== selectedDistrictId) return false;
-
-      // Score status filter
-      if (selectedScoreStatus !== 'ALL') {
-        const score = school.currentScore;
-        if (selectedScoreStatus === 'GREEN' && score < 80) return false;
-        if (selectedScoreStatus === 'YELLOW' && (score < 50 || score >= 80)) return false;
-        if (selectedScoreStatus === 'RED' && score >= 50) return false;
-      }
-
-      // Coordinate status filter
-      if (selectedCoordStatus !== 'ALL' && school.coordinateStatus !== selectedCoordStatus) return false;
-
-      // Search query
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase().trim();
-        const matchName = school.name.toLowerCase().includes(q);
-        const matchNumber = school.schoolNumber.includes(q);
-        const matchDirector = school.directorName.toLowerCase().includes(q);
-        const matchDistrict = school.districtName.toLowerCase().includes(q);
-        if (!matchName && !matchNumber && !matchDirector && !matchDistrict) return false;
-      }
-
-      return true;
-    });
-  }, [
-    schools,
-    selectedRegionId,
-    selectedDistrictId,
-    selectedScoreStatus,
-    selectedCoordStatus,
-    searchQuery,
-  ]);
 
   // Reset Filters
   const handleResetFilters = () => {
@@ -125,6 +110,7 @@ export default function AdminSchoolsPage() {
     setSelectedScoreStatus('ALL');
     setSelectedCoordStatus('ALL');
     setSearchQuery('');
+    setPage(1);
   };
 
   // Reset Password Action
@@ -156,28 +142,6 @@ export default function AdminSchoolsPage() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="space-y-6 pb-12">
-        <Skeleton className="h-24 w-full rounded-2xl" />
-        <Skeleton className="h-44 w-full rounded-2xl" />
-        <Skeleton className="h-96 w-full rounded-2xl" />
-      </div>
-    );
-  }
-
-  if (hasError) {
-    return (
-      <div className="py-12">
-        <ErrorState
-          title="Maktablarni yuklab bo‘lmadi"
-          message={errorMessage || 'Ma’lumotlarni olishda xatolik yuz berdi.'}
-          onRetry={loadData}
-        />
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6 pb-16">
       {/* 1. Header */}
@@ -187,14 +151,14 @@ export default function AdminSchoolsPage() {
             <SchoolIcon className="w-4 h-4 text-teal-600" />
             <span className="font-bold text-slate-800">Milliy Reyestr</span>
             <span>•</span>
-            <span>Umumiy ta’lim muassasalari</span>
+            <span>10 110 ta umumiy ta’lim muassasasi</span>
           </div>
 
           <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
             Respublika Maktablar Reyestri
           </h1>
           <p className="text-xs text-slate-500 max-w-2xl leading-relaxed">
-            Maktablar yo‘l xavfsizligi holati, hisoblar xavfsizligi va geolokatsiya statuslarini markazlashtirilgan boshqarish.
+            O‘zbekistondagi barcha 10 110 ta maktabning yo‘l xavfsizligi holati, hisoblar xavfsizligi va geolokatsiya statuslarini markazlashtirilgan boshqarish.
           </p>
         </div>
       </div>
@@ -204,26 +168,91 @@ export default function AdminSchoolsPage() {
         regions={regions}
         districts={filteredDistricts}
         selectedRegionId={selectedRegionId}
-        onRegionChange={setSelectedRegionId}
+        onRegionChange={(val) => {
+          setSelectedRegionId(val);
+          setSelectedDistrictId('ALL');
+          setPage(1);
+        }}
         selectedDistrictId={selectedDistrictId}
-        onDistrictChange={setSelectedDistrictId}
+        onDistrictChange={(val) => {
+          setSelectedDistrictId(val);
+          setPage(1);
+        }}
         selectedScoreStatus={selectedScoreStatus}
-        onScoreStatusChange={setSelectedScoreStatus}
+        onScoreStatusChange={(val) => {
+          setSelectedScoreStatus(val);
+          setPage(1);
+        }}
         selectedCoordStatus={selectedCoordStatus}
-        onCoordStatusChange={setSelectedCoordStatus}
+        onCoordStatusChange={(val) => {
+          setSelectedCoordStatus(val);
+          setPage(1);
+        }}
         searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
+        onSearchChange={(val) => {
+          setSearchQuery(val);
+          setPage(1);
+        }}
         onReset={handleResetFilters}
-        totalResults={filteredSchools.length}
+        totalResults={schools.length}
       />
 
       {/* 3. Schools Admin Table */}
-      <SchoolAdminTable
-        schools={filteredSchools}
-        onViewSchool={setSelectedSchool}
-        onResetPassword={handleResetPassword}
-        onToggleStatus={handleToggleStatus}
-      />
+      {isLoading ? (
+        <div className="p-12 text-center space-y-3 bg-white rounded-2xl border border-slate-200">
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+        </div>
+      ) : hasError ? (
+        <div className="py-12 bg-white rounded-2xl border border-slate-200">
+          <ErrorState
+            title="Maktablarni yuklab bo‘lmadi"
+            message={errorMessage || 'Ma’lumotlarni olishda xatolik yuz berdi.'}
+            onRetry={fetchSchools}
+          />
+        </div>
+      ) : (
+        <>
+          <SchoolAdminTable
+            schools={schools}
+            onViewSchool={setSelectedSchool}
+            onResetPassword={handleResetPassword}
+            onToggleStatus={handleToggleStatus}
+          />
+
+          {/* Pagination Controls */}
+          <div className="flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-200 shadow-2xs text-xs">
+            <div className="text-slate-500 font-mono">
+              Sahifa: <strong className="text-slate-900">{page}</strong> (Har sahifada {pageSize} ta maktab)
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={page === 1 || isLoading}
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                className="gap-1 rounded-xl h-9"
+              >
+                <ChevronLeft className="w-4 h-4" />
+                <span>Oldingi</span>
+              </Button>
+
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={schools.length < pageSize || isLoading}
+                onClick={() => setPage((p) => p + 1)}
+                className="gap-1 rounded-xl h-9"
+              >
+                <span>Keyingi</span>
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* 4. Details Modal */}
       {selectedSchool && (

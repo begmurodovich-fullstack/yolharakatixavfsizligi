@@ -11,8 +11,8 @@ export async function GET(request: NextRequest) {
     const scoreStatus = searchParams.get('scoreStatus');
     const coordStatus = searchParams.get('coordStatus');
     const search = searchParams.get('search');
-    const limit = Math.min(Number(searchParams.get('limit')) || 100, 1000);
-    const offset = Number(searchParams.get('offset')) || 0;
+    const limit = Math.min(Number(searchParams.get('limit')) || 50, 15000);
+    const offset = Math.max(Number(searchParams.get('offset')) || 0, 0);
 
     let sql = `
       SELECT s.*, r.name as region_name, d.name as district_name 
