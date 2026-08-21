@@ -21,7 +21,14 @@ export function RankingTable({ entries, currentSchoolId, scope }: RankingTablePr
     );
   }
 
-  const getRankBadge = (rank: number) => {
+  const getRankBadge = (rank: number, score: number) => {
+    if (score === 0) {
+      return (
+        <span className="inline-flex items-center justify-center h-7 px-2 rounded-lg bg-slate-100 text-slate-500 border border-slate-200 font-mono text-[11px]">
+          -
+        </span>
+      );
+    }
     if (rank === 1) {
       return (
         <span className="inline-flex items-center justify-center h-7 w-7 rounded-lg bg-amber-100 text-amber-900 border border-amber-300 font-mono font-black text-xs shadow-2xs">
@@ -66,6 +73,7 @@ export function RankingTable({ entries, currentSchoolId, scope }: RankingTablePr
           <tbody className="divide-y divide-slate-100">
             {entries.map((entry) => {
               const isCurrentSchool = entry.entityId === currentSchoolId;
+              const isAssessed = entry.score > 0;
 
               return (
                 <tr
@@ -80,12 +88,7 @@ export function RankingTable({ entries, currentSchoolId, scope }: RankingTablePr
                   {/* Rank Column */}
                   <td className="py-4 px-5 text-center">
                     <div className="flex flex-col items-center justify-center">
-                      {getRankBadge(entry.rank)}
-                      {entry.schoolCount && entry.schoolCount > 1 && (
-                        <span className="text-[10px] text-slate-400 font-mono mt-0.5" title={`${entry.schoolCount} ta maktab bir xil ball to‘plagan`}>
-                          ({entry.schoolCount} ta teng)
-                        </span>
-                      )}
+                      {getRankBadge(entry.rank, entry.score)}
                     </div>
                   </td>
 
@@ -138,21 +141,19 @@ export function RankingTable({ entries, currentSchoolId, scope }: RankingTablePr
                   </td>
 
                   {/* Score */}
-                  <td className="py-4 px-5 text-right">
-                    <span
-                      className={cn(
-                        'text-sm sm:text-base font-extrabold font-mono',
-                        isCurrentSchool ? 'text-teal-900' : 'text-slate-900'
-                      )}
-                    >
-                      {entry.score}
-                    </span>
-                    <span className="text-xs text-slate-400 font-normal ml-0.5">/ 100</span>
+                  <td className="py-4 px-5 text-right font-mono font-bold text-slate-900">
+                    {isAssessed ? `${entry.score} ball` : '0 ball'}
                   </td>
 
                   {/* Status Badge */}
                   <td className="py-4 px-5 text-center">
-                    <ScoreStatusBadge score={entry.score} showScore={false} />
+                    {isAssessed ? (
+                      <ScoreStatusBadge score={entry.score} />
+                    ) : (
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200">
+                        Baholanmagan
+                      </span>
+                    )}
                   </td>
                 </tr>
               );
