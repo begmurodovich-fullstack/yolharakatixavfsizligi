@@ -222,7 +222,7 @@ export function SchoolPassportModal({
             <ul className="text-xs space-y-1 text-slate-700 list-disc list-inside">
               <li>Maktab darvozasi oldidagi piyodalar o‘tish joyi (zebra) chiziqlari muntazam yangilansin.</li>
               <li>Dars boshlanishi va tugash vaqtida ota-onalar va o‘qituvchilar navbatchilik patruli faollashtirilsin.</li>
-              <li>"Uy–Maktab–Uy" xavfsiz harakatlanish sxemasi barcha boshlang‘ich sinf kundaliklariga yopishtirilsin.</li>
+              <li>&quot;Uy–Maktab–Uy&quot; xavfsiz harakatlanish sxemasi barcha boshlang‘ich sinf kundaliklariga yopishtirilsin.</li>
             </ul>
           </div>
 
