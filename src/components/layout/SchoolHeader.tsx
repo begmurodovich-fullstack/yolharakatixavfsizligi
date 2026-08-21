@@ -7,7 +7,6 @@ import { School, AssessmentPeriod } from '@/types';
 import { schoolService } from '@/services/schoolService';
 import { assessmentService } from '@/services/assessmentService';
 import { ScoreStatusBadge } from '@/components/ui/status-badge';
-import { DemoAccountSwitcher } from '@/features/auth/components/DemoAccountSwitcher';
 import { Shield, School as SchoolIcon, ChevronRight, LogOut, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -75,13 +74,11 @@ export function SchoolHeader() {
             </div>
           )}
 
-          <DemoAccountSwitcher />
-
           <Button
             variant="ghost"
             size="sm"
             onClick={() => logout()}
-            className="text-slate-600 hover:text-rose-600 gap-1"
+            className="text-slate-600 hover:text-rose-600 gap-1 rounded-xl"
           >
             <LogOut className="w-4 h-4" />
             <span className="hidden sm:inline">Chiqish</span>
