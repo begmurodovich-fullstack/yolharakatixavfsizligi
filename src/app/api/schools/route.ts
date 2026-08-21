@@ -37,6 +37,9 @@ export async function GET(request: NextRequest) {
     if (coordStatus && coordStatus !== 'ALL') {
       sql += ` AND s.coordinate_status = $${paramIndex++}`;
       params.push(coordStatus);
+      if (coordStatus === 'PENDING' || coordStatus === 'VERIFIED') {
+        sql += ` AND s.latitude IS NOT NULL AND s.longitude IS NOT NULL`;
+      }
     }
 
     if (scoreStatus && scoreStatus !== 'ALL') {

@@ -35,10 +35,16 @@ export default function AdminCoordinatesPage() {
 
     try {
       const [allSchools, allRegions] = await Promise.all([
-        schoolService.getSchools(),
+        schoolService.getSchools({ limit: 500 }),
         schoolService.getRegions(),
       ]);
-      setSchools(allSchools);
+
+      // Only show schools where the director actually SUBMITTED real coordinates (latitude is NOT null)
+      const submittedCoords = allSchools.filter(
+        (s) => s.coordinates?.latitude != null && s.coordinates?.longitude != null
+      );
+
+      setSchools(submittedCoords);
       setRegions(allRegions);
     } catch (err: any) {
       console.error('Admin coordinates load error:', err);
@@ -94,6 +100,7 @@ export default function AdminCoordinatesPage() {
   // Filter schools
   const filteredSchools = useMemo(() => {
     return schools.filter((s) => {
+      if (s.coordinates?.latitude == null || s.coordinates?.longitude == null) return false;
       if (statusFilter !== 'ALL' && s.coordinateStatus !== statusFilter) return false;
       if (regionFilter !== 'ALL' && s.regionId !== regionFilter) return false;
       return true;
@@ -101,7 +108,9 @@ export default function AdminCoordinatesPage() {
   }, [schools, statusFilter, regionFilter]);
 
   const pendingCount = schools.filter(
-    (s) => s.coordinateStatus === CoordinateStatus.PENDING
+    (s) =>
+      s.coordinateStatus === CoordinateStatus.PENDING &&
+      s.coordinates?.latitude != null
   ).length;
 
   if (isLoading) {
@@ -150,61 +159,66 @@ export default function AdminCoordinatesPage() {
           </p>
         </div>
 
-        {pendingCount > 0 && (
+        {pendingCount > 0 ? (
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 text-amber-900 border border-amber-200 text-xs font-mono font-bold w-fit">
             <Clock className="w-3.5 h-3.5 text-amber-600" />
             <span>{pendingCount} ta maktab tekshiruv kutmoqda</span>
           </span>
+        ) : (
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-mono font-bold w-fit">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Kutilayotgan navbat toza (0 ta)</span>
+          </span>
         )}
       </div>
 
-      {/* 2. Filters Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-        {/* Status Tabs */}
-        <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-slate-100/80 border border-slate-200 overflow-x-auto">
-          <div className="flex items-center gap-1 text-xs text-slate-400 font-semibold px-2">
-            <Filter className="w-3.5 h-3.5" />
-            <span>Holat:</span>
-          </div>
+      {/* 2. Filter Bar */}
+      <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-xs flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={() => setStatusFilter('ALL')}
+            className={cn(
+              'px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all',
+              statusFilter === 'ALL'
+                ? 'bg-slate-900 text-white shadow-2xs'
+                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+            )}
+          >
+            Barchasi ({schools.length})
+          </button>
 
-          {[
-            { id: 'ALL', label: `Barchasi (${schools.length})` },
-            { id: CoordinateStatus.PENDING, label: `Kutilmoqda (${pendingCount})` },
-            {
-              id: CoordinateStatus.VERIFIED,
-              label: `Tasdiqlangan (${schools.filter((s) => s.coordinateStatus === CoordinateStatus.VERIFIED).length})`,
-            },
-            {
-              id: CoordinateStatus.REJECTED,
-              label: `Rad etilgan (${schools.filter((s) => s.coordinateStatus === CoordinateStatus.REJECTED).length})`,
-            },
-          ].map((tab) => {
-            const isActive = statusFilter === tab.id;
+          <button
+            onClick={() => setStatusFilter(CoordinateStatus.PENDING)}
+            className={cn(
+              'px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all',
+              statusFilter === CoordinateStatus.PENDING
+                ? 'bg-amber-600 text-white shadow-2xs'
+                : 'bg-amber-50 text-amber-900 border border-amber-200 hover:bg-amber-100'
+            )}
+          >
+            Tasdiqlash kutilmoqda ({pendingCount})
+          </button>
 
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setStatusFilter(tab.id as any)}
-                className={cn(
-                  'px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all focus:outline-none',
-                  isActive
-                    ? 'bg-white text-slate-900 shadow-xs border border-slate-200 font-bold'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50'
-                )}
-              >
-                {tab.label}
-              </button>
-            );
-          })}
+          <button
+            onClick={() => setStatusFilter(CoordinateStatus.VERIFIED)}
+            className={cn(
+              'px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all',
+              statusFilter === CoordinateStatus.VERIFIED
+                ? 'bg-emerald-600 text-white shadow-2xs'
+                : 'bg-emerald-50 text-emerald-900 border border-emerald-200 hover:bg-emerald-100'
+            )}
+          >
+            Tasdiqlangan ({schools.filter((s) => s.coordinateStatus === CoordinateStatus.VERIFIED).length})
+          </button>
         </div>
 
-        {/* Region Filter */}
-        <div className="w-full sm:w-56">
+        {/* Region Select */}
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <Filter className="w-4 h-4 text-slate-400 shrink-0" />
           <select
             value={regionFilter}
             onChange={(e) => setRegionFilter(e.target.value)}
-            className="w-full h-10 px-3 rounded-xl border border-slate-200 bg-white text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900"
+            className="text-xs h-9 rounded-xl border-slate-200 bg-slate-50 text-slate-800 font-semibold px-3 py-1 focus:ring-slate-900 focus:border-slate-900 w-full sm:w-56"
           >
             <option value="ALL">Barcha viloyatlar</option>
             {regions.map((r) => (
@@ -216,22 +230,23 @@ export default function AdminCoordinatesPage() {
         </div>
       </div>
 
-      {/* 3. Coordinates Grid */}
+      {/* 3. Cards Grid */}
       {filteredSchools.length === 0 ? (
-        <EmptyState
-          icon={MapPin}
-          title="Koordinatalar topilmadi"
-          description="Tanlangan filtrlar bo‘yicha hozircha hech qanday maktab geolokatsiyasi mavjud emas."
-          className="py-16"
-        />
+        <div className="py-12 bg-white rounded-2xl border border-slate-200">
+          <EmptyState
+            icon={CheckCircle2}
+            title="Tasdiqlash kutilayotgan geolokatsiyalar yo‘q"
+            description="Hozircha hech bir maktab o‘z GPS lokatsiyasini yubormadi. Maktab direktori birinchi marta tizimga kirib yoki profilingizdan koordinata yuborganda, ushbu navbatda tekshirish uchun paydo bo‘ladi."
+          />
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredSchools.map((school) => (
             <CoordinateVerificationCard
               key={school.id}
               school={school}
-              onVerify={handleVerify}
-              onReject={handleReject}
+              onVerify={() => handleVerify(school.id)}
+              onReject={() => handleReject(school.id)}
             />
           ))}
         </div>

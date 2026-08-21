@@ -8,9 +8,9 @@ export async function GET() {
     const totalSchoolsRes = await query(`
       SELECT 
         COUNT(*) as total_schools,
-        COUNT(CASE WHEN coordinate_status = 'VERIFIED' THEN 1 END) as verified_coords,
-        COUNT(CASE WHEN coordinate_status = 'PENDING' THEN 1 END) as pending_coords,
-        AVG(current_score) as avg_score,
+        COUNT(CASE WHEN coordinate_status = 'VERIFIED' AND latitude IS NOT NULL THEN 1 END) as verified_coords,
+        COUNT(CASE WHEN coordinate_status = 'PENDING' AND latitude IS NOT NULL THEN 1 END) as pending_coords,
+        COALESCE(AVG(current_score), 0) as avg_score,
         COUNT(CASE WHEN current_score >= 80 THEN 1 END) as green_count,
         COUNT(CASE WHEN current_score >= 50 AND current_score < 80 THEN 1 END) as yellow_count,
         COUNT(CASE WHEN current_score < 50 THEN 1 END) as red_count
