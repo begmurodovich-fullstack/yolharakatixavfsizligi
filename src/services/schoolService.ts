@@ -1,5 +1,4 @@
 import { School, SchoolFilterParams, Region, District, User } from '@/types';
-import { repositories } from '@/repositories';
 import { canEditSchool } from '@/lib/permissions';
 import { apiClient } from '@/lib/apiClient';
 
@@ -12,15 +11,18 @@ export class SchoolService {
       if (params?.scoreStatus) queryParams.scoreStatus = params.scoreStatus;
       if (params?.coordinateStatus) queryParams.coordStatus = params.coordinateStatus;
       if (params?.searchQuery) queryParams.search = params.searchQuery;
+      if (params?.limit) queryParams.limit = params.limit;
+      if (params?.offset) queryParams.offset = params.offset;
 
       const schools = await apiClient<School[]>('/schools', { params: queryParams });
-      if (Array.isArray(schools) && schools.length > 0) {
+      if (Array.isArray(schools)) {
         return schools;
       }
-    } catch {
-      // fallback to mock
+      return [];
+    } catch (e) {
+      console.error('Error fetching schools from API:', e);
+      return [];
     }
-    return repositories.school.getAll(params);
   }
 
   async getSchoolById(id: string): Promise<School | null> {
@@ -29,26 +31,27 @@ export class SchoolService {
       if (school && school.id) {
         return school;
       }
+      return null;
     } catch {
-      // fallback to mock
+      return null;
     }
-    return repositories.school.getById(id);
   }
 
   async getSchoolByNumberAndDistrict(schoolNumber: string, districtId: string): Promise<School | null> {
-    return repositories.school.getByNumberAndDistrict(schoolNumber, districtId);
+    const list = await this.getSchools({ districtId, searchQuery: schoolNumber });
+    return list.find((s) => s.schoolNumber === schoolNumber) || null;
   }
 
   async getRegions(): Promise<Region[]> {
     try {
       const regions = await apiClient<Region[]>('/regions');
-      if (Array.isArray(regions) && regions.length > 0) {
+      if (Array.isArray(regions)) {
         return regions;
       }
+      return [];
     } catch {
-      // fallback
+      return [];
     }
-    return repositories.school.getRegions();
   }
 
   async getDistricts(regionId?: string): Promise<District[]> {
@@ -56,13 +59,13 @@ export class SchoolService {
       const districts = await apiClient<District[]>('/districts', {
         params: regionId ? { regionId } : {},
       });
-      if (Array.isArray(districts) && districts.length > 0) {
+      if (Array.isArray(districts)) {
         return districts;
       }
+      return [];
     } catch {
-      // fallback
+      return [];
     }
-    return repositories.school.getDistricts(regionId);
   }
 
   async updateSchoolProfile(
@@ -79,19 +82,10 @@ export class SchoolService {
       throw new Error("Sizda ushbu maktab ma'lumotlarini o'zgartirish huquqi yo'q");
     }
 
-    try {
-      const updated = await apiClient<School>(`/schools/${schoolId}`, {
-        method: 'PATCH',
-        body: JSON.stringify(updates),
-      });
-      if (updated && updated.id) {
-        return updated;
-      }
-    } catch {
-      // fallback
-    }
-
-    return repositories.school.updateSchool(schoolId, updates);
+    return apiClient<School>(`/schools/${schoolId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(updates),
+    });
   }
 
   async updateSchoolCoordinates(
@@ -101,47 +95,40 @@ export class SchoolService {
     addressNotes: string,
     user: User
   ): Promise<School> {
+    return this.updateCoordinates(schoolId, latitude, longitude, addressNotes, user);
+  }
+
+  async updateCoordinates(
+    schoolId: string,
+    latitude: number,
+    longitude: number,
+    addressNotes: string,
+    user: User
+  ): Promise<School> {
     if (!canEditSchool(user, schoolId)) {
-      throw new Error("Sizda ushbu maktab koordinatalarini o'zgartirish huquqi yo'q");
+      throw new Error("Sizda koordinatalarni o'zgartirish huquqi yo'q");
     }
 
-    try {
-      const updated = await apiClient<School>(`/schools/${schoolId}`, {
-        method: 'PATCH',
-        body: JSON.stringify({ latitude, longitude, addressNotes }),
-      });
-      if (updated && updated.id) {
-        return updated;
-      }
-    } catch {
-      // fallback
-    }
-
-    return repositories.school.updateCoordinates(schoolId, {
-      latitude,
-      longitude,
-      addressNotes,
-      status: 'PENDING' as any,
+    return apiClient<School>(`/schools/${schoolId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({
+        latitude,
+        longitude,
+        addressNotes,
+        coordinateStatus: 'PENDING',
+      }),
     });
   }
 
-  async changePassword(arg1: string, arg2: string, arg3?: any, arg4?: any): Promise<void> {
-    const newPass = typeof arg3 === 'string' ? arg3 : arg2;
-    const user: User | undefined = typeof arg3 === 'object' ? arg3 : arg4;
-
-    if (newPass.length < 6) {
-      throw new Error("Yangi parol kamida 6 ta belgidan iborat bo'lishi lozim.");
-    }
-
-    if (user) {
-      await repositories.auditLog.logAction({
-        actorId: user.id,
-        actorName: user.name,
-        actorRole: user.role,
-        action: 'UPDATE_PASSWORD' as any,
-        target: 'Hisob paroli yangilandi',
-        targetId: user.id,
+  async changePassword(userId: string, oldPass: string, newPass: string, user?: User): Promise<boolean> {
+    try {
+      await apiClient('/auth/onboarding', {
+        method: 'POST',
+        body: JSON.stringify({ userId, newPassword: newPass }),
       });
+      return true;
+    } catch {
+      return false;
     }
   }
 }
