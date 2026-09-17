@@ -21,7 +21,6 @@ import {
   Sun,
   Footprints,
   Route,
-  Compass,
   Zap,
   Users,
   AlertTriangle,
@@ -30,10 +29,12 @@ import {
   X,
   Star,
   Info,
-  Layers,
   ArrowUpDown,
+  Truck,
+  Bike,
+  GitFork,
+  HelpCircle,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 
 export interface AttributeOption {
   id: string;
@@ -41,7 +42,6 @@ export interface AttributeOption {
   subLabel?: string;
   icon?: any;
   scoreWeight: number; // 1-5 impact rating
-  color?: string;
 }
 
 export interface AttributeDefinition {
@@ -52,9 +52,9 @@ export interface AttributeDefinition {
   options: AttributeOption[];
 }
 
-// Initial attributes configuration matching SR4S demonstrator
-const INITIAL_ATTRIBUTES: AttributeDefinition[] = [
-  // Row 1
+// ALL 40 OFFICIAL SR4S ATTRIBUTES MATCHING DEMONSTRATOR (5 ROWS x 8 COLS)
+const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
+  // ROW 1 (1-8)
   {
     id: 'land_use_left',
     name: 'Yerda foydalanish (Chap)',
@@ -147,7 +147,7 @@ const INITIAL_ATTRIBUTES: AttributeDefinition[] = [
     ],
   },
 
-  // Row 2
+  // ROW 2 (9-16)
   {
     id: 'road_condition',
     name: 'Yo‘l holati',
@@ -235,7 +235,7 @@ const INITIAL_ATTRIBUTES: AttributeDefinition[] = [
     ],
   },
 
-  // Row 3
+  // ROW 3 (17-24)
   {
     id: 'crossing_supervisor',
     name: 'Piyodalar patruli (Nazoratchi)',
@@ -323,7 +323,7 @@ const INITIAL_ATTRIBUTES: AttributeDefinition[] = [
     ],
   },
 
-  // Row 4
+  // ROW 4 (25-32)
   {
     id: 'crossing_quality',
     name: 'O‘tish joyi sifati',
@@ -335,15 +335,140 @@ const INITIAL_ATTRIBUTES: AttributeDefinition[] = [
     ],
   },
   {
+    id: 'vehicles_per_day',
+    name: 'Kunlik avtomobillar soni',
+    category: 'Oqim',
+    currentValueId: 'high',
+    options: [
+      { id: 'high', label: '10 000 dan ko‘p (Yuqori oqim)', icon: Car, scoreWeight: 1 },
+      { id: 'med_high', label: '5 000 - 10 000', icon: Car, scoreWeight: 2 },
+      { id: 'medium', label: '1 000 - 5 000', icon: Car, scoreWeight: 4 },
+      { id: 'low', label: '1 000 dan kam (Past oqim)', icon: Car, scoreWeight: 5 },
+    ],
+  },
+  {
+    id: 'crossing_flow',
+    name: 'Piyodalar o‘tish oqimi',
+    category: 'Oqim',
+    currentValueId: 'medium',
+    options: [
+      { id: 'high', label: 'Yuqori piyodalar oqimi', icon: Users, scoreWeight: 5 },
+      { id: 'medium', label: 'O‘rtacha piyodalar oqimi', icon: Users, scoreWeight: 3 },
+      { id: 'low', label: 'Past oqim', icon: Users, scoreWeight: 2 },
+    ],
+  },
+  {
+    id: 'right_side_flow',
+    name: 'O‘ng tomondagi piyodalar oqimi',
+    category: 'Oqim',
+    currentValueId: 'medium',
+    options: [
+      { id: 'high', label: 'Yuqori oqim', icon: Users, scoreWeight: 5 },
+      { id: 'medium', label: 'O‘rtacha oqim', icon: Users, scoreWeight: 3 },
+      { id: 'low', label: 'Past oqim', icon: Users, scoreWeight: 2 },
+    ],
+  },
+  {
+    id: 'left_side_flow',
+    name: 'Chap tomondagi piyodalar oqimi',
+    category: 'Oqim',
+    currentValueId: 'medium',
+    options: [
+      { id: 'high', label: 'Yuqori oqim', icon: Users, scoreWeight: 5 },
+      { id: 'medium', label: 'O‘rtacha oqim', icon: Users, scoreWeight: 3 },
+      { id: 'low', label: 'Past oqim', icon: Users, scoreWeight: 2 },
+    ],
+  },
+  {
+    id: 'intersection_type',
+    name: 'Chorraha turi',
+    category: 'Chorraha',
+    currentValueId: 'none',
+    options: [
+      { id: 'none', label: 'Chorraha emas (To‘g‘ri yo‘l)', icon: Route, scoreWeight: 5 },
+      { id: 't_junction', label: 'T-simon tutashma (3 ta shaxobcha)', icon: GitFork, scoreWeight: 3 },
+      { id: 'cross_4leg', label: '4 tomonlama chorraha (4+ shaxobcha)', icon: GitFork, scoreWeight: 2 },
+      { id: 'roundabout', label: 'Aylanma chorraha (Koleco)', icon: GitFork, scoreWeight: 4 },
+    ],
+  },
+  {
+    id: 'driveways',
+    name: 'Hovli/Tijorat kirish joylari',
+    category: 'Chorraha',
+    currentValueId: 'none',
+    options: [
+      { id: 'none', label: 'Yo‘q (Kirish joyi yo‘q)', icon: CheckCircle2, scoreWeight: 5 },
+      { id: 'one_two', label: '1-2 ta turar joy kirish joyi', icon: Home, scoreWeight: 3 },
+      { id: 'more_two', label: '2 ta dan ko‘p kirish joylari', icon: Home, scoreWeight: 2 },
+      { id: 'commercial', label: 'Tijorat / Zpravka / Bozor kirishi', icon: Store, scoreWeight: 1 },
+    ],
+  },
+  {
+    id: 'intersection_side_flow',
+    name: 'Yon yo‘l avtomobil oqimi',
+    category: 'Chorraha',
+    currentValueId: 'medium',
+    options: [
+      { id: 'low', label: 'Past yon oqim', icon: Car, scoreWeight: 5 },
+      { id: 'medium', label: 'O‘rtacha yon oqim', icon: Car, scoreWeight: 3 },
+      { id: 'high', label: 'Yuqori yon oqim', icon: Car, scoreWeight: 1 },
+    ],
+  },
+
+  // ROW 5 (33-40)
+  {
+    id: 'intersection_quality',
+    name: 'Chorraha sifati',
+    category: 'Chorraha',
+    currentValueId: 'adequate',
+    options: [
+      { id: 'adequate', label: 'Qoniqarli chorraha sifati', icon: CheckCircle2, scoreWeight: 5 },
+      { id: 'poor', label: 'Yomon (Xavfli va belgisiz)', icon: XCircle, scoreWeight: 1 },
+    ],
+  },
+  {
+    id: 'curve_type',
+    name: 'Burilish turi',
+    category: 'Burilish',
+    currentValueId: 'straight',
+    options: [
+      { id: 'straight', label: 'To‘g‘ri yo‘l (Burilishlarsiz)', icon: Route, scoreWeight: 5 },
+      { id: 'moderate', label: 'O‘rtacha burilish', icon: GitFork, scoreWeight: 3 },
+      { id: 'sharp', label: 'O‘tkir burilish (~45°)', icon: GitFork, scoreWeight: 2 },
+      { id: 'very_sharp', label: 'Juda o‘tkir burilish (45°-90°)', icon: GitFork, scoreWeight: 1 },
+    ],
+  },
+  {
+    id: 'curve_quality',
+    name: 'Burilish sifati',
+    category: 'Burilish',
+    currentValueId: 'adequate',
+    options: [
+      { id: 'adequate', label: 'Qoniqarli burilish sifati', icon: CheckCircle2, scoreWeight: 5 },
+      { id: 'poor', label: 'Yomon (Belgilar va ko‘rinish yo‘q)', icon: XCircle, scoreWeight: 1 },
+    ],
+  },
+  {
     id: 'speed_limit',
     name: 'Tezlik cheklovi',
     category: 'Tezlik',
-    currentValueId: 'speed_30',
+    currentValueId: 'speed_40',
     options: [
       { id: 'speed_30', label: '30 km/soat yoki undan past', icon: Zap, scoreWeight: 5 },
       { id: 'speed_40', label: '40 km/soat', icon: Zap, scoreWeight: 4 },
       { id: 'speed_50', label: '50 km/soat', icon: Zap, scoreWeight: 2 },
       { id: 'speed_60plus', label: '60 km/soat va undan yuqori', icon: Zap, scoreWeight: 0 },
+    ],
+  },
+  {
+    id: 'operating_speed',
+    name: 'Haqiqiy tezlik (Ishchi)',
+    category: 'Tezlik',
+    currentValueId: 'speed_45',
+    options: [
+      { id: 'speed_30', label: '30 km/soat va undan past', icon: Gauge, scoreWeight: 5 },
+      { id: 'speed_45', label: '45 km/soat', icon: Gauge, scoreWeight: 3 },
+      { id: 'speed_60plus', label: '60 km/soat va undan yuqori', icon: Gauge, scoreWeight: 1 },
     ],
   },
   {
@@ -356,10 +481,32 @@ const INITIAL_ATTRIBUTES: AttributeDefinition[] = [
       { id: 'not_present', label: 'Yo‘q', icon: XCircle, scoreWeight: 0 },
     ],
   },
+  {
+    id: 'motorcycle_percent',
+    name: 'Motosikl ulushi (%)',
+    category: 'Oqim',
+    currentValueId: 'low',
+    options: [
+      { id: 'none', label: '0% (Motosikllar yo‘q)', icon: Bike, scoreWeight: 5 },
+      { id: 'low', label: '1 - 5%', icon: Bike, scoreWeight: 4 },
+      { id: 'high', label: '5% dan ko‘p', icon: Bike, scoreWeight: 2 },
+    ],
+  },
+  {
+    id: 'hgv_percent',
+    name: 'Yuk mashinalari ulushi (%)',
+    category: 'Oqim',
+    currentValueId: 'low',
+    options: [
+      { id: 'low', label: '0 - 5%', icon: Truck, scoreWeight: 5 },
+      { id: 'medium', label: '5 - 10%', icon: Truck, scoreWeight: 3 },
+      { id: 'high', label: '10% dan ko‘p', icon: Truck, scoreWeight: 1 },
+    ],
+  },
 ];
 
 export function Sr4sDemonstrator() {
-  const [attributes, setAttributes] = useState<AttributeDefinition[]>(INITIAL_ATTRIBUTES);
+  const [attributes, setAttributes] = useState<AttributeDefinition[]>(FULL_40_ATTRIBUTES);
   const [activeAttrId, setActiveAttrId] = useState<string | null>(null);
 
   // Dynamic live calculation of Star Rating & score
@@ -417,7 +564,7 @@ export function Sr4sDemonstrator() {
           </div>
           <div>
             <div className="text-[11px] font-mono font-bold tracking-widest text-teal-400 uppercase">
-              XALQARO iRAP SR4S STANDARTI
+              XALQARO iRAP SR4S STANDARTI (40 TA PARAMETR)
             </div>
             <h2 className="text-lg font-extrabold text-white tracking-tight">
               Maktab Yo‘l Xavfsizligi Interaktiv Kalkulyatori
@@ -434,26 +581,26 @@ export function Sr4sDemonstrator() {
       </div>
 
       {/* Main Grid: Left Star Display + Right Attribute Buttons */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[560px]">
+      <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[620px]">
         {/* Left Side: Live Star Rating Display */}
-        <div className="lg:col-span-5 p-8 bg-slate-950/80 border-r border-slate-800 flex flex-col items-center justify-center text-center space-y-6">
+        <div className="lg:col-span-4 p-8 bg-slate-950/90 border-r border-slate-800 flex flex-col items-center justify-center text-center space-y-6">
           <div className="space-y-2 max-w-sm">
             <p className="text-xs text-slate-400 leading-relaxed font-medium">
-              O‘ng tomondagi har bir ko‘rsatkich tugmasini bosing va maktab yo‘li xavfsizlik bali o‘zgarishini kuzating:
+              Barcha 40 ta rasmiy iRAP SR4S parametrlaridan birini bosing va maktab yulduzli reytingini jonli kuzating:
             </p>
           </div>
 
           {/* Children Illustration Placeholder / Icon */}
-          <div className="relative py-4">
-            <div className="flex items-center justify-center h-32 w-32 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-400 mx-auto shadow-2xl animate-pulse">
-              <SchoolIcon className="h-16 w-16" />
+          <div className="relative py-2">
+            <div className="flex items-center justify-center h-28 w-28 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-400 mx-auto shadow-2xl animate-pulse">
+              <SchoolIcon className="h-14 w-14" />
             </div>
           </div>
 
           {/* Star Rating Display */}
           <div className="space-y-3">
             {/* 5-Star Visual Row */}
-            <div className="flex items-center justify-center gap-2">
+            <div className="flex items-center justify-center gap-1.5">
               {[1, 2, 3, 4, 5].map((s) => {
                 const filled = starRating >= s;
                 const half = starRating > s - 1 && starRating < s;
@@ -461,7 +608,7 @@ export function Sr4sDemonstrator() {
                   <Star
                     key={s}
                     className={cn(
-                      'w-8 h-8 transition-all transform hover:scale-110',
+                      'w-7 h-7 transition-all transform hover:scale-110',
                       filled
                         ? 'fill-amber-400 text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]'
                         : half
@@ -479,20 +626,20 @@ export function Sr4sDemonstrator() {
                 {starRating} <span className="text-sm font-normal text-slate-400">/ 5.0 Yulduz</span>
               </div>
               <div className="text-xs font-mono font-bold text-teal-400 mt-1">
-                Umumiy Indeks: {scorePercentage}% Xavfsizlik
+                Umumiy Indeks: {scorePercentage}% Xavfsizlik (40 ta parametr)
               </div>
             </div>
           </div>
 
           <div className="pt-4 border-t border-slate-900 w-full max-w-xs text-[11px] text-slate-500 flex items-center justify-center gap-1.5">
             <Info className="w-3.5 h-3.5 text-teal-500 shrink-0" />
-            <span>Xalqaro iRAP SR4S "Star Rating for Schools" metodikasi</span>
+            <span>Xalqaro iRAP SR4S (Coding Guide v1.7) standarti</span>
           </div>
         </div>
 
-        {/* Right Side: Attribute Grid Tiles */}
-        <div className="lg:col-span-7 p-6 bg-slate-900 overflow-y-auto max-h-[680px]">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+        {/* Right Side: 40 Attribute Grid Tiles (8 Cols on Large Screen) */}
+        <div className="lg:col-span-8 p-5 bg-slate-900 overflow-y-auto max-h-[720px]">
+          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2.5">
             {attributes.map((attr) => {
               const currentOpt = attr.options.find((o) => o.id === attr.currentValueId) || attr.options[0];
               const IconComp = currentOpt.icon || CriterionIconFallback(attr.id);
@@ -502,20 +649,20 @@ export function Sr4sDemonstrator() {
                   key={attr.id}
                   type="button"
                   onClick={() => setActiveAttrId(attr.id)}
-                  className="flex flex-col items-center justify-between p-3.5 rounded-2xl bg-slate-950 border border-slate-800 hover:border-teal-500 hover:bg-slate-900/90 transition-all text-center group cursor-pointer shadow-sm relative overflow-hidden"
+                  className="flex flex-col items-center justify-between p-2.5 rounded-2xl bg-slate-950 border border-slate-800 hover:border-teal-500 hover:bg-slate-900 transition-all text-center group cursor-pointer shadow-sm relative overflow-hidden min-h-[110px]"
                 >
                   {/* Top Badge label */}
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-teal-400/90 truncate max-w-full mb-2">
+                  <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-teal-400/90 truncate max-w-full mb-1">
                     {currentOpt.label}
                   </span>
 
                   {/* Center Icon */}
-                  <div className="my-1.5 flex h-12 w-12 items-center justify-center rounded-xl bg-teal-500/10 text-teal-400 group-hover:scale-110 group-hover:bg-teal-500 group-hover:text-slate-950 transition-all shadow-inner border border-teal-500/20">
-                    <IconComp className="h-6 w-6" />
+                  <div className="my-1 flex h-10 w-10 items-center justify-center rounded-xl bg-teal-500/10 text-teal-400 group-hover:scale-110 group-hover:bg-teal-500 group-hover:text-slate-950 transition-all border border-teal-500/20 shrink-0">
+                    <IconComp className="h-5 w-5" />
                   </div>
 
                   {/* Bottom Attribute Name */}
-                  <span className="text-xs font-bold text-slate-200 group-hover:text-white leading-tight mt-2 line-clamp-2">
+                  <span className="text-[10px] font-bold text-slate-300 group-hover:text-white leading-tight mt-1 line-clamp-2">
                     {attr.name}
                   </span>
                 </button>
@@ -533,7 +680,7 @@ export function Sr4sDemonstrator() {
             <div className="flex items-center justify-between border-b border-slate-800 pb-4">
               <div>
                 <span className="text-[10px] font-mono font-bold tracking-widest text-teal-400 uppercase">
-                  PARAMETR KIRSHTIRISH
+                  PARAMETR QIYMATINI TANLANG
                 </span>
                 <h3 className="text-lg font-extrabold text-white">
                   {activeAttr.name}
@@ -595,5 +742,8 @@ function CriterionIconFallback(id: string) {
   if (id.includes('sidewalk')) return Footprints;
   if (id.includes('speed')) return Zap;
   if (id.includes('crossing')) return Route;
-  return Building2;
+  if (id.includes('flow')) return Users;
+  if (id.includes('intersection')) return GitFork;
+  if (id.includes('edge')) return Maximize2;
+  return HelpCircle;
 }
