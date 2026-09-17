@@ -40,6 +40,7 @@ import {
   Save,
   Check,
   Loader2,
+  Sparkles,
 } from 'lucide-react';
 
 export interface AttributeOption {
@@ -58,10 +59,10 @@ export interface AttributeDefinition {
   options: AttributeOption[];
 }
 
-// Rich Custom SVG Icon Components
+// Rich Custom SVG Icon Components with enhanced visual styling
 function SpeedSignIcon({ limit }: { limit: string }) {
   return (
-    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white border-2 border-rose-600 font-extrabold text-slate-950 font-mono text-[11px] shadow-sm">
+    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white border-2 border-rose-600 font-extrabold text-slate-950 font-mono text-[11px] shadow-md group-hover:scale-110 transition-transform duration-200">
       {limit}
     </div>
   );
@@ -69,7 +70,7 @@ function SpeedSignIcon({ limit }: { limit: string }) {
 
 function SchoolSignIcon() {
   return (
-    <div className="w-8 h-8 bg-amber-400 border-2 border-slate-950 flex items-center justify-center text-slate-950 font-black shadow-sm rounded-md">
+    <div className="w-8 h-8 bg-amber-400 border-2 border-slate-950 flex items-center justify-center text-slate-950 font-black shadow-md rounded-md group-hover:scale-110 transition-transform duration-200">
       <SchoolIcon className="w-5 h-5 text-slate-950" />
     </div>
   );
@@ -77,17 +78,17 @@ function SchoolSignIcon() {
 
 function ZebraCrossingIcon() {
   return (
-    <div className="w-9 h-9 bg-slate-800 rounded-lg p-1 flex flex-col justify-between border border-slate-700 shadow-sm">
-      <div className="h-1.5 w-full bg-white rounded-xs" />
-      <div className="h-1.5 w-full bg-white rounded-xs" />
-      <div className="h-1.5 w-full bg-white rounded-xs" />
+    <div className="w-9 h-9 bg-slate-800 rounded-xl p-1 flex flex-col justify-between border border-slate-700 shadow-md group-hover:scale-110 transition-transform duration-200">
+      <div className="h-1.5 w-full bg-white rounded-xs shadow-2xs" />
+      <div className="h-1.5 w-full bg-white rounded-xs shadow-2xs" />
+      <div className="h-1.5 w-full bg-white rounded-xs shadow-2xs" />
     </div>
   );
 }
 
 function DividedRoadIcon() {
   return (
-    <div className="w-9 h-9 bg-slate-800 rounded-lg flex items-center justify-between px-1 border border-slate-700 shadow-sm">
+    <div className="w-9 h-9 bg-slate-800 rounded-xl flex items-center justify-between px-1 border border-slate-700 shadow-md group-hover:scale-110 transition-transform duration-200">
       <div className="w-2.5 h-full bg-slate-700 border-r border-dashed border-slate-400" />
       <div className="w-1.5 h-full bg-emerald-500 shadow-sm" />
       <div className="w-2.5 h-full bg-slate-700 border-l border-dashed border-slate-400" />
@@ -97,7 +98,7 @@ function DividedRoadIcon() {
 
 function SidewalkIcon() {
   return (
-    <div className="w-9 h-9 bg-slate-800 rounded-lg flex items-center justify-between p-1 border border-slate-700 shadow-sm">
+    <div className="w-9 h-9 bg-slate-800 rounded-xl flex items-center justify-between p-1 border border-slate-700 shadow-md group-hover:scale-110 transition-transform duration-200">
       <div className="w-3 h-full bg-emerald-600 rounded-xs flex items-center justify-center">
         <Footprints className="w-3 h-3 text-white" />
       </div>
@@ -108,7 +109,7 @@ function SidewalkIcon() {
 
 function SpeedBumpIcon() {
   return (
-    <div className="w-9 h-9 bg-slate-800 rounded-lg flex flex-col items-center justify-center p-1 border border-slate-700 shadow-sm">
+    <div className="w-9 h-9 bg-slate-800 rounded-xl flex flex-col items-center justify-center p-1 border border-slate-700 shadow-md group-hover:scale-110 transition-transform duration-200">
       <div className="w-full h-2.5 bg-amber-500 rounded-full border border-amber-300 shadow-xs" />
     </div>
   );
@@ -116,7 +117,7 @@ function SpeedBumpIcon() {
 
 function RoundaboutIcon() {
   return (
-    <div className="w-9 h-9 bg-slate-800 rounded-lg flex items-center justify-center border border-slate-700 shadow-sm">
+    <div className="w-9 h-9 bg-slate-800 rounded-xl flex items-center justify-center border border-slate-700 shadow-md group-hover:scale-110 transition-transform duration-200">
       <div className="w-5 h-5 rounded-full border-2 border-dashed border-teal-400 flex items-center justify-center">
         <div className="w-2 h-2 rounded-full bg-emerald-400" />
       </div>
@@ -124,7 +125,7 @@ function RoundaboutIcon() {
   );
 }
 
-// ALL 40 OFFICIAL SR4S ATTRIBUTES WITH DEDICATED GRAPHICAL ICONS
+// ALL 40 OFFICIAL SR4S ATTRIBUTES
 const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
   // ROW 1 (1-8)
   {
@@ -600,14 +601,14 @@ export function Sr4sDemonstrator() {
     if (star > 5.0) star = 5.0;
 
     let badgeText = 'O‘rtacha Xavfsiz';
-    let badgeClass = 'bg-amber-50 text-amber-800 border-amber-200';
+    let badgeClass = 'bg-amber-500/10 text-amber-400 border-amber-500/30';
 
     if (star >= 4.0) {
       badgeText = 'A’lo — Xavfsiz Maktab Zonasi';
-      badgeClass = 'bg-emerald-50 text-emerald-800 border-emerald-200';
+      badgeClass = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
     } else if (star < 3.0) {
       badgeText = 'Yuqori Xavf — Ta’mir va Himoya Talab';
-      badgeClass = 'bg-rose-50 text-rose-800 border-rose-200';
+      badgeClass = 'bg-rose-500/10 text-rose-400 border-rose-500/30';
     }
 
     return {
@@ -630,7 +631,7 @@ export function Sr4sDemonstrator() {
     setActiveAttrId(null);
   };
 
-  // Connect & Save Assessment directly to PostgreSQL Database
+  // Save to database
   const handleSaveToDatabase = async () => {
     if (!user || !user.schoolId) {
       toastError("Baholashni bazaga saqlash uchun maktab hisobiga kirish lozim.", "Eslatma");
@@ -681,25 +682,26 @@ export function Sr4sDemonstrator() {
   };
 
   return (
-    <div className="w-full bg-slate-900 text-white rounded-3xl overflow-hidden shadow-2xl border border-slate-800">
+    <div className="w-full bg-slate-950 text-white rounded-3xl overflow-hidden shadow-2xl border border-slate-800/80 transition-all duration-300">
       {/* Top Header Banner */}
-      <div className="bg-slate-950 px-6 py-4 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-slate-900/90 px-6 py-4 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 backdrop-blur-md">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-teal-500 text-slate-950 font-black shadow-lg shadow-teal-500/20">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-400 to-emerald-600 text-slate-950 font-black shadow-lg shadow-teal-500/20 transform hover:rotate-6 transition-all duration-300">
             <Star className="h-6 w-6 fill-slate-950" />
           </div>
           <div>
-            <div className="text-[11px] font-mono font-bold tracking-widest text-teal-400 uppercase">
-              XALQARO iRAP SR4S STANDARTI (40 TA PARAMETR)
+            <div className="text-[10px] font-mono font-bold tracking-widest text-teal-400 uppercase flex items-center gap-1.5">
+              <Sparkles className="w-3 h-3 text-teal-400" />
+              <span>XALQARO iRAP SR4S STANDARTI (40 TA PARAMETR)</span>
             </div>
-            <h2 className="text-lg font-extrabold text-white tracking-tight">
+            <h2 className="text-base sm:text-lg font-extrabold text-white tracking-tight">
               Maktab Yo‘l Xavfsizligi Interaktiv Kalkulyatori
             </h2>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <span className={cn('px-3 py-1 rounded-xl text-xs font-bold border', statusBadge.className)}>
+          <span className={cn('px-3.5 py-1.5 rounded-xl text-xs font-bold border backdrop-blur-sm transition-all', statusBadge.className)}>
             {statusBadge.text}
           </span>
 
@@ -707,7 +709,7 @@ export function Sr4sDemonstrator() {
             <Button
               onClick={handleSaveToDatabase}
               disabled={isSaving}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl h-9 px-4 gap-1.5 shadow-md"
+              className="bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 active:scale-95 text-white font-bold text-xs rounded-xl h-9.5 px-4 gap-2 shadow-lg shadow-teal-500/20 transition-all duration-200"
             >
               {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
               <span>Bazaga Saqlash</span>
@@ -717,24 +719,27 @@ export function Sr4sDemonstrator() {
       </div>
 
       {/* Main Grid: Left Star Display + Right Attribute Buttons */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[620px]">
+      <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[640px]">
         {/* Left Side: Live Star Rating Display */}
-        <div className="lg:col-span-4 p-8 bg-slate-950/90 border-r border-slate-800 flex flex-col items-center justify-center text-center space-y-6">
-          <div className="space-y-2 max-w-sm">
+        <div className="lg:col-span-4 p-8 bg-gradient-to-b from-slate-950 via-slate-900/80 to-slate-950 border-r border-slate-800/80 flex flex-col items-center justify-center text-center space-y-6 relative overflow-hidden">
+          {/* Subtle Ambient Glow Effect */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="space-y-2 max-w-sm relative z-10">
             <p className="text-xs text-slate-400 leading-relaxed font-medium">
               Barcha 40 ta rasmiy iRAP SR4S parametrlaridan birini bosing va maktab yulduzli reytingini jonli kuzating:
             </p>
           </div>
 
           {/* Children Illustration Placeholder / Icon */}
-          <div className="relative py-2">
+          <div className="relative py-2 relative z-10">
             <div className="flex items-center justify-center h-28 w-28 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-400 mx-auto shadow-2xl animate-pulse">
               <SchoolIcon className="h-14 w-14" />
             </div>
           </div>
 
           {/* Star Rating Display */}
-          <div className="space-y-3">
+          <div className="space-y-3 relative z-10">
             {/* 5-Star Visual Row */}
             <div className="flex items-center justify-center gap-1.5">
               {[1, 2, 3, 4, 5].map((s) => {
@@ -744,12 +749,12 @@ export function Sr4sDemonstrator() {
                   <Star
                     key={s}
                     className={cn(
-                      'w-7 h-7 transition-all transform hover:scale-110',
+                      'w-7 h-7 transition-all duration-300 transform hover:scale-125',
                       filled
-                        ? 'fill-amber-400 text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]'
+                        ? 'fill-amber-400 text-amber-400 drop-shadow-[0_0_12px_rgba(251,191,36,0.6)]'
                         : half
                         ? 'fill-amber-400/50 text-amber-400'
-                        : 'text-slate-700'
+                        : 'text-slate-800'
                     )}
                   />
                 );
@@ -767,14 +772,14 @@ export function Sr4sDemonstrator() {
             </div>
           </div>
 
-          <div className="pt-4 border-t border-slate-900 w-full max-w-xs text-[11px] text-slate-500 flex items-center justify-center gap-1.5">
+          <div className="pt-4 border-t border-slate-900/80 w-full max-w-xs text-[11px] text-slate-500 flex items-center justify-center gap-1.5 relative z-10">
             <Info className="w-3.5 h-3.5 text-teal-500 shrink-0" />
             <span>Xalqaro iRAP SR4S (Coding Guide v1.7) standarti</span>
           </div>
         </div>
 
         {/* Right Side: 40 Attribute Grid Tiles (8 Cols on Large Screen) */}
-        <div className="lg:col-span-8 p-5 bg-slate-900 overflow-y-auto max-h-[720px]">
+        <div className="lg:col-span-8 p-5 bg-slate-900/90 overflow-y-auto max-h-[720px]">
           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2.5">
             {attributes.map((attr) => {
               const currentOpt = attr.options.find((o) => o.id === attr.currentValueId) || attr.options[0];
@@ -785,20 +790,20 @@ export function Sr4sDemonstrator() {
                   key={attr.id}
                   type="button"
                   onClick={() => setActiveAttrId(attr.id)}
-                  className="flex flex-col items-center justify-between p-2.5 rounded-2xl bg-slate-950 border border-slate-800 hover:border-teal-500 hover:bg-slate-900 transition-all text-center group cursor-pointer shadow-sm relative overflow-hidden min-h-[110px]"
+                  className="flex flex-col items-center justify-between p-2.5 rounded-2xl bg-slate-950 border border-slate-800/80 hover:border-teal-400 hover:shadow-xl hover:shadow-teal-500/10 hover:-translate-y-1 active:scale-95 transition-all duration-200 text-center group cursor-pointer relative overflow-hidden min-h-[110px]"
                 >
                   {/* Top Badge label */}
-                  <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-teal-400/90 truncate max-w-full mb-1">
+                  <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-teal-400 group-hover:text-teal-300 truncate max-w-full mb-1 transition-colors">
                     {currentOpt.label}
                   </span>
 
                   {/* Center Icon */}
-                  <div className="my-1 flex h-10 w-10 items-center justify-center rounded-xl bg-teal-500/10 group-hover:scale-110 group-hover:bg-teal-500 transition-all border border-teal-500/20 shrink-0">
+                  <div className="my-1 flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 border border-slate-800 group-hover:border-teal-400 group-hover:bg-teal-500 group-hover:text-slate-950 group-hover:shadow-md transition-all duration-200 shrink-0">
                     {renderFn()}
                   </div>
 
                   {/* Bottom Attribute Name */}
-                  <span className="text-[10px] font-bold text-slate-300 group-hover:text-white leading-tight mt-1 line-clamp-2">
+                  <span className="text-[10px] font-bold text-slate-300 group-hover:text-white leading-tight mt-1 line-clamp-2 transition-colors">
                     {attr.name}
                   </span>
                 </button>
@@ -810,22 +815,23 @@ export function Sr4sDemonstrator() {
 
       {/* Option Picker Modal (Popup when a tile is clicked) */}
       {activeAttr && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 animate-in fade-in duration-150">
-          <div className="w-full max-w-xl rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl space-y-5 animate-in zoom-in-95 duration-150 relative text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 animate-in fade-in duration-200">
+          <div className="w-full max-w-xl rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl space-y-5 animate-in zoom-in-95 duration-200 relative text-white">
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-slate-800 pb-4">
               <div>
-                <span className="text-[10px] font-mono font-bold tracking-widest text-teal-400 uppercase">
-                  PARAMETR QIYMATINI TANLANG
+                <span className="text-[10px] font-mono font-bold tracking-widest text-teal-400 uppercase flex items-center gap-1">
+                  <Sparkles className="w-3 h-3 text-teal-400" />
+                  <span>PARAMETR QIYMATINI TANLANG</span>
                 </span>
-                <h3 className="text-lg font-extrabold text-white">
+                <h3 className="text-lg font-extrabold text-white mt-0.5">
                   {activeAttr.name}
                 </h3>
               </div>
 
               <button
                 onClick={() => setActiveAttrId(null)}
-                className="rounded-xl p-2 text-slate-400 hover:bg-slate-800 hover:text-white transition-colors"
+                className="rounded-xl p-2 text-slate-400 hover:bg-slate-800 hover:text-white active:scale-95 transition-all"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -843,16 +849,16 @@ export function Sr4sDemonstrator() {
                     type="button"
                     onClick={() => handleSelectOption(activeAttr.id, opt.id)}
                     className={cn(
-                      'flex flex-col items-center justify-center p-4 rounded-2xl border text-center transition-all cursor-pointer group space-y-2',
+                      'flex flex-col items-center justify-center p-4 rounded-2xl border text-center transition-all duration-200 cursor-pointer group space-y-2.5 active:scale-95',
                       isSelected
-                        ? 'border-teal-500 bg-teal-500/20 text-white ring-2 ring-teal-500/40'
-                        : 'border-slate-800 bg-slate-950 text-slate-300 hover:border-slate-700 hover:bg-slate-800'
+                        ? 'border-teal-500 bg-teal-500/20 text-white ring-2 ring-teal-500/40 shadow-lg shadow-teal-500/10'
+                        : 'border-slate-800 bg-slate-950 text-slate-300 hover:border-teal-500/50 hover:bg-slate-800/80 hover:-translate-y-0.5'
                     )}
                   >
                     <div
                       className={cn(
-                        'flex h-10 w-10 items-center justify-center rounded-xl transition-all',
-                        isSelected ? 'bg-teal-500 text-slate-950' : 'bg-slate-900 text-teal-400 group-hover:scale-110'
+                        'flex h-10 w-10 items-center justify-center rounded-xl transition-all duration-200',
+                        isSelected ? 'bg-teal-500 text-slate-950 shadow-md' : 'bg-slate-900 text-teal-400 group-hover:scale-110'
                       )}
                     >
                       {renderOptFn()}
