@@ -10,30 +10,54 @@ import {
   X,
   Compass,
   School as SchoolIcon,
-  UserCheck,
   Navigation,
-  Clock,
 } from 'lucide-react';
+import { cn } from '@/lib/cn';
 
 interface CoordinateVerificationCardProps {
   school: School;
+  isSelected: boolean;
+  onToggleSelect: (schoolId: string) => void;
   onVerify: (schoolId: string) => Promise<void>;
   onReject: (schoolId: string) => Promise<void>;
 }
 
 export function CoordinateVerificationCard({
   school,
+  isSelected,
+  onToggleSelect,
   onVerify,
   onReject,
 }: CoordinateVerificationCardProps) {
   const isPending = school.coordinateStatus === CoordinateStatus.PENDING;
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white shadow-xs overflow-hidden flex flex-col justify-between hover:border-slate-300 transition-all space-y-4">
-      {/* Top Map Simulator Preview */}
+    <div
+      className={cn(
+        'rounded-2xl border bg-white shadow-xs overflow-hidden flex flex-col justify-between hover:border-slate-300 transition-all',
+        isSelected
+          ? 'border-teal-500 ring-2 ring-teal-500/30 shadow-teal-100'
+          : 'border-slate-200'
+      )}
+    >
+      {/* Top: Checkbox + Map Preview */}
       <div className="relative h-44 w-full bg-slate-900 overflow-hidden flex items-center justify-center p-4">
         {/* Map Grid */}
         <div className="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,#334155_1px,transparent_1px),linear-gradient(to_bottom,#334155_1px,transparent_1px)] bg-[size:20px_20px]" />
+
+        {/* Checkbox for bulk select */}
+        <button
+          type="button"
+          onClick={() => onToggleSelect(school.id)}
+          className={cn(
+            'absolute top-3 right-3 z-20 flex h-6 w-6 items-center justify-center rounded-md border-2 transition-all',
+            isSelected
+              ? 'bg-teal-500 border-teal-400 text-white'
+              : 'bg-slate-800/70 border-slate-500 hover:border-teal-400'
+          )}
+        >
+          {isSelected && <Check className="w-3.5 h-3.5" />}
+        </button>
 
         {/* Center Pin */}
         <div className="relative z-10 flex flex-col items-center">
@@ -41,7 +65,7 @@ export function CoordinateVerificationCard({
             <MapPin className="h-5 w-5" />
           </div>
           <div className="mt-1.5 px-2.5 py-0.5 rounded-full bg-slate-950/90 text-white border border-slate-700 text-[10px] font-mono font-bold">
-            {school.coordinates.latitude.toFixed(4)}, {school.coordinates.longitude.toFixed(4)}
+            {school.coordinates?.latitude?.toFixed(4)}, {school.coordinates?.longitude?.toFixed(4)}
           </div>
         </div>
 
@@ -71,7 +95,7 @@ export function CoordinateVerificationCard({
                 <Compass className="w-3.5 h-3.5 text-teal-600" />
                 <span>Kenglik:</span>
               </span>
-              <strong className="font-mono">{school.coordinates.latitude}</strong>
+              <strong className="font-mono">{school.coordinates?.latitude}</strong>
             </div>
 
             <div className="flex items-center justify-between text-[11px] text-slate-600">
@@ -79,48 +103,48 @@ export function CoordinateVerificationCard({
                 <Navigation className="w-3.5 h-3.5 text-teal-600" />
                 <span>Uzunlik:</span>
               </span>
-              <strong className="font-mono">{school.coordinates.longitude}</strong>
+              <strong className="font-mono">{school.coordinates?.longitude}</strong>
             </div>
 
-            {school.coordinates.addressNotes && (
+            {school.coordinates?.addressNotes && (
               <div className="pt-1 border-t border-slate-200/60 text-[11px] text-slate-500 truncate">
-                Mo‘ljal: {school.coordinates.addressNotes}
+                Mo'ljal: {school.coordinates.addressNotes}
               </div>
             )}
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
-          <span className="text-[11px] text-slate-400 font-mono">
-            {school.directorName}
-          </span>
+        {/* Per-card Action Buttons (only for PENDING) */}
+        {isPending && (
+          <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+            <span className="text-[11px] text-slate-400 font-mono truncate">
+              {school.directorName}
+            </span>
 
-          {isPending && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 shrink-0">
               <Button
                 type="button"
                 size="sm"
                 variant="outline"
                 onClick={() => onReject(school.id)}
-                className="text-xs font-bold border-rose-200 text-rose-700 hover:bg-rose-50 rounded-xl h-8.5 px-3"
+                className="text-xs font-bold border-rose-200 text-rose-700 hover:bg-rose-50 rounded-xl h-8 px-3"
               >
                 <X className="w-3.5 h-3.5" />
-                <span>Rad etish</span>
+                <span>Rad</span>
               </Button>
 
               <Button
                 type="button"
                 size="sm"
                 onClick={() => onVerify(school.id)}
-                className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl h-8.5 px-3 shadow-xs gap-1"
+                className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl h-8 px-3 shadow-xs gap-1"
               >
                 <Check className="w-3.5 h-3.5" />
                 <span>Tasdiqlash</span>
               </Button>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
