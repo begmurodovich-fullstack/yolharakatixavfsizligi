@@ -232,9 +232,16 @@ export function MapPreviewSection() {
 
                   <div className="rounded-xl bg-slate-50 p-4 border border-slate-100 flex items-center justify-between">
                     <div>
-                      <div className="text-[11px] text-slate-500">Joriy xavfsizlik bali:</div>
-                      <div className="text-2xl font-extrabold text-slate-900 mt-0.5">
-                        {selectedSchool.currentScore} <span className="text-xs text-slate-400 font-normal">/ 100</span>
+                      <div className="text-[11px] text-slate-500">Xavfsizlik darajasi:</div>
+                      <div className="text-xl font-extrabold text-slate-900 mt-0.5 flex items-center gap-1">
+                        {selectedSchool.currentScore > 0 ? (
+                          <>
+                            <span>{((selectedSchool.currentScore / 100) * 4 + 1).toFixed(1)}</span>
+                            <span className="text-xs text-amber-500 font-normal">★ (5 yulduzli)</span>
+                          </>
+                        ) : (
+                          <span className="text-sm text-slate-400 font-medium">Baholanmagan</span>
+                        )}
                       </div>
                     </div>
                     <ScoreStatusBadge score={selectedSchool.currentScore} />

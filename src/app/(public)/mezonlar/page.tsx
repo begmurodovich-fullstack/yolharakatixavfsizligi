@@ -96,12 +96,12 @@ export default function MezonlarPage() {
               <span className="text-lg font-bold text-slate-900">7 ta Modul</span>
             </div>
             <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-              <span className="text-[11px] font-semibold text-slate-500 block">Rasmiy Savollar</span>
-              <span className="text-lg font-bold text-teal-700">23 ta Mezon</span>
+              <span className="text-[11px] font-semibold text-slate-500 block">Rasmiy Parametrlar</span>
+              <span className="text-lg font-bold text-teal-700">40 ta SR4S</span>
             </div>
             <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-              <span className="text-[11px] font-semibold text-slate-500 block">Maksimal Ball</span>
-              <span className="text-lg font-bold text-slate-900">100 Ball</span>
+              <span className="text-[11px] font-semibold text-slate-500 block">Reyting Tizimi</span>
+              <span className="text-lg font-bold text-slate-900">5 Yulduz (5★)</span>
             </div>
             <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
               <span className="text-[11px] font-semibold text-slate-500 block">Xalqaro Standart</span>

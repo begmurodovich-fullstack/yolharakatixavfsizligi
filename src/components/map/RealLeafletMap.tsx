@@ -230,7 +230,7 @@ export function RealLeafletMap({
           </div>
           <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 6px; border-top: 1px solid #e2e8f0;">
             <span style="font-size: 12px; font-weight: 800; color: ${pinColor};">
-              ${isAssessed ? `${score} / 100 ball` : '0 ball (Baholanmagan)'}
+              ${isAssessed ? `${((score / 100) * 4 + 1).toFixed(1)} ★ / 5.0 yulduz` : 'Baholanmagan'}
             </span>
             <span style="font-size: 10px; font-weight: 700; background: ${
               isAssessed ? '#ecfdf5' : '#f1f5f9'

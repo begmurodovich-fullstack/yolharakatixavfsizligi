@@ -9,21 +9,21 @@ interface RegionNode {
   name: string;
   x: number;
   y: number;
-  score: number;
+  stars: number;
   status: 'GREEN' | 'YELLOW' | 'RED';
   schoolCount: number;
   topSchool: string;
 }
 
 const REGION_NODES: RegionNode[] = [
-  { id: 'tas', name: 'Toshkent shahri', x: 670, y: 160, score: 94, status: 'GREEN', schoolCount: 380, topSchool: '17-maktab' },
-  { id: 'sam', name: 'Samarqand viloyati', x: 500, y: 260, score: 88, status: 'GREEN', schoolCount: 1250, topSchool: '9-maktab' },
-  { id: 'bux', name: 'Buxoro viloyati', x: 380, y: 240, score: 84, status: 'GREEN', schoolCount: 540, topSchool: '24-maktab' },
-  { id: 'fer', name: 'Farg‘ona vodiysi', x: 790, y: 180, score: 82, status: 'GREEN', schoolCount: 1670, topSchool: '11-maktab' },
-  { id: 'nav', name: 'Navoiy viloyati', x: 420, y: 180, score: 71, status: 'YELLOW', schoolCount: 370, topSchool: '11-maktab' },
-  { id: 'xor', name: 'Xorazm viloyati', x: 230, y: 160, score: 78, status: 'YELLOW', schoolCount: 530, topSchool: '1-maktab' },
-  { id: 'qor', name: 'Qoraqalpog‘iston', x: 130, y: 110, score: 67, status: 'YELLOW', schoolCount: 720, topSchool: '3-maktab' },
-  { id: 'qash', name: 'Qashqadaryo / Surxondaryo', x: 490, y: 340, score: 62, status: 'YELLOW', schoolCount: 1980, topSchool: '7-maktab' },
+  { id: 'tas', name: 'Toshkent shahri', x: 670, y: 160, stars: 4.8, status: 'GREEN', schoolCount: 380, topSchool: '17-maktab' },
+  { id: 'sam', name: 'Samarqand viloyati', x: 500, y: 260, stars: 4.4, status: 'GREEN', schoolCount: 1250, topSchool: '9-maktab' },
+  { id: 'bux', name: 'Buxoro viloyati', x: 380, y: 240, stars: 4.2, status: 'GREEN', schoolCount: 540, topSchool: '24-maktab' },
+  { id: 'fer', name: 'Farg‘ona vodiysi', x: 790, y: 180, stars: 4.1, status: 'GREEN', schoolCount: 1670, topSchool: '11-maktab' },
+  { id: 'nav', name: 'Navoiy viloyati', x: 420, y: 180, stars: 3.6, status: 'YELLOW', schoolCount: 370, topSchool: '11-maktab' },
+  { id: 'xor', name: 'Xorazm viloyati', x: 230, y: 160, stars: 3.9, status: 'YELLOW', schoolCount: 530, topSchool: '1-maktab' },
+  { id: 'qor', name: 'Qoraqalpog‘iston', x: 130, y: 110, stars: 3.4, status: 'YELLOW', schoolCount: 720, topSchool: '3-maktab' },
+  { id: 'qash', name: 'Qashqadaryo / Surxondaryo', x: 490, y: 340, stars: 3.1, status: 'YELLOW', schoolCount: 1980, topSchool: '7-maktab' },
 ];
 
 export function UzbekistanSafetyMapVisual() {
@@ -44,13 +44,13 @@ export function UzbekistanSafetyMapVisual() {
           </div>
           <div className="flex items-center gap-3 text-[11px] text-slate-400">
             <span className="flex items-center gap-1">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" /> Yashil: &ge;80
+              <span className="h-2 w-2 rounded-full bg-emerald-500" /> 4-5★ Xavfsiz
             </span>
             <span className="flex items-center gap-1">
-              <span className="h-2 w-2 rounded-full bg-amber-500" /> Sariq: 50-79
+              <span className="h-2 w-2 rounded-full bg-amber-500" /> 3★ O‘rta
             </span>
             <span className="flex items-center gap-1">
-              <span className="h-2 w-2 rounded-full bg-rose-500" /> Qizil: &lt;50
+              <span className="h-2 w-2 rounded-full bg-rose-500" /> 1-2★ Xavfli
             </span>
           </div>
         </div>
@@ -156,9 +156,9 @@ export function UzbekistanSafetyMapVisual() {
               <div className="text-[10px] text-slate-400">O‘rtacha ko‘rsatkich:</div>
               <div className={cn(
                 'text-sm font-extrabold font-mono',
-                activeNode.score >= 80 ? 'text-emerald-400' : activeNode.score >= 50 ? 'text-amber-400' : 'text-rose-400'
+                activeNode.stars >= 4.0 ? 'text-emerald-400' : activeNode.stars >= 3.0 ? 'text-amber-400' : 'text-rose-400'
               )}>
-                {activeNode.score} ball / 100
+                {activeNode.stars.toFixed(1)} ★ (5 yulduzli)
               </div>
             </div>
             <div className="h-8 w-px bg-slate-800 hidden sm:block" />

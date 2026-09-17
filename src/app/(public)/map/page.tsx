@@ -18,6 +18,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useAuth } from '@/hooks/useAuth';
 
 // Dynamically load Leaflet Map without SSR
 const RealLeafletMap = dynamic(
@@ -34,6 +35,7 @@ const RealLeafletMap = dynamic(
 );
 
 export default function PublicMapPage() {
+  const { user } = useAuth();
   const [schools, setSchools] = useState<School[]>([]);
   const [regions, setRegions] = useState<Region[]>([]);
   const [districts, setDistricts] = useState<District[]>([]);
@@ -373,10 +375,14 @@ export default function PublicMapPage() {
                         ? 'text-emerald-400 bg-emerald-950/60 border-emerald-800'
                         : selectedSchool.currentScore >= 50
                         ? 'text-amber-400 bg-amber-950/60 border-amber-800'
-                        : 'text-rose-400 bg-rose-950/60 border-rose-800'
+                        : selectedSchool.currentScore > 0
+                        ? 'text-rose-400 bg-rose-950/60 border-rose-800'
+                        : 'text-slate-400 bg-slate-800/60 border-slate-700'
                     }`}
                   >
-                    {selectedSchool.currentScore || 0} / 100 ball
+                    {selectedSchool.currentScore > 0
+                      ? `${((selectedSchool.currentScore / 100) * 4 + 1).toFixed(1)} ★ (5 yulduzli)`
+                      : 'Baholanmagan'}
                   </span>
                 </div>
               </div>
@@ -391,15 +397,27 @@ export default function PublicMapPage() {
                 </span>
               </div>
 
-              <Link href="/login" className="block pt-1">
-                <Button
-                  size="sm"
-                  className="w-full bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs rounded-xl h-9 gap-1.5 shadow-xs"
-                >
-                  <span>Maktab Portaliga Kirish</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Button>
-              </Link>
+              {user ? (
+                <Link href={user.role === 'ADMIN' ? '/admin' : '/school'} className="block pt-1">
+                  <Button
+                    size="sm"
+                    className="w-full bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs rounded-xl h-9 gap-1.5 shadow-xs"
+                  >
+                    <span>{user.role === 'ADMIN' ? 'Admin Panelga O‘tish' : 'Baholashni Boshlash'}</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Button>
+                </Link>
+              ) : (
+                <Link href="/login" className="block pt-1">
+                  <Button
+                    size="sm"
+                    className="w-full bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs rounded-xl h-9 gap-1.5 shadow-xs"
+                  >
+                    <span>Maktab Portaliga Kirish</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Button>
+                </Link>
+              )}
             </div>
           )}
         </main>
