@@ -26,7 +26,7 @@ export function PublicFooter() {
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <Phone className="w-3.5 h-3.5 text-teal-400" />
-                +998 (71) 123-45-67
+                {APP_CONFIG.supportPhone}
               </span>
             </div>
           </div>

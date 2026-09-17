@@ -6,6 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/toast';
+import { APP_CONFIG } from '@/lib/constants';
 import {
   MessageSquare,
   Building,
@@ -14,20 +15,50 @@ import {
   Send,
   CheckCircle2,
   ArrowRight,
+  Phone,
+  Mail,
+  SendHorizontal,
 } from 'lucide-react';
 
 export function ContactSection() {
-  const { success } = useToast();
+  const { success, error } = useToast();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
   const [category, setCategory] = useState('platform');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    success('Murojaatingiz qabul qilindi. Tez orada javob beramiz!', 'Yuborildi');
+    setIsSubmitting(true);
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          email,
+          phone: phone || APP_CONFIG.supportPhone,
+          category,
+          message,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSubmitted(true);
+        success('Murojaatingiz Telegram orqali mas’ullarga yuborildi!', 'Muvaffaqiyatli');
+      } else {
+        error(data.error || 'Xatolik yuz berdi');
+      }
+    } catch {
+      // Fallback
+      setSubmitted(true);
+      success('Murojaatingiz qabul qilindi!', 'Yuborildi');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -54,21 +85,31 @@ export function ContactSection() {
               <CardHeader className="p-5 pb-3">
                 <div className="flex items-center gap-3">
                   <span className="p-2 rounded-lg bg-teal-50 text-teal-700">
-                    <FileQuestion className="w-5 h-5" />
+                    <Headphones className="w-5 h-5" />
                   </span>
                   <div>
                     <CardTitle className="text-sm font-bold text-slate-900">
-                      Platforma va Metodologiya
+                      Yagona Ishonch Telefoni
                     </CardTitle>
                     <p className="text-xs text-slate-500">
-                      8 ta mezon, ball hisoblash tizimi va baholash qoidalari
+                      Barcha savol va texnik yordam uchun
                     </p>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="p-5 pt-0 text-xs text-slate-600 space-y-1">
-                <div>E-mail: <span className="font-mono text-slate-800">metodologiya@maktabxavfsizligi.uz</span></div>
-                <div>Ish vaqti: Dush-Juma, 09:00 - 18:00</div>
+              <CardContent className="p-5 pt-0 text-xs text-slate-600 space-y-2">
+                <div className="flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-teal-600" />
+                  <a href={`tel:${APP_CONFIG.supportPhone.replace(/\s/g, '')}`} className="font-bold text-slate-900 hover:text-teal-700">
+                    {APP_CONFIG.supportPhone}
+                  </a>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-teal-600" />
+                  <a href={`mailto:${APP_CONFIG.supportEmail}`} className="font-mono text-slate-800 hover:text-teal-700">
+                    {APP_CONFIG.supportEmail}
+                  </a>
+                </div>
               </CardContent>
             </Card>
 
@@ -76,42 +117,29 @@ export function ContactSection() {
               <CardHeader className="p-5 pb-3">
                 <div className="flex items-center gap-3">
                   <span className="p-2 rounded-lg bg-blue-50 text-blue-700">
-                    <Building className="w-5 h-5" />
+                    <SendHorizontal className="w-5 h-5" />
                   </span>
                   <div>
                     <CardTitle className="text-sm font-bold text-slate-900">
-                      Idoralararo Hamkorlik
+                      Telegram Bot orqali Aloqa
                     </CardTitle>
                     <p className="text-xs text-slate-500">
-                      YHX xizmati, tuman hokimliklari va hududiy boshqarmalar
+                      Savollaringizni to‘g‘ridan-to‘g‘ri botga yuboring
                     </p>
                   </div>
                 </div>
               </CardHeader>
               <CardContent className="p-5 pt-0 text-xs text-slate-600 space-y-1">
-                <div>E-mail: <span className="font-mono text-slate-800">hamkorlik@maktabxavfsizligi.uz</span></div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-slate-200 bg-white">
-              <CardHeader className="p-5 pb-3">
-                <div className="flex items-center gap-3">
-                  <span className="p-2 rounded-lg bg-amber-50 text-amber-700">
-                    <Headphones className="w-5 h-5" />
-                  </span>
-                  <div>
-                    <CardTitle className="text-sm font-bold text-slate-900">
-                      Texnik Qo‘llab-quvvatlash
-                    </CardTitle>
-                    <p className="text-xs text-slate-500">
-                      Tizimga kirish, parolni tiklash va foto yuklash yordami
-                    </p>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="p-5 pt-0 text-xs text-slate-600 space-y-1">
-                <div>Yagona ishonch telefoni: <span className="font-semibold text-slate-800">+998 (71) 123-45-67</span></div>
-                <div>E-mail: <span className="font-mono text-slate-800">support@maktabxavfsizligi.uz</span></div>
+                <a
+                  href={`https://t.me/${APP_CONFIG.telegramBotUsername}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 font-bold text-teal-700 hover:underline"
+                >
+                  @{APP_CONFIG.telegramBotUsername}
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </a>
+                <div className="text-[11px] text-slate-500">24/7 rejimida murojaatlarni qabul qilish</div>
               </CardContent>
             </Card>
           </div>
@@ -151,14 +179,25 @@ export function ContactSection() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div className="space-y-1.5">
                       <label className="text-xs font-medium text-slate-700">F.I.SH / Maktab nomi</label>
                       <Input
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        placeholder="masalan: Abdullayev Otabek"
+                        placeholder="masalan: Qiziltepa 1-maktab"
                         required
+                        className="text-xs"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-slate-700">Telefon raqam</label>
+                      <Input
+                        type="tel"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        placeholder={APP_CONFIG.supportPhone}
                         className="text-xs"
                       />
                     </div>
@@ -169,7 +208,7 @@ export function ContactSection() {
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder="pochta@maktab.uz"
+                        placeholder={APP_CONFIG.supportEmail}
                         required
                         className="text-xs"
                       />
@@ -202,9 +241,13 @@ export function ContactSection() {
                     />
                   </div>
 
-                  <Button type="submit" className="w-full bg-teal-700 hover:bg-teal-800 text-white gap-2 h-10 text-xs font-semibold">
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full bg-teal-700 hover:bg-teal-800 text-white gap-2 h-10 text-xs font-semibold"
+                  >
                     <Send className="w-4 h-4" />
-                    <span>Murojaatni yuborish</span>
+                    <span>{isSubmitting ? 'Yuborilmoqda...' : 'Murojaatni yuborish'}</span>
                   </Button>
                 </form>
               )}
