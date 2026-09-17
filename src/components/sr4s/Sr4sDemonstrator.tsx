@@ -40,8 +40,8 @@ export interface AttributeOption {
   id: string;
   label: string;
   subLabel?: string;
-  icon?: any;
   scoreWeight: number; // 1-5 impact rating
+  renderIcon?: () => React.ReactNode;
 }
 
 export interface AttributeDefinition {
@@ -52,7 +52,63 @@ export interface AttributeDefinition {
   options: AttributeOption[];
 }
 
-// ALL 40 OFFICIAL SR4S ATTRIBUTES MATCHING DEMONSTRATOR (5 ROWS x 8 COLS)
+// Rich Custom Graphical SVG Badges matching SR4S Visual Style
+function SpeedSignIcon({ limit }: { limit: string }) {
+  return (
+    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white border-2 border-rose-600 font-extrabold text-slate-950 font-mono text-xs shadow-md">
+      {limit}
+    </div>
+  );
+}
+
+function SchoolSignIcon() {
+  return (
+    <div className="w-9 h-8 bg-amber-400 border-2 border-slate-950 flex items-center justify-center clip-triangle text-slate-950 font-black text-[9px] shadow-md">
+      <SchoolIcon className="w-5 h-5 text-slate-950" />
+    </div>
+  );
+}
+
+function ZebraCrossingIcon() {
+  return (
+    <div className="w-10 h-10 bg-slate-800 rounded-lg p-1.5 flex flex-col justify-between border border-slate-700 shadow-md">
+      <div className="h-1.5 w-full bg-white rounded-xs" />
+      <div className="h-1.5 w-full bg-white rounded-xs" />
+      <div className="h-1.5 w-full bg-white rounded-xs" />
+    </div>
+  );
+}
+
+function DividedRoadIcon() {
+  return (
+    <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-between px-1.5 border border-slate-700 shadow-md">
+      <div className="w-2.5 h-full bg-slate-700 border-r border-dashed border-slate-400" />
+      <div className="w-1.5 h-full bg-emerald-500 shadow-sm" />
+      <div className="w-2.5 h-full bg-slate-700 border-l border-dashed border-slate-400" />
+    </div>
+  );
+}
+
+function SidewalkIcon() {
+  return (
+    <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-between p-1 border border-slate-700 shadow-md">
+      <div className="w-3 h-full bg-emerald-600 rounded-xs flex items-center justify-center">
+        <Footprints className="w-3 h-3 text-white" />
+      </div>
+      <div className="w-5 h-full bg-slate-700 border-l border-white/40" />
+    </div>
+  );
+}
+
+function SpeedBumpIcon() {
+  return (
+    <div className="w-10 h-10 bg-slate-800 rounded-lg flex flex-col items-center justify-center p-1 border border-slate-700 shadow-md">
+      <div className="w-full h-3 bg-amber-500 rounded-full border border-amber-300 shadow-sm" />
+    </div>
+  );
+}
+
+// ALL 40 OFFICIAL SR4S ATTRIBUTES WITH RICH VISUAL ICONS
 const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
   // ROW 1 (1-8)
   {
@@ -61,12 +117,12 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Muhit',
     currentValueId: 'residential',
     options: [
-      { id: 'undeveloped', label: 'Bo‘sh hudud', icon: Trees, scoreWeight: 5 },
-      { id: 'residential', label: 'Aholi punkti', icon: Home, scoreWeight: 4 },
-      { id: 'commercial', label: 'Tijorat / Bozor', icon: Store, scoreWeight: 3 },
-      { id: 'industrial', label: 'Sanoat korxonasi', icon: Factory, scoreWeight: 2 },
-      { id: 'farming', label: 'Qishloq xo‘jaligi', icon: Tractor, scoreWeight: 4 },
-      { id: 'school', label: 'Maktab hududi', icon: SchoolIcon, scoreWeight: 5 },
+      { id: 'undeveloped', label: 'Bo‘sh hudud', scoreWeight: 5, renderIcon: () => <Trees className="w-6 h-6 text-emerald-400" /> },
+      { id: 'residential', label: 'Aholi punkti', scoreWeight: 4, renderIcon: () => <Home className="w-6 h-6 text-teal-400" /> },
+      { id: 'commercial', label: 'Tijorat / Bozor', scoreWeight: 3, renderIcon: () => <Store className="w-6 h-6 text-amber-400" /> },
+      { id: 'industrial', label: 'Sanoat korxonasi', scoreWeight: 2, renderIcon: () => <Factory className="w-6 h-6 text-slate-400" /> },
+      { id: 'farming', label: 'Qishloq xo‘jaligi', scoreWeight: 4, renderIcon: () => <Tractor className="w-6 h-6 text-lime-400" /> },
+      { id: 'school', label: 'Maktab hududi', scoreWeight: 5, renderIcon: () => <SchoolIcon className="w-6 h-6 text-teal-300" /> },
     ],
   },
   {
@@ -75,12 +131,12 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Muhit',
     currentValueId: 'residential',
     options: [
-      { id: 'undeveloped', label: 'Bo‘sh hudud', icon: Trees, scoreWeight: 5 },
-      { id: 'residential', label: 'Aholi punkti', icon: Home, scoreWeight: 4 },
-      { id: 'commercial', label: 'Tijorat / Bozor', icon: Store, scoreWeight: 3 },
-      { id: 'industrial', label: 'Sanoat korxonasi', icon: Factory, scoreWeight: 2 },
-      { id: 'farming', label: 'Qishloq xo‘jaligi', icon: Tractor, scoreWeight: 4 },
-      { id: 'school', label: 'Maktab hududi', icon: SchoolIcon, scoreWeight: 5 },
+      { id: 'undeveloped', label: 'Bo‘sh hudud', scoreWeight: 5, renderIcon: () => <Trees className="w-6 h-6 text-emerald-400" /> },
+      { id: 'residential', label: 'Aholi punkti', scoreWeight: 4, renderIcon: () => <Home className="w-6 h-6 text-teal-400" /> },
+      { id: 'commercial', label: 'Tijorat / Bozor', scoreWeight: 3, renderIcon: () => <Store className="w-6 h-6 text-amber-400" /> },
+      { id: 'industrial', label: 'Sanoat korxonasi', scoreWeight: 2, renderIcon: () => <Factory className="w-6 h-6 text-slate-400" /> },
+      { id: 'farming', label: 'Qishloq xo‘jaligi', scoreWeight: 4, renderIcon: () => <Tractor className="w-6 h-6 text-lime-400" /> },
+      { id: 'school', label: 'Maktab hududi', scoreWeight: 5, renderIcon: () => <SchoolIcon className="w-6 h-6 text-teal-300" /> },
     ],
   },
   {
@@ -89,8 +145,8 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Muhit',
     currentValueId: 'urban',
     options: [
-      { id: 'urban', label: 'Shahar markazi', icon: Building2, scoreWeight: 4 },
-      { id: 'rural', label: 'Qishloq / Ochiq', icon: Trees, scoreWeight: 3 },
+      { id: 'urban', label: 'Shahar markazi', scoreWeight: 4, renderIcon: () => <Building2 className="w-6 h-6 text-teal-400" /> },
+      { id: 'rural', label: 'Qishloq / Ochiq', scoreWeight: 3, renderIcon: () => <Trees className="w-6 h-6 text-emerald-400" /> },
     ],
   },
   {
@@ -99,9 +155,9 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Muhit',
     currentValueId: 'none',
     options: [
-      { id: 'none', label: 'Yo‘q (Parking yo‘q)', icon: Car, scoreWeight: 5 },
-      { id: 'one_side', label: 'Bir tomonda bor', icon: Car, scoreWeight: 3 },
-      { id: 'two_sides', label: 'Ikki tomonda bor', icon: Car, scoreWeight: 1 },
+      { id: 'none', label: 'Yo‘q (Parking yo‘q)', scoreWeight: 5, renderIcon: () => <XCircle className="w-6 h-6 text-emerald-400" /> },
+      { id: 'one_side', label: 'Bir tomonda bor', scoreWeight: 3, renderIcon: () => <Car className="w-6 h-6 text-amber-400" /> },
+      { id: 'two_sides', label: 'Ikki tomonda bor', scoreWeight: 1, renderIcon: () => <Car className="w-6 h-6 text-rose-400" /> },
     ],
   },
   {
@@ -110,8 +166,8 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Muhit',
     currentValueId: 'adequate',
     options: [
-      { id: 'adequate', label: 'Yetarli (Yaxshi)', icon: Eye, scoreWeight: 5 },
-      { id: 'poor', label: 'Yomon (Cheklangan)', icon: AlertTriangle, scoreWeight: 1 },
+      { id: 'adequate', label: 'Yetarli (Yaxshi)', scoreWeight: 5, renderIcon: () => <Eye className="w-6 h-6 text-emerald-400" /> },
+      { id: 'poor', label: 'Yomon (Cheklangan)', scoreWeight: 1, renderIcon: () => <AlertTriangle className="w-6 h-6 text-rose-400" /> },
     ],
   },
   {
@@ -120,9 +176,9 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Yo‘l',
     currentValueId: 'lanes_1_1',
     options: [
-      { id: 'lanes_1_1', label: '1 x 1 (Ikkita bo‘lak)', icon: Navigation, scoreWeight: 5 },
-      { id: 'lanes_2_2', label: '2 x 2 (To‘rtta bo‘lak)', icon: Navigation, scoreWeight: 3 },
-      { id: 'lanes_3_3', label: '3 x 3 va undan ko‘p', icon: Navigation, scoreWeight: 1 },
+      { id: 'lanes_1_1', label: '1 x 1 (Ikkita bo‘lak)', scoreWeight: 5, renderIcon: () => <Navigation className="w-6 h-6 text-teal-400" /> },
+      { id: 'lanes_2_2', label: '2 x 2 (To‘rtta bo‘lak)', scoreWeight: 3, renderIcon: () => <Navigation className="w-6 h-6 text-amber-400" /> },
+      { id: 'lanes_3_3', label: '3 x 3 va undan ko‘p', scoreWeight: 1, renderIcon: () => <Navigation className="w-6 h-6 text-rose-400" /> },
     ],
   },
   {
@@ -131,9 +187,9 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Yo‘l',
     currentValueId: 'wide',
     options: [
-      { id: 'wide', label: 'Keng (>3.25m)', icon: Maximize2, scoreWeight: 5 },
-      { id: 'medium', label: 'O‘rtacha (2.75m-3.25m)', icon: Maximize2, scoreWeight: 4 },
-      { id: 'narrow', label: 'Tor (<2.75m)', icon: Maximize2, scoreWeight: 2 },
+      { id: 'wide', label: 'Keng (>3.25m)', scoreWeight: 5, renderIcon: () => <Maximize2 className="w-6 h-6 text-teal-400" /> },
+      { id: 'medium', label: 'O‘rtacha (2.75m-3.25m)', scoreWeight: 4, renderIcon: () => <Maximize2 className="w-6 h-6 text-amber-400" /> },
+      { id: 'narrow', label: 'Tor (<2.75m)', scoreWeight: 2, renderIcon: () => <Maximize2 className="w-6 h-6 text-rose-400" /> },
     ],
   },
   {
@@ -142,8 +198,8 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Yo‘l',
     currentValueId: 'not_present',
     options: [
-      { id: 'present', label: 'Bor (Shovqinli tasmalar)', icon: Activity, scoreWeight: 5 },
-      { id: 'not_present', label: 'Yo‘q', icon: XCircle, scoreWeight: 2 },
+      { id: 'present', label: 'Bor (Shovqinli tasmalar)', scoreWeight: 5, renderIcon: () => <Activity className="w-6 h-6 text-emerald-400" /> },
+      { id: 'not_present', label: 'Yo‘q', scoreWeight: 2, renderIcon: () => <XCircle className="w-6 h-6 text-slate-400" /> },
     ],
   },
 
@@ -154,9 +210,9 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Yo‘l',
     currentValueId: 'good',
     options: [
-      { id: 'good', label: 'Yaxshi (Silliq)', icon: CheckCircle2, scoreWeight: 5 },
-      { id: 'medium', label: 'O‘rtacha (Ta’mirtalab)', icon: AlertTriangle, scoreWeight: 3 },
-      { id: 'poor', label: 'Yomon (Chuqurchalar bor)', icon: XCircle, scoreWeight: 1 },
+      { id: 'good', label: 'Yaxshi (Silliq)', scoreWeight: 5, renderIcon: () => <CheckCircle2 className="w-6 h-6 text-emerald-400" /> },
+      { id: 'medium', label: 'O‘rtacha (Ta’mirtalab)', scoreWeight: 3, renderIcon: () => <AlertTriangle className="w-6 h-6 text-amber-400" /> },
+      { id: 'poor', label: 'Yomon (Chuqurchalar bor)', scoreWeight: 1, renderIcon: () => <XCircle className="w-6 h-6 text-rose-400" /> },
     ],
   },
   {
@@ -165,9 +221,9 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Yo‘l',
     currentValueId: 'good',
     options: [
-      { id: 'good', label: 'Yaxshi (A’lo ilashuv)', icon: CheckCircle2, scoreWeight: 5 },
-      { id: 'medium', label: 'O‘rtacha ilashuv', icon: AlertTriangle, scoreWeight: 3 },
-      { id: 'poor', label: 'Yomon (Silliq / Shag‘al)', icon: XCircle, scoreWeight: 1 },
+      { id: 'good', label: 'Yaxshi (A’lo ilashuv)', scoreWeight: 5, renderIcon: () => <CheckCircle2 className="w-6 h-6 text-emerald-400" /> },
+      { id: 'medium', label: 'O‘rtacha ilashuv', scoreWeight: 3, renderIcon: () => <AlertTriangle className="w-6 h-6 text-amber-400" /> },
+      { id: 'poor', label: 'Yomon (Silliq / Shag‘al)', scoreWeight: 1, renderIcon: () => <XCircle className="w-6 h-6 text-rose-400" /> },
     ],
   },
   {
@@ -176,8 +232,8 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Yo‘l',
     currentValueId: 'flat',
     options: [
-      { id: 'flat', label: 'Tekis yo‘l (<7.5%)', icon: ArrowUpDown, scoreWeight: 5 },
-      { id: 'slope', label: 'Nishablik yo‘l (≥7.5%)', icon: ArrowUpDown, scoreWeight: 2 },
+      { id: 'flat', label: 'Tekis yo‘l (<7.5%)', scoreWeight: 5, renderIcon: () => <ArrowUpDown className="w-6 h-6 text-teal-400" /> },
+      { id: 'slope', label: 'Nishablik yo‘l (≥7.5%)', scoreWeight: 2, renderIcon: () => <ArrowUpDown className="w-6 h-6 text-amber-400" /> },
     ],
   },
   {
@@ -186,8 +242,8 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Yo‘l',
     currentValueId: 'undivided',
     options: [
-      { id: 'divided', label: 'Ajratilgan qatnov qismi', icon: Split, scoreWeight: 5 },
-      { id: 'undivided', label: 'Ajratilmagan qatnov qismi', icon: Split, scoreWeight: 2 },
+      { id: 'divided', label: 'Ajratilgan qatnov qismi', scoreWeight: 5, renderIcon: DividedRoadIcon },
+      { id: 'undivided', label: 'Ajratilmagan qatnov qismi', scoreWeight: 2, renderIcon: () => <Split className="w-6 h-6 text-slate-400" /> },
     ],
   },
   {
@@ -196,11 +252,11 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Yo‘l',
     currentValueId: 'centreline',
     options: [
-      { id: 'barrier_metal', label: 'Metall to‘siq', icon: ShieldAlert, scoreWeight: 5 },
-      { id: 'barrier_concrete', label: 'Beton to‘siq', icon: ShieldAlert, scoreWeight: 5 },
-      { id: 'median_separated', label: 'Keng ajratuvchi maysazor', icon: Trees, scoreWeight: 4 },
-      { id: 'double_centreline', label: 'Qo‘sh o‘q chiziq', icon: Split, scoreWeight: 3 },
-      { id: 'centreline', label: 'Bitta o‘q chiziq', icon: Split, scoreWeight: 2 },
+      { id: 'barrier_metal', label: 'Metall to‘siq', scoreWeight: 5, renderIcon: () => <ShieldAlert className="w-6 h-6 text-teal-400" /> },
+      { id: 'barrier_concrete', label: 'Beton to‘siq', scoreWeight: 5, renderIcon: () => <ShieldAlert className="w-6 h-6 text-slate-300" /> },
+      { id: 'median_separated', label: 'Keng ajratuvchi maysazor', scoreWeight: 4, renderIcon: () => <Trees className="w-6 h-6 text-emerald-400" /> },
+      { id: 'double_centreline', label: 'Qo‘sh o‘q chiziq', scoreWeight: 3, renderIcon: () => <Split className="w-6 h-6 text-amber-400" /> },
+      { id: 'centreline', label: 'Bitta o‘q chiziq', scoreWeight: 2, renderIcon: () => <Split className="w-6 h-6 text-slate-400" /> },
     ],
   },
   {
@@ -209,8 +265,8 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Belgilar',
     currentValueId: 'adequate',
     options: [
-      { id: 'adequate', label: 'Qoniqarli (Aniq ko‘rinadi)', icon: CheckCircle2, scoreWeight: 5 },
-      { id: 'poor', label: 'Qoniqarsiz (Eskirgan/Yo‘q)', icon: XCircle, scoreWeight: 1 },
+      { id: 'adequate', label: 'Qoniqarli (Aniq ko‘rinadi)', scoreWeight: 5, renderIcon: () => <CheckCircle2 className="w-6 h-6 text-emerald-400" /> },
+      { id: 'poor', label: 'Qoniqarsiz (Eskirgan/Yo‘q)', scoreWeight: 1, renderIcon: () => <XCircle className="w-6 h-6 text-rose-400" /> },
     ],
   },
   {
@@ -219,8 +275,8 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Belgilar',
     currentValueId: 'present',
     options: [
-      { id: 'present', label: 'Bor (Yoritilgan)', icon: Sun, scoreWeight: 5 },
-      { id: 'not_present', label: 'Yo‘q (Yoritilmagan)', icon: XCircle, scoreWeight: 1 },
+      { id: 'present', label: 'Bor (Yoritilgan)', scoreWeight: 5, renderIcon: () => <Sun className="w-6 h-6 text-amber-400" /> },
+      { id: 'not_present', label: 'Yo‘q (Yoritilmagan)', scoreWeight: 1, renderIcon: () => <XCircle className="w-6 h-6 text-slate-400" /> },
     ],
   },
   {
@@ -229,9 +285,9 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Maktab',
     currentValueId: 'flashing_beacon',
     options: [
-      { id: 'flashing_beacon', label: 'Miltillovchi T.7 svetofori va belgilari bor', icon: ShieldAlert, scoreWeight: 5 },
-      { id: 'signs_only', label: 'Ogohlantirish belgilari bor', icon: ShieldAlert, scoreWeight: 3 },
-      { id: 'none', label: 'Ogohlantirish belgilari yo‘q', icon: XCircle, scoreWeight: 1 },
+      { id: 'flashing_beacon', label: 'Miltillovchi T.7 svetofori va belgilari bor', scoreWeight: 5, renderIcon: SchoolSignIcon },
+      { id: 'signs_only', label: 'Ogohlantirish belgilari bor', scoreWeight: 3, renderIcon: () => <ShieldAlert className="w-6 h-6 text-amber-400" /> },
+      { id: 'none', label: 'Ogohlantirish belgilari yo‘q', scoreWeight: 1, renderIcon: () => <XCircle className="w-6 h-6 text-rose-400" /> },
     ],
   },
 
@@ -242,8 +298,8 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Maktab',
     currentValueId: 'present',
     options: [
-      { id: 'present', label: 'Bor (Dars vaqtlarida navbatchilik bor)', icon: Users, scoreWeight: 5 },
-      { id: 'not_present', label: 'Yo‘q', icon: XCircle, scoreWeight: 1 },
+      { id: 'present', label: 'Bor (Dars vaqtlarida navbatchilik bor)', scoreWeight: 5, renderIcon: () => <Users className="w-6 h-6 text-teal-400" /> },
+      { id: 'not_present', label: 'Yo‘q', scoreWeight: 1, renderIcon: () => <XCircle className="w-6 h-6 text-slate-400" /> },
     ],
   },
   {
@@ -252,10 +308,10 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Piyoda',
     currentValueId: 'behind_barrier',
     options: [
-      { id: 'behind_barrier', label: 'Panjara/To‘siq ortida', icon: Footprints, scoreWeight: 5 },
-      { id: 'separated', label: 'Qatnov qismidan ajratilgan (≥1m)', icon: Footprints, scoreWeight: 4 },
-      { id: 'adjacent', label: 'Qatnov qismiga yondosh (<1m)', icon: Footprints, scoreWeight: 2 },
-      { id: 'none', label: 'Piyodalar yo‘lagi yo‘q', icon: XCircle, scoreWeight: 0 },
+      { id: 'behind_barrier', label: 'Panjara/To‘siq ortida', scoreWeight: 5, renderIcon: SidewalkIcon },
+      { id: 'separated', label: 'Qatnov qismidan ajratilgan (≥1m)', scoreWeight: 4, renderIcon: () => <Footprints className="w-6 h-6 text-emerald-400" /> },
+      { id: 'adjacent', label: 'Qatnov qismiga yondosh (<1m)', scoreWeight: 2, renderIcon: () => <Footprints className="w-6 h-6 text-amber-400" /> },
+      { id: 'none', label: 'Piyodalar yo‘lagi yo‘q', scoreWeight: 0, renderIcon: () => <XCircle className="w-6 h-6 text-rose-400" /> },
     ],
   },
   {
@@ -264,10 +320,10 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Piyoda',
     currentValueId: 'behind_barrier',
     options: [
-      { id: 'behind_barrier', label: 'Panjara/To‘siq ortida', icon: Footprints, scoreWeight: 5 },
-      { id: 'separated', label: 'Qatnov qismidan ajratilgan (≥1m)', icon: Footprints, scoreWeight: 4 },
-      { id: 'adjacent', label: 'Qatnov qismiga yondosh (<1m)', icon: Footprints, scoreWeight: 2 },
-      { id: 'none', label: 'Piyodalar yo‘lagi yo‘q', icon: XCircle, scoreWeight: 0 },
+      { id: 'behind_barrier', label: 'Panjara/To‘siq ortida', scoreWeight: 5, renderIcon: SidewalkIcon },
+      { id: 'separated', label: 'Qatnov qismidan ajratilgan (≥1m)', scoreWeight: 4, renderIcon: () => <Footprints className="w-6 h-6 text-emerald-400" /> },
+      { id: 'adjacent', label: 'Qatnov qismiga yondosh (<1m)', scoreWeight: 2, renderIcon: () => <Footprints className="w-6 h-6 text-amber-400" /> },
+      { id: 'none', label: 'Piyodalar yo‘lagi yo‘q', scoreWeight: 0, renderIcon: () => <XCircle className="w-6 h-6 text-rose-400" /> },
     ],
   },
   {
@@ -276,9 +332,9 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Piyoda',
     currentValueId: 'wide',
     options: [
-      { id: 'wide', label: 'Keng chetki tasma (≥2.4m)', icon: Maximize2, scoreWeight: 5 },
-      { id: 'narrow', label: 'Tor chetki tasma (0.75m-1m)', icon: Maximize2, scoreWeight: 3 },
-      { id: 'none', label: 'Chetki tasma yo‘q', icon: XCircle, scoreWeight: 1 },
+      { id: 'wide', label: 'Keng chetki tasma (≥2.4m)', scoreWeight: 5, renderIcon: () => <Maximize2 className="w-6 h-6 text-teal-400" /> },
+      { id: 'narrow', label: 'Tor chetki tasma (0.75m-1m)', scoreWeight: 3, renderIcon: () => <Maximize2 className="w-6 h-6 text-amber-400" /> },
+      { id: 'none', label: 'Chetki tasma yo‘q', scoreWeight: 1, renderIcon: () => <XCircle className="w-6 h-6 text-rose-400" /> },
     ],
   },
   {
@@ -287,9 +343,9 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Piyoda',
     currentValueId: 'wide',
     options: [
-      { id: 'wide', label: 'Keng chetki tasma (≥2.4m)', icon: Maximize2, scoreWeight: 5 },
-      { id: 'narrow', label: 'Tor chetki tasma (0.75m-1m)', icon: Maximize2, scoreWeight: 3 },
-      { id: 'none', label: 'Chetki tasma yo‘q', icon: XCircle, scoreWeight: 1 },
+      { id: 'wide', label: 'Keng chetki tasma (≥2.4m)', scoreWeight: 5, renderIcon: () => <Maximize2 className="w-6 h-6 text-teal-400" /> },
+      { id: 'narrow', label: 'Tor chetki tasma (0.75m-1m)', scoreWeight: 3, renderIcon: () => <Maximize2 className="w-6 h-6 text-amber-400" /> },
+      { id: 'none', label: 'Chetki tasma yo‘q', scoreWeight: 1, renderIcon: () => <XCircle className="w-6 h-6 text-rose-400" /> },
     ],
   },
   {
@@ -298,8 +354,8 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Piyoda',
     currentValueId: 'present',
     options: [
-      { id: 'present', label: 'Bor (Muhofaza panjaralari mavjud)', icon: ShieldAlert, scoreWeight: 5 },
-      { id: 'not_present', label: 'Yo‘q', icon: XCircle, scoreWeight: 1 },
+      { id: 'present', label: 'Bor (Muhofaza panjaralari mavjud)', scoreWeight: 5, renderIcon: () => <ShieldAlert className="w-6 h-6 text-emerald-400" /> },
+      { id: 'not_present', label: 'Yo‘q', scoreWeight: 1, renderIcon: () => <XCircle className="w-6 h-6 text-slate-400" /> },
     ],
   },
   {
@@ -308,8 +364,8 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'O‘tish joyi',
     currentValueId: 'present',
     options: [
-      { id: 'present', label: 'Bor (Piyodalar o‘tish joyi mavjud)', icon: Route, scoreWeight: 5 },
-      { id: 'not_present', label: 'Yo‘q', icon: XCircle, scoreWeight: 0 },
+      { id: 'present', label: 'Bor (Piyodalar o‘tish joyi mavjud)', scoreWeight: 5, renderIcon: ZebraCrossingIcon },
+      { id: 'not_present', label: 'Yo‘q', scoreWeight: 0, renderIcon: () => <XCircle className="w-6 h-6 text-rose-400" /> },
     ],
   },
   {
@@ -318,8 +374,8 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'O‘tish joyi',
     currentValueId: 'present',
     options: [
-      { id: 'present', label: 'Bor', icon: Route, scoreWeight: 5 },
-      { id: 'not_present', label: 'Yo‘q', icon: XCircle, scoreWeight: 1 },
+      { id: 'present', label: 'Bor', scoreWeight: 5, renderIcon: ZebraCrossingIcon },
+      { id: 'not_present', label: 'Yo‘q', scoreWeight: 1, renderIcon: () => <XCircle className="w-6 h-6 text-slate-400" /> },
     ],
   },
 
@@ -330,8 +386,8 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'O‘tish joyi',
     currentValueId: 'adequate',
     options: [
-      { id: 'adequate', label: 'Qoniqarli (A’lo yoritilgan va ko‘rinadi)', icon: CheckCircle2, scoreWeight: 5 },
-      { id: 'poor', label: 'Yomon (Tushnarsiz yoki ta’mirtalab)', icon: XCircle, scoreWeight: 1 },
+      { id: 'adequate', label: 'Qoniqarli (A’lo yoritilgan va ko‘rinadi)', scoreWeight: 5, renderIcon: () => <CheckCircle2 className="w-6 h-6 text-emerald-400" /> },
+      { id: 'poor', label: 'Yomon (Tushnarsiz yoki ta’mirtalab)', scoreWeight: 1, renderIcon: () => <XCircle className="w-6 h-6 text-rose-400" /> },
     ],
   },
   {
@@ -340,10 +396,10 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Oqim',
     currentValueId: 'high',
     options: [
-      { id: 'high', label: '10 000 dan ko‘p (Yuqori oqim)', icon: Car, scoreWeight: 1 },
-      { id: 'med_high', label: '5 000 - 10 000', icon: Car, scoreWeight: 2 },
-      { id: 'medium', label: '1 000 - 5 000', icon: Car, scoreWeight: 4 },
-      { id: 'low', label: '1 000 dan kam (Past oqim)', icon: Car, scoreWeight: 5 },
+      { id: 'high', label: '10 000 dan ko‘p (Yuqori oqim)', scoreWeight: 1, renderIcon: () => <Car className="w-6 h-6 text-rose-400" /> },
+      { id: 'med_high', label: '5 000 - 10 000', scoreWeight: 2, renderIcon: () => <Car className="w-6 h-6 text-amber-400" /> },
+      { id: 'medium', label: '1 000 - 5 000', scoreWeight: 4, renderIcon: () => <Car className="w-6 h-6 text-teal-400" /> },
+      { id: 'low', label: '1 000 dan kam (Past oqim)', scoreWeight: 5, renderIcon: () => <Car className="w-6 h-6 text-emerald-400" /> },
     ],
   },
   {
@@ -352,9 +408,9 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Oqim',
     currentValueId: 'medium',
     options: [
-      { id: 'high', label: 'Yuqori piyodalar oqimi', icon: Users, scoreWeight: 5 },
-      { id: 'medium', label: 'O‘rtacha piyodalar oqimi', icon: Users, scoreWeight: 3 },
-      { id: 'low', label: 'Past oqim', icon: Users, scoreWeight: 2 },
+      { id: 'high', label: 'Yuqori piyodalar oqimi', scoreWeight: 5, renderIcon: () => <Users className="w-6 h-6 text-teal-400" /> },
+      { id: 'medium', label: 'O‘rtacha piyodalar oqimi', scoreWeight: 3, renderIcon: () => <Users className="w-6 h-6 text-amber-400" /> },
+      { id: 'low', label: 'Past oqim', scoreWeight: 2, renderIcon: () => <Users className="w-6 h-6 text-slate-400" /> },
     ],
   },
   {
@@ -363,9 +419,9 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Oqim',
     currentValueId: 'medium',
     options: [
-      { id: 'high', label: 'Yuqori oqim', icon: Users, scoreWeight: 5 },
-      { id: 'medium', label: 'O‘rtacha oqim', icon: Users, scoreWeight: 3 },
-      { id: 'low', label: 'Past oqim', icon: Users, scoreWeight: 2 },
+      { id: 'high', label: 'Yuqori oqim', scoreWeight: 5, renderIcon: () => <Users className="w-6 h-6 text-teal-400" /> },
+      { id: 'medium', label: 'O‘rtacha oqim', scoreWeight: 3, renderIcon: () => <Users className="w-6 h-6 text-amber-400" /> },
+      { id: 'low', label: 'Past oqim', scoreWeight: 2, renderIcon: () => <Users className="w-6 h-6 text-slate-400" /> },
     ],
   },
   {
@@ -374,9 +430,9 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Oqim',
     currentValueId: 'medium',
     options: [
-      { id: 'high', label: 'Yuqori oqim', icon: Users, scoreWeight: 5 },
-      { id: 'medium', label: 'O‘rtacha oqim', icon: Users, scoreWeight: 3 },
-      { id: 'low', label: 'Past oqim', icon: Users, scoreWeight: 2 },
+      { id: 'high', label: 'Yuqori oqim', scoreWeight: 5, renderIcon: () => <Users className="w-6 h-6 text-teal-400" /> },
+      { id: 'medium', label: 'O‘rtacha oqim', scoreWeight: 3, renderIcon: () => <Users className="w-6 h-6 text-amber-400" /> },
+      { id: 'low', label: 'Past oqim', scoreWeight: 2, renderIcon: () => <Users className="w-6 h-6 text-slate-400" /> },
     ],
   },
   {
@@ -385,10 +441,10 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Chorraha',
     currentValueId: 'none',
     options: [
-      { id: 'none', label: 'Chorraha emas (To‘g‘ri yo‘l)', icon: Route, scoreWeight: 5 },
-      { id: 't_junction', label: 'T-simon tutashma (3 ta shaxobcha)', icon: GitFork, scoreWeight: 3 },
-      { id: 'cross_4leg', label: '4 tomonlama chorraha (4+ shaxobcha)', icon: GitFork, scoreWeight: 2 },
-      { id: 'roundabout', label: 'Aylanma chorraha (Koleco)', icon: GitFork, scoreWeight: 4 },
+      { id: 'none', label: 'Chorraha emas (To‘g‘ri yo‘l)', scoreWeight: 5, renderIcon: () => <Route className="w-6 h-6 text-emerald-400" /> },
+      { id: 't_junction', label: 'T-simon tutashma (3 ta shaxobcha)', scoreWeight: 3, renderIcon: () => <GitFork className="w-6 h-6 text-amber-400" /> },
+      { id: 'cross_4leg', label: '4 tomonlama chorraha (4+ shaxobcha)', scoreWeight: 2, renderIcon: () => <GitFork className="w-6 h-6 text-rose-400" /> },
+      { id: 'roundabout', label: 'Aylanma chorraha (Koleco)', scoreWeight: 4, renderIcon: () => <GitFork className="w-6 h-6 text-teal-400" /> },
     ],
   },
   {
@@ -397,10 +453,10 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Chorraha',
     currentValueId: 'none',
     options: [
-      { id: 'none', label: 'Yo‘q (Kirish joyi yo‘q)', icon: CheckCircle2, scoreWeight: 5 },
-      { id: 'one_two', label: '1-2 ta turar joy kirish joyi', icon: Home, scoreWeight: 3 },
-      { id: 'more_two', label: '2 ta dan ko‘p kirish joylari', icon: Home, scoreWeight: 2 },
-      { id: 'commercial', label: 'Tijorat / Zpravka / Bozor kirishi', icon: Store, scoreWeight: 1 },
+      { id: 'none', label: 'Yo‘q (Kirish joyi yo‘q)', scoreWeight: 5, renderIcon: () => <CheckCircle2 className="w-6 h-6 text-emerald-400" /> },
+      { id: 'one_two', label: '1-2 ta turar joy kirish joyi', scoreWeight: 3, renderIcon: () => <Home className="w-6 h-6 text-amber-400" /> },
+      { id: 'more_two', label: '2 ta dan ko‘p kirish joylari', scoreWeight: 2, renderIcon: () => <Home className="w-6 h-6 text-rose-400" /> },
+      { id: 'commercial', label: 'Tijorat / Zpravka / Bozor kirishi', scoreWeight: 1, renderIcon: () => <Store className="w-6 h-6 text-rose-500" /> },
     ],
   },
   {
@@ -409,9 +465,9 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Chorraha',
     currentValueId: 'medium',
     options: [
-      { id: 'low', label: 'Past yon oqim', icon: Car, scoreWeight: 5 },
-      { id: 'medium', label: 'O‘rtacha yon oqim', icon: Car, scoreWeight: 3 },
-      { id: 'high', label: 'Yuqori yon oqim', icon: Car, scoreWeight: 1 },
+      { id: 'low', label: 'Past yon oqim', scoreWeight: 5, renderIcon: () => <Car className="w-6 h-6 text-emerald-400" /> },
+      { id: 'medium', label: 'O‘rtacha yon oqim', scoreWeight: 3, renderIcon: () => <Car className="w-6 h-6 text-amber-400" /> },
+      { id: 'high', label: 'Yuqori yon oqim', scoreWeight: 1, renderIcon: () => <Car className="w-6 h-6 text-rose-400" /> },
     ],
   },
 
@@ -422,8 +478,8 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Chorraha',
     currentValueId: 'adequate',
     options: [
-      { id: 'adequate', label: 'Qoniqarli chorraha sifati', icon: CheckCircle2, scoreWeight: 5 },
-      { id: 'poor', label: 'Yomon (Xavfli va belgisiz)', icon: XCircle, scoreWeight: 1 },
+      { id: 'adequate', label: 'Qoniqarli chorraha sifati', scoreWeight: 5, renderIcon: () => <CheckCircle2 className="w-6 h-6 text-emerald-400" /> },
+      { id: 'poor', label: 'Yomon (Xavfli va belgisiz)', scoreWeight: 1, renderIcon: () => <XCircle className="w-6 h-6 text-rose-400" /> },
     ],
   },
   {
@@ -432,10 +488,10 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Burilish',
     currentValueId: 'straight',
     options: [
-      { id: 'straight', label: 'To‘g‘ri yo‘l (Burilishlarsiz)', icon: Route, scoreWeight: 5 },
-      { id: 'moderate', label: 'O‘rtacha burilish', icon: GitFork, scoreWeight: 3 },
-      { id: 'sharp', label: 'O‘tkir burilish (~45°)', icon: GitFork, scoreWeight: 2 },
-      { id: 'very_sharp', label: 'Juda o‘tkir burilish (45°-90°)', icon: GitFork, scoreWeight: 1 },
+      { id: 'straight', label: 'To‘g‘ri yo‘l (Burilishlarsiz)', scoreWeight: 5, renderIcon: () => <Route className="w-6 h-6 text-emerald-400" /> },
+      { id: 'moderate', label: 'O‘rtacha burilish', scoreWeight: 3, renderIcon: () => <GitFork className="w-6 h-6 text-amber-400" /> },
+      { id: 'sharp', label: 'O‘tkir burilish (~45°)', scoreWeight: 2, renderIcon: () => <GitFork className="w-6 h-6 text-rose-400" /> },
+      { id: 'very_sharp', label: 'Juda o‘tkir burilish (45°-90°)', scoreWeight: 1, renderIcon: () => <GitFork className="w-6 h-6 text-rose-500" /> },
     ],
   },
   {
@@ -444,8 +500,8 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Burilish',
     currentValueId: 'adequate',
     options: [
-      { id: 'adequate', label: 'Qoniqarli burilish sifati', icon: CheckCircle2, scoreWeight: 5 },
-      { id: 'poor', label: 'Yomon (Belgilar va ko‘rinish yo‘q)', icon: XCircle, scoreWeight: 1 },
+      { id: 'adequate', label: 'Qoniqarli burilish sifati', scoreWeight: 5, renderIcon: () => <CheckCircle2 className="w-6 h-6 text-emerald-400" /> },
+      { id: 'poor', label: 'Yomon (Belgilar va ko‘rinish yo‘q)', scoreWeight: 1, renderIcon: () => <XCircle className="w-6 h-6 text-rose-400" /> },
     ],
   },
   {
@@ -454,10 +510,10 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Tezlik',
     currentValueId: 'speed_40',
     options: [
-      { id: 'speed_30', label: '30 km/soat yoki undan past', icon: Zap, scoreWeight: 5 },
-      { id: 'speed_40', label: '40 km/soat', icon: Zap, scoreWeight: 4 },
-      { id: 'speed_50', label: '50 km/soat', icon: Zap, scoreWeight: 2 },
-      { id: 'speed_60plus', label: '60 km/soat va undan yuqori', icon: Zap, scoreWeight: 0 },
+      { id: 'speed_30', label: '30 km/soat yoki undan past', scoreWeight: 5, renderIcon: () => <SpeedSignIcon limit="30" /> },
+      { id: 'speed_40', label: '40 km/soat', scoreWeight: 4, renderIcon: () => <SpeedSignIcon limit="40" /> },
+      { id: 'speed_50', label: '50 km/soat', scoreWeight: 2, renderIcon: () => <SpeedSignIcon limit="50" /> },
+      { id: 'speed_60plus', label: '60 km/soat va undan yuqori', scoreWeight: 0, renderIcon: () => <SpeedSignIcon limit="60" /> },
     ],
   },
   {
@@ -466,9 +522,9 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Tezlik',
     currentValueId: 'speed_45',
     options: [
-      { id: 'speed_30', label: '30 km/soat va undan past', icon: Gauge, scoreWeight: 5 },
-      { id: 'speed_45', label: '45 km/soat', icon: Gauge, scoreWeight: 3 },
-      { id: 'speed_60plus', label: '60 km/soat va undan yuqori', icon: Gauge, scoreWeight: 1 },
+      { id: 'speed_30', label: '30 km/soat va undan past', scoreWeight: 5, renderIcon: () => <Gauge className="w-6 h-6 text-emerald-400" /> },
+      { id: 'speed_45', label: '45 km/soat', scoreWeight: 3, renderIcon: () => <Gauge className="w-6 h-6 text-amber-400" /> },
+      { id: 'speed_60plus', label: '60 km/soat va undan yuqori', scoreWeight: 1, renderIcon: () => <Gauge className="w-6 h-6 text-rose-400" /> },
     ],
   },
   {
@@ -477,8 +533,8 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Tezlik',
     currentValueId: 'present',
     options: [
-      { id: 'present', label: 'Bor (Sun’iy notekislik - lejaщiy politseyskiy)', icon: CheckCircle2, scoreWeight: 5 },
-      { id: 'not_present', label: 'Yo‘q', icon: XCircle, scoreWeight: 0 },
+      { id: 'present', label: 'Bor (Sun’iy notekislik - lejaщiy politseyskiy)', scoreWeight: 5, renderIcon: SpeedBumpIcon },
+      { id: 'not_present', label: 'Yo‘q', scoreWeight: 0, renderIcon: () => <XCircle className="w-6 h-6 text-rose-400" /> },
     ],
   },
   {
@@ -487,9 +543,9 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Oqim',
     currentValueId: 'low',
     options: [
-      { id: 'none', label: '0% (Motosikllar yo‘q)', icon: Bike, scoreWeight: 5 },
-      { id: 'low', label: '1 - 5%', icon: Bike, scoreWeight: 4 },
-      { id: 'high', label: '5% dan ko‘p', icon: Bike, scoreWeight: 2 },
+      { id: 'none', label: '0% (Motosikllar yo‘q)', scoreWeight: 5, renderIcon: () => <Bike className="w-6 h-6 text-emerald-400" /> },
+      { id: 'low', label: '1 - 5%', scoreWeight: 4, renderIcon: () => <Bike className="w-6 h-6 text-teal-400" /> },
+      { id: 'high', label: '5% dan ko‘p', scoreWeight: 2, renderIcon: () => <Bike className="w-6 h-6 text-rose-400" /> },
     ],
   },
   {
@@ -498,9 +554,9 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Oqim',
     currentValueId: 'low',
     options: [
-      { id: 'low', label: '0 - 5%', icon: Truck, scoreWeight: 5 },
-      { id: 'medium', label: '5 - 10%', icon: Truck, scoreWeight: 3 },
-      { id: 'high', label: '10% dan ko‘p', icon: Truck, scoreWeight: 1 },
+      { id: 'low', label: '0 - 5%', scoreWeight: 5, renderIcon: () => <Truck className="w-6 h-6 text-emerald-400" /> },
+      { id: 'medium', label: '5 - 10%', scoreWeight: 3, renderIcon: () => <Truck className="w-6 h-6 text-amber-400" /> },
+      { id: 'high', label: '10% dan ko‘p', scoreWeight: 1, renderIcon: () => <Truck className="w-6 h-6 text-rose-400" /> },
     ],
   },
 ];
@@ -520,7 +576,6 @@ export function Sr4sDemonstrator() {
     });
 
     const pct = Math.round((totalScore / maxTotal) * 100);
-    // Convert pct (0-100) to SR4S Star Rating (1.0 to 5.0)
     let star = Number((1 + (pct / 100) * 4).toFixed(1));
     if (star > 5.0) star = 5.0;
 
@@ -642,7 +697,7 @@ export function Sr4sDemonstrator() {
           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2.5">
             {attributes.map((attr) => {
               const currentOpt = attr.options.find((o) => o.id === attr.currentValueId) || attr.options[0];
-              const IconComp = currentOpt.icon || CriterionIconFallback(attr.id);
+              const renderFn = currentOpt.renderIcon || (() => <HelpCircle className="h-5 w-5 text-teal-400" />);
 
               return (
                 <button
@@ -657,8 +712,8 @@ export function Sr4sDemonstrator() {
                   </span>
 
                   {/* Center Icon */}
-                  <div className="my-1 flex h-10 w-10 items-center justify-center rounded-xl bg-teal-500/10 text-teal-400 group-hover:scale-110 group-hover:bg-teal-500 group-hover:text-slate-950 transition-all border border-teal-500/20 shrink-0">
-                    <IconComp className="h-5 w-5" />
+                  <div className="my-1 flex h-10 w-10 items-center justify-center rounded-xl bg-teal-500/10 group-hover:scale-110 group-hover:bg-teal-500 transition-all border border-teal-500/20 shrink-0">
+                    {renderFn()}
                   </div>
 
                   {/* Bottom Attribute Name */}
@@ -699,7 +754,7 @@ export function Sr4sDemonstrator() {
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {activeAttr.options.map((opt) => {
                 const isSelected = activeAttr.currentValueId === opt.id;
-                const OptIcon = opt.icon || CriterionIconFallback(activeAttr.id);
+                const renderOptFn = opt.renderIcon || (() => <HelpCircle className="h-5 w-5" />);
 
                 return (
                   <button
@@ -719,7 +774,7 @@ export function Sr4sDemonstrator() {
                         isSelected ? 'bg-teal-500 text-slate-950' : 'bg-slate-900 text-teal-400 group-hover:scale-110'
                       )}
                     >
-                      <OptIcon className="h-5 w-5" />
+                      {renderOptFn()}
                     </div>
 
                     <span className="text-xs font-bold leading-tight">
@@ -734,16 +789,4 @@ export function Sr4sDemonstrator() {
       )}
     </div>
   );
-}
-
-function CriterionIconFallback(id: string) {
-  if (id.includes('land')) return Home;
-  if (id.includes('lane')) return Navigation;
-  if (id.includes('sidewalk')) return Footprints;
-  if (id.includes('speed')) return Zap;
-  if (id.includes('crossing')) return Route;
-  if (id.includes('flow')) return Users;
-  if (id.includes('intersection')) return GitFork;
-  if (id.includes('edge')) return Maximize2;
-  return HelpCircle;
 }
