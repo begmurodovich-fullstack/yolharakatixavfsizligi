@@ -2,14 +2,13 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Shield, Menu, X, LogIn, Globe, User, LogOut, LayoutDashboard } from 'lucide-react';
+import { Shield, Menu, X, LogIn, Globe, LogOut, LayoutDashboard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { APP_CONFIG } from '@/lib/constants';
 import { useAuth } from '@/hooks/useAuth';
 
 const NAV_LINKS = [
   { label: 'Bosh sahifa', href: '/' },
-  { label: 'SR4S Kalkulyator', href: '/demonstrator' },
   { label: 'Interaktiv Xarita', href: '/map' },
   { label: 'Platforma', href: '/#platform' },
   { label: 'Mezonlar', href: '/#mezonlar' },

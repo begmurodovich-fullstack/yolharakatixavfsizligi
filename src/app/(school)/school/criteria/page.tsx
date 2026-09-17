@@ -16,6 +16,7 @@ import {
   CriteriaHeader,
   CriterionDetailCard,
 } from '@/features/criteria/components';
+import { Sr4sDemonstrator } from '@/components/sr4s/Sr4sDemonstrator';
 
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -151,7 +152,15 @@ export default function SchoolCriteriaPage() {
         schoolScore={school.currentScore}
       />
 
-      {/* 2. Search & Expand All Bar */}
+      {/* 2. Interactive SR4S Calculator / Demonstrator */}
+      <div className="space-y-2">
+        <div className="text-sm font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+          <span>Xalqaro iRAP SR4S Interaktiv Kalkulyatori</span>
+        </div>
+        <Sr4sDemonstrator />
+      </div>
+
+      {/* 3. Search & Expand All Bar */}
       <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         <div className="relative flex-1 max-w-md">
           <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -185,7 +194,7 @@ export default function SchoolCriteriaPage() {
         </Button>
       </div>
 
-      {/* 3. Criteria List */}
+      {/* 4. Criteria List */}
       <div className="space-y-4">
         {filteredCriteria.map((criterion) => {
           const critQuestions = questions.filter((q) => q.criterionId === criterion.id);
