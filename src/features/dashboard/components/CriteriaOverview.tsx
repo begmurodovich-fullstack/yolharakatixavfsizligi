@@ -51,13 +51,13 @@ export function CriteriaOverview({ criterionScores }: CriteriaOverviewProps) {
               Yo‘l Xavfsizligi Mezonlari Ko‘rsatkichlari
             </h2>
             <p className="text-xs text-slate-500">
-              Davlat standarti bo‘yicha 8 ta yo‘nalishdagi natijalar
+              SR4S xalqaro standarti bo‘yicha 7 ta asosiy modul
             </p>
           </div>
         </div>
 
         <span className="text-xs font-mono font-bold text-teal-800 bg-teal-50 px-2.5 py-1 rounded-md border border-teal-200 w-fit">
-          Jami: 8 ta mezon
+          Jami: 7 ta modul
         </span>
       </div>
 

@@ -1,11 +1,12 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 import { usePermissions } from '@/hooks/usePermissions';
 import { UserRole } from '@/types';
 import { Button } from '@/components/ui/button';
-import { Menu, LogOut, Crown, Shield } from 'lucide-react';
+import { Menu, LogOut, Crown, Shield, Globe } from 'lucide-react';
 
 interface AdminHeaderProps {
   onOpenMobileSidebar: () => void;
@@ -60,11 +61,23 @@ export function AdminHeader({ onOpenMobileSidebar }: AdminHeaderProps) {
           </div>
         )}
 
+        {/* Go to main public site */}
+        <Link href="/">
+          <Button
+            variant="outline"
+            size="sm"
+            className="text-xs font-semibold gap-1.5 border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-teal-800 rounded-xl h-9 px-3"
+          >
+            <Globe className="w-3.5 h-3.5 text-teal-600" />
+            <span className="hidden sm:inline">Asosiy saytga o‘tish</span>
+          </Button>
+        </Link>
+
         <Button
           variant="ghost"
           size="sm"
           onClick={() => logout()}
-          className="text-slate-600 hover:text-rose-600 gap-1"
+          className="text-slate-600 hover:text-rose-600 gap-1 rounded-xl"
         >
           <LogOut className="w-4 h-4" />
           <span className="hidden sm:inline">Chiqish</span>

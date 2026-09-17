@@ -7,7 +7,7 @@ import { School, AssessmentPeriod } from '@/types';
 import { schoolService } from '@/services/schoolService';
 import { assessmentService } from '@/services/assessmentService';
 import { ScoreStatusBadge } from '@/components/ui/status-badge';
-import { Shield, School as SchoolIcon, ChevronRight, LogOut, Calendar } from 'lucide-react';
+import { Shield, School as SchoolIcon, ChevronRight, LogOut, Calendar, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export function SchoolHeader() {
@@ -78,6 +78,18 @@ export function SchoolHeader() {
               <ScoreStatusBadge score={school.currentScore} />
             </div>
           )}
+
+          {/* Go to main public site */}
+          <Link href="/">
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-xs font-semibold gap-1.5 border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-teal-800 rounded-xl h-9 px-3"
+            >
+              <Globe className="w-3.5 h-3.5 text-teal-600" />
+              <span>Asosiy saytga o‘tish</span>
+            </Button>
+          </Link>
 
           <Button
             variant="ghost"
