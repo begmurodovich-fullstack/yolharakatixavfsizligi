@@ -4,9 +4,12 @@ export const APP_CONFIG = {
   name: "O'zbekiston Maktab Yo'l Xavfsizligi Monitoring Tizimi",
   shortName: 'Maktab Yo\'l Xavfsizligi',
   nameEn: 'Uzbekistan School Road Safety Platform',
-  version: '1.0.0-prototype',
+  version: '1.0.0-pilot',
   academicYear: '2025-2026',
-  supportEmail: 'support@maktabxavfsizligi.uz',
+  supportEmail: 'azizbekofficialaccaunt@gmail.com',
+  supportPhone: '+998 33 585 13 03',
+  telegramBotUsername: 'yolharakatixavfsizligi_bot',
+  telegramBotToken: '8674118429:AAGnRU8AArMUsZYYQIOMx3eF8GUkxhSmpkk',
 };
 
 export const SCORE_THRESHOLDS = {
