@@ -38,7 +38,9 @@ import { apiClient } from '@/lib/apiClient';
 // 1. ApiSchoolRepository
 export class ApiSchoolRepository implements ISchoolRepository {
   async getAll(params?: SchoolFilterParams): Promise<School[]> {
-    const queryParams: Record<string, string | number> = {};
+    const queryParams: Record<string, string | number> = {
+      limit: params?.limit || 15000,
+    };
     if (params?.regionId) queryParams.regionId = params.regionId;
     if (params?.districtId) queryParams.districtId = params.districtId;
     if (params?.scoreStatus) queryParams.scoreStatus = params.scoreStatus;

@@ -75,20 +75,19 @@ export function PublicFooter() {
             </ul>
           </div>
 
-          {/* Prototype note & Developer attribution */}
+          {/* System status note */}
           <div className="space-y-3">
             <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-200">
               Tizim holati
             </h4>
-            <div className="rounded-lg border border-slate-800 bg-slate-900/60 p-3 text-xs text-slate-400 space-y-2">
-              <div>
-                <span className="text-teal-400 font-semibold">V1 Prototip versiya:</span> Tizim ma’lumotlari
-                sinov rejimida ishlamoqda. Haqiqiy OneID integratsiyasi keyingi bosqichda kiritiladi.
+            <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-3.5 text-xs text-slate-300 space-y-2">
+              <div className="flex items-center gap-1.5 text-amber-400 font-bold">
+                <span>⚠️ Pilot Sinov Rejimi</span>
               </div>
-              <div className="pt-2 border-t border-slate-800 flex items-center gap-1.5 text-[11px] text-slate-400">
-                <Code2 className="w-3.5 h-3.5 text-teal-400 shrink-0" />
-                <span>Frontend arxitekturasi: V1 Foundation</span>
-              </div>
+              <p className="text-slate-400 text-[11px] leading-relaxed">
+                Tizim O‘zbekiston Respublikasi maktablari uchun pilot rejimda ishga tushirilgan.
+                Barcha 40 ta SR4S xavfsizlik mezonlari va reytinglar amaliy sinovdan o‘tmoqda.
+              </p>
             </div>
           </div>
         </div>

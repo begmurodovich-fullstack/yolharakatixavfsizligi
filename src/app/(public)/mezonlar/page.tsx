@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useAuth } from '@/hooks/useAuth';
 import {
   ShieldCheck,
   Search,
@@ -15,6 +16,7 @@ import {
   CheckCircle2,
   AlertCircle,
   BookOpen,
+  ClipboardCheck,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -23,6 +25,7 @@ import { Input } from '@/components/ui/input';
 import { MOCK_CRITERIA, MOCK_QUESTIONS } from '@/data/mock/criteria';
 
 export default function MezonlarPage() {
+  const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCriterionId, setSelectedCriterionId] = useState<string | null>(null);
   const [expandedCriteria, setExpandedCriteria] = useState<Record<string, boolean>>({
@@ -295,11 +298,20 @@ export default function MezonlarPage() {
             Maktab hisobi orqali tizimga kirib, so‘rovnomani to‘ldiring va rasmiy yulduz reytingini oling.
           </p>
           <div className="flex justify-center gap-3 pt-2">
-            <Link href="/login">
-              <Button size="lg" className="bg-teal-700 hover:bg-teal-800 text-white font-semibold text-xs sm:text-sm px-6">
-                Tizimga Kirish va Baholash
-              </Button>
-            </Link>
+            {user ? (
+              <Link href={user.role === 'SCHOOL_USER' ? '/school/criteria' : '/admin'}>
+                <Button size="lg" className="bg-teal-700 hover:bg-teal-800 text-white font-semibold text-xs sm:text-sm px-6 gap-2">
+                  <ClipboardCheck className="w-4 h-4" />
+                  <span>Baholashni Boshlash</span>
+                </Button>
+              </Link>
+            ) : (
+              <Link href="/login">
+                <Button size="lg" className="bg-teal-700 hover:bg-teal-800 text-white font-semibold text-xs sm:text-sm px-6">
+                  Tizimga Kirish va Baholash
+                </Button>
+              </Link>
+            )}
             <Link href="/platform">
               <Button size="lg" variant="outline" className="border-slate-300 bg-white text-slate-700 hover:bg-slate-100 text-xs sm:text-sm px-6">
                 Platforma Mexanizmi

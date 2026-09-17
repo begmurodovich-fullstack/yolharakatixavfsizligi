@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useAuth } from '@/hooks/useAuth';
 import {
   Shield,
   MapPin,
@@ -18,6 +19,7 @@ import {
   CheckCircle2,
   Layers,
   AlertTriangle,
+  LayoutDashboard,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -26,7 +28,7 @@ const WORKFLOW_STEPS = [
   {
     step: '01',
     title: 'Maktab geolokatsiyasi va ro‘yxatga olish',
-    desc: 'O‘zbekiston Respublikasidagi 10 110 ta maktabning aniq GPS koordinatalari, maktab ma’muriyati va hududiy mas’ullar yagona milliy bazaga kiritiladi.',
+    desc: 'O‘zbekiston Respublikasidagi barcha umumta’lim maktablarining aniq GPS koordinatalari, maktab ma’muriyati va hududiy mas’ullar yagona milliy bazaga kiritiladi.',
     icon: MapPin,
     badge: '1-bosqich: GPS & Profil',
   },
@@ -104,6 +106,8 @@ const STAKEHOLDERS = [
 ];
 
 export default function PlatformPage() {
+  const { user } = useAuth();
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       {/* Header Banner */}
@@ -288,7 +292,7 @@ export default function PlatformPage() {
               <ul className="space-y-2 text-xs sm:text-sm text-slate-700">
                 <li className="flex items-start gap-2">
                   <span className="text-teal-700 font-bold">✓</span>
-                  <span>100% raqamli, 10 110 ta maktab uchun yagona ma’lumotlar bazasi</span>
+                  <span>100% raqamli, barcha umumta’lim maktablari uchun yagona ma’lumotlar bazasi</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-teal-700 font-bold">✓</span>
@@ -318,11 +322,20 @@ export default function PlatformPage() {
             Har bir maktab hisobi orqali tizimga kirib, 7 ta modul bo‘yicha so‘rovnomani to‘ldiring va rasmiy yulduz reytingini oling.
           </p>
           <div className="flex justify-center gap-3 pt-2">
-            <Link href="/login">
-              <Button size="lg" className="bg-teal-700 hover:bg-teal-800 text-white font-semibold text-xs sm:text-sm px-6">
-                Tizimga Kirish
-              </Button>
-            </Link>
+            {user ? (
+              <Link href={user.role === 'SCHOOL_USER' ? '/school/criteria' : '/admin'}>
+                <Button size="lg" className="bg-teal-700 hover:bg-teal-800 text-white font-semibold text-xs sm:text-sm px-6 gap-2">
+                  <ClipboardCheck className="w-4 h-4" />
+                  <span>Baholashni Boshlash</span>
+                </Button>
+              </Link>
+            ) : (
+              <Link href="/login">
+                <Button size="lg" className="bg-teal-700 hover:bg-teal-800 text-white font-semibold text-xs sm:text-sm px-6">
+                  Tizimga Kirish va Baholash
+                </Button>
+              </Link>
+            )}
             <Link href="/mezonlar">
               <Button size="lg" variant="outline" className="border-slate-300 bg-white text-slate-700 hover:bg-slate-100 text-xs sm:text-sm px-6">
                 Mezonlarni Ko‘rish

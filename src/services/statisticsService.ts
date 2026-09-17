@@ -58,21 +58,28 @@ export class StatisticsService {
     let safeCount = 0;
     let moderateCount = 0;
     let highRiskCount = 0;
+    let assessedCount = 0;
     let verifiedCoordinatesCount = 0;
     let pendingCoordinatesCount = 0;
 
     schools.forEach((s) => {
-      totalScoreSum += s.currentScore;
-      const scoreEval = evaluateScore(s.currentScore);
-      if (scoreEval.status === ScoreStatus.GREEN) safeCount++;
-      else if (scoreEval.status === ScoreStatus.YELLOW) moderateCount++;
-      else highRiskCount++;
+      if (s.currentScore > 0) {
+        assessedCount++;
+        totalScoreSum += s.currentScore;
+        const scoreEval = evaluateScore(s.currentScore);
+        if (scoreEval.status === ScoreStatus.GREEN) safeCount++;
+        else if (scoreEval.status === ScoreStatus.YELLOW) moderateCount++;
+        else highRiskCount++;
+      }
 
       if (s.coordinateStatus === CoordinateStatus.VERIFIED) verifiedCoordinatesCount++;
       else if (s.coordinateStatus === CoordinateStatus.PENDING) pendingCoordinatesCount++;
     });
 
-    const averageScore = Math.round(totalScoreSum / totalSchools);
+    const averageScore = assessedCount > 0 ? Math.round(totalScoreSum / assessedCount) : 0;
+    const safePercentage = assessedCount > 0 ? Math.round((safeCount / assessedCount) * 100) : 0;
+    const moderatePercentage = assessedCount > 0 ? Math.round((moderateCount / assessedCount) * 100) : 0;
+    const highRiskPercentage = assessedCount > 0 ? Math.round((highRiskCount / assessedCount) * 100) : 0;
 
     return {
       totalSchools,
@@ -80,9 +87,9 @@ export class StatisticsService {
       safeCount,
       moderateCount,
       highRiskCount,
-      safePercentage: Math.round((safeCount / totalSchools) * 100),
-      moderatePercentage: Math.round((moderateCount / totalSchools) * 100),
-      highRiskPercentage: Math.round((highRiskCount / totalSchools) * 100),
+      safePercentage,
+      moderatePercentage,
+      highRiskPercentage,
       verifiedCoordinatesCount,
       pendingCoordinatesCount,
       periodName: currentPeriod?.name || '2025-2026 O‘quv yili',
