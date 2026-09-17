@@ -15,7 +15,8 @@ export async function GET() {
     );
 
     const questionsRows = await query(
-      `SELECT id, criterion_id as "criterionId", text, description, points, requires_evidence as "requiresEvidence", options 
+      `SELECT id, criterion_id as "criterionId", text, description, points, requires_evidence as "requiresEvidence", options,
+              code, guide_image as "guideImage", help_guidance as "helpGuidance"
        FROM questions 
        ORDER BY id ASC`
     );

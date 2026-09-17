@@ -1,8 +1,10 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { statisticsService, NationalStatisticsSummary } from '@/services/statisticsService';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import {
   ResponsiveContainer,
   BarChart,
@@ -14,7 +16,7 @@ import {
   PieChart,
   Pie,
 } from 'recharts';
-import { BarChart3, TrendingUp, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { BarChart3, TrendingUp, AlertTriangle, CheckCircle2, ArrowRight } from 'lucide-react';
 
 export function StatisticsPreviewSection() {
   const [stats, setStats] = useState<NationalStatisticsSummary | null>(null);
@@ -191,6 +193,16 @@ export function StatisticsPreviewSection() {
               </div>
             </CardContent>
           </Card>
+        </div>
+
+        {/* CTA to full /statistika page */}
+        <div className="flex justify-center mt-10">
+          <Link href="/statistika">
+            <Button size="lg" className="bg-slate-900 hover:bg-teal-700 text-white font-semibold gap-2 text-sm shadow-sm">
+              <span>Barcha diagrammalar va milliy statistikani ko‘rish</span>
+              <ArrowRight className="w-4 h-4 text-teal-400" />
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

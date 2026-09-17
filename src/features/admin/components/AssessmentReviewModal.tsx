@@ -2,18 +2,33 @@
 
 import React, { useState } from 'react';
 import { Assessment, AssessmentStatus, School, Criterion, Question } from '@/types';
-import { ScoreStatusBadge, GenericStatusBadge } from '@/components/ui/status-badge';
+import { GenericStatusBadge } from '@/components/ui/status-badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/cn';
+import { SR4S_STAR_LEVELS } from '@/components/sr4s/Sr4sDemonstrator';
 import {
   X,
   ClipboardCheck,
-  Award,
   CheckCircle2,
-  AlertTriangle,
   School as SchoolIcon,
-  Calendar,
+  Star,
 } from 'lucide-react';
+
+/** Convert percentage (0–100) → SR4S star rating (1.0–5.0) */
+function pctToStar(pct: number): number {
+  const star = Number((1 + (pct / 100) * 4).toFixed(1));
+  return Math.min(5.0, Math.max(1.0, star));
+}
+
+function getStarLevel(pct: number) {
+  const star = pctToStar(pct);
+  if (star >= 5.0) return SR4S_STAR_LEVELS[4];
+  if (star >= 4.0) return SR4S_STAR_LEVELS[3];
+  if (star >= 3.0) return SR4S_STAR_LEVELS[2];
+  if (star >= 2.0) return SR4S_STAR_LEVELS[1];
+  return SR4S_STAR_LEVELS[0];
+}
 
 interface AssessmentReviewModalProps {
   assessment: Assessment | null;
@@ -27,8 +42,8 @@ interface AssessmentReviewModalProps {
 export function AssessmentReviewModal({
   assessment,
   school,
-  criteria,
-  questions,
+  criteria: _criteria,
+  questions: _questions,
   onClose,
   onVerify,
 }: AssessmentReviewModalProps) {
@@ -81,75 +96,91 @@ export function AssessmentReviewModal({
           </button>
         </div>
 
-        {/* Score and Status Banner */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="p-4 rounded-2xl bg-teal-50/60 border border-teal-200 space-y-1">
-            <div className="text-[11px] font-bold uppercase tracking-wider text-teal-800">
-              Umumiy Ball:
-            </div>
-            <div className="text-2xl font-black text-teal-950 font-mono">
-              {assessment.score} <span className="text-xs font-normal text-teal-700">/ {assessment.maxScore}</span>
-            </div>
-          </div>
+        {/* SR4S Star Rating Banner */}
+        {(() => {
+          const pct = assessment.percentage ?? 0;
+          const starVal = pctToStar(pct);
+          const lvl = getStarLevel(pct);
+          const filledStars = Math.round(starVal);
+          return (
+            <div className={cn('p-5 rounded-2xl border space-y-4', lvl.cardBgClass ?? 'bg-slate-50', lvl.cardBorderClass ?? 'border-slate-200')}>
+              {/* Stars Row */}
+              <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-1">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                    SR4S Yo&apos;l Xavfsizligi Reytingi:
+                  </span>
+                  <div className="flex items-center gap-1">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <Star
+                        key={s}
+                        className={cn(
+                          'w-7 h-7 transition-colors',
+                          s <= filledStars ? lvl.starFillClass : 'fill-slate-200 text-slate-200'
+                        )}
+                      />
+                    ))}
+                    <span className={cn('ml-2 text-2xl font-black font-mono', lvl.starTextClass)}>
+                      {starVal}
+                    </span>
+                    <span className="text-sm text-slate-400 font-mono ml-0.5">/ 5.0</span>
+                  </div>
+                  <p className={cn('text-xs font-bold', lvl.starTextClass)}>
+                    {lvl.title}
+                  </p>
+                </div>
 
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
-            <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-              Muvofiqlik:
-            </div>
-            <div className="text-2xl font-black text-slate-900 font-mono">
-              {assessment.percentage}%
-            </div>
-          </div>
+                <div className="flex flex-col items-end gap-2">
+                  <GenericStatusBadge status={assessment.status} />
+                  <span
+                    className={cn(
+                      'inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold border',
+                      lvl.badgeClass
+                    )}
+                  >
+                    {lvl.starCount}★ {lvl.colorName}
+                  </span>
+                  <span className="text-[11px] text-slate-400 font-mono">
+                    Indeks: {pct}%
+                  </span>
+                </div>
+              </div>
 
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
-            <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-              Holat:
+              {/* Description */}
+              <div className="px-3 py-2 rounded-xl bg-slate-950/10 border border-slate-800/20 text-xs text-slate-600 italic">
+                &quot;{lvl.description}&quot;
+              </div>
             </div>
-            <div className="pt-0.5">
-              <GenericStatusBadge status={assessment.status} />
-            </div>
-          </div>
+          );
+        })()}
 
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
-            <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-              Xavfsizlik:
-            </div>
-            <div className="pt-0.5">
-              <ScoreStatusBadge score={assessment.score} showScore={false} />
-            </div>
-          </div>
-        </div>
-
-        {/* Criteria Breakdown */}
+        {/* SR4S Parameter Answers Overview */}
         <div className="space-y-3">
           <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
-            Mezonlar bo‘yicha to‘plangan ballar:
+            SR4S Parametrlar bo&apos;yicha baholash:
           </h3>
 
-          <div className="space-y-2">
-            {criteria.map((c) => {
-              const critQuestions = questions.filter((q) => q.criterionId === c.id);
-              let critEarned = 0;
-              let critMax = 0;
-
-              critQuestions.forEach((q) => {
-                critMax += q.points;
-                const ans = assessment.answers?.[q.id];
-                critEarned += ans?.pointsAwarded || 0;
-              });
-
-              return (
+          <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+            {Object.entries(assessment.answers || {}).length > 0 ? (
+              Object.entries(assessment.answers).map(([paramId, ans]: [string, any]) => (
                 <div
-                  key={c.id}
+                  key={paramId}
                   className="p-3 rounded-xl border border-slate-100 bg-slate-50 flex items-center justify-between text-xs"
                 >
-                  <div className="font-semibold text-slate-800">{c.title}</div>
+                  <div className="font-semibold text-slate-800 truncate max-w-[60%]">
+                    {paramId.replace('attr-', 'Parametr #')}
+                    {ans.optionLabel ? <span className="text-slate-400 font-normal ml-1">— {ans.optionLabel}</span> : null}
+                  </div>
                   <div className="font-mono font-bold text-slate-900">
-                    {critEarned} / {critMax} ball
+                    {ans.pointsAwarded ?? 0} / 5 ball
                   </div>
                 </div>
-              );
-            })}
+              ))
+            ) : (
+              <div className="text-xs text-slate-400 italic py-4 text-center">
+                Parametr javoblari mavjud emas yoki yuklanmadi.
+              </div>
+            )}
           </div>
         </div>
 

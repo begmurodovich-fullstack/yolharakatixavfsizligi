@@ -111,9 +111,9 @@ export class StatisticsService {
 
     return {
       schoolScore,
-      districtAverage: calcAvg(districtSchools) || 78,
-      regionAverage: calcAvg(regionSchools) || 74,
-      republicAverage: calcAvg(republicSchools) || 71,
+      districtAverage: calcAvg(districtSchools),
+      regionAverage: calcAvg(regionSchools),
+      republicAverage: calcAvg(republicSchools),
     };
   }
 
@@ -125,25 +125,15 @@ export class StatisticsService {
     const periods = await repositories.assessment.getPeriods();
     const currentPeriod = periods.find((p) => p.isCurrent);
 
+    // Only return current period data. Historical data will be added when real
+    // multi-period assessments exist in the database.
+    if (!currentScore || currentScore === 0) {
+      return [];
+    }
+
     return [
       {
-        periodId: 'period-2024-spring',
-        periodName: '2023-2024 Bahorgi monitoring',
-        shortName: '2024 Bahor',
-        score: Math.max(45, currentScore - 18),
-        isCurrent: false,
-        status: evaluateScore(Math.max(45, currentScore - 18)).status,
-      },
-      {
-        periodId: 'period-2024-autumn',
-        periodName: '2024-2025 Kuzgi monitoring',
-        shortName: '2024 Kuz',
-        score: Math.max(55, currentScore - 12),
-        isCurrent: false,
-        status: evaluateScore(Math.max(55, currentScore - 12)).status,
-      },
-      {
-        periodId: currentPeriod?.id || 'period-2025-spring',
+        periodId: currentPeriod?.id || 'period-2025-q1',
         periodName: currentPeriod?.name || '2025-2026 Bahorgi monitoring',
         shortName: '2025 Bahor (Joriy)',
         score: currentScore,

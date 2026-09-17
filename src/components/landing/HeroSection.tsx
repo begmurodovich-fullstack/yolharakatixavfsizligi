@@ -41,7 +41,7 @@ export function HeroSection() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 text-xs font-medium text-slate-700">
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-teal-600 shrink-0" />
-                <span>8 ta davlat standarti mezoni</span>
+                <span>40 ta xalqaro SR4S parametri</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-teal-600 shrink-0" />
@@ -66,12 +66,12 @@ export function HeroSection() {
                 </Button>
               </Link>
 
-              <a href="#platform">
+              <Link href="/platform">
                 <Button size="lg" variant="outline" className="border-slate-300 text-slate-700 hover:bg-slate-100 font-semibold gap-2 h-12 px-6 text-sm">
                   <BookOpen className="w-4 h-4 text-teal-700" />
                   <span>Platforma haqida</span>
                 </Button>
-              </a>
+              </Link>
             </div>
 
             {/* Prototype note */}

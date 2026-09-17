@@ -1,5 +1,7 @@
 import React from 'react';
+import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import {
   MapPin,
   ClipboardCheck,
@@ -13,38 +15,38 @@ import {
 const STEPS = [
   {
     step: '01',
-    title: 'Maktab ma’lumotlari',
-    description: 'Maktab geolokatsiyasi, hududiy ierarxiyasi va mas’ul shaxslar ro‘yxatga olinadi.',
+    title: 'Maktab ma’lumotlari va GPS',
+    description: 'Maktab geolokatsiyasi, GPS koordinatalari va hududiy mas’ul shaxslar ro‘yxatga olinadi.',
     icon: MapPin,
-    badge: 'Ierarxiya & Joylashuv',
+    badge: 'GPS & Geolokatsiya',
   },
   {
     step: '02',
-    title: 'Xavfsizlikni baholash',
-    description: '8 ta asosiy mezon bo‘yicha maktab atrofi infratuzilmasi savolnomasi to‘ldiriladi.',
+    title: '40 ta SR4S parametri bo‘yicha baholash',
+    description: 'Xalqaro iRAP Star Rating for Schools (v1.7) standarti asosida 40 ta muhim yo‘l infratuzilmasi parametri baholanadi.',
     icon: ClipboardCheck,
-    badge: '100 ballik shkala',
+    badge: '40 ta SR4S parametri',
   },
   {
     step: '03',
-    title: 'Dalillarni tekshirish',
-    description: 'Yo‘l belgilari, chiziqlar va panjaralarning haqiqiy foto-suratlari ekspertlar tomonidan tasdiqlanadi.',
+    title: 'Foto-dalillarni ekspert tekshiruvi',
+    description: 'Yo‘l belgilari, chiziqlar, piyodalar yo‘laklari va to‘siqlarning haqiqiy foto-suratlari ekspertlar tomonidan tasdiqlanadi.',
     icon: Camera,
     badge: 'Foto-ekspertiza',
   },
   {
     step: '04',
-    title: 'Natijalarni tahlil qilish',
-    description: 'Avtomatlashtirilgan tizim xavf darajasini (Yashil, Sariq, Qizil) hisoblab chiqadi.',
+    title: 'Yulduzli reyting (Star Rating) tahlili',
+    description: 'Avtomatlashtirilgan tizim xavfsizlik darajasini 1.0 dan 5.0 yulduzgacha (Qora, Qizil, Sariq, Sabzirang, Yashil) hisoblab chiqadi.',
     icon: LineChart,
-    badge: 'Algoritmik baho',
+    badge: '1 — 5 Yulduz shkalasi',
   },
   {
     step: '05',
-    title: 'Reyting va monitoring',
-    description: 'Respublika, viloyat va tuman darajasidagi shaffof reyting shakllantirilib, choralar belgilanadi.',
+    title: 'Reyting va manzilli xavfsizlik choralari',
+    description: 'Respublika bo‘yicha shaffof monitoring yuritilib, maktab zonalari kamida 3 yulduzli xavfsizlik standartiga yetkaziladi.',
     icon: Trophy,
-    badge: 'Manzilli choralar',
+    badge: 'Maqsad: ≥3 Yulduz',
   },
 ];
 
@@ -106,6 +108,16 @@ export function WorkflowSection() {
               </div>
             );
           })}
+        </div>
+
+        {/* CTA Link to dedicated /platform page */}
+        <div className="flex justify-center mt-10">
+          <Link href="/platform">
+            <Button size="lg" className="bg-slate-900 hover:bg-teal-700 text-white font-semibold gap-2 shadow-sm text-sm">
+              <span>Platforma imkoniyatlari va mexanizmi haqida to‘liq</span>
+              <ArrowRight className="w-4 h-4 text-teal-400" />
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

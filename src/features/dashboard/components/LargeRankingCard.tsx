@@ -43,25 +43,17 @@ export function LargeRankingCard({ rankingOverview, currentScore }: LargeRanking
 
       {/* Main Score Display */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-        {/* Left: Huge Score Number & Bar */}
+        {/* Left: Star Rating Display */}
         <div className="md:col-span-5 space-y-3">
           <div className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
-            Umumiy To‘plangan Ball
+            Xavfsizlik Yulduz Reytingi
           </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight font-mono">
-              {score}
+          <div className="space-y-1">
+            <span className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-mono block">
+              {score >= 90 ? '⭐️⭐️⭐️⭐️⭐️' : score >= 75 ? '⭐️⭐️⭐️⭐️' : score >= 60 ? '⭐️⭐️⭐️' : score >= 45 ? '⭐️⭐️' : '⭐️'}
             </span>
-            <span className="text-sm text-slate-400 font-medium font-mono">
-              / 100 ball
-            </span>
-          </div>
-
-          <div className="space-y-1.5 pt-1">
-            <Progress value={score} showColorByScore className="h-2" />
-            <div className="flex justify-between text-xs text-slate-500">
-              <span>Davlat talabi: &ge;80 (Xavfsiz)</span>
-              <span className="font-semibold text-slate-800">{score}% bajarilgan</span>
+            <div className="pt-1">
+              <ScoreStatusBadge score={score} />
             </div>
           </div>
         </div>

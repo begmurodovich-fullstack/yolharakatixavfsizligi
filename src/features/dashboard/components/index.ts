@@ -8,3 +8,4 @@ export * from './StatisticsPreview';
 export * from './RankingComparison';
 export * from './NotificationList';
 export * from './QuickActions';
+export * from './RoadCategoryStarChart';

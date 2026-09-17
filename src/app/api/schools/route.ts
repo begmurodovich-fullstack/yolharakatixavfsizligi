@@ -59,31 +59,49 @@ export async function GET(request: NextRequest) {
       params.push(q);
     }
 
+    const roadType = searchParams.get('roadType');
+    if (roadType && roadType !== 'ALL') {
+      sql += ` AND s.road_type = $${paramIndex++}`;
+      params.push(roadType);
+    }
+
     sql += ` ORDER BY s.current_score DESC, s.name ASC LIMIT $${paramIndex++} OFFSET $${paramIndex++}`;
     params.push(limit, offset);
 
     const rows = await query(sql, params);
 
-    const formattedSchools = rows.map((s) => ({
-      id: s.id,
-      schoolNumber: s.school_number,
-      name: s.name,
-      regionId: s.region_id,
-      regionName: s.region_name,
-      districtId: s.district_id,
-      districtName: s.district_name,
-      directorName: s.director_name,
-      studentCount: s.student_count,
-      currentScore: s.current_score,
-      coordinateStatus: s.coordinate_status,
-      status: s.status,
-      coordinates: {
-        latitude: s.latitude,
-        longitude: s.longitude,
-        addressNotes: s.address_notes,
-        status: s.coordinate_status,
-      },
-    }));
+    const formattedSchools = rows.map((s) => {
+      const score = Number(s.current_score) || 0;
+      let starRating: 1 | 2 | 3 | 4 | 5 = 1;
+      if (score >= 90) starRating = 5;
+      else if (score >= 75) starRating = 4;
+      else if (score >= 50) starRating = 3;
+      else if (score >= 30) starRating = 2;
+      else starRating = 1;
+
+      return {
+        id: s.id,
+        schoolNumber: s.school_number,
+        name: s.name,
+        regionId: s.region_id,
+        regionName: s.region_name,
+        districtId: s.district_id,
+        districtName: s.district_name,
+        directorName: s.director_name,
+        studentCount: s.student_count,
+        currentScore: score,
+        starRating,
+        roadType: s.road_type || 'URBAN',
+        coordinateStatus: s.coordinate_status,
+        status: s.status,
+        coordinates: {
+          latitude: s.latitude,
+          longitude: s.longitude,
+          addressNotes: s.address_notes,
+          status: s.coordinate_status,
+        },
+      };
+    });
 
     return NextResponse.json(formattedSchools);
   } catch (error: any) {

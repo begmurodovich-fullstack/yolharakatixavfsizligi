@@ -62,10 +62,10 @@ export function RankingPreviewSection() {
               </div>
             </div>
 
-            <div className="pt-4">
-              <Link href="/login">
+            <div className="pt-4 flex flex-wrap gap-3">
+              <Link href="/reyting">
                 <Button className="bg-teal-700 hover:bg-teal-800 text-white gap-2 shadow-xs">
-                  <span>Tizimga kirib to‘liq reytingni ko‘rish</span>
+                  <span>To‘liq Respublika Reytingi</span>
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
@@ -91,7 +91,7 @@ export function RankingPreviewSection() {
                     <TableHead className="w-14 text-center">O‘rin</TableHead>
                     <TableHead>Maktab nomi</TableHead>
                     <TableHead>Hudud / Tuman</TableHead>
-                    <TableHead className="text-right">Xavfsizlik Bali</TableHead>
+                    <TableHead className="text-right">Yulduz Reytingi</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -111,7 +111,7 @@ export function RankingPreviewSection() {
                         <div className="text-[11px] text-slate-400">{entry.districtName}</div>
                       </TableCell>
                       <TableCell className="text-right">
-                        <ScoreStatusBadge score={entry.score} showScore={true} />
+                        <ScoreStatusBadge score={entry.score} showScore={false} />
                       </TableCell>
                     </TableRow>
                   ))}

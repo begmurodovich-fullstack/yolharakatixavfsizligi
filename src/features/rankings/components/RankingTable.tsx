@@ -66,8 +66,8 @@ export function RankingTable({ entries, currentSchoolId, scope }: RankingTablePr
               <th className="py-4 px-5 w-24 text-center">O‘rin</th>
               <th className="py-4 px-5">Maktab nomi</th>
               <th className="py-4 px-5">Hudud</th>
-              <th className="py-4 px-5 text-right">Ball</th>
-              <th className="py-4 px-5 text-center w-36">Holat</th>
+              <th className="py-4 px-5 text-center">Yulduz Reytingi</th>
+              <th className="py-4 px-5 text-center w-40">Xavfsizlik Toifasi</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -140,9 +140,15 @@ export function RankingTable({ entries, currentSchoolId, scope }: RankingTablePr
                     </div>
                   </td>
 
-                  {/* Score */}
-                  <td className="py-4 px-5 text-right font-mono font-bold text-slate-900">
-                    {isAssessed ? `${entry.score} ball` : '0 ball'}
+                  {/* Star Rating Icons */}
+                  <td className="py-4 px-5 text-center font-mono text-sm tracking-wider">
+                    {isAssessed ? (
+                      <span className="text-base">
+                        {entry.score >= 90 ? '⭐️⭐️⭐️⭐️⭐️' : entry.score >= 75 ? '⭐️⭐️⭐️⭐️' : entry.score >= 60 ? '⭐️⭐️⭐️' : entry.score >= 45 ? '⭐️⭐️' : '⭐️'}
+                      </span>
+                    ) : (
+                      <span className="text-slate-400 text-xs">-</span>
+                    )}
                   </td>
 
                   {/* Status Badge */}

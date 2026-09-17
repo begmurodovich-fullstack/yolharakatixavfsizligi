@@ -16,16 +16,16 @@ export async function POST(request: NextRequest) {
     const trimmedEmail = email.trim().toLowerCase();
     const trimmedPassword = password.trim();
 
-    // 1. Direct email lookup or normalized district/school match
+    console.log('LOGIN ATTEMPT:', { trimmedEmail, trimmedPassword });
+
+    // 1. Direct email lookup
     let users = await query(
       `SELECT id, email, password_hash, name, role, school_id, region_id, district_id, is_first_login, is_active, created_at, updated_at
        FROM users 
-       WHERE (LOWER(email) = $1 OR LOWER(email) LIKE $2) AND is_active = true
+       WHERE LOWER(email) = $1
+         AND is_active = true
        LIMIT 1`,
-      [
-        trimmedEmail,
-        `%${trimmedEmail.replace('@maktab.uz', '').replace('@gijduvon.demo', '').replace(/[^a-z0-9]/g, '%')}%`,
-      ]
+      [trimmedEmail]
     );
 
     if (users.length === 0) {
@@ -37,10 +37,17 @@ export async function POST(request: NextRequest) {
 
     const dbUser = users[0];
 
-    // Password verification (supports exact hash or standard admin passwords)
+    // Password verification (supports exact hash, standard school passwords, or admin passwords)
     const isAdmin = dbUser.role === 'ADMIN' || dbUser.role === 'SUPER_ADMIN';
+    const isSchool = dbUser.role === 'SCHOOL_USER';
+    
     const isPasswordMatch =
       dbUser.password_hash === trimmedPassword ||
+      (isSchool &&
+        (trimmedPassword === 'Maktab@24' ||
+          trimmedPassword === 'qiziltepa24' ||
+          trimmedPassword === 'Maktab@1234' ||
+          trimmedPassword === 'Demo@1234')) ||
       (isAdmin &&
         (trimmedPassword === 'Demo@1234' ||
           trimmedPassword === 'Admin@1234' ||

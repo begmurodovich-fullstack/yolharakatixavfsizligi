@@ -27,9 +27,9 @@ export const SCORE_THRESHOLDS = {
  */
 export const DEMO_ACCOUNTS: DemoAccount[] = [
   {
-    label: 'Maktab Vakili (School User)',
-    email: 'school24@gijduvon.demo',
-    passwordHint: 'Demo@1234',
+    label: 'Maktab Mas’uli (School User)',
+    email: 'school24@gijduvon.uz',
+    passwordHint: 'Maktab@1234',
     role: UserRole.SCHOOL_USER,
     description: '24-umumta\'lim maktabi, G\'ijduvon tumani, Buxoro viloyati',
     schoolInfo: {
@@ -37,20 +37,20 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
       schoolName: '24-sonli umumta\'lim maktabi',
       districtName: 'G\'ijduvon tumani',
       regionName: 'Buxoro viloyati',
-      directorName: 'Demo Director',
+      directorName: 'Maktab Mas’uli',
     },
   },
   {
-    label: 'Hududiy Administrator (Admin)',
-    email: 'admin@demo.local',
-    passwordHint: 'Demo@1234',
+    label: 'Hududiy Inspektor (Admin)',
+    email: 'admin@yhxx.uz',
+    passwordHint: 'Admin@1234',
     role: UserRole.ADMIN,
     description: 'Tuman va viloyat darajasidagi monitoring va tekshiruv administratori',
   },
   {
-    label: 'Bosh Administrator (Super Admin)',
-    email: 'superadmin@demo.local',
-    passwordHint: 'Demo@1234',
+    label: 'Bosh Administrator (IIV YHXX)',
+    email: 'superadmin@yhxx.uz',
+    passwordHint: 'Super@1234',
     role: UserRole.SUPER_ADMIN,
     description: 'Respublika miqyosidagi tizim boshqaruvi va huquqlarni sozlash',
   },

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -12,6 +13,7 @@ import {
   FileQuestion,
   Send,
   CheckCircle2,
+  ArrowRight,
 } from 'lucide-react';
 
 export function ContactSection() {
@@ -208,6 +210,16 @@ export function ContactSection() {
               )}
             </Card>
           </div>
+        </div>
+
+        {/* CTA to full /aloqa page */}
+        <div className="flex justify-center mt-10">
+          <Link href="/aloqa">
+            <Button size="lg" className="bg-slate-900 hover:bg-teal-700 text-white font-semibold gap-2 text-sm shadow-sm">
+              <span>Barcha idoralar kontaktlari va to‘liq aloqa sahifasi</span>
+              <ArrowRight className="w-4 h-4 text-teal-400" />
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

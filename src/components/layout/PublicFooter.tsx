@@ -38,37 +38,37 @@ export function PublicFooter() {
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <a href="#bosh-sahifa" className="hover:text-teal-400 transition-colors">
+                <a href="/" className="hover:text-teal-400 transition-colors">
                   Bosh sahifa
                 </a>
               </li>
               <li>
-                <a href="#platform" className="hover:text-teal-400 transition-colors">
+                <a href="/platform" className="hover:text-teal-400 transition-colors">
                   Platforma mexanizmi
                 </a>
               </li>
               <li>
-                <a href="#mezonlar" className="hover:text-teal-400 transition-colors">
-                  8 ta xavfsizlik mezoni
+                <a href="/mezonlar" className="hover:text-teal-400 transition-colors">
+                  Xalqaro SR4S mezonlari
                 </a>
               </li>
               <li>
-                <a href="#xarita" className="hover:text-teal-400 transition-colors">
+                <a href="/map" className="hover:text-teal-400 transition-colors">
                   Geolokatsiya xaritasi
                 </a>
               </li>
               <li>
-                <a href="#reyting" className="hover:text-teal-400 transition-colors">
+                <a href="/reyting" className="hover:text-teal-400 transition-colors">
                   Respublika reytingi
                 </a>
               </li>
               <li>
-                <a href="#statistika" className="hover:text-teal-400 transition-colors">
+                <a href="/statistika" className="hover:text-teal-400 transition-colors">
                   Xavfsizlik statistikasi
                 </a>
               </li>
               <li>
-                <a href="#aloqa" className="hover:text-teal-400 transition-colors">
+                <a href="/aloqa" className="hover:text-teal-400 transition-colors">
                   Murojaat va aloqa
                 </a>
               </li>

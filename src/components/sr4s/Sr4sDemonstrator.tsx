@@ -41,6 +41,8 @@ import {
   Check,
   Loader2,
   Sparkles,
+  Target,
+  RotateCcw,
 } from 'lucide-react';
 
 export interface AttributeOption {
@@ -58,6 +60,89 @@ export interface AttributeDefinition {
   currentValueId: string;
   options: AttributeOption[];
 }
+
+export interface Sr4sStarLevel {
+  starCount: number;
+  title: string;
+  colorName: string;
+  description: string;
+  starFillClass: string;
+  starTextClass: string;
+  badgeClass: string;
+  cardBorderClass: string;
+  cardBgClass: string;
+  minStar: number;
+  maxStar: number;
+}
+
+// 5 OFFICIAL SR4S STAR LEVEL DEFINITIONS (From Uzbek Checklist Image)
+export const SR4S_STAR_LEVELS: Sr4sStarLevel[] = [
+  {
+    starCount: 1,
+    title: '1 Yulduz — Infratuzilma Yetishmaydi',
+    colorName: 'Qora',
+    description: "Infratuzilmaning yetishmasligi, transport oqimining juda ko'pligi va yuqori tezlik",
+    starFillClass: 'fill-slate-950 text-slate-900 stroke-slate-400 drop-shadow-md',
+    starTextClass: 'text-slate-300',
+    badgeClass: 'bg-slate-950 text-slate-200 border-slate-700',
+    cardBorderClass: 'border-slate-700/80',
+    cardBgClass: 'bg-slate-900/90',
+    minStar: 1.0,
+    maxStar: 1.9,
+  },
+  {
+    starCount: 2,
+    title: '2 Yulduz — Yuqori Xavf',
+    colorName: 'Qizil',
+    description: "Infratuzilma yo'qligi, yaxshi bo'lmagan sharoit va chorrahadan uzoqda joylashgani",
+    starFillClass: 'fill-red-500 text-red-500 drop-shadow-[0_0_12px_rgba(239,68,68,0.7)]',
+    starTextClass: 'text-red-400',
+    badgeClass: 'bg-red-500/10 text-red-400 border-red-500/30',
+    cardBorderClass: 'border-red-500/50',
+    cardBgClass: 'bg-red-950/20',
+    minStar: 2.0,
+    maxStar: 2.9,
+  },
+  {
+    starCount: 3,
+    title: "3 Yulduz — O'rtacha Xavfsiz (Maqsadli)",
+    colorName: 'Sariq',
+    description: "Infratuzilmaning yetishmasligi, transport oqimining kamligi va past tezlik",
+    starFillClass: 'fill-yellow-400 text-yellow-400 drop-shadow-[0_0_12px_rgba(250,204,21,0.8)]',
+    starTextClass: 'text-yellow-400',
+    badgeClass: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/30',
+    cardBorderClass: 'border-yellow-500/50',
+    cardBgClass: 'bg-yellow-950/20',
+    minStar: 3.0,
+    maxStar: 3.9,
+  },
+  {
+    starCount: 4,
+    title: '4 Yulduz — Qulay va Xavfsiz',
+    colorName: 'Sabzirang (Olovrang)',
+    description: 'Xavfsizlik uchun qulay sharoit',
+    starFillClass: 'fill-orange-500 text-orange-500 drop-shadow-[0_0_12px_rgba(249,115,22,0.8)]',
+    starTextClass: 'text-orange-400',
+    badgeClass: 'bg-orange-500/10 text-orange-400 border-orange-500/30',
+    cardBorderClass: 'border-orange-500/50',
+    cardBgClass: 'bg-orange-950/20',
+    minStar: 4.0,
+    maxStar: 4.9,
+  },
+  {
+    starCount: 5,
+    title: "5 Yulduz — To'liq Jihozlangan",
+    colorName: 'Yashil',
+    description: "To'liq jihozlangan yo'l",
+    starFillClass: 'fill-emerald-400 text-emerald-400 drop-shadow-[0_0_12px_rgba(52,211,153,0.7)]',
+    starTextClass: 'text-emerald-400',
+    badgeClass: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
+    cardBorderClass: 'border-emerald-500/50',
+    cardBgClass: 'bg-emerald-950/20',
+    minStar: 5.0,
+    maxStar: 5.0,
+  },
+];
 
 // Rich Custom SVG Icon Components with enhanced visual styling
 function SpeedSignIcon({ limit }: { limit: string }) {
@@ -96,13 +181,50 @@ function DividedRoadIcon() {
   );
 }
 
-function SidewalkIcon() {
+function SidewalkLeftIcon() {
   return (
     <div className="w-9 h-9 bg-slate-800 rounded-xl flex items-center justify-between p-1 border border-slate-700 shadow-md group-hover:scale-110 transition-transform duration-200">
-      <div className="w-3 h-full bg-emerald-600 rounded-xs flex items-center justify-center">
-        <Footprints className="w-3 h-3 text-white" />
+      <div className="w-3.5 h-full bg-emerald-500 rounded-xs flex flex-col items-center justify-center shadow-xs">
+        <Footprints className="w-2.5 h-2.5 text-slate-950" />
       </div>
-      <div className="w-4 h-full bg-slate-700 border-l border-white/40" />
+      <div className="w-3.5 h-full bg-slate-700 border-l border-dashed border-white/40 flex items-center justify-center">
+        <span className="text-[7px] font-mono font-bold text-slate-300">CH</span>
+      </div>
+    </div>
+  );
+}
+
+function SidewalkRightIcon() {
+  return (
+    <div className="w-9 h-9 bg-slate-800 rounded-xl flex items-center justify-between p-1 border border-slate-700 shadow-md group-hover:scale-110 transition-transform duration-200">
+      <div className="w-3.5 h-full bg-slate-700 border-r border-dashed border-white/40 flex items-center justify-center">
+        <span className="text-[7px] font-mono font-bold text-slate-300">O‘</span>
+      </div>
+      <div className="w-3.5 h-full bg-emerald-500 rounded-xs flex flex-col items-center justify-center shadow-xs">
+        <Footprints className="w-2.5 h-2.5 text-slate-950" />
+      </div>
+    </div>
+  );
+}
+
+function RoadEdgeLeftIcon() {
+  return (
+    <div className="w-9 h-9 bg-slate-800 rounded-xl flex items-center justify-between p-1 border border-slate-700 shadow-md group-hover:scale-110 transition-transform duration-200">
+      <div className="w-3 h-full bg-teal-500/90 rounded-xs flex items-center justify-center">
+        <Maximize2 className="w-2.5 h-2.5 text-slate-950" />
+      </div>
+      <div className="w-4 h-full bg-slate-700 border-l border-dashed border-white/30" />
+    </div>
+  );
+}
+
+function RoadEdgeRightIcon() {
+  return (
+    <div className="w-9 h-9 bg-slate-800 rounded-xl flex items-center justify-between p-1 border border-slate-700 shadow-md group-hover:scale-110 transition-transform duration-200">
+      <div className="w-4 h-full bg-slate-700 border-r border-dashed border-white/30" />
+      <div className="w-3 h-full bg-teal-500/90 rounded-xs flex items-center justify-center">
+        <Maximize2 className="w-2.5 h-2.5 text-slate-950" />
+      </div>
     </div>
   );
 }
@@ -191,11 +313,12 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     id: 'number_of_lanes',
     name: 'Tasmalar soni',
     category: 'Yo‘l',
-    currentValueId: 'lanes_1_1',
+    currentValueId: 'lanes_2',
     options: [
-      { id: 'lanes_1_1', label: '1 x 1 (Ikkita bo‘lak)', scoreWeight: 5, renderIcon: () => <Navigation className="w-5 h-5 text-teal-400" /> },
-      { id: 'lanes_2_2', label: '2 x 2 (To‘rtta bo‘lak)', scoreWeight: 3, renderIcon: () => <Navigation className="w-5 h-5 text-amber-400" /> },
-      { id: 'lanes_3_3', label: '3 x 3 va undan ko‘p', scoreWeight: 1, renderIcon: () => <Navigation className="w-5 h-5 text-rose-400" /> },
+      { id: 'lanes_1', label: '1 ta tasma (Bir tomonlama / tor)', scoreWeight: 5, renderIcon: () => <Navigation className="w-5 h-5 text-teal-400" /> },
+      { id: 'lanes_2', label: '2 ta tasma (1x1)', scoreWeight: 4, renderIcon: () => <Navigation className="w-5 h-5 text-emerald-400" /> },
+      { id: 'lanes_3', label: '3 ta tasma (Burilish tasmali)', scoreWeight: 2, renderIcon: () => <Navigation className="w-5 h-5 text-amber-400" /> },
+      { id: 'lanes_4plus', label: '4 va undan ko‘p tasma (Magistral)', scoreWeight: 1, renderIcon: () => <Navigation className="w-5 h-5 text-rose-400" /> },
     ],
   },
   {
@@ -249,8 +372,9 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Yo‘l',
     currentValueId: 'flat',
     options: [
-      { id: 'flat', label: 'Tekis yo‘l (<7.5%)', scoreWeight: 5, renderIcon: () => <ArrowUpDown className="w-5 h-5 text-teal-400" /> },
-      { id: 'slope', label: 'Nishablik yo‘l (≥7.5%)', scoreWeight: 2, renderIcon: () => <ArrowUpDown className="w-5 h-5 text-amber-400" /> },
+      { id: 'flat', label: '0% < t < 7.5% (Tekis yo‘l)', scoreWeight: 5, renderIcon: () => <ArrowUpDown className="w-5 h-5 text-teal-400" /> },
+      { id: 'slope_med', label: '7.5% ≤ t < 10% (O‘rtacha nishablik)', scoreWeight: 3, renderIcon: () => <ArrowUpDown className="w-5 h-5 text-amber-400" /> },
+      { id: 'slope_steep', label: '10% < t (Tik nishablik)', scoreWeight: 1, renderIcon: () => <ArrowUpDown className="w-5 h-5 text-rose-400" /> },
     ],
   },
   {
@@ -265,15 +389,15 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
   },
   {
     id: 'middle_of_road',
-    name: 'Yo‘lning o‘rtasi',
+    name: 'Yo‘lning o‘rta qismi',
     category: 'Yo‘l',
     currentValueId: 'centreline',
     options: [
-      { id: 'barrier_metal', label: 'Metall to‘siq', scoreWeight: 5, renderIcon: () => <ShieldAlert className="w-5 h-5 text-teal-400" /> },
-      { id: 'barrier_concrete', label: 'Beton to‘siq', scoreWeight: 5, renderIcon: () => <ShieldAlert className="w-5 h-5 text-slate-300" /> },
-      { id: 'median_separated', label: 'Keng ajratuvchi maysazor', scoreWeight: 4, renderIcon: () => <Trees className="w-5 h-5 text-emerald-400" /> },
-      { id: 'double_centreline', label: 'Qo‘sh o‘q chiziq', scoreWeight: 3, renderIcon: () => <Split className="w-5 h-5 text-amber-400" /> },
-      { id: 'centreline', label: 'Bitta o‘q chiziq', scoreWeight: 2, renderIcon: () => <Split className="w-5 h-5 text-slate-400" /> },
+      { id: 'barrier_metal', label: 'Metall to‘siq (W-beam)', scoreWeight: 5, renderIcon: () => <ShieldAlert className="w-5 h-5 text-teal-400" /> },
+      { id: 'barrier_concrete', label: 'Beton to‘siq (New Jersey)', scoreWeight: 5, renderIcon: () => <ShieldAlert className="w-5 h-5 text-slate-300" /> },
+      { id: 'median_separated', label: 'Keng ajratuvchi maysazor (≥1m)', scoreWeight: 4, renderIcon: () => <Trees className="w-5 h-5 text-emerald-400" /> },
+      { id: 'double_centreline', label: 'Qo‘sh uzluksiz o‘q chiziq', scoreWeight: 2, renderIcon: () => <Split className="w-5 h-5 text-amber-400" /> },
+      { id: 'centreline', label: 'Bitta o‘q chiziq / Ajratilmagan', scoreWeight: 1, renderIcon: () => <Split className="w-5 h-5 text-slate-400" /> },
     ],
   },
   {
@@ -302,9 +426,10 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Maktab',
     currentValueId: 'flashing_beacon',
     options: [
-      { id: 'flashing_beacon', label: 'Miltillovchi T.7 svetofori va belgilari bor', scoreWeight: 5, renderIcon: SchoolSignIcon },
-      { id: 'signs_only', label: 'Ogohlantirish belgilari bor', scoreWeight: 3, renderIcon: () => <ShieldAlert className="w-5 h-5 text-amber-400" /> },
-      { id: 'none', label: 'Ogohlantirish belgilari yo‘q', scoreWeight: 1, renderIcon: () => <XCircle className="w-5 h-5 text-rose-400" /> },
+      { id: 'flashing_beacon', label: 'Miltillovchi LED chiroqli belgi', scoreWeight: 5, renderIcon: SchoolSignIcon },
+      { id: 'signs_standard', label: 'Standart 1.21 «Bolalar» belgisi', scoreWeight: 4, renderIcon: () => <ShieldAlert className="w-5 h-5 text-amber-400" /> },
+      { id: 'road_marking', label: 'Yo‘l qoplamasidagi yozuv / piktogramma', scoreWeight: 3, renderIcon: () => <CheckCircle2 className="w-5 h-5 text-teal-400" /> },
+      { id: 'none', label: 'Ogohlantirish belgisi yo‘q', scoreWeight: 0, renderIcon: () => <XCircle className="w-5 h-5 text-rose-400" /> },
     ],
   },
 
@@ -313,10 +438,11 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     id: 'crossing_supervisor',
     name: 'Piyodalar patruli (Nazoratchi)',
     category: 'Maktab',
-    currentValueId: 'present',
+    currentValueId: 'full',
     options: [
-      { id: 'present', label: 'Bor (Dars vaqtlarida navbatchilik bor)', scoreWeight: 5, renderIcon: () => <Users className="w-5 h-5 text-teal-400" /> },
-      { id: 'not_present', label: 'Yo‘q', scoreWeight: 1, renderIcon: () => <XCircle className="w-5 h-5 text-slate-400" /> },
+      { id: 'full', label: 'Doimiy maktab patruli / YPX nazorati', scoreWeight: 5, renderIcon: () => <Users className="w-5 h-5 text-teal-400" /> },
+      { id: 'peak', label: 'Faqat dars paytida navbatchi', scoreWeight: 3, renderIcon: () => <Users className="w-5 h-5 text-amber-400" /> },
+      { id: 'none', label: 'Piyodalar patruli yo‘q', scoreWeight: 0, renderIcon: () => <XCircle className="w-5 h-5 text-slate-400" /> },
     ],
   },
   {
@@ -325,9 +451,9 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Piyoda',
     currentValueId: 'behind_barrier',
     options: [
-      { id: 'behind_barrier', label: 'Panjara/To‘siq ortida', scoreWeight: 5, renderIcon: SidewalkIcon },
-      { id: 'separated', label: 'Qatnov qismidan ajratilgan (≥1m)', scoreWeight: 4, renderIcon: () => <Footprints className="w-5 h-5 text-emerald-400" /> },
-      { id: 'adjacent', label: 'Qatnov qismiga yondosh (<1m)', scoreWeight: 2, renderIcon: () => <Footprints className="w-5 h-5 text-amber-400" /> },
+      { id: 'behind_barrier', label: 'Panjara/To‘siq ortida (Chap)', scoreWeight: 5, renderIcon: SidewalkLeftIcon },
+      { id: 'separated', label: 'Qatnov qismidan ajratilgan (≥1m)', scoreWeight: 4, renderIcon: SidewalkLeftIcon },
+      { id: 'adjacent', label: 'Qatnov qismiga yondosh (<1m)', scoreWeight: 2, renderIcon: SidewalkLeftIcon },
       { id: 'none', label: 'Piyodalar yo‘lagi yo‘q', scoreWeight: 0, renderIcon: () => <XCircle className="w-5 h-5 text-rose-400" /> },
     ],
   },
@@ -337,9 +463,9 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Piyoda',
     currentValueId: 'behind_barrier',
     options: [
-      { id: 'behind_barrier', label: 'Panjara/To‘siq ortida', scoreWeight: 5, renderIcon: SidewalkIcon },
-      { id: 'separated', label: 'Qatnov qismidan ajratilgan (≥1m)', scoreWeight: 4, renderIcon: () => <Footprints className="w-5 h-5 text-emerald-400" /> },
-      { id: 'adjacent', label: 'Qatnov qismiga yondosh (<1m)', scoreWeight: 2, renderIcon: () => <Footprints className="w-5 h-5 text-amber-400" /> },
+      { id: 'behind_barrier', label: 'Panjara/To‘siq ortida (O‘ng)', scoreWeight: 5, renderIcon: SidewalkRightIcon },
+      { id: 'separated', label: 'Qatnov qismidan ajratilgan (≥1m)', scoreWeight: 4, renderIcon: SidewalkRightIcon },
+      { id: 'adjacent', label: 'Qatnov qismiga yondosh (<1m)', scoreWeight: 2, renderIcon: SidewalkRightIcon },
       { id: 'none', label: 'Piyodalar yo‘lagi yo‘q', scoreWeight: 0, renderIcon: () => <XCircle className="w-5 h-5 text-rose-400" /> },
     ],
   },
@@ -349,8 +475,8 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Piyoda',
     currentValueId: 'wide',
     options: [
-      { id: 'wide', label: 'Keng chetki tasma (≥2.4m)', scoreWeight: 5, renderIcon: () => <Maximize2 className="w-5 h-5 text-teal-400" /> },
-      { id: 'narrow', label: 'Tor chetki tasma (0.75m-1m)', scoreWeight: 3, renderIcon: () => <Maximize2 className="w-5 h-5 text-amber-400" /> },
+      { id: 'wide', label: 'Keng chetki tasma (≥2.4m, Chap)', scoreWeight: 5, renderIcon: RoadEdgeLeftIcon },
+      { id: 'narrow', label: 'Tor chetki tasma (0.75m-1m)', scoreWeight: 3, renderIcon: RoadEdgeLeftIcon },
       { id: 'none', label: 'Chetki tasma yo‘q', scoreWeight: 1, renderIcon: () => <XCircle className="w-5 h-5 text-rose-400" /> },
     ],
   },
@@ -360,8 +486,8 @@ const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
     category: 'Piyoda',
     currentValueId: 'wide',
     options: [
-      { id: 'wide', label: 'Keng chetki tasma (≥2.4m)', scoreWeight: 5, renderIcon: () => <Maximize2 className="w-5 h-5 text-teal-400" /> },
-      { id: 'narrow', label: 'Tor chetki tasma (0.75m-1m)', scoreWeight: 3, renderIcon: () => <Maximize2 className="w-5 h-5 text-amber-400" /> },
+      { id: 'wide', label: 'Keng chetki tasma (≥2.4m, O‘ng)', scoreWeight: 5, renderIcon: RoadEdgeRightIcon },
+      { id: 'narrow', label: 'Tor chetki tasma (0.75m-1m)', scoreWeight: 3, renderIcon: RoadEdgeRightIcon },
       { id: 'none', label: 'Chetki tasma yo‘q', scoreWeight: 1, renderIcon: () => <XCircle className="w-5 h-5 text-rose-400" /> },
     ],
   },
@@ -585,9 +711,10 @@ export function Sr4sDemonstrator() {
   const [attributes, setAttributes] = useState<AttributeDefinition[]>(FULL_40_ATTRIBUTES);
   const [activeAttrId, setActiveAttrId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [touchedIds, setTouchedIds] = useState<Set<string>>(new Set(FULL_40_ATTRIBUTES.map(a => a.id)));
 
   // Dynamic live calculation of Star Rating & score
-  const { starRating, scorePercentage, calculatedScore, statusBadge } = useMemo(() => {
+  const { starRating, scorePercentage, calculatedScore, currentLevelObj } = useMemo(() => {
     let totalScore = 0;
     let maxTotal = attributes.length * 5;
 
@@ -600,22 +727,19 @@ export function Sr4sDemonstrator() {
     let star = Number((1 + (pct / 100) * 4).toFixed(1));
     if (star > 5.0) star = 5.0;
 
-    let badgeText = 'O‘rtacha Xavfsiz';
-    let badgeClass = 'bg-amber-500/10 text-amber-400 border-amber-500/30';
-
-    if (star >= 4.0) {
-      badgeText = 'A’lo — Xavfsiz Maktab Zonasi';
-      badgeClass = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
-    } else if (star < 3.0) {
-      badgeText = 'Yuqori Xavf — Ta’mir va Himoya Talab';
-      badgeClass = 'bg-rose-500/10 text-rose-400 border-rose-500/30';
-    }
+    // Determine 1-5 level object according to user image requirements
+    let levelIdx = 0;
+    if (star >= 5.0) levelIdx = 4;
+    else if (star >= 4.0) levelIdx = 3;
+    else if (star >= 3.0) levelIdx = 2;
+    else if (star >= 2.0) levelIdx = 1;
+    else levelIdx = 0;
 
     return {
       starRating: star,
       scorePercentage: pct,
       calculatedScore: pct,
-      statusBadge: { text: badgeText, className: badgeClass },
+      currentLevelObj: SR4S_STAR_LEVELS[levelIdx],
     };
   }, [attributes]);
 
@@ -628,7 +752,14 @@ export function Sr4sDemonstrator() {
     setAttributes((prev) =>
       prev.map((a) => (a.id === attrId ? { ...a, currentValueId: optionId } : a))
     );
+    setTouchedIds((prev) => new Set(prev).add(attrId));
     setActiveAttrId(null);
+  };
+
+  const handleResetAttributes = () => {
+    setAttributes(FULL_40_ATTRIBUTES);
+    setTouchedIds(new Set(FULL_40_ATTRIBUTES.map(a => a.id)));
+    toastError("Barcha parametrlar standart holatga qaytarildi.", "Qayta o'rnatildi");
   };
 
   // Save to database
@@ -661,7 +792,7 @@ export function Sr4sDemonstrator() {
           maxScore: 100,
           percentage: scorePercentage,
           answers: answersMap,
-          reviewerNotes: `SR4S Baholash calculator orqali topshirildi: ${starRating} yulduz (${scorePercentage}%)`,
+          reviewerNotes: `SR4S Baholash calculator: ${starRating} yulduz (${scorePercentage}%) - ${currentLevelObj.title}`,
         }),
       });
 
@@ -671,8 +802,8 @@ export function Sr4sDemonstrator() {
       }
 
       success(
-        `Baholash ma'lumotlar bazasiga muvaffaqiyatli saqlandi! Maktab balli: ${calculatedScore} ball (${starRating} yulduz).`,
-        "Bazaga Saqlandi ✅"
+        `Baholash bazaga saqlandi! Maktab balli: ${calculatedScore} ball (${starRating} yulduz).`,
+        "Muvaffaqiyatli saqlandi ✅"
       );
     } catch (err: any) {
       toastError(err?.message || "Baholashni saqlashda xatolik yuz berdi", "Xatolik");
@@ -691,7 +822,7 @@ export function Sr4sDemonstrator() {
           </div>
           <div>
             <div className="text-[10px] font-mono font-bold tracking-widest text-teal-400 uppercase flex items-center gap-1.5">
-              <Sparkles className="w-3 h-3 text-teal-400" />
+              <Sparkles className="w-3.5 h-3.5 text-teal-400" />
               <span>XALQARO iRAP SR4S STANDARTI (40 TA PARAMETR)</span>
             </div>
             <h2 className="text-base sm:text-lg font-extrabold text-white tracking-tight">
@@ -701,9 +832,19 @@ export function Sr4sDemonstrator() {
         </div>
 
         <div className="flex items-center gap-3">
-          <span className={cn('px-3.5 py-1.5 rounded-xl text-xs font-bold border backdrop-blur-sm transition-all', statusBadge.className)}>
-            {statusBadge.text}
+          {/* Status Badge */}
+          <span className={cn('px-3.5 py-1.5 rounded-xl text-xs font-bold border backdrop-blur-sm transition-all flex items-center gap-1.5', currentLevelObj.badgeClass)}>
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            <span>{currentLevelObj.title}</span>
           </span>
+
+          <button
+            onClick={handleResetAttributes}
+            title="Standart holatga keltirish"
+            className="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-all active:scale-95"
+          >
+            <RotateCcw className="w-4 h-4" />
+          </button>
 
           {user && user.role === 'SCHOOL_USER' && (
             <Button
@@ -718,81 +859,172 @@ export function Sr4sDemonstrator() {
         </div>
       </div>
 
-      {/* Main Grid: Left Star Display + Right Attribute Buttons */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[640px]">
-        {/* Left Side: Live Star Rating Display */}
-        <div className="lg:col-span-4 p-8 bg-gradient-to-b from-slate-950 via-slate-900/80 to-slate-950 border-r border-slate-800/80 flex flex-col items-center justify-center text-center space-y-6 relative overflow-hidden">
-          {/* Subtle Ambient Glow Effect */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
+      {/* Main Layout Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[660px]">
+        {/* LEFT SIDE SCREEN: Calculated Result & 5 Star Level Reference Scale */}
+        <div className="lg:col-span-5 p-6 bg-gradient-to-b from-slate-950 via-slate-900/90 to-slate-950 border-r border-slate-800/80 flex flex-col space-y-6 relative overflow-y-auto max-h-[760px]">
+          
+          {/* Main Calculated Result Card */}
+          <div className={cn('p-5 rounded-2xl border transition-all duration-300 relative overflow-hidden space-y-4 shadow-xl', currentLevelObj.cardBgClass, currentLevelObj.cardBorderClass)}>
+            
+            {/* Header / Parameter Counter */}
+            <div className="flex items-center justify-between">
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase bg-teal-500/10 text-teal-400 border border-teal-500/20">
+                <Check className="w-3 h-3 text-teal-400" />
+                <span>{touchedIds.size} / 40 PARAMETR BELGILANDI</span>
+              </span>
 
-          <div className="space-y-2 max-w-sm relative z-10">
-            <p className="text-xs text-slate-400 leading-relaxed font-medium">
-              Barcha 40 ta rasmiy iRAP SR4S parametrlaridan birini bosing va maktab yulduzli reytingini jonli kuzating:
-            </p>
-          </div>
-
-          {/* Children Illustration Placeholder / Icon */}
-          <div className="relative py-2 relative z-10">
-            <div className="flex items-center justify-center h-28 w-28 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-400 mx-auto shadow-2xl animate-pulse">
-              <SchoolIcon className="h-14 w-14" />
+              <span className="text-[11px] font-bold text-slate-400">
+                Indeks: {scorePercentage}%
+              </span>
             </div>
-          </div>
 
-          {/* Star Rating Display */}
-          <div className="space-y-3 relative z-10">
-            {/* 5-Star Visual Row */}
-            <div className="flex items-center justify-center gap-1.5">
+            {/* Stars Row (Colored strictly according to evaluated star level) */}
+            <div className="flex items-center justify-center gap-2 py-2">
               {[1, 2, 3, 4, 5].map((s) => {
-                const filled = starRating >= s;
-                const half = starRating > s - 1 && starRating < s;
+                const filled = Math.round(starRating) >= s;
                 return (
                   <Star
                     key={s}
                     className={cn(
-                      'w-7 h-7 transition-all duration-300 transform hover:scale-125',
-                      filled
-                        ? 'fill-amber-400 text-amber-400 drop-shadow-[0_0_12px_rgba(251,191,36,0.6)]'
-                        : half
-                        ? 'fill-amber-400/50 text-amber-400'
-                        : 'text-slate-800'
+                      'w-8 h-8 transition-all duration-300 transform hover:scale-110',
+                      filled ? currentLevelObj.starFillClass : 'text-slate-800 fill-slate-900'
                     )}
                   />
                 );
               })}
             </div>
 
-            {/* Decimal Score Text */}
-            <div>
-              <div className="text-3xl font-black text-white tracking-tight">
-                {starRating} <span className="text-sm font-normal text-slate-400">/ 5.0 Yulduz</span>
+            {/* Decimal Score */}
+            <div className="text-center space-y-1">
+              <div className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+                {starRating} <span className="text-base font-normal text-slate-400">/ 5.0 Yulduz</span>
               </div>
-              <div className="text-xs font-mono font-bold text-teal-400 mt-1">
-                Umumiy Indeks: {scorePercentage}% Xavfsizlik ({calculatedScore} ball)
-              </div>
+              <p className={cn('text-sm font-extrabold uppercase tracking-wide', currentLevelObj.starTextClass)}>
+                {currentLevelObj.title}
+              </p>
             </div>
+
+            {/* Evaluated Description Banner (Exact match to User Image Text) */}
+            <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 text-center space-y-1">
+              <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
+                Yulduz reytingi natijasi:
+              </div>
+              <p className="text-xs sm:text-sm font-medium text-slate-200 leading-snug">
+                &quot;{currentLevelObj.description}&quot;
+              </p>
+            </div>
+
+            {/* Goal Target Badge */}
+            {starRating >= 3.0 ? (
+              <div className="flex items-center justify-center gap-2 py-1.5 px-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-emerald-400 text-xs font-bold">
+                <Target className="w-4 h-4 text-emerald-400" />
+                <span>Maqsadga erishildi: 3 yulduz va undan yuqori!</span>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center gap-2 py-1.5 px-3 bg-amber-500/10 border border-amber-500/30 rounded-xl text-amber-400 text-xs font-bold">
+                <AlertTriangle className="w-4 h-4 text-amber-400" />
+                <span>Maqsad: Kamida 3 yulduzli xavfsizlikka yetkazish lozim</span>
+              </div>
+            )}
           </div>
 
-          <div className="pt-4 border-t border-slate-900/80 w-full max-w-xs text-[11px] text-slate-500 flex items-center justify-center gap-1.5 relative z-10">
-            <Info className="w-3.5 h-3.5 text-teal-500 shrink-0" />
-            <span>Xalqaro iRAP SR4S (Coding Guide v1.7) standarti</span>
+          {/* 5-LEVEL COMPARATIVE REFERENCE SCALE (Direct replica of User's Uzbek Checklist Image) */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between px-1">
+              <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                <Info className="w-3.5 h-3.5 text-teal-400" />
+                <span>Baholash Mezonlari (5 ta Daraja)</span>
+              </h3>
+              <span className="text-[10px] font-mono text-slate-500">iRAP SR4S Scale</span>
+            </div>
+
+            <div className="space-y-2.5">
+              {SR4S_STAR_LEVELS.map((lvl) => {
+                const isActive = Math.round(starRating) === lvl.starCount;
+                return (
+                  <div
+                    key={lvl.starCount}
+                    className={cn(
+                      'p-3.5 rounded-2xl border transition-all duration-300 relative text-left group',
+                      lvl.cardBgClass,
+                      lvl.cardBorderClass,
+                      isActive
+                        ? 'ring-2 ring-teal-400 shadow-lg shadow-teal-500/10 scale-[1.02]'
+                        : 'opacity-85 hover:opacity-100 hover:border-slate-600'
+                    )}
+                  >
+                    {/* Top Row: Stars + Target Flag if 3-star */}
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-1">
+                        {Array.from({ length: lvl.starCount }).map((_, idx) => (
+                          <Star
+                            key={idx}
+                            className={cn('w-4 h-4', lvl.starFillClass)}
+                          />
+                        ))}
+                        <span className={cn('ml-1.5 text-xs font-bold', lvl.starTextClass)}>
+                          {lvl.starCount} Yulduz
+                        </span>
+                      </div>
+
+                      {/* Active Indicator Badge */}
+                      {isActive && (
+                        <span className="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-teal-500 text-slate-950 animate-pulse">
+                          Sizning Natijangiz
+                        </span>
+                      )}
+
+                      {/* Goal Target Badge on 3-Star Level (As depicted in user image) */}
+                      {lvl.starCount === 3 && (
+                        <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-black text-[9px] shadow-xs">
+                          <Target className="w-3 h-3 text-slate-950" />
+                          <span>Maqsad: 3 yulduz va...</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Exact Level Text Description from Uzbek Image */}
+                    <p className="text-xs text-slate-300 leading-snug font-medium">
+                      {lvl.description}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
 
-        {/* Right Side: 40 Attribute Grid Tiles (8 Cols on Large Screen) */}
-        <div className="lg:col-span-8 p-5 bg-slate-900/90 overflow-y-auto max-h-[720px]">
-          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2.5">
+        {/* RIGHT SIDE SCREEN: 40 Attribute Buttons Grid */}
+        <div className="lg:col-span-7 p-5 bg-slate-900/90 overflow-y-auto max-h-[760px]">
+          <div className="mb-3 flex items-center justify-between px-1">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+              40 ta Parametrdan birini tanlang:
+            </span>
+            <span className="text-[11px] font-mono text-teal-400">
+              {touchedIds.size} / 40 belgilandi
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-8 gap-2.5">
             {attributes.map((attr) => {
               const currentOpt = attr.options.find((o) => o.id === attr.currentValueId) || attr.options[0];
               const renderFn = currentOpt.renderIcon || (() => <HelpCircle className="h-5 w-5 text-teal-400" />);
+              const isTouched = touchedIds.has(attr.id);
 
               return (
                 <button
                   key={attr.id}
                   type="button"
                   onClick={() => setActiveAttrId(attr.id)}
-                  className="flex flex-col items-center justify-between p-2.5 rounded-2xl bg-slate-950 border border-slate-800/80 hover:border-teal-400 hover:shadow-xl hover:shadow-teal-500/10 hover:-translate-y-1 active:scale-95 transition-all duration-200 text-center group cursor-pointer relative overflow-hidden min-h-[110px]"
+                  className={cn(
+                    'flex flex-col items-center justify-between p-2.5 rounded-2xl bg-slate-950 border transition-all duration-200 text-center group cursor-pointer relative overflow-hidden min-h-[110px]',
+                    isTouched
+                      ? 'border-slate-800/80 hover:border-teal-400 hover:shadow-xl hover:shadow-teal-500/10 hover:-translate-y-1'
+                      : 'border-amber-500/40 bg-amber-950/10 hover:border-teal-400'
+                  )}
                 >
-                  {/* Top Badge label */}
+                  {/* Top Option Label */}
                   <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-teal-400 group-hover:text-teal-300 truncate max-w-full mb-1 transition-colors">
                     {currentOpt.label}
                   </span>

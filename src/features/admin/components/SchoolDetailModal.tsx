@@ -68,16 +68,34 @@ export function SchoolDetailModal({
         {/* Scores & Status Strip */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
           <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-100 space-y-1">
-            <div className="text-[11px] text-slate-400 uppercase font-bold">Joriy Ball:</div>
-            <div className="text-xl font-black text-slate-900 font-mono">
-              {school.currentScore} <span className="text-xs font-normal text-slate-400">/ 100</span>
+            <div className="text-[11px] text-slate-400 uppercase font-bold">Yulduz Reytingi:</div>
+            <div className="text-sm font-black text-slate-900 font-mono">
+              {school.currentScore === 0 ? (
+                <span className="text-slate-400 text-xs font-sans font-medium">—</span>
+              ) : school.currentScore >= 90 ? (
+                '⭐️⭐️⭐️⭐️⭐️'
+              ) : school.currentScore >= 75 ? (
+                '⭐️⭐️⭐️⭐️'
+              ) : school.currentScore >= 60 ? (
+                '⭐️⭐️⭐️'
+              ) : school.currentScore >= 45 ? (
+                '⭐️⭐️'
+              ) : (
+                '⭐️'
+              )}
             </div>
           </div>
 
           <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-100 space-y-1">
             <div className="text-[11px] text-slate-400 uppercase font-bold">Xavfsizlik Holati:</div>
             <div className="pt-0.5">
-              <ScoreStatusBadge score={school.currentScore} showScore={false} />
+              {school.currentScore === 0 ? (
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-600 border border-slate-200">
+                  Kutilmoqda
+                </span>
+              ) : (
+                <ScoreStatusBadge score={school.currentScore} showScore={false} />
+              )}
             </div>
           </div>
 
@@ -115,12 +133,19 @@ export function SchoolDetailModal({
 
             <div className="flex items-center gap-2 font-mono">
               <Compass className="w-4 h-4 text-teal-600" />
-              <span>Koordinatalar: {school.coordinates.latitude.toFixed(4)}, {school.coordinates.longitude.toFixed(4)}</span>
+              <span>
+                Koordinatalar:{' '}
+                {school.coordinates?.latitude != null && school.coordinates?.longitude != null
+                  ? `${school.coordinates.latitude.toFixed(4)}, ${school.coordinates.longitude.toFixed(4)}`
+                  : 'Kiritilmagan'}
+              </span>
             </div>
 
             <div className="flex items-center gap-2">
               <MapPin className="w-4 h-4 text-teal-600" />
-              <span className="truncate">Mo‘ljal: {school.coordinates.addressNotes || 'Belgilanmagan'}</span>
+              <span className="truncate">
+                Mo‘ljal: {school.coordinates?.addressNotes || 'Belgilanmagan'}
+              </span>
             </div>
           </div>
         </div>

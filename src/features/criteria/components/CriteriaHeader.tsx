@@ -34,11 +34,11 @@ export function CriteriaHeader({
           </div>
 
           <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-            Davlat Yo‘l Xavfsizligi Standarti Mezonlari
+            Xalqaro iRAP SR4S Standarti Mezonlari
           </h1>
           <p className="text-xs text-slate-500 max-w-2xl leading-relaxed">
-            Umumta’lim maktablari atrofidagi xavfsizlik holatini baholash uchun tasdiqlangan
-            8 ta milliy standart mezoni va savollar rubrikasi.
+            BMT va iRAP (Star Rating for Schools v1.7) standarti asosida maktab atrofi infratuzilmasini
+            40 ta xalqaro parametr va 7 ta modul bo‘yicha kompleks baholash rubrikasi.
           </p>
         </div>
 
@@ -60,41 +60,41 @@ export function CriteriaHeader({
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
         <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center gap-2.5">
           <div className="p-2 rounded-lg bg-teal-50 text-teal-700 font-bold font-mono">
-            08
+            40
           </div>
           <div>
-            <div className="font-bold text-slate-900">8 ta Mezon</div>
-            <div className="text-[11px] text-slate-500">Standart yo‘nalishlar</div>
+            <div className="font-bold text-slate-900">40 ta Parametr</div>
+            <div className="text-[11px] text-slate-500">SR4S mezonlari</div>
           </div>
         </div>
 
         <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center gap-2.5">
           <div className="p-2 rounded-lg bg-blue-50 text-blue-700 font-bold font-mono">
-            {totalQuestions}
+            07
           </div>
           <div>
-            <div className="font-bold text-slate-900">{totalQuestions} ta Savol</div>
-            <div className="text-[11px] text-slate-500">Batafsil tekshiruv</div>
+            <div className="font-bold text-slate-900">7 ta Modul</div>
+            <div className="text-[11px] text-slate-500">Infratuzilma guruhlari</div>
           </div>
         </div>
 
         <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center gap-2.5">
           <div className="p-2 rounded-lg bg-amber-50 text-amber-700 font-bold font-mono">
-            100
+            1-5⭐
           </div>
           <div>
-            <div className="font-bold text-slate-900">100 Maksimal Ball</div>
-            <div className="text-[11px] text-slate-500">Umumiy reyting shkalasi</div>
+            <div className="font-bold text-slate-900">1 — 5 Yulduz</div>
+            <div className="text-[11px] text-slate-500">Star Rating shkalasi</div>
           </div>
         </div>
 
         <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center gap-2.5">
           <div className="p-2 rounded-lg bg-emerald-50 text-emerald-700 font-bold font-mono">
-            &ge;80
+            &ge;3⭐
           </div>
           <div>
-            <div className="font-bold text-slate-900">&ge;80% Talabi</div>
-            <div className="text-[11px] text-slate-500">Xavfsiz daraja standarti</div>
+            <div className="font-bold text-slate-900">&ge;3 Yulduz Talabi</div>
+            <div className="text-[11px] text-slate-500">Maqsadli xavfsizlik darajasi</div>
           </div>
         </div>
       </div>
