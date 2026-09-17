@@ -6,9 +6,12 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   try {
     const criteriaRows = await query(
-      `SELECT id, title, description, icon, sort_order as "sortOrder", max_score as "maxScore" 
-       FROM criteria 
-       ORDER BY sort_order ASC`
+      `SELECT c.id, c.title, c.description, c.icon, c.sort_order as "sortOrder", c.sort_order as "order", c.max_score as "maxScore",
+              COUNT(q.id)::int as "questionCount"
+       FROM criteria c
+       LEFT JOIN questions q ON c.id = q.criterion_id
+       GROUP BY c.id, c.title, c.description, c.icon, c.sort_order, c.max_score
+       ORDER BY c.sort_order ASC`
     );
 
     const questionsRows = await query(
