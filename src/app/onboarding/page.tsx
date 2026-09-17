@@ -15,24 +15,18 @@ import {
   KeyRound,
   UserCheck,
   MapPin,
-  Compass,
-  Navigation,
   ArrowRight,
   ArrowLeft,
   CheckCircle2,
-  Lock,
-  Users,
   Eye,
   EyeOff,
   Sparkles,
-  School as SchoolIcon,
-  Globe,
 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const { user, isLoading: isAuthLoading } = useAuth();
+  const { user, isLoading: isAuthLoading, updateUser } = useAuth();
   const { success, error: toastError } = useToast();
 
   const [school, setSchool] = useState<School | null>(null);
@@ -144,17 +138,8 @@ export default function OnboardingPage() {
         }),
       });
 
-      // Update local stored session
-      const stored = localStorage.getItem('uz_road_safety_auth_user');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        localStorage.setItem(
-          'uz_road_safety_auth_user',
-          JSON.stringify({
-            ...parsed,
-            isFirstLogin: false,
-          })
-        );
+      if (response?.user) {
+        updateUser(response.user);
       }
 
       success(
@@ -162,7 +147,7 @@ export default function OnboardingPage() {
         'Muvaffaqiyatli'
       );
 
-      // Redirect to school dashboard
+      // Clean redirect to school dashboard without infinite loop
       router.push('/school');
     } catch (err: any) {
       console.error('Onboarding submit error:', err);

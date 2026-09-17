@@ -106,6 +106,15 @@ export class AuthService {
     }
   }
 
+  setStoredUser(user: User): void {
+    if (typeof window === 'undefined') return;
+    try {
+      localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(user));
+    } catch (e) {
+      console.warn('Failed to save updated session to localStorage', e);
+    }
+  }
+
   async switchDemoAccount(roleOrEmail: UserRole | string): Promise<User> {
     const demo = DEMO_ACCOUNTS.find(
       (acc) => acc.role === roleOrEmail || acc.email.toLowerCase() === roleOrEmail.toLowerCase()

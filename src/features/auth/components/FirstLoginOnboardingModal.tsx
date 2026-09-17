@@ -5,18 +5,14 @@ import { User, School } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/toast';
+import { useAuth } from '@/hooks/useAuth';
 import {
-  ShieldCheck,
   KeyRound,
   UserCheck,
   MapPin,
-  Compass,
-  Navigation,
   ArrowRight,
   ArrowLeft,
   CheckCircle2,
-  Lock,
-  Users,
   Eye,
   EyeOff,
   Sparkles,
@@ -36,6 +32,7 @@ export function FirstLoginOnboardingModal({
   onComplete,
 }: FirstLoginOnboardingModalProps) {
   const { success, error: toastError } = useToast();
+  const { updateUser } = useAuth();
 
   const [step, setStep] = useState<1 | 2 | 3>(1);
 
@@ -105,17 +102,8 @@ export function FirstLoginOnboardingModal({
         }),
       });
 
-      // Update local stored user
-      const stored = localStorage.getItem('srsp_auth_user');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        localStorage.setItem(
-          'srsp_auth_user',
-          JSON.stringify({
-            ...parsed,
-            isFirstLogin: false,
-          })
-        );
+      if (response?.user) {
+        updateUser(response.user);
       }
 
       success(
