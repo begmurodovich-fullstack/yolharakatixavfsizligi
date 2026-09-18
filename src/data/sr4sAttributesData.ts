@@ -900,22 +900,22 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "currentValueId": "not_present",
     "options": [
       {
-        "id": "not_present",
-        "labelUz": "Mavjud emas (Not Present)",
-        "labelEn": "Not Present",
-        "iconSrc": "/sr4s_icons/icon-not-present.png",
-        "scoreWeight": 3,
-        "badgeText": "NOT PRESENT",
-        "badgeColor": "red"
-      },
-      {
         "id": "present",
-        "labelUz": "Panjara mavjud (Present)",
+        "labelUz": "Mavjud",
         "labelEn": "Present",
         "iconSrc": "/sr4s_icons/icon-present.png",
         "scoreWeight": 5,
         "badgeText": "PRESENT",
         "badgeColor": "teal"
+      },
+      {
+        "id": "not_present",
+        "labelUz": "Mavjud emas",
+        "labelEn": "Not Present",
+        "iconSrc": "/sr4s_icons/icon-not-present.png",
+        "scoreWeight": 3,
+        "badgeText": "NOT PRESENT",
+        "badgeColor": "red"
       }
     ]
   },
@@ -927,60 +927,88 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "currentValueId": "marked",
     "options": [
       {
-        "id": "marked",
-        "labelUz": "Zebra chizilgan o‘tish joyi (Marked)",
-        "labelEn": "Marked Crossing",
-        "iconSrc": "/sr4s_icons/crossing-marked.png",
-        "scoreWeight": 4
-      },
-      {
-        "id": "raised_marked",
-        "labelUz": "Ko‘tarilgan zebra (Raised & Marked)",
-        "labelEn": "Raised Marked",
-        "iconSrc": "/sr4s_icons/crossing-raised-marked.png",
-        "scoreWeight": 5
+        "id": "none",
+        "labelUz": "O‘tish joyi yo‘q",
+        "labelEn": "None",
+        "iconSrc": "/sr4s_icons/crossing-none.png",
+        "scoreWeight": 1
       },
       {
         "id": "lights",
-        "labelUz": "Svetoforli o‘tish joyi (Signalized)",
-        "labelEn": "Signalized Crossing",
+        "labelUz": "Svetoforli",
+        "labelEn": "Lights",
         "iconSrc": "/sr4s_icons/crossing-lights.png",
         "scoreWeight": 5
       },
       {
-        "id": "raised_marked_refuge",
-        "labelUz": "Ko‘tarilgan + orolchali zebra",
-        "labelEn": "Raised + Refuge",
-        "iconSrc": "/sr4s_icons/crossing-raised-marked-refuge.png",
+        "id": "raised",
+        "labelUz": "Ko‘tarilgan",
+        "labelEn": "Raised",
+        "iconSrc": "/sr4s_icons/crossing-raised.png",
         "scoreWeight": 5
       },
       {
         "id": "bridge_tunnel",
-        "labelUz": "Yer usti / Yer osti ko‘prigi",
+        "labelUz": "Ko‘prik / Tunnel",
         "labelEn": "Bridge / Tunnel",
         "iconSrc": "/sr4s_icons/crossing-bridge-tunnel.png",
         "scoreWeight": 5
       },
       {
-        "id": "refuge",
-        "labelUz": "Xavfsizlik orolchali (Refuge)",
-        "labelEn": "Refuge Island",
-        "iconSrc": "/sr4s_icons/crossing-refuge.png",
+        "id": "marked",
+        "labelUz": "Chizilgan (Zebra)",
+        "labelEn": "Marked",
+        "iconSrc": "/sr4s_icons/crossing-marked.png",
         "scoreWeight": 4
       },
       {
         "id": "unmarked",
-        "labelUz": "Belgilanmagan o‘tish joyi",
+        "labelUz": "Belgilanmagan",
         "labelEn": "Unmarked",
         "iconSrc": "/sr4s_icons/crossing-unmarked.png",
         "scoreWeight": 2
       },
       {
-        "id": "none",
-        "labelUz": "O‘tish joyi umuman yo‘q (None)",
-        "labelEn": "None",
-        "iconSrc": "/sr4s_icons/crossing-none.png",
-        "scoreWeight": 1
+        "id": "refuge",
+        "labelUz": "Xavfsizlik orolchali",
+        "labelEn": "Refuge",
+        "iconSrc": "/sr4s_icons/crossing-refuge.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "lights_refuge",
+        "labelUz": "Svetofor + orolcha",
+        "labelEn": "Lights & Refuge",
+        "iconSrc": "/sr4s_icons/crossing-lights-refuge.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "marked_refuge",
+        "labelUz": "Zebra + orolcha",
+        "labelEn": "Marked & Refuge",
+        "iconSrc": "/sr4s_icons/crossing-marked-refuge.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "raised_marked",
+        "labelUz": "Ko‘tarilgan + zebra",
+        "labelEn": "Raised & Marked",
+        "iconSrc": "/sr4s_icons/crossing-raised-marked.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "raised_refuge",
+        "labelUz": "Ko‘tarilgan + orolcha",
+        "labelEn": "Raised & Refuge",
+        "iconSrc": "/sr4s_icons/crossing-raised-refuge.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "raised_marked_refuge",
+        "labelUz": "Ko‘tarilgan, zebra va orolcha",
+        "labelEn": "Raised, Marked & Refuge",
+        "iconSrc": "/sr4s_icons/crossing-raised-marked-refuge.png",
+        "scoreWeight": 5
       }
     ]
   },
@@ -989,49 +1017,91 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-24",
     "nameUz": "Yon yo‘l piyodalar o‘tish joyi",
     "nameEn": "Crossing Side Road",
-    "currentValueId": "side_lights",
+    "currentValueId": "lights",
     "options": [
       {
-        "id": "side_lights",
-        "labelUz": "Svetoforli yon o‘tish joyi",
-        "labelEn": "Signalized Side Crossing",
+        "id": "none",
+        "labelUz": "O‘tish joyi yo‘q",
+        "labelEn": "None",
+        "iconSrc": "/sr4s_icons/crossing-side-none.png",
+        "scoreWeight": 1
+      },
+      {
+        "id": "lights",
+        "labelUz": "Svetoforli",
+        "labelEn": "Lights",
         "iconSrc": "/sr4s_icons/crossing-side-lights.png",
         "scoreWeight": 5
       },
       {
-        "id": "side_marked",
-        "labelUz": "Chizilgan zebra (Marked)",
-        "labelEn": "Marked Side Crossing",
-        "iconSrc": "/sr4s_icons/crossing-side-marked.png",
-        "scoreWeight": 4
-      },
-      {
-        "id": "side_raised",
-        "labelUz": "Ko‘tarilgan o‘tish joyi (Raised)",
-        "labelEn": "Raised Side Crossing",
+        "id": "raised",
+        "labelUz": "Ko‘tarilgan",
+        "labelEn": "Raised",
         "iconSrc": "/sr4s_icons/crossing-side-raised.png",
         "scoreWeight": 5
       },
       {
-        "id": "side_bridge",
-        "labelUz": "Ko‘prik / Yer osti",
+        "id": "bridge_tunnel",
+        "labelUz": "Ko‘prik / Tunnel",
         "labelEn": "Bridge / Tunnel",
         "iconSrc": "/sr4s_icons/crossing-side-bridge-tunnel.png",
         "scoreWeight": 5
       },
       {
-        "id": "side_unmarked",
+        "id": "marked",
+        "labelUz": "Chizilgan (Zebra)",
+        "labelEn": "Marked",
+        "iconSrc": "/sr4s_icons/crossing-side-marked.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "unmarked",
         "labelUz": "Belgilanmagan",
         "labelEn": "Unmarked",
         "iconSrc": "/sr4s_icons/crossing-side-unmarked.png",
         "scoreWeight": 2
       },
       {
-        "id": "side_none",
-        "labelUz": "Mavjud emas (None)",
-        "labelEn": "None",
-        "iconSrc": "/sr4s_icons/crossing-side-none.png",
-        "scoreWeight": 1
+        "id": "refuge",
+        "labelUz": "Xavfsizlik orolchali",
+        "labelEn": "Refuge",
+        "iconSrc": "/sr4s_icons/crossing-side-refuge.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "lights_refuge",
+        "labelUz": "Svetofor + orolcha",
+        "labelEn": "Lights & Refuge",
+        "iconSrc": "/sr4s_icons/crossing-side-lights-refuge.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "marked_refuge",
+        "labelUz": "Zebra + orolcha",
+        "labelEn": "Marked & Refuge",
+        "iconSrc": "/sr4s_icons/crossing-side-marked-refuge.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "raised_marked",
+        "labelUz": "Ko‘tarilgan + zebra",
+        "labelEn": "Raised & Marked",
+        "iconSrc": "/sr4s_icons/crossing-side-raised-marked.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "raised_refuge",
+        "labelUz": "Ko‘tarilgan + orolcha",
+        "labelEn": "Raised & Refuge",
+        "iconSrc": "/sr4s_icons/crossing-side-raised-refuge.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "raised_marked_refuge",
+        "labelUz": "Ko‘tarilgan, zebra va orolcha",
+        "labelEn": "Raised, Marked & Refuge",
+        "iconSrc": "/sr4s_icons/crossing-side-raised-marked-refuge.png",
+        "scoreWeight": 5
       }
     ]
   },
@@ -1044,7 +1114,7 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "options": [
       {
         "id": "adequate",
-        "labelUz": "Talabga to‘liq javob beradi (Adequate)",
+        "labelUz": "Talabga to‘liq javob beradi",
         "labelEn": "Adequate",
         "iconSrc": "/sr4s_icons/icon-adequate.png",
         "scoreWeight": 5,
@@ -1053,12 +1123,21 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
       },
       {
         "id": "poor",
-        "labelUz": "Sifatsiz / Xavfli (Poor)",
+        "labelUz": "Yomon / Yetarli emas",
         "labelEn": "Poor",
         "iconSrc": "/sr4s_icons/icon-poor.png",
-        "scoreWeight": 1,
+        "scoreWeight": 2,
         "badgeText": "POOR",
         "badgeColor": "red"
+      },
+      {
+        "id": "na",
+        "labelUz": "Qo‘llanilmaydi",
+        "labelEn": "Not Applicable",
+        "iconSrc": "/sr4s_icons/icon-na.png",
+        "scoreWeight": 4,
+        "badgeText": "NA",
+        "badgeColor": "orange"
       }
     ]
   },
