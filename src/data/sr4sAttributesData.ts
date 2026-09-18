@@ -1,0 +1,1583 @@
+export interface AttributeOption {
+  id: string;
+  labelUz: string;
+  labelEn: string;
+  iconSrc: string;
+  scoreWeight: number;
+  badgeText?: string;
+  badgeColor?: 'teal' | 'red' | 'purple' | 'orange' | 'dark';
+}
+
+export interface AttributeDefinition {
+  id: string;
+  code: string;
+  nameUz: string;
+  nameEn: string;
+  currentValueId: string;
+  options: AttributeOption[];
+}
+
+export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
+  {
+    "id": "land_use_left",
+    "code": "SR4S-01",
+    "nameUz": "Yerdan foydalanish chapda",
+    "nameEn": "Land use left",
+    "currentValueId": "residential",
+    "options": [
+      {
+        "id": "residential",
+        "labelUz": "Aholi punkti (Turar joy)",
+        "labelEn": "Residential",
+        "iconSrc": "/sr4s_icons/land-use-residential.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "commercial",
+        "labelUz": "Tijorat / Savdo",
+        "labelEn": "Commercial",
+        "iconSrc": "/sr4s_icons/land-use-commercial.png",
+        "scoreWeight": 3
+      },
+      {
+        "id": "educational",
+        "labelUz": "Maktab / Ta’lim hududi",
+        "labelEn": "Educational",
+        "iconSrc": "/sr4s_icons/land-use-educational.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "farming",
+        "labelUz": "Qishloq xo‘jaligi",
+        "labelEn": "Farming",
+        "iconSrc": "/sr4s_icons/land-use-farming.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "industrial",
+        "labelUz": "Sanoat korxonasi",
+        "labelEn": "Industrial",
+        "iconSrc": "/sr4s_icons/land-use-industrial.png",
+        "scoreWeight": 2
+      },
+      {
+        "id": "undeveloped",
+        "labelUz": "Bo‘sh yer / Ochiq maydon",
+        "labelEn": "Undeveloped",
+        "iconSrc": "/sr4s_icons/land-use-undeveloped.png",
+        "scoreWeight": 5
+      }
+    ]
+  },
+  {
+    "id": "land_use_right",
+    "code": "SR4S-02",
+    "nameUz": "Yerdan foydalanish o‘ngda",
+    "nameEn": "Land Use Right",
+    "currentValueId": "residential",
+    "options": [
+      {
+        "id": "residential",
+        "labelUz": "Aholi punkti (Turar joy)",
+        "labelEn": "Residential",
+        "iconSrc": "/sr4s_icons/land-use-residential.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "commercial",
+        "labelUz": "Tijorat / Savdo",
+        "labelEn": "Commercial",
+        "iconSrc": "/sr4s_icons/land-use-commercial.png",
+        "scoreWeight": 3
+      },
+      {
+        "id": "educational",
+        "labelUz": "Maktab / Ta’lim hududi",
+        "labelEn": "Educational",
+        "iconSrc": "/sr4s_icons/land-use-educational.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "farming",
+        "labelUz": "Qishloq xo‘jaligi",
+        "labelEn": "Farming",
+        "iconSrc": "/sr4s_icons/land-use-farming.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "industrial",
+        "labelUz": "Sanoat korxonasi",
+        "labelEn": "Industrial",
+        "iconSrc": "/sr4s_icons/land-use-industrial.png",
+        "scoreWeight": 2
+      },
+      {
+        "id": "undeveloped",
+        "labelUz": "Bo‘sh yer / Ochiq maydon",
+        "labelEn": "Undeveloped",
+        "iconSrc": "/sr4s_icons/land-use-undeveloped.png",
+        "scoreWeight": 5
+      }
+    ]
+  },
+  {
+    "id": "area_type",
+    "code": "SR4S-03",
+    "nameUz": "Maydon turi",
+    "nameEn": "Area Type",
+    "currentValueId": "urban",
+    "options": [
+      {
+        "id": "urban",
+        "labelUz": "Shahar hududi (Urban)",
+        "labelEn": "Urban",
+        "iconSrc": "/sr4s_icons/area-type-urban.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "rural",
+        "labelUz": "Qishloq / Ochiq hudud (Rural)",
+        "labelEn": "Rural",
+        "iconSrc": "/sr4s_icons/area-type-rural.png",
+        "scoreWeight": 3
+      }
+    ]
+  },
+  {
+    "id": "vehicle_parking",
+    "code": "SR4S-04",
+    "nameUz": "Avtomobil to‘xtash joyi",
+    "nameEn": "Vehicle Parking",
+    "currentValueId": "two_sides",
+    "options": [
+      {
+        "id": "two_sides",
+        "labelUz": "Ikki tomonda to‘xtash bor",
+        "labelEn": "Two sides",
+        "iconSrc": "/sr4s_icons/vehicle-parking-two-sides.png",
+        "scoreWeight": 2
+      },
+      {
+        "id": "one_side",
+        "labelUz": "Bir tomonda to‘xtash bor",
+        "labelEn": "One side",
+        "iconSrc": "/sr4s_icons/vehicle-parking-one-side.png",
+        "scoreWeight": 3
+      },
+      {
+        "id": "none",
+        "labelUz": "To‘xtash joyi yo‘q / Taqiqlangan",
+        "labelEn": "None",
+        "iconSrc": "/sr4s_icons/vehicle-parking-none.png",
+        "scoreWeight": 5
+      }
+    ]
+  },
+  {
+    "id": "sight_distance",
+    "code": "SR4S-05",
+    "nameUz": "Ko‘rish masofasi",
+    "nameEn": "Sight Distance",
+    "currentValueId": "adequate",
+    "options": [
+      {
+        "id": "adequate",
+        "labelUz": "Yetarli ko‘rish masofasi (Adequate)",
+        "labelEn": "Adequate",
+        "iconSrc": "/sr4s_icons/icon-adequate.png",
+        "scoreWeight": 5,
+        "badgeText": "ADEQUATE",
+        "badgeColor": "teal"
+      },
+      {
+        "id": "poor",
+        "labelUz": "Yetarli emas / Cheklangan (Poor)",
+        "labelEn": "Poor",
+        "iconSrc": "/sr4s_icons/icon-poor.png",
+        "scoreWeight": 2,
+        "badgeText": "POOR",
+        "badgeColor": "red"
+      }
+    ]
+  },
+  {
+    "id": "number_of_lanes",
+    "code": "SR4S-06",
+    "nameUz": "Yo‘l qatorlari soni",
+    "nameEn": "Number of Lanes",
+    "currentValueId": "1_2",
+    "options": [
+      {
+        "id": "1_2",
+        "labelUz": "1 & 1 qatorli harakat",
+        "labelEn": "1 & 1",
+        "iconSrc": "/sr4s_icons/number-of-lanes-1-2.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "1",
+        "labelUz": "1 qatorli harakat",
+        "labelEn": "1 lane",
+        "iconSrc": "/sr4s_icons/number-of-lanes-1.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "2",
+        "labelUz": "2 qatorli harakat",
+        "labelEn": "2 lanes",
+        "iconSrc": "/sr4s_icons/number-of-lanes-2.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "2_3",
+        "labelUz": "2 & 2 yoki 3 qatorli",
+        "labelEn": "2 & 3",
+        "iconSrc": "/sr4s_icons/number-of-lanes-2-3.png",
+        "scoreWeight": 3
+      },
+      {
+        "id": "3",
+        "labelUz": "3 qatorli harakat",
+        "labelEn": "3 lanes",
+        "iconSrc": "/sr4s_icons/number-of-lanes-3.png",
+        "scoreWeight": 2
+      },
+      {
+        "id": "4",
+        "labelUz": "4 va undan ortiq qatorli",
+        "labelEn": "4+ lanes",
+        "iconSrc": "/sr4s_icons/number-of-lanes-4.png",
+        "scoreWeight": 1
+      }
+    ]
+  },
+  {
+    "id": "lane_width",
+    "code": "SR4S-07",
+    "nameUz": "Qator kengligi",
+    "nameEn": "Lane Width",
+    "currentValueId": "wide",
+    "options": [
+      {
+        "id": "wide",
+        "labelUz": "Keng yo‘l qatori (Wide >= 3.25m)",
+        "labelEn": "Wide",
+        "iconSrc": "/sr4s_icons/lane-width-wide.png",
+        "scoreWeight": 4,
+        "badgeText": "WIDE",
+        "badgeColor": "teal"
+      },
+      {
+        "id": "medium",
+        "labelUz": "O‘rtacha qator (2.75 - 3.25m)",
+        "labelEn": "Medium",
+        "iconSrc": "/sr4s_icons/icon-medium.png",
+        "scoreWeight": 4,
+        "badgeText": "MEDIUM",
+        "badgeColor": "teal"
+      },
+      {
+        "id": "narrow",
+        "labelUz": "Tor qator (Narrow < 2.75m)",
+        "labelEn": "Narrow",
+        "iconSrc": "/sr4s_icons/lane-width-narrow.png",
+        "scoreWeight": 3,
+        "badgeText": "NARROW",
+        "badgeColor": "teal"
+      }
+    ]
+  },
+  {
+    "id": "shoulder_rumble_strips",
+    "code": "SR4S-08",
+    "nameUz": "Shovqinli ogohlantirish chiziqlari",
+    "nameEn": "Shoulder Rumble Strips",
+    "currentValueId": "not_present",
+    "options": [
+      {
+        "id": "not_present",
+        "labelUz": "Mavjud emas (Not Present)",
+        "labelEn": "Not Present",
+        "iconSrc": "/sr4s_icons/icon-not-present.png",
+        "scoreWeight": 3,
+        "badgeText": "NOT PRESENT",
+        "badgeColor": "red"
+      },
+      {
+        "id": "present",
+        "labelUz": "Mavjud (Present)",
+        "labelEn": "Present",
+        "iconSrc": "/sr4s_icons/icon-present.png",
+        "scoreWeight": 5,
+        "badgeText": "PRESENT",
+        "badgeColor": "teal"
+      }
+    ]
+  },
+  {
+    "id": "road_condition",
+    "code": "SR4S-09",
+    "nameUz": "Yo‘l qoplamasi holati",
+    "nameEn": "Road Condition",
+    "currentValueId": "good",
+    "options": [
+      {
+        "id": "good",
+        "labelUz": "Yaxshi (Good)",
+        "labelEn": "Good",
+        "iconSrc": "/sr4s_icons/icon-good.png",
+        "scoreWeight": 5,
+        "badgeText": "GOOD",
+        "badgeColor": "teal"
+      },
+      {
+        "id": "medium",
+        "labelUz": "O‘rtacha (Medium)",
+        "labelEn": "Medium",
+        "iconSrc": "/sr4s_icons/icon-medium.png",
+        "scoreWeight": 3,
+        "badgeText": "MEDIUM",
+        "badgeColor": "teal"
+      },
+      {
+        "id": "poor",
+        "labelUz": "Yomon / O‘nqir-cho‘nqir (Poor)",
+        "labelEn": "Poor",
+        "iconSrc": "/sr4s_icons/icon-poor.png",
+        "scoreWeight": 1,
+        "badgeText": "POOR",
+        "badgeColor": "red"
+      }
+    ]
+  },
+  {
+    "id": "grip",
+    "code": "SR4S-10",
+    "nameUz": "Yo‘l tishlashish sifati (Grip)",
+    "nameEn": "Grip",
+    "currentValueId": "good",
+    "options": [
+      {
+        "id": "good",
+        "labelUz": "Yaxshi (Good)",
+        "labelEn": "Good",
+        "iconSrc": "/sr4s_icons/icon-good.png",
+        "scoreWeight": 5,
+        "badgeText": "GOOD",
+        "badgeColor": "teal"
+      },
+      {
+        "id": "medium",
+        "labelUz": "O‘rtacha (Medium)",
+        "labelEn": "Medium",
+        "iconSrc": "/sr4s_icons/icon-medium.png",
+        "scoreWeight": 3,
+        "badgeText": "MEDIUM",
+        "badgeColor": "teal"
+      },
+      {
+        "id": "poor",
+        "labelUz": "Yomon (Sirpanchiq / Poor)",
+        "labelEn": "Poor",
+        "iconSrc": "/sr4s_icons/icon-poor.png",
+        "scoreWeight": 1,
+        "badgeText": "POOR",
+        "badgeColor": "red"
+      }
+    ]
+  },
+  {
+    "id": "grade",
+    "code": "SR4S-11",
+    "nameUz": "Yo‘l qiyaligi (Grade)",
+    "nameEn": "Grade",
+    "currentValueId": "low",
+    "options": [
+      {
+        "id": "low",
+        "labelUz": "Past nishablik (Low < 4%)",
+        "labelEn": "Grade Low",
+        "iconSrc": "/sr4s_icons/grade-low.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "medium",
+        "labelUz": "O‘rtacha nishablik (4 - 8%)",
+        "labelEn": "Grade Medium",
+        "iconSrc": "/sr4s_icons/grade-medium.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "high",
+        "labelUz": "Tik nishablik (High > 8%)",
+        "labelEn": "Grade High",
+        "iconSrc": "/sr4s_icons/grade-high.png",
+        "scoreWeight": 2
+      }
+    ]
+  },
+  {
+    "id": "carriageway_type",
+    "code": "SR4S-12",
+    "nameUz": "Qatnov qismi turi",
+    "nameEn": "Carriageway Type",
+    "currentValueId": "undivided",
+    "options": [
+      {
+        "id": "undivided",
+        "labelUz": "Bo‘linmagan yo‘l (Undivided)",
+        "labelEn": "Undivided",
+        "iconSrc": "/sr4s_icons/carriageway-na.png",
+        "scoreWeight": 3
+      },
+      {
+        "id": "divided",
+        "labelUz": "O‘rtadan ajratilgan (Divided)",
+        "labelEn": "Divided",
+        "iconSrc": "/sr4s_icons/carriageway-north-east.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "one_way",
+        "labelUz": "Bir tomonlama harakat (One Way)",
+        "labelEn": "One Way",
+        "iconSrc": "/sr4s_icons/carriageway-south-west.png",
+        "scoreWeight": 4
+      }
+    ]
+  },
+  {
+    "id": "middle_of_road",
+    "code": "SR4S-13",
+    "nameUz": "Yo‘l o‘rtasi ajratgichi",
+    "nameEn": "Middle of Road",
+    "currentValueId": "broken_wide",
+    "options": [
+      {
+        "id": "broken_wide",
+        "labelUz": "Keng chiziqli ajratgich",
+        "labelEn": "Wide Markings",
+        "iconSrc": "/sr4s_icons/median-broken-wide-markings.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "concrete_barrier",
+        "labelUz": "Beton to‘siq (Concrete Barrier)",
+        "labelEn": "Concrete Barrier",
+        "iconSrc": "/sr4s_icons/median-concrete-barrier.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "metal_barrier",
+        "labelUz": "Metall to‘siq (Metal Barrier)",
+        "labelEn": "Metal Barrier",
+        "iconSrc": "/sr4s_icons/median-metal-barrier.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "center_line",
+        "labelUz": "Oddiy o‘q chiziq (Center Line)",
+        "labelEn": "Center Line",
+        "iconSrc": "/sr4s_icons/median-center-line.png",
+        "scoreWeight": 3
+      },
+      {
+        "id": "hatching",
+        "labelUz": "Shtrixli orolcha (Hatching)",
+        "labelEn": "Hatching",
+        "iconSrc": "/sr4s_icons/median-hatching.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "flexible_posts",
+        "labelUz": "Ustunlar (Flexible Posts)",
+        "labelEn": "Flexible Posts",
+        "iconSrc": "/sr4s_icons/median-flexible-posts.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "one_way",
+        "labelUz": "Bir tomonlama (One Way)",
+        "labelEn": "One Way",
+        "iconSrc": "/sr4s_icons/median-one-way.png",
+        "scoreWeight": 4
+      }
+    ]
+  },
+  {
+    "id": "lines_and_signs",
+    "code": "SR4S-14",
+    "nameUz": "Chiziqlar va belgilar",
+    "nameEn": "Lines & Signs",
+    "currentValueId": "adequate",
+    "options": [
+      {
+        "id": "adequate",
+        "labelUz": "Yetarli va aniq (Adequate)",
+        "labelEn": "Adequate",
+        "iconSrc": "/sr4s_icons/icon-adequate.png",
+        "scoreWeight": 5,
+        "badgeText": "ADEQUATE",
+        "badgeColor": "teal"
+      },
+      {
+        "id": "poor",
+        "labelUz": "Yetarli emas / O‘chgan (Poor)",
+        "labelEn": "Poor",
+        "iconSrc": "/sr4s_icons/icon-poor.png",
+        "scoreWeight": 1,
+        "badgeText": "POOR",
+        "badgeColor": "red"
+      }
+    ]
+  },
+  {
+    "id": "street_lighting",
+    "code": "SR4S-15",
+    "nameUz": "Ko‘chalarni yoritish",
+    "nameEn": "Street Lighting",
+    "currentValueId": "present",
+    "options": [
+      {
+        "id": "present",
+        "labelUz": "Mavjud va yorug‘ (Present)",
+        "labelEn": "Present",
+        "iconSrc": "/sr4s_icons/icon-present.png",
+        "scoreWeight": 5,
+        "badgeText": "PRESENT",
+        "badgeColor": "teal"
+      },
+      {
+        "id": "not_present",
+        "labelUz": "Mavjud emas / Qorong‘i (Not Present)",
+        "labelEn": "Not Present",
+        "iconSrc": "/sr4s_icons/icon-not-present.png",
+        "scoreWeight": 1,
+        "badgeText": "NOT PRESENT",
+        "badgeColor": "red"
+      }
+    ]
+  },
+  {
+    "id": "school_warning",
+    "code": "SR4S-16",
+    "nameUz": "Maktab haqida ogohlantirish",
+    "nameEn": "School Warning",
+    "currentValueId": "signs_markings",
+    "options": [
+      {
+        "id": "signs_markings",
+        "labelUz": "Belgilar va chiziqlar mavjud",
+        "labelEn": "Signs & Markings",
+        "iconSrc": "/sr4s_icons/school-warning-signs-markings.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "flashing_beacons",
+        "labelUz": "Miltillovchi svetodiod chiroqlar",
+        "labelEn": "Flashing Beacons",
+        "iconSrc": "/sr4s_icons/school-warning-flashing-beacons.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "no_school_zone",
+        "labelUz": "Maktab zonasi belgisi yo‘q",
+        "labelEn": "No School Zone",
+        "iconSrc": "/sr4s_icons/school-warning-no-school-zone.png",
+        "scoreWeight": 1
+      }
+    ]
+  },
+  {
+    "id": "crossing_supervisor",
+    "code": "SR4S-17",
+    "nameUz": "O‘tish nazoratchisi (Supervisor)",
+    "nameEn": "Crossing Supervisor",
+    "currentValueId": "no",
+    "options": [
+      {
+        "id": "no",
+        "labelUz": "Nazoratchi yo‘q (No)",
+        "labelEn": "No Supervisor",
+        "iconSrc": "/sr4s_icons/school-supervisor-no.png",
+        "scoreWeight": 2
+      },
+      {
+        "id": "yes",
+        "labelUz": "Nazoratchi / Patrul bor (Yes)",
+        "labelEn": "Supervisor Present",
+        "iconSrc": "/sr4s_icons/school-supervisor.png",
+        "scoreWeight": 5
+      }
+    ]
+  },
+  {
+    "id": "sidewalk_left",
+    "code": "SR4S-18",
+    "nameUz": "Trotuar chap tomonda",
+    "nameEn": "Sidewalk Left",
+    "currentValueId": "barrier",
+    "options": [
+      {
+        "id": "barrier",
+        "labelUz": "To‘siqli himoyalangan trotuar (Barrier >= 1.5m)",
+        "labelEn": "Barrier Protected",
+        "iconSrc": "/sr4s_icons/sidewalk-left-barrier.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "wide",
+        "labelUz": "Keng trotuar (3.0m+)",
+        "labelEn": "Wide (>=3.0m)",
+        "iconSrc": "/sr4s_icons/sidewalk-left-3-plus.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "standard",
+        "labelUz": "Standart trotuar (1.0 - 3.0m)",
+        "labelEn": "Medium (1.0-3.0m)",
+        "iconSrc": "/sr4s_icons/sidewalk-left-1-3.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "narrow",
+        "labelUz": "Tor trotuar (< 1.0m)",
+        "labelEn": "Narrow (<1.0m)",
+        "iconSrc": "/sr4s_icons/sidewalk-left-0-1.png",
+        "scoreWeight": 2
+      },
+      {
+        "id": "shared",
+        "labelUz": "Umumiy yo‘lakcha (Shared)",
+        "labelEn": "Shared Path",
+        "iconSrc": "/sr4s_icons/sidewalk-left-shared.png",
+        "scoreWeight": 3
+      },
+      {
+        "id": "informal",
+        "labelUz": "Norasmiy tuproq yo‘lak",
+        "labelEn": "Informal Path",
+        "iconSrc": "/sr4s_icons/sidewalk-left-informal-1-plus.png",
+        "scoreWeight": 2
+      },
+      {
+        "id": "none",
+        "labelUz": "Trotuar umuman yo‘q (None)",
+        "labelEn": "None",
+        "iconSrc": "/sr4s_icons/sidewalk-left-none.png",
+        "scoreWeight": 1
+      }
+    ]
+  },
+  {
+    "id": "sidewalk_right",
+    "code": "SR4S-19",
+    "nameUz": "Trotuar o‘ng tomonda",
+    "nameEn": "Sidewalk Right",
+    "currentValueId": "barrier",
+    "options": [
+      {
+        "id": "barrier",
+        "labelUz": "To‘siqli himoyalangan trotuar (Barrier >= 1.5m)",
+        "labelEn": "Barrier Protected",
+        "iconSrc": "/sr4s_icons/sidewalk-right-barrier.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "wide",
+        "labelUz": "Keng trotuar (3.0m+)",
+        "labelEn": "Wide (>=3.0m)",
+        "iconSrc": "/sr4s_icons/sidewalk-right-3-plus.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "standard",
+        "labelUz": "Standart trotuar (1.0 - 3.0m)",
+        "labelEn": "Medium (1.0-3.0m)",
+        "iconSrc": "/sr4s_icons/sidewalk-right-1-3.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "narrow",
+        "labelUz": "Tor trotuar (< 1.0m)",
+        "labelEn": "Narrow (<1.0m)",
+        "iconSrc": "/sr4s_icons/sidewalk-right-0-1.png",
+        "scoreWeight": 2
+      },
+      {
+        "id": "shared",
+        "labelUz": "Umumiy yo‘lakcha (Shared)",
+        "labelEn": "Shared Path",
+        "iconSrc": "/sr4s_icons/sidewalk-right-shared.png",
+        "scoreWeight": 3
+      },
+      {
+        "id": "informal",
+        "labelUz": "Norasmiy tuproq yo‘lak",
+        "labelEn": "Informal Path",
+        "iconSrc": "/sr4s_icons/sidewalk-right-informal-1-plus.png",
+        "scoreWeight": 2
+      },
+      {
+        "id": "none",
+        "labelUz": "Trotuar umuman yo‘q (None)",
+        "labelEn": "None",
+        "iconSrc": "/sr4s_icons/sidewalk-right-none.png",
+        "scoreWeight": 1
+      }
+    ]
+  },
+  {
+    "id": "road_edge_left",
+    "code": "SR4S-20",
+    "nameUz": "Yo‘l chekkasi (Yelka) chapda",
+    "nameEn": "Road Edge Left",
+    "currentValueId": "wide",
+    "options": [
+      {
+        "id": "wide",
+        "labelUz": "Keng yelka (Wide >= 2.4m)",
+        "labelEn": "Wide (>=2.4m)",
+        "iconSrc": "/sr4s_icons/shoulder-left-wide.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "medium",
+        "labelUz": "O‘rtacha yelka (1.0 - 2.4m)",
+        "labelEn": "Medium (1.0-2.4m)",
+        "iconSrc": "/sr4s_icons/shoulder-left-medium.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "narrow",
+        "labelUz": "Tor yelka (< 1.0m)",
+        "labelEn": "Narrow (<1.0m)",
+        "iconSrc": "/sr4s_icons/shoulder-left-narrow.png",
+        "scoreWeight": 2
+      },
+      {
+        "id": "none",
+        "labelUz": "Yelka yo‘q (None)",
+        "labelEn": "None",
+        "iconSrc": "/sr4s_icons/shoulder-left-none.png",
+        "scoreWeight": 1
+      }
+    ]
+  },
+  {
+    "id": "road_edge_right",
+    "code": "SR4S-21",
+    "nameUz": "Yo‘l chekkasi (Yelka) o‘ngda",
+    "nameEn": "Road Edge Right",
+    "currentValueId": "wide",
+    "options": [
+      {
+        "id": "wide",
+        "labelUz": "Keng yelka (Wide >= 2.4m)",
+        "labelEn": "Wide (>=2.4m)",
+        "iconSrc": "/sr4s_icons/shoulder-right-wide.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "medium",
+        "labelUz": "O‘rtacha yelka (1.0 - 2.4m)",
+        "labelEn": "Medium (1.0-2.4m)",
+        "iconSrc": "/sr4s_icons/shoulder-right-medium.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "narrow",
+        "labelUz": "Tor yelka (< 1.0m)",
+        "labelEn": "Narrow (<1.0m)",
+        "iconSrc": "/sr4s_icons/shoulder-right-narrow.png",
+        "scoreWeight": 2
+      },
+      {
+        "id": "none",
+        "labelUz": "Yelka yo‘q (None)",
+        "labelEn": "None",
+        "iconSrc": "/sr4s_icons/shoulder-right-none.png",
+        "scoreWeight": 1
+      }
+    ]
+  },
+  {
+    "id": "pedestrian_channelisation",
+    "code": "SR4S-22",
+    "nameUz": "Piyodalarni yo‘naltiruvchi panjara",
+    "nameEn": "Pedestrian Channelisation",
+    "currentValueId": "not_present",
+    "options": [
+      {
+        "id": "not_present",
+        "labelUz": "Mavjud emas (Not Present)",
+        "labelEn": "Not Present",
+        "iconSrc": "/sr4s_icons/icon-not-present.png",
+        "scoreWeight": 3,
+        "badgeText": "NOT PRESENT",
+        "badgeColor": "red"
+      },
+      {
+        "id": "present",
+        "labelUz": "Panjara mavjud (Present)",
+        "labelEn": "Present",
+        "iconSrc": "/sr4s_icons/icon-present.png",
+        "scoreWeight": 5,
+        "badgeText": "PRESENT",
+        "badgeColor": "teal"
+      }
+    ]
+  },
+  {
+    "id": "crossing_main_road",
+    "code": "SR4S-23",
+    "nameUz": "Asosiy yo‘l piyodalar o‘tish joyi",
+    "nameEn": "Crossing Main Road",
+    "currentValueId": "marked",
+    "options": [
+      {
+        "id": "marked",
+        "labelUz": "Zebra chizilgan o‘tish joyi (Marked)",
+        "labelEn": "Marked Crossing",
+        "iconSrc": "/sr4s_icons/crossing-marked.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "raised_marked",
+        "labelUz": "Ko‘tarilgan zebra (Raised & Marked)",
+        "labelEn": "Raised Marked",
+        "iconSrc": "/sr4s_icons/crossing-raised-marked.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "lights",
+        "labelUz": "Svetoforli o‘tish joyi (Signalized)",
+        "labelEn": "Signalized Crossing",
+        "iconSrc": "/sr4s_icons/crossing-lights.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "raised_marked_refuge",
+        "labelUz": "Ko‘tarilgan + orolchali zebra",
+        "labelEn": "Raised + Refuge",
+        "iconSrc": "/sr4s_icons/crossing-raised-marked-refuge.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "bridge_tunnel",
+        "labelUz": "Yer usti / Yer osti ko‘prigi",
+        "labelEn": "Bridge / Tunnel",
+        "iconSrc": "/sr4s_icons/crossing-bridge-tunnel.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "refuge",
+        "labelUz": "Xavfsizlik orolchali (Refuge)",
+        "labelEn": "Refuge Island",
+        "iconSrc": "/sr4s_icons/crossing-refuge.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "unmarked",
+        "labelUz": "Belgilanmagan o‘tish joyi",
+        "labelEn": "Unmarked",
+        "iconSrc": "/sr4s_icons/crossing-unmarked.png",
+        "scoreWeight": 2
+      },
+      {
+        "id": "none",
+        "labelUz": "O‘tish joyi umuman yo‘q (None)",
+        "labelEn": "None",
+        "iconSrc": "/sr4s_icons/crossing-none.png",
+        "scoreWeight": 1
+      }
+    ]
+  },
+  {
+    "id": "crossing_side_road",
+    "code": "SR4S-24",
+    "nameUz": "Yon yo‘l piyodalar o‘tish joyi",
+    "nameEn": "Crossing Side Road",
+    "currentValueId": "side_lights",
+    "options": [
+      {
+        "id": "side_lights",
+        "labelUz": "Svetoforli yon o‘tish joyi",
+        "labelEn": "Signalized Side Crossing",
+        "iconSrc": "/sr4s_icons/crossing-side-lights.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "side_marked",
+        "labelUz": "Chizilgan zebra (Marked)",
+        "labelEn": "Marked Side Crossing",
+        "iconSrc": "/sr4s_icons/crossing-side-marked.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "side_raised",
+        "labelUz": "Ko‘tarilgan o‘tish joyi (Raised)",
+        "labelEn": "Raised Side Crossing",
+        "iconSrc": "/sr4s_icons/crossing-side-raised.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "side_bridge",
+        "labelUz": "Ko‘prik / Yer osti",
+        "labelEn": "Bridge / Tunnel",
+        "iconSrc": "/sr4s_icons/crossing-side-bridge-tunnel.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "side_unmarked",
+        "labelUz": "Belgilanmagan",
+        "labelEn": "Unmarked",
+        "iconSrc": "/sr4s_icons/crossing-side-unmarked.png",
+        "scoreWeight": 2
+      },
+      {
+        "id": "side_none",
+        "labelUz": "Mavjud emas (None)",
+        "labelEn": "None",
+        "iconSrc": "/sr4s_icons/crossing-side-none.png",
+        "scoreWeight": 1
+      }
+    ]
+  },
+  {
+    "id": "crossing_quality",
+    "code": "SR4S-25",
+    "nameUz": "O‘tish joyi sifati",
+    "nameEn": "Crossing Quality",
+    "currentValueId": "adequate",
+    "options": [
+      {
+        "id": "adequate",
+        "labelUz": "Talabga to‘liq javob beradi (Adequate)",
+        "labelEn": "Adequate",
+        "iconSrc": "/sr4s_icons/icon-adequate.png",
+        "scoreWeight": 5,
+        "badgeText": "ADEQUATE",
+        "badgeColor": "teal"
+      },
+      {
+        "id": "poor",
+        "labelUz": "Sifatsiz / Xavfli (Poor)",
+        "labelEn": "Poor",
+        "iconSrc": "/sr4s_icons/icon-poor.png",
+        "scoreWeight": 1,
+        "badgeText": "POOR",
+        "badgeColor": "red"
+      }
+    ]
+  },
+  {
+    "id": "vehicles_per_day",
+    "code": "SR4S-26",
+    "nameUz": "Kunlik transport oqimi",
+    "nameEn": "Vehicles / Day",
+    "currentValueId": "100",
+    "options": [
+      {
+        "id": "100",
+        "labelUz": "Kam oqim (< 500 avto/kun)",
+        "labelEn": "100 - Low Flow",
+        "iconSrc": "/sr4s_icons/icon-medium.png",
+        "scoreWeight": 5,
+        "badgeText": "100",
+        "badgeColor": "purple"
+      },
+      {
+        "id": "1000",
+        "labelUz": "O‘rtacha oqim (1,000 - 5,000 avto/kun)",
+        "labelEn": "1,000 - Medium Flow",
+        "iconSrc": "/sr4s_icons/icon-medium.png",
+        "scoreWeight": 4,
+        "badgeText": "1000",
+        "badgeColor": "purple"
+      },
+      {
+        "id": "5000",
+        "labelUz": "Yuqori oqim (5,000 - 15,000 avto/kun)",
+        "labelEn": "5,000 - High Flow",
+        "iconSrc": "/sr4s_icons/icon-medium.png",
+        "scoreWeight": 2,
+        "badgeText": "5000",
+        "badgeColor": "purple"
+      },
+      {
+        "id": "15000",
+        "labelUz": "O‘ta yuqori oqim (> 15,000 avto/kun)",
+        "labelEn": "15,000+ - Heavy Flow",
+        "iconSrc": "/sr4s_icons/icon-medium.png",
+        "scoreWeight": 1,
+        "badgeText": "15k+",
+        "badgeColor": "purple"
+      }
+    ]
+  },
+  {
+    "id": "crossing_flow",
+    "code": "SR4S-27",
+    "nameUz": "O‘tish joyi piyodalar oqimi",
+    "nameEn": "Crossing Flow",
+    "currentValueId": "present",
+    "options": [
+      {
+        "id": "present",
+        "labelUz": "Mavjud (Piyodalar o‘tadi)",
+        "labelEn": "Present",
+        "iconSrc": "/sr4s_icons/pedestrians-crossing-present.png",
+        "scoreWeight": 4,
+        "badgeText": "PRESENT",
+        "badgeColor": "teal"
+      },
+      {
+        "id": "not_present",
+        "labelUz": "Mavjud emas / O‘tilmaydi",
+        "labelEn": "Not Present",
+        "iconSrc": "/sr4s_icons/pedestrians-crossing-not-present.png",
+        "scoreWeight": 5,
+        "badgeText": "NOT PRESENT",
+        "badgeColor": "red"
+      }
+    ]
+  },
+  {
+    "id": "right_side_flow",
+    "code": "SR4S-28",
+    "nameUz": "O‘ng tomon piyodalar oqimi",
+    "nameEn": "Right Side Flow",
+    "currentValueId": "present",
+    "options": [
+      {
+        "id": "present",
+        "labelUz": "Mavjud (O‘ng tomonda piyodalar bor)",
+        "labelEn": "Present",
+        "iconSrc": "/sr4s_icons/pedestrians-right-present.png",
+        "scoreWeight": 4,
+        "badgeText": "PRESENT",
+        "badgeColor": "teal"
+      },
+      {
+        "id": "not_present",
+        "labelUz": "Mavjud emas",
+        "labelEn": "Not Present",
+        "iconSrc": "/sr4s_icons/pedestrians-right-not-present.png",
+        "scoreWeight": 5,
+        "badgeText": "NOT PRESENT",
+        "badgeColor": "red"
+      }
+    ]
+  },
+  {
+    "id": "left_side_flow",
+    "code": "SR4S-29",
+    "nameUz": "Chap tomon piyodalar oqimi",
+    "nameEn": "Left Side Flow",
+    "currentValueId": "present",
+    "options": [
+      {
+        "id": "present",
+        "labelUz": "Mavjud (Chap tomonda piyodalar bor)",
+        "labelEn": "Present",
+        "iconSrc": "/sr4s_icons/pedestrians-left-present.png",
+        "scoreWeight": 4,
+        "badgeText": "PRESENT",
+        "badgeColor": "teal"
+      },
+      {
+        "id": "not_present",
+        "labelUz": "Mavjud emas",
+        "labelEn": "Not Present",
+        "iconSrc": "/sr4s_icons/pedestrians-left-not-present.png",
+        "scoreWeight": 5,
+        "badgeText": "NOT PRESENT",
+        "badgeColor": "red"
+      }
+    ]
+  },
+  {
+    "id": "intersection_type",
+    "code": "SR4S-30",
+    "nameUz": "Chorraha / Kesishish turi",
+    "nameEn": "Intersection Type",
+    "currentValueId": "4_leg_signal",
+    "options": [
+      {
+        "id": "4_leg_signal",
+        "labelUz": "4 tomonli svetoforli chorraha",
+        "labelEn": "4-leg Signalized",
+        "iconSrc": "/sr4s_icons/intersection-4-leg-signal.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "4_leg",
+        "labelUz": "4 tomonli oddiy chorraha",
+        "labelEn": "4-leg Intersection",
+        "iconSrc": "/sr4s_icons/intersection-4-leg.png",
+        "scoreWeight": 2
+      },
+      {
+        "id": "3_leg_signal",
+        "labelUz": "3 tomonli (T-simon) svetoforli",
+        "labelEn": "3-leg Signalized",
+        "iconSrc": "/sr4s_icons/intersection-3-leg-signal.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "3_leg",
+        "labelUz": "3 tomonli (T-simon) oddiy",
+        "labelEn": "3-leg Intersection",
+        "iconSrc": "/sr4s_icons/intersection-3-leg.png",
+        "scoreWeight": 3
+      },
+      {
+        "id": "roundabout",
+        "labelUz": "Aylanma harakat (Roundabout)",
+        "labelEn": "Roundabout",
+        "iconSrc": "/sr4s_icons/intersection-roundabout.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "mini_roundabout",
+        "labelUz": "Kichik aylanma harakat",
+        "labelEn": "Mini-roundabout",
+        "iconSrc": "/sr4s_icons/intersection-mini-roundabout.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "no_intersection",
+        "labelUz": "Chorraha yo‘q (To‘g‘ri yo‘l)",
+        "labelEn": "No Intersection",
+        "iconSrc": "/sr4s_icons/intersection-no.png",
+        "scoreWeight": 5
+      }
+    ]
+  },
+  {
+    "id": "driveways",
+    "code": "SR4S-31",
+    "nameUz": "Hovli va tijorat kirish yo‘llari",
+    "nameEn": "Driveways",
+    "currentValueId": "commercial",
+    "options": [
+      {
+        "id": "commercial",
+        "labelUz": "Tijorat / Tashkilot kirish yo‘li",
+        "labelEn": "Commercial",
+        "iconSrc": "/sr4s_icons/driveway-commercial.png",
+        "scoreWeight": 3
+      },
+      {
+        "id": "1_2",
+        "labelUz": "1 - 2 ta kirish yo‘li",
+        "labelEn": "1-2 Driveways",
+        "iconSrc": "/sr4s_icons/driveway-1-2.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "3_plus",
+        "labelUz": "3 va undan ortiq kirish yo‘li",
+        "labelEn": "3+ Driveways",
+        "iconSrc": "/sr4s_icons/driveway-3-plus.png",
+        "scoreWeight": 2
+      },
+      {
+        "id": "none",
+        "labelUz": "Kirish yo‘llari yo‘q",
+        "labelEn": "None",
+        "iconSrc": "/sr4s_icons/icon-not-present.png",
+        "scoreWeight": 5,
+        "badgeText": "NONE",
+        "badgeColor": "teal"
+      }
+    ]
+  },
+  {
+    "id": "intersection_side_flow",
+    "code": "SR4S-32",
+    "nameUz": "Chorraha yon yo‘l transport oqimi",
+    "nameEn": "Intersection Side Flow",
+    "currentValueId": "1999",
+    "options": [
+      {
+        "id": "1999",
+        "labelUz": "O‘rtacha yon oqim (1,999.00 avto)",
+        "labelEn": "1999.00 Flow",
+        "iconSrc": "/sr4s_icons/icon-medium.png",
+        "scoreWeight": 4,
+        "badgeText": "1999.00",
+        "badgeColor": "purple"
+      },
+      {
+        "id": "500",
+        "labelUz": "Kam yon oqim (< 500 avto)",
+        "labelEn": "500 Flow",
+        "iconSrc": "/sr4s_icons/icon-medium.png",
+        "scoreWeight": 5,
+        "badgeText": "500.00",
+        "badgeColor": "purple"
+      },
+      {
+        "id": "5000",
+        "labelUz": "Yuqori yon oqim (5,000+ avto)",
+        "labelEn": "5000.00 Flow",
+        "iconSrc": "/sr4s_icons/icon-medium.png",
+        "scoreWeight": 2,
+        "badgeText": "5000.00",
+        "badgeColor": "purple"
+      },
+      {
+        "id": "na",
+        "labelUz": "Qo‘llanmaydi (NA)",
+        "labelEn": "NA",
+        "iconSrc": "/sr4s_icons/icon-na.png",
+        "scoreWeight": 5,
+        "badgeText": "NA",
+        "badgeColor": "orange"
+      }
+    ]
+  },
+  {
+    "id": "intersection_quality",
+    "code": "SR4S-33",
+    "nameUz": "Chorraha xavfsizligi sifati",
+    "nameEn": "Intersection Quality",
+    "currentValueId": "adequate",
+    "options": [
+      {
+        "id": "adequate",
+        "labelUz": "Yetarli / Xavfsiz (Adequate)",
+        "labelEn": "Adequate",
+        "iconSrc": "/sr4s_icons/icon-adequate.png",
+        "scoreWeight": 5,
+        "badgeText": "ADEQUATE",
+        "badgeColor": "teal"
+      },
+      {
+        "id": "poor",
+        "labelUz": "Xavfli / Ko‘rinishi yomon (Poor)",
+        "labelEn": "Poor",
+        "iconSrc": "/sr4s_icons/icon-poor.png",
+        "scoreWeight": 1,
+        "badgeText": "POOR",
+        "badgeColor": "red"
+      },
+      {
+        "id": "na",
+        "labelUz": "Chorraha yo‘q (NA)",
+        "labelEn": "NA",
+        "iconSrc": "/sr4s_icons/icon-na.png",
+        "scoreWeight": 5,
+        "badgeText": "NA",
+        "badgeColor": "orange"
+      }
+    ]
+  },
+  {
+    "id": "curve_type",
+    "code": "SR4S-34",
+    "nameUz": "Yo‘l burilishi turi",
+    "nameEn": "Curve Type",
+    "currentValueId": "straight",
+    "options": [
+      {
+        "id": "straight",
+        "labelUz": "To‘g‘ri yo‘l (Straight)",
+        "labelEn": "Straight",
+        "iconSrc": "/sr4s_icons/curve-straight.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "moderate",
+        "labelUz": "O‘rtacha burilish (Moderate curve)",
+        "labelEn": "Moderate",
+        "iconSrc": "/sr4s_icons/curve-moderate.png",
+        "scoreWeight": 3
+      },
+      {
+        "id": "sharp",
+        "labelUz": "O‘tkir burilish (Sharp curve)",
+        "labelEn": "Sharp",
+        "iconSrc": "/sr4s_icons/curve-sharp.png",
+        "scoreWeight": 2
+      },
+      {
+        "id": "very_sharp",
+        "labelUz": "O‘ta xavfli burilish (Very sharp)",
+        "labelEn": "Very Sharp",
+        "iconSrc": "/sr4s_icons/curve-very-sharp.png",
+        "scoreWeight": 1
+      }
+    ]
+  },
+  {
+    "id": "curve_quality",
+    "code": "SR4S-35",
+    "nameUz": "Burilish sifati va ko‘rinishi",
+    "nameEn": "Curve Quality",
+    "currentValueId": "na",
+    "options": [
+      {
+        "id": "na",
+        "labelUz": "Qo‘llanmaydi (NA - To‘g‘ri yo‘l)",
+        "labelEn": "NA",
+        "iconSrc": "/sr4s_icons/icon-na.png",
+        "scoreWeight": 5,
+        "badgeText": "NA",
+        "badgeColor": "orange"
+      },
+      {
+        "id": "adequate",
+        "labelUz": "Yetarli ko‘rish (Adequate)",
+        "labelEn": "Adequate",
+        "iconSrc": "/sr4s_icons/icon-adequate.png",
+        "scoreWeight": 5,
+        "badgeText": "ADEQUATE",
+        "badgeColor": "teal"
+      },
+      {
+        "id": "poor",
+        "labelUz": "Ko‘rinish xavfli (Poor)",
+        "labelEn": "Poor",
+        "iconSrc": "/sr4s_icons/icon-poor.png",
+        "scoreWeight": 1,
+        "badgeText": "POOR",
+        "badgeColor": "red"
+      }
+    ]
+  },
+  {
+    "id": "speed_limit",
+    "code": "SR4S-36",
+    "nameUz": "Tezlik cheklovi belgisi",
+    "nameEn": "Speed Limit",
+    "currentValueId": "40",
+    "options": [
+      {
+        "id": "30",
+        "labelUz": "30 km/soat (BMT xavfsiz maktab standarti)",
+        "labelEn": "30 km/h",
+        "iconSrc": "/sr4s_icons/speed-limit.png",
+        "scoreWeight": 5,
+        "badgeText": "30 km/h",
+        "badgeColor": "dark"
+      },
+      {
+        "id": "40",
+        "labelUz": "40 km/soat (Standart maktab hududi)",
+        "labelEn": "40 km/h",
+        "iconSrc": "/sr4s_icons/speed-limit.png",
+        "scoreWeight": 4,
+        "badgeText": "40 km/h",
+        "badgeColor": "dark"
+      },
+      {
+        "id": "50",
+        "labelUz": "50 km/soat (Shahar tezligi)",
+        "labelEn": "50 km/h",
+        "iconSrc": "/sr4s_icons/speed-limit.png",
+        "scoreWeight": 3,
+        "badgeText": "50 km/h",
+        "badgeColor": "dark"
+      },
+      {
+        "id": "60",
+        "labelUz": "60 km/soat (Magistral shahar ko‘chasi)",
+        "labelEn": "60 km/h",
+        "iconSrc": "/sr4s_icons/speed-limit.png",
+        "scoreWeight": 2,
+        "badgeText": "60 km/h",
+        "badgeColor": "dark"
+      },
+      {
+        "id": "70",
+        "labelUz": "70+ km/soat (Katta trassa)",
+        "labelEn": "70+ km/h",
+        "iconSrc": "/sr4s_icons/speed-limit.png",
+        "scoreWeight": 1,
+        "badgeText": "70 km/h",
+        "badgeColor": "dark"
+      }
+    ]
+  },
+  {
+    "id": "operating_speed",
+    "code": "SR4S-37",
+    "nameUz": "Haqiqiy harakat tezligi (Operating Speed)",
+    "nameEn": "Operating Speed",
+    "currentValueId": "45",
+    "options": [
+      {
+        "id": "30",
+        "labelUz": "30 km/soat (Sokin harakat)",
+        "labelEn": "30 km/h",
+        "iconSrc": "/sr4s_icons/operating-speed.png",
+        "scoreWeight": 5,
+        "badgeText": "30 km/h",
+        "badgeColor": "dark"
+      },
+      {
+        "id": "45",
+        "labelUz": "45 km/soat (O‘rtacha harakat)",
+        "labelEn": "45 km/h",
+        "iconSrc": "/sr4s_icons/operating-speed.png",
+        "scoreWeight": 4,
+        "badgeText": "45 km/h",
+        "badgeColor": "dark"
+      },
+      {
+        "id": "60",
+        "labelUz": "60 km/soat (Yuqori tezlik)",
+        "labelEn": "60 km/h",
+        "iconSrc": "/sr4s_icons/operating-speed.png",
+        "scoreWeight": 2,
+        "badgeText": "60 km/h",
+        "badgeColor": "dark"
+      },
+      {
+        "id": "75",
+        "labelUz": "75+ km/soat (O‘ta xavfli tezlik)",
+        "labelEn": "75+ km/h",
+        "iconSrc": "/sr4s_icons/operating-speed.png",
+        "scoreWeight": 1,
+        "badgeText": "75 km/h",
+        "badgeColor": "dark"
+      }
+    ]
+  },
+  {
+    "id": "speed_management",
+    "code": "SR4S-38",
+    "nameUz": "Tezlikni majburiy pasaytirgichlar",
+    "nameEn": "Speed Management",
+    "currentValueId": "not_present",
+    "options": [
+      {
+        "id": "not_present",
+        "labelUz": "Mavjud emas (Not Present)",
+        "labelEn": "Not Present",
+        "iconSrc": "/sr4s_icons/icon-not-present.png",
+        "scoreWeight": 2,
+        "badgeText": "NOT PRESENT",
+        "badgeColor": "red"
+      },
+      {
+        "id": "present",
+        "labelUz": "Mavjud (Sun’iy notekislik / Radar bor)",
+        "labelEn": "Present",
+        "iconSrc": "/sr4s_icons/icon-present.png",
+        "scoreWeight": 5,
+        "badgeText": "PRESENT",
+        "badgeColor": "teal"
+      }
+    ]
+  },
+  {
+    "id": "motorcycle_percent",
+    "code": "SR4S-39",
+    "nameUz": "Mototsikl va mopedlar ulushi",
+    "nameEn": "Motorcycle %",
+    "currentValueId": "na",
+    "options": [
+      {
+        "id": "na",
+        "labelUz": "Qo‘llanmaydi / Kam (NA)",
+        "labelEn": "NA",
+        "iconSrc": "/sr4s_icons/motorcycle-percent-na.png",
+        "scoreWeight": 5,
+        "badgeText": "NA",
+        "badgeColor": "teal"
+      },
+      {
+        "id": "0",
+        "labelUz": "0%",
+        "labelEn": "0%",
+        "iconSrc": "/sr4s_icons/motorcycle-percent-0.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "1_5",
+        "labelUz": "1 - 5%",
+        "labelEn": "1-5%",
+        "iconSrc": "/sr4s_icons/motorcycle-percent-1-5.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "6_10",
+        "labelUz": "6 - 10%",
+        "labelEn": "6-10%",
+        "iconSrc": "/sr4s_icons/motorcycle-percent-6-10.png",
+        "scoreWeight": 3
+      },
+      {
+        "id": "11_20",
+        "labelUz": "11 - 20%",
+        "labelEn": "11-20%",
+        "iconSrc": "/sr4s_icons/motorcycle-percent-11-20.png",
+        "scoreWeight": 2
+      },
+      {
+        "id": "21_plus",
+        "labelUz": "20%+ Yuqori ulush",
+        "labelEn": "21-40%",
+        "iconSrc": "/sr4s_icons/motorcycle-percent-21-40.png",
+        "scoreWeight": 1
+      }
+    ]
+  },
+  {
+    "id": "hgv_percent",
+    "code": "SR4S-40",
+    "nameUz": "Og‘ir yuk mashinalari ulushi",
+    "nameEn": "HGV %",
+    "currentValueId": "na",
+    "options": [
+      {
+        "id": "na",
+        "labelUz": "Qo‘llanmaydi / Kam (NA)",
+        "labelEn": "NA",
+        "iconSrc": "/sr4s_icons/hgv-percent-na.png",
+        "scoreWeight": 5,
+        "badgeText": "NA",
+        "badgeColor": "teal"
+      },
+      {
+        "id": "0_5",
+        "labelUz": "0 - 5%",
+        "labelEn": "0-5%",
+        "iconSrc": "/sr4s_icons/hgv-percent-0-5.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "5_10",
+        "labelUz": "5 - 10%",
+        "labelEn": "5-10%",
+        "iconSrc": "/sr4s_icons/hgv-percent-5-10.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "10_15",
+        "labelUz": "10 - 15%",
+        "labelEn": "10-15%",
+        "iconSrc": "/sr4s_icons/hgv-percent-10-15.png",
+        "scoreWeight": 3
+      },
+      {
+        "id": "15_20",
+        "labelUz": "15 - 20%",
+        "labelEn": "15-20%",
+        "iconSrc": "/sr4s_icons/hgv-percent-15-20.png",
+        "scoreWeight": 2
+      },
+      {
+        "id": "20_plus",
+        "labelUz": "20%+ Yuqori og‘ir yuk oqimi",
+        "labelEn": "20-30%",
+        "iconSrc": "/sr4s_icons/hgv-percent-20-30.png",
+        "scoreWeight": 1
+      }
+    ]
+  }
+];
