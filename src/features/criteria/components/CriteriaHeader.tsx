@@ -38,7 +38,7 @@ export function CriteriaHeader({
           </h1>
           <p className="text-xs text-slate-500 max-w-2xl leading-relaxed">
             BMT va iRAP (Star Rating for Schools v1.7) standarti asosida maktab atrofi infratuzilmasini
-            40 ta xalqaro parametr va 7 ta modul bo‘yicha kompleks baholash rubrikasi.
+            40 ta xalqaro parametr va foto-dalillar bo‘yicha kompleks baholash rubrikasi.
           </p>
         </div>
 
@@ -70,11 +70,11 @@ export function CriteriaHeader({
 
         <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center gap-2.5">
           <div className="p-2 rounded-lg bg-blue-50 text-blue-700 font-bold font-mono">
-            07
+            📸
           </div>
           <div>
-            <div className="font-bold text-slate-900">7 ta Modul</div>
-            <div className="text-[11px] text-slate-500">Infratuzilma guruhlari</div>
+            <div className="font-bold text-slate-900">Foto Dalillar</div>
+            <div className="text-[11px] text-slate-500">Joyida tasdiqlash</div>
           </div>
         </div>
 

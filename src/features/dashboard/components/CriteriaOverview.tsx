@@ -48,16 +48,16 @@ export function CriteriaOverview({ criterionScores }: CriteriaOverviewProps) {
           </div>
           <div>
             <h2 className="text-base font-bold text-slate-900">
-              Yo‘l Xavfsizligi Mezonlari Ko‘rsatkichlari
+              40 ta Rasmiy SR4S Yo‘l Xavfsizligi Mezonlari Nazorati
             </h2>
             <p className="text-xs text-slate-500">
-              SR4S xalqaro standarti bo‘yicha 7 ta asosiy modul
+              O‘zbekiston maktablari uchun iRAP xalqaro baholash standarti
             </p>
           </div>
         </div>
 
         <span className="text-xs font-mono font-bold text-teal-800 bg-teal-50 px-2.5 py-1 rounded-md border border-teal-200 w-fit">
-          Jami: 7 ta modul
+          Jami: 40 ta savol
         </span>
       </div>
 
