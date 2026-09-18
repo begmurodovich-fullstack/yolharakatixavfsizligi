@@ -111,7 +111,16 @@ export function Sr4sDemonstrator() {
 
   const [attributes, setAttributes] = useState<AttributeDefinition[]>(OFFICIAL_40_ATTRIBUTES_DATA);
   const [activeModalAttr, setActiveModalAttr] = useState<AttributeDefinition | null>(null);
+  const [inputVal, setInputVal] = useState<string>('');
   const [isSaving, setIsSaving] = useState(false);
+
+  // When opening modal, initialize inputVal if it is an input attribute
+  const handleOpenModal = (attr: AttributeDefinition) => {
+    setActiveModalAttr(attr);
+    if (attr.isInput) {
+      setInputVal(attr.customValue || attr.currentValueId || '');
+    }
+  };
 
   // Dynamic Star Rating calculation
   const { decimalScore, starLevel } = useMemo(() => {
@@ -119,9 +128,23 @@ export function Sr4sDemonstrator() {
     let maxPossibleScore = 0;
 
     attributes.forEach((attr) => {
-      const selected = attr.options.find((o) => o.id === attr.currentValueId) || attr.options[0];
-      totalScoreWeight += selected.scoreWeight;
-      maxPossibleScore += 5;
+      if (attr.isInput) {
+        const num = parseFloat(attr.customValue || attr.currentValueId) || 0;
+        if (attr.id === 'vehicles_per_day') {
+          const weight = num <= 500 ? 5 : num <= 2000 ? 4 : num <= 8000 ? 3 : num <= 15000 ? 2 : 1;
+          totalScoreWeight += weight;
+        } else if (attr.id === 'intersection_side_flow') {
+          const weight = num <= 500 ? 5 : num <= 2000 ? 4 : num <= 5000 ? 3 : 2;
+          totalScoreWeight += weight;
+        } else {
+          totalScoreWeight += 4;
+        }
+        maxPossibleScore += 5;
+      } else {
+        const selected = attr.options.find((o) => o.id === attr.currentValueId) || attr.options[0];
+        totalScoreWeight += selected ? selected.scoreWeight : 4;
+        maxPossibleScore += 5;
+      }
     });
 
     const ratio = totalScoreWeight / maxPossibleScore;
@@ -142,6 +165,17 @@ export function Sr4sDemonstrator() {
   const handleSelectOption = (attrId: string, optionId: string) => {
     setAttributes((prev) =>
       prev.map((attr) => (attr.id === attrId ? { ...attr, currentValueId: optionId } : attr))
+    );
+    setActiveModalAttr(null);
+  };
+
+  const handleSaveCustomInput = (attrId: string, value: string) => {
+    setAttributes((prev) =>
+      prev.map((attr) =>
+        attr.id === attrId
+          ? { ...attr, currentValueId: value, customValue: value }
+          : attr
+      )
     );
     setActiveModalAttr(null);
   };
@@ -346,37 +380,49 @@ export function Sr4sDemonstrator() {
               const currentOption =
                 attr.options.find((o) => o.id === attr.currentValueId) || attr.options[0];
 
+              const isPurpleInput = attr.isInput || attr.id === 'vehicles_per_day' || attr.id === 'intersection_side_flow';
+
               return (
                 <button
                   key={attr.id}
-                  onClick={() => setActiveModalAttr(attr)}
+                  onClick={() => handleOpenModal(attr)}
                   type="button"
-                  title={attr.nameUz + " (" + attr.nameEn + ") - Hozirgi: " + currentOption.labelUz}
+                  title={attr.nameUz + " (" + attr.nameEn + ")"}
                   className="flex flex-col items-center justify-between p-2.5 rounded-xl bg-white border border-slate-200 shadow-2xs hover:shadow-lg hover:border-teal-500 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 text-center group min-h-[128px] focus:outline-hidden focus:ring-2 focus:ring-teal-500 focus:ring-offset-1"
                 >
                   {/* Icon Graphic Container */}
                   <div className="w-14 h-14 sm:w-16 sm:h-16 relative flex items-center justify-center select-none group-hover:scale-105 transition-transform duration-200">
-                    <Image
-                      src={currentOption.iconSrc}
-                      alt={attr.nameEn}
-                      width={64}
-                      height={64}
-                      className="object-contain max-h-full max-w-full drop-shadow-2xs"
-                      unoptimized
-                    />
+                    {isPurpleInput ? (
+                      <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-[#4a3575] flex items-center justify-center p-1 shadow-2xs">
+                        <span className="text-white font-bold text-xs sm:text-sm font-mono tracking-tight text-center px-1 truncate">
+                          {attr.customValue || attr.currentValueId}
+                        </span>
+                      </div>
+                    ) : (
+                      <>
+                        <Image
+                          src={currentOption?.iconSrc || '/sr4s_icons/icon-good.png'}
+                          alt={attr.nameEn}
+                          width={64}
+                          height={64}
+                          className="object-contain max-h-full max-w-full drop-shadow-2xs"
+                          unoptimized
+                        />
 
-                    {/* Speed limit overlay if speed card */}
-                    {attr.id === 'speed_limit' && currentOption.badgeText && (
-                      <span className="absolute text-[11px] font-black text-slate-900 font-mono tracking-tight pointer-events-none mt-0.5">
-                        {currentOption.badgeText.replace(' km/h', '')}
-                      </span>
-                    )}
+                        {/* Speed limit overlay if speed card */}
+                        {attr.id === 'speed_limit' && currentOption?.badgeText && (
+                          <span className="absolute text-[11px] font-black text-slate-900 font-mono tracking-tight pointer-events-none mt-0.5">
+                            {currentOption.badgeText.replace(' km/h', '')}
+                          </span>
+                        )}
 
-                    {/* Operating speed overlay */}
-                    {attr.id === 'operating_speed' && currentOption.badgeText && (
-                      <span className="absolute bottom-1 text-[10px] font-black text-slate-900 font-mono tracking-tight pointer-events-none">
-                        {currentOption.badgeText.replace(' km/h', '')}
-                      </span>
+                        {/* Operating speed overlay */}
+                        {attr.id === 'operating_speed' && currentOption?.badgeText && (
+                          <span className="absolute bottom-1 text-[10px] font-black text-slate-900 font-mono tracking-tight pointer-events-none">
+                            {currentOption.badgeText.replace(' km/h', '')}
+                          </span>
+                        )}
+                      </>
                     )}
                   </div>
 
@@ -415,67 +461,94 @@ export function Sr4sDemonstrator() {
               ×
             </button>
 
-            {/* Modal Title (e.g. Land use left, Area Type, Vehicle Parking) */}
+            {/* Modal Title (e.g. Vehicles / Day, Crossing Flow, Intersection Type) */}
             <h3 className="text-xl sm:text-2xl font-normal text-slate-800 text-center tracking-tight mb-5 select-none">
               {activeModalAttr.nameEn}
             </h3>
 
-            {/* Option Cards Horizontal Row */}
-            <div className="flex flex-row items-end justify-center gap-3 sm:gap-6 flex-wrap">
-              {activeModalAttr.options.map((option) => {
-                const isSelected = option.id === activeModalAttr.currentValueId;
+            {/* Editable Input Mode for numeric/custom attributes */}
+            {activeModalAttr.isInput ? (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSaveCustomInput(activeModalAttr.id, inputVal);
+                }}
+                className="w-full max-w-sm mx-auto mt-2 flex items-center border border-slate-300 rounded-md overflow-hidden bg-white shadow-xs focus-within:border-teal-500 focus-within:ring-1 focus-within:ring-teal-500"
+              >
+                <input
+                  type="text"
+                  value={inputVal}
+                  onChange={(e) => setInputVal(e.target.value)}
+                  className="flex-1 px-4 py-3 text-base sm:text-lg text-slate-800 font-medium outline-hidden"
+                  placeholder="Enter value..."
+                  autoFocus
+                />
+                <button
+                  type="submit"
+                  className="px-4 py-3 bg-white hover:bg-slate-50 border-l border-slate-200 text-teal-600 transition-colors flex items-center justify-center cursor-pointer"
+                  title="Tasdiqlash"
+                >
+                  <Check className="w-5 h-5 text-teal-600 stroke-[2.5]" />
+                </button>
+              </form>
+            ) : (
+              /* Option Cards Horizontal Row */
+              <div className="flex flex-row items-end justify-center gap-3 sm:gap-6 flex-wrap">
+                {activeModalAttr.options.map((option) => {
+                  const isSelected = option.id === activeModalAttr.currentValueId;
 
-                return (
-                  <button
-                    key={option.id}
-                    onClick={() => handleSelectOption(activeModalAttr.id, option.id)}
-                    type="button"
-                    className={cn(
-                      'group flex flex-col items-center justify-end p-2 transition-all cursor-pointer rounded-xs min-w-[70px] sm:min-w-[80px]',
-                      isSelected
-                        ? 'border border-[#009688] shadow-2xs'
-                        : 'border border-transparent hover:border-slate-300'
-                    )}
-                  >
-                    {/* Option Icon */}
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 relative flex items-center justify-center mb-1 select-none">
-                      <Image
-                        src={option.iconSrc}
-                        alt={option.labelEn}
-                        width={64}
-                        height={64}
-                        className="object-contain max-h-full max-w-full drop-shadow-2xs"
-                        unoptimized
-                      />
-
-                      {/* Speed limit badge overlay */}
-                      {activeModalAttr.id === 'speed_limit' && option.badgeText && (
-                        <span className="absolute text-[11px] font-black text-slate-900 font-mono tracking-tight pointer-events-none mt-0.5">
-                          {option.badgeText.replace(' km/h', '')}
-                        </span>
+                  return (
+                    <button
+                      key={option.id}
+                      onClick={() => handleSelectOption(activeModalAttr.id, option.id)}
+                      type="button"
+                      className={cn(
+                        'group flex flex-col items-center justify-end p-2 transition-all cursor-pointer rounded-xs min-w-[70px] sm:min-w-[80px]',
+                        isSelected
+                          ? 'border border-[#009688] shadow-2xs'
+                          : 'border border-transparent hover:border-slate-300'
                       )}
+                    >
+                      {/* Option Icon */}
+                      <div className="w-14 h-14 sm:w-16 sm:h-16 relative flex items-center justify-center mb-1 select-none">
+                        <Image
+                          src={option.iconSrc}
+                          alt={option.labelEn}
+                          width={64}
+                          height={64}
+                          className="object-contain max-h-full max-w-full drop-shadow-2xs"
+                          unoptimized
+                        />
 
-                      {/* Operating speed badge overlay */}
-                      {activeModalAttr.id === 'operating_speed' && option.badgeText && (
-                        <span className="absolute bottom-1 text-[10px] font-black text-slate-900 font-mono tracking-tight pointer-events-none">
-                          {option.badgeText.replace(' km/h', '')}
-                        </span>
-                      )}
-                    </div>
+                        {/* Speed limit badge overlay */}
+                        {activeModalAttr.id === 'speed_limit' && option.badgeText && (
+                          <span className="absolute text-[11px] font-black text-slate-900 font-mono tracking-tight pointer-events-none mt-0.5">
+                            {option.badgeText.replace(' km/h', '')}
+                          </span>
+                        )}
 
-                    {/* Option English Label */}
-                    <span className="text-xs sm:text-sm text-slate-800 font-normal text-center leading-tight max-w-[75px] sm:max-w-[90px] break-words select-none">
-                      {option.labelEn}
-                    </span>
+                        {/* Operating speed badge overlay */}
+                        {activeModalAttr.id === 'operating_speed' && option.badgeText && (
+                          <span className="absolute bottom-1 text-[10px] font-black text-slate-900 font-mono tracking-tight pointer-events-none">
+                            {option.badgeText.replace(' km/h', '')}
+                          </span>
+                        )}
+                      </div>
 
-                    {/* Uzbek subtitle (compact, subtle helper) */}
-                    <span className="text-[10px] text-slate-400 text-center leading-tight mt-0.5 max-w-[85px] truncate select-none">
-                      {option.labelUz}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
+                      {/* Option English Label */}
+                      <span className="text-xs sm:text-sm text-slate-800 font-normal text-center leading-tight max-w-[75px] sm:max-w-[90px] break-words select-none">
+                        {option.labelEn}
+                      </span>
+
+                      {/* Uzbek subtitle (compact, subtle helper) */}
+                      <span className="text-[10px] text-slate-400 text-center leading-tight mt-0.5 max-w-[85px] truncate select-none">
+                        {option.labelUz}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
       )}

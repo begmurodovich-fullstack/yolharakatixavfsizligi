@@ -14,6 +14,9 @@ export interface AttributeDefinition {
   nameUz: string;
   nameEn: string;
   currentValueId: string;
+  customValue?: string;
+  isInput?: boolean;
+  inputUnit?: string;
   options: AttributeOption[];
 }
 
@@ -1147,44 +1150,10 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "nameUz": "Kunlik transport oqimi",
     "nameEn": "Vehicles / Day",
     "currentValueId": "100",
-    "options": [
-      {
-        "id": "100",
-        "labelUz": "Kam oqim (< 500 avto/kun)",
-        "labelEn": "100 - Low Flow",
-        "iconSrc": "/sr4s_icons/icon-medium.png",
-        "scoreWeight": 5,
-        "badgeText": "100",
-        "badgeColor": "purple"
-      },
-      {
-        "id": "1000",
-        "labelUz": "O‘rtacha oqim (1,000 - 5,000 avto/kun)",
-        "labelEn": "1,000 - Medium Flow",
-        "iconSrc": "/sr4s_icons/icon-medium.png",
-        "scoreWeight": 4,
-        "badgeText": "1000",
-        "badgeColor": "purple"
-      },
-      {
-        "id": "5000",
-        "labelUz": "Yuqori oqim (5,000 - 15,000 avto/kun)",
-        "labelEn": "5,000 - High Flow",
-        "iconSrc": "/sr4s_icons/icon-medium.png",
-        "scoreWeight": 2,
-        "badgeText": "5000",
-        "badgeColor": "purple"
-      },
-      {
-        "id": "15000",
-        "labelUz": "O‘ta yuqori oqim (> 15,000 avto/kun)",
-        "labelEn": "15,000+ - Heavy Flow",
-        "iconSrc": "/sr4s_icons/icon-medium.png",
-        "scoreWeight": 1,
-        "badgeText": "15k+",
-        "badgeColor": "purple"
-      }
-    ]
+    "customValue": "100",
+    "isInput": true,
+    "inputUnit": "avto/kun",
+    "options": []
   },
   {
     "id": "crossing_flow",
@@ -1194,22 +1163,22 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "currentValueId": "present",
     "options": [
       {
-        "id": "present",
-        "labelUz": "Mavjud (Piyodalar o‘tadi)",
-        "labelEn": "Present",
-        "iconSrc": "/sr4s_icons/pedestrians-crossing-present.png",
-        "scoreWeight": 4,
-        "badgeText": "PRESENT",
-        "badgeColor": "teal"
-      },
-      {
         "id": "not_present",
-        "labelUz": "Mavjud emas / O‘tilmaydi",
+        "labelUz": "Mavjud emas",
         "labelEn": "Not Present",
         "iconSrc": "/sr4s_icons/pedestrians-crossing-not-present.png",
         "scoreWeight": 5,
         "badgeText": "NOT PRESENT",
         "badgeColor": "red"
+      },
+      {
+        "id": "present",
+        "labelUz": "Mavjud",
+        "labelEn": "Present",
+        "iconSrc": "/sr4s_icons/pedestrians-crossing-present.png",
+        "scoreWeight": 4,
+        "badgeText": "PRESENT",
+        "badgeColor": "teal"
       }
     ]
   },
@@ -1221,15 +1190,6 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "currentValueId": "present",
     "options": [
       {
-        "id": "present",
-        "labelUz": "Mavjud (O‘ng tomonda piyodalar bor)",
-        "labelEn": "Present",
-        "iconSrc": "/sr4s_icons/pedestrians-right-present.png",
-        "scoreWeight": 4,
-        "badgeText": "PRESENT",
-        "badgeColor": "teal"
-      },
-      {
         "id": "not_present",
         "labelUz": "Mavjud emas",
         "labelEn": "Not Present",
@@ -1237,6 +1197,15 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
         "scoreWeight": 5,
         "badgeText": "NOT PRESENT",
         "badgeColor": "red"
+      },
+      {
+        "id": "present",
+        "labelUz": "Mavjud",
+        "labelEn": "Present",
+        "iconSrc": "/sr4s_icons/pedestrians-right-present.png",
+        "scoreWeight": 4,
+        "badgeText": "PRESENT",
+        "badgeColor": "teal"
       }
     ]
   },
@@ -1248,15 +1217,6 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "currentValueId": "present",
     "options": [
       {
-        "id": "present",
-        "labelUz": "Mavjud (Chap tomonda piyodalar bor)",
-        "labelEn": "Present",
-        "iconSrc": "/sr4s_icons/pedestrians-left-present.png",
-        "scoreWeight": 4,
-        "badgeText": "PRESENT",
-        "badgeColor": "teal"
-      },
-      {
         "id": "not_present",
         "labelUz": "Mavjud emas",
         "labelEn": "Not Present",
@@ -1264,6 +1224,15 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
         "scoreWeight": 5,
         "badgeText": "NOT PRESENT",
         "badgeColor": "red"
+      },
+      {
+        "id": "present",
+        "labelUz": "Mavjud",
+        "labelEn": "Present",
+        "iconSrc": "/sr4s_icons/pedestrians-left-present.png",
+        "scoreWeight": 4,
+        "badgeText": "PRESENT",
+        "badgeColor": "teal"
       }
     ]
   },
@@ -1272,39 +1241,74 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-30",
     "nameUz": "Chorraha / Kesishish turi",
     "nameEn": "Intersection Type",
-    "currentValueId": "4_leg_signal",
+    "currentValueId": "4_leg",
     "options": [
       {
-        "id": "4_leg_signal",
-        "labelUz": "4 tomonli svetoforli chorraha",
-        "labelEn": "4-leg Signalized",
-        "iconSrc": "/sr4s_icons/intersection-4-leg-signal.png",
-        "scoreWeight": 5
-      },
-      {
-        "id": "4_leg",
-        "labelUz": "4 tomonli oddiy chorraha",
-        "labelEn": "4-leg Intersection",
-        "iconSrc": "/sr4s_icons/intersection-4-leg.png",
-        "scoreWeight": 2
-      },
-      {
-        "id": "3_leg_signal",
-        "labelUz": "3 tomonli (T-simon) svetoforli",
-        "labelEn": "3-leg Signalized",
-        "iconSrc": "/sr4s_icons/intersection-3-leg-signal.png",
-        "scoreWeight": 5
+        "id": "merge_lane",
+        "labelUz": "Qo‘shilish qatori",
+        "labelEn": "Merge Lane",
+        "iconSrc": "/sr4s_icons/intersection-merge-lane.png",
+        "scoreWeight": 4
       },
       {
         "id": "3_leg",
-        "labelUz": "3 tomonli (T-simon) oddiy",
-        "labelEn": "3-leg Intersection",
+        "labelUz": "3 tomonli (T-simon)",
+        "labelEn": "3 Leg",
         "iconSrc": "/sr4s_icons/intersection-3-leg.png",
         "scoreWeight": 3
       },
       {
+        "id": "3_leg_signal",
+        "labelUz": "3 tomonli + svetofor",
+        "labelEn": "3 Leg & Signal",
+        "iconSrc": "/sr4s_icons/intersection-3-leg-signal.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "3_leg_turn_lane",
+        "labelUz": "3 tomonli + burilish qatori",
+        "labelEn": "3 Leg & Turn Lane",
+        "iconSrc": "/sr4s_icons/intersection-3-leg-turn-lane.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "3_leg_turn_signal",
+        "labelUz": "3 tomonli, burilish + svetofor",
+        "labelEn": "3 Leg, Turn Lane & Signal",
+        "iconSrc": "/sr4s_icons/intersection-3-leg-turn-lane-signal.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "4_leg",
+        "labelUz": "4 yoki undan ortiq tomonli",
+        "labelEn": "4 or More Leg",
+        "iconSrc": "/sr4s_icons/intersection-4-leg.png",
+        "scoreWeight": 2
+      },
+      {
+        "id": "4_leg_turn_lane",
+        "labelUz": "4 tomonli + burilish qatori",
+        "labelEn": "4 or More Leg & Turn Lane",
+        "iconSrc": "/sr4s_icons/intersection-4-leg-turn-lane.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "4_leg_signal",
+        "labelUz": "4 tomonli + svetofor",
+        "labelEn": "4 or More Leg & Signal",
+        "iconSrc": "/sr4s_icons/intersection-4-leg-signal.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "4_leg_turn_signal",
+        "labelUz": "4 tomonli, burilish + svetofor",
+        "labelEn": "4 or More Leg, Turn Lane & Signal",
+        "iconSrc": "/sr4s_icons/intersection-4-leg-turn-lane-signal.png",
+        "scoreWeight": 5
+      },
+      {
         "id": "roundabout",
-        "labelUz": "Aylanma harakat (Roundabout)",
+        "labelUz": "Aylanma harakat",
         "labelEn": "Roundabout",
         "iconSrc": "/sr4s_icons/intersection-roundabout.png",
         "scoreWeight": 4
@@ -1312,16 +1316,58 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
       {
         "id": "mini_roundabout",
         "labelUz": "Kichik aylanma harakat",
-        "labelEn": "Mini-roundabout",
+        "labelEn": "Mini Roundabout",
         "iconSrc": "/sr4s_icons/intersection-mini-roundabout.png",
         "scoreWeight": 4
       },
       {
+        "id": "formal_u_turn",
+        "labelUz": "Rasmiy qayrilib olish",
+        "labelEn": "Formal U Turn",
+        "iconSrc": "/sr4s_icons/intersection-formal-u-turn.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "informal_u_turn",
+        "labelUz": "Norasmiy qayrilib olish",
+        "labelEn": "Informal U Turn",
+        "iconSrc": "/sr4s_icons/intersection-informal-u-turn.png",
+        "scoreWeight": 2
+      },
+      {
+        "id": "active_train",
+        "labelUz": "Poyezd o‘tish joyi (Faol)",
+        "labelEn": "Active Train",
+        "iconSrc": "/sr4s_icons/intersection-active-train.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "passive_train",
+        "labelUz": "Poyezd o‘tish joyi (Passiv)",
+        "labelEn": "Passive Train",
+        "iconSrc": "/sr4s_icons/intersection-passive-train.png",
+        "scoreWeight": 2
+      },
+      {
         "id": "no_intersection",
-        "labelUz": "Chorraha yo‘q (To‘g‘ri yo‘l)",
+        "labelUz": "Chorraha yo‘q",
         "labelEn": "No Intersection",
         "iconSrc": "/sr4s_icons/intersection-no.png",
         "scoreWeight": 5
+      },
+      {
+        "id": "short_merge",
+        "labelUz": "Qisqa qo‘shilish yo‘lagi",
+        "labelEn": "Short merge/weaving lane",
+        "iconSrc": "/sr4s_icons/intersection-short-merge.png",
+        "scoreWeight": 3
+      },
+      {
+        "id": "diverge_lane",
+        "labelUz": "Ajralish qatori",
+        "labelEn": "Diverge lane",
+        "iconSrc": "/sr4s_icons/intersection-diverge-lane.png",
+        "scoreWeight": 4
       }
     ]
   },
@@ -1369,45 +1415,11 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-32",
     "nameUz": "Chorraha yon yo‘l transport oqimi",
     "nameEn": "Intersection Side Flow",
-    "currentValueId": "1999",
-    "options": [
-      {
-        "id": "1999",
-        "labelUz": "O‘rtacha yon oqim (1,999.00 avto)",
-        "labelEn": "1999.00 Flow",
-        "iconSrc": "/sr4s_icons/icon-medium.png",
-        "scoreWeight": 4,
-        "badgeText": "1999.00",
-        "badgeColor": "purple"
-      },
-      {
-        "id": "500",
-        "labelUz": "Kam yon oqim (< 500 avto)",
-        "labelEn": "500 Flow",
-        "iconSrc": "/sr4s_icons/icon-medium.png",
-        "scoreWeight": 5,
-        "badgeText": "500.00",
-        "badgeColor": "purple"
-      },
-      {
-        "id": "5000",
-        "labelUz": "Yuqori yon oqim (5,000+ avto)",
-        "labelEn": "5000.00 Flow",
-        "iconSrc": "/sr4s_icons/icon-medium.png",
-        "scoreWeight": 2,
-        "badgeText": "5000.00",
-        "badgeColor": "purple"
-      },
-      {
-        "id": "na",
-        "labelUz": "Qo‘llanmaydi (NA)",
-        "labelEn": "NA",
-        "iconSrc": "/sr4s_icons/icon-na.png",
-        "scoreWeight": 5,
-        "badgeText": "NA",
-        "badgeColor": "orange"
-      }
-    ]
+    "currentValueId": "4999.00",
+    "customValue": "4999.00",
+    "isInput": true,
+    "inputUnit": "avto",
+    "options": []
   },
   {
     "id": "intersection_quality",
