@@ -629,25 +629,32 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "currentValueId": "signs_markings",
     "options": [
       {
-        "id": "signs_markings",
-        "labelUz": "Belgilar va chiziqlar mavjud",
-        "labelEn": "Signs & Markings",
-        "iconSrc": "/sr4s_icons/school-warning-signs-markings.png",
-        "scoreWeight": 4
-      },
-      {
         "id": "flashing_beacons",
-        "labelUz": "Miltillovchi svetodiod chiroqlar",
+        "labelUz": "Miltillovchi chiroqlar",
         "labelEn": "Flashing Beacons",
         "iconSrc": "/sr4s_icons/school-warning-flashing-beacons.png",
         "scoreWeight": 5
+      },
+      {
+        "id": "signs_markings",
+        "labelUz": "Belgilar va chiziqlar",
+        "labelEn": "Signs / Markings",
+        "iconSrc": "/sr4s_icons/school-warning-signs-markings.png",
+        "scoreWeight": 4
       },
       {
         "id": "no_school_zone",
         "labelUz": "Maktab zonasi belgisi yo‘q",
         "labelEn": "No School Zone",
         "iconSrc": "/sr4s_icons/school-warning-no-school-zone.png",
-        "scoreWeight": 1
+        "scoreWeight": 2
+      },
+      {
+        "id": "no_school_nearby",
+        "labelUz": "Yaqin atrofda maktab yo‘q",
+        "labelEn": "No School Nearby",
+        "iconSrc": "/sr4s_icons/school-no.png",
+        "scoreWeight": 3
       }
     ]
   },
@@ -656,21 +663,28 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-17",
     "nameUz": "O‘tish nazoratchisi (Supervisor)",
     "nameEn": "Crossing Supervisor",
-    "currentValueId": "no",
+    "currentValueId": "no_supervisor",
     "options": [
       {
-        "id": "no",
-        "labelUz": "Nazoratchi yo‘q (No)",
+        "id": "supervisor",
+        "labelUz": "Nazoratchi / Patrul bor",
+        "labelEn": "Supervisor",
+        "iconSrc": "/sr4s_icons/school-supervisor.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "no_supervisor",
+        "labelUz": "Nazoratchi yo‘q",
         "labelEn": "No Supervisor",
         "iconSrc": "/sr4s_icons/school-supervisor-no.png",
         "scoreWeight": 2
       },
       {
-        "id": "yes",
-        "labelUz": "Nazoratchi / Patrul bor (Yes)",
-        "labelEn": "Supervisor Present",
-        "iconSrc": "/sr4s_icons/school-supervisor.png",
-        "scoreWeight": 5
+        "id": "no_school_nearby",
+        "labelUz": "Yaqin atrofda maktab yo‘q",
+        "labelEn": "No School Nearby",
+        "iconSrc": "/sr4s_icons/school-no.png",
+        "scoreWeight": 3
       }
     ]
   },
@@ -679,56 +693,63 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-18",
     "nameUz": "Trotuar chap tomonda",
     "nameEn": "Sidewalk Left",
-    "currentValueId": "barrier",
+    "currentValueId": "0_1m",
     "options": [
       {
-        "id": "barrier",
-        "labelUz": "To‘siqli himoyalangan trotuar (Barrier >= 1.5m)",
-        "labelEn": "Barrier Protected",
-        "iconSrc": "/sr4s_icons/sidewalk-left-barrier.png",
-        "scoreWeight": 5
+        "id": "none",
+        "labelUz": "Trotuar yo‘q",
+        "labelEn": "No sidewalk",
+        "iconSrc": "/sr4s_icons/sidewalk-left-none.png",
+        "scoreWeight": 1
       },
       {
-        "id": "wide",
-        "labelUz": "Keng trotuar (3.0m+)",
-        "labelEn": "Wide (>=3.0m)",
-        "iconSrc": "/sr4s_icons/sidewalk-left-3-plus.png",
-        "scoreWeight": 5
+        "id": "0_1m",
+        "labelUz": "0 dan 1m gacha",
+        "labelEn": "0 to 1m Away",
+        "iconSrc": "/sr4s_icons/sidewalk-left-0-1.png",
+        "scoreWeight": 3
       },
       {
-        "id": "standard",
-        "labelUz": "Standart trotuar (1.0 - 3.0m)",
-        "labelEn": "Medium (1.0-3.0m)",
+        "id": "1_3m",
+        "labelUz": "1 dan 3m gacha",
+        "labelEn": "1 to 3m Away",
         "iconSrc": "/sr4s_icons/sidewalk-left-1-3.png",
         "scoreWeight": 4
       },
       {
-        "id": "narrow",
-        "labelUz": "Tor trotuar (< 1.0m)",
-        "labelEn": "Narrow (<1.0m)",
-        "iconSrc": "/sr4s_icons/sidewalk-left-0-1.png",
+        "id": "gt_3m",
+        "labelUz": "3m dan uzoqda",
+        "labelEn": "> 3m Away",
+        "iconSrc": "/sr4s_icons/sidewalk-left-3-plus.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "barrier",
+        "labelUz": "To‘siq orqasida",
+        "labelEn": "Behind Barrier",
+        "iconSrc": "/sr4s_icons/sidewalk-left-barrier.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "poor",
+        "labelUz": "Yomon / Tuproq yo‘l",
+        "labelEn": "Poor",
+        "iconSrc": "/sr4s_icons/sidewalk-left-informal-0-1.png",
         "scoreWeight": 2
       },
       {
-        "id": "shared",
-        "labelUz": "Umumiy yo‘lakcha (Shared)",
-        "labelEn": "Shared Path",
-        "iconSrc": "/sr4s_icons/sidewalk-left-shared.png",
+        "id": "moderate",
+        "labelUz": "O‘rtacha yo‘lak",
+        "labelEn": "Moderate",
+        "iconSrc": "/sr4s_icons/sidewalk-left-informal-1-plus.png",
         "scoreWeight": 3
       },
       {
-        "id": "informal",
-        "labelUz": "Norasmiy tuproq yo‘lak",
-        "labelEn": "Informal Path",
-        "iconSrc": "/sr4s_icons/sidewalk-left-informal-1-plus.png",
-        "scoreWeight": 2
-      },
-      {
-        "id": "none",
-        "labelUz": "Trotuar umuman yo‘q (None)",
-        "labelEn": "None",
-        "iconSrc": "/sr4s_icons/sidewalk-left-none.png",
-        "scoreWeight": 1
+        "id": "shared",
+        "labelUz": "Umumiy velo-piyoda yo‘lak",
+        "labelEn": "Shared use path",
+        "iconSrc": "/sr4s_icons/sidewalk-left-shared.png",
+        "scoreWeight": 4
       }
     ]
   },
@@ -737,56 +758,63 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-19",
     "nameUz": "Trotuar o‘ng tomonda",
     "nameEn": "Sidewalk Right",
-    "currentValueId": "barrier",
+    "currentValueId": "0_1m",
     "options": [
       {
-        "id": "barrier",
-        "labelUz": "To‘siqli himoyalangan trotuar (Barrier >= 1.5m)",
-        "labelEn": "Barrier Protected",
-        "iconSrc": "/sr4s_icons/sidewalk-right-barrier.png",
-        "scoreWeight": 5
+        "id": "none",
+        "labelUz": "Trotuar yo‘q",
+        "labelEn": "No sidewalk",
+        "iconSrc": "/sr4s_icons/sidewalk-right-none.png",
+        "scoreWeight": 1
       },
       {
-        "id": "wide",
-        "labelUz": "Keng trotuar (3.0m+)",
-        "labelEn": "Wide (>=3.0m)",
-        "iconSrc": "/sr4s_icons/sidewalk-right-3-plus.png",
-        "scoreWeight": 5
+        "id": "0_1m",
+        "labelUz": "0 dan 1m gacha",
+        "labelEn": "0 to 1m Away",
+        "iconSrc": "/sr4s_icons/sidewalk-right-0-1.png",
+        "scoreWeight": 3
       },
       {
-        "id": "standard",
-        "labelUz": "Standart trotuar (1.0 - 3.0m)",
-        "labelEn": "Medium (1.0-3.0m)",
+        "id": "1_3m",
+        "labelUz": "1 dan 3m gacha",
+        "labelEn": "1 to 3m Away",
         "iconSrc": "/sr4s_icons/sidewalk-right-1-3.png",
         "scoreWeight": 4
       },
       {
-        "id": "narrow",
-        "labelUz": "Tor trotuar (< 1.0m)",
-        "labelEn": "Narrow (<1.0m)",
-        "iconSrc": "/sr4s_icons/sidewalk-right-0-1.png",
+        "id": "gt_3m",
+        "labelUz": "3m dan uzoqda",
+        "labelEn": "> 3m Away",
+        "iconSrc": "/sr4s_icons/sidewalk-right-3-plus.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "barrier",
+        "labelUz": "To‘siq orqasida",
+        "labelEn": "Behind Barrier",
+        "iconSrc": "/sr4s_icons/sidewalk-right-barrier.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "poor",
+        "labelUz": "Yomon / Tuproq yo‘l",
+        "labelEn": "Poor",
+        "iconSrc": "/sr4s_icons/sidewalk-right-informal-0-1.png",
         "scoreWeight": 2
       },
       {
-        "id": "shared",
-        "labelUz": "Umumiy yo‘lakcha (Shared)",
-        "labelEn": "Shared Path",
-        "iconSrc": "/sr4s_icons/sidewalk-right-shared.png",
+        "id": "moderate",
+        "labelUz": "O‘rtacha yo‘lak",
+        "labelEn": "Moderate",
+        "iconSrc": "/sr4s_icons/sidewalk-right-informal-1-plus.png",
         "scoreWeight": 3
       },
       {
-        "id": "informal",
-        "labelUz": "Norasmiy tuproq yo‘lak",
-        "labelEn": "Informal Path",
-        "iconSrc": "/sr4s_icons/sidewalk-right-informal-1-plus.png",
-        "scoreWeight": 2
-      },
-      {
-        "id": "none",
-        "labelUz": "Trotuar umuman yo‘q (None)",
-        "labelEn": "None",
-        "iconSrc": "/sr4s_icons/sidewalk-right-none.png",
-        "scoreWeight": 1
+        "id": "shared",
+        "labelUz": "Umumiy velo-piyoda yo‘lak",
+        "labelEn": "Shared use path",
+        "iconSrc": "/sr4s_icons/sidewalk-right-shared.png",
+        "scoreWeight": 4
       }
     ]
   },
@@ -795,35 +823,35 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-20",
     "nameUz": "Yo‘l chekkasi (Yelka) chapda",
     "nameEn": "Road Edge Left",
-    "currentValueId": "wide",
+    "currentValueId": "0_1m",
     "options": [
       {
-        "id": "wide",
-        "labelUz": "Keng yelka (Wide >= 2.4m)",
-        "labelEn": "Wide (>=2.4m)",
-        "iconSrc": "/sr4s_icons/shoulder-left-wide.png",
-        "scoreWeight": 5
+        "id": "none",
+        "labelUz": "Yelka yo‘q",
+        "labelEn": "None",
+        "iconSrc": "/sr4s_icons/shoulder-left-none.png",
+        "scoreWeight": 1
       },
       {
-        "id": "medium",
-        "labelUz": "O‘rtacha yelka (1.0 - 2.4m)",
-        "labelEn": "Medium (1.0-2.4m)",
+        "id": "0_1m",
+        "labelUz": "0 dan 1m gacha",
+        "labelEn": "0 to 1m Wide",
+        "iconSrc": "/sr4s_icons/shoulder-left-narrow.png",
+        "scoreWeight": 3
+      },
+      {
+        "id": "1_2_4m",
+        "labelUz": "1 dan 2.4m gacha",
+        "labelEn": "1 to 2.4m Wide",
         "iconSrc": "/sr4s_icons/shoulder-left-medium.png",
         "scoreWeight": 4
       },
       {
-        "id": "narrow",
-        "labelUz": "Tor yelka (< 1.0m)",
-        "labelEn": "Narrow (<1.0m)",
-        "iconSrc": "/sr4s_icons/shoulder-left-narrow.png",
-        "scoreWeight": 2
-      },
-      {
-        "id": "none",
-        "labelUz": "Yelka yo‘q (None)",
-        "labelEn": "None",
-        "iconSrc": "/sr4s_icons/shoulder-left-none.png",
-        "scoreWeight": 1
+        "id": "gt_2_4m",
+        "labelUz": "2.4m dan ortiq",
+        "labelEn": "> 2.4m Wide",
+        "iconSrc": "/sr4s_icons/shoulder-left-wide.png",
+        "scoreWeight": 5
       }
     ]
   },
@@ -832,35 +860,35 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-21",
     "nameUz": "Yo‘l chekkasi (Yelka) o‘ngda",
     "nameEn": "Road Edge Right",
-    "currentValueId": "wide",
+    "currentValueId": "0_1m",
     "options": [
       {
-        "id": "wide",
-        "labelUz": "Keng yelka (Wide >= 2.4m)",
-        "labelEn": "Wide (>=2.4m)",
-        "iconSrc": "/sr4s_icons/shoulder-right-wide.png",
-        "scoreWeight": 5
+        "id": "none",
+        "labelUz": "Yelka yo‘q",
+        "labelEn": "None",
+        "iconSrc": "/sr4s_icons/shoulder-right-none.png",
+        "scoreWeight": 1
       },
       {
-        "id": "medium",
-        "labelUz": "O‘rtacha yelka (1.0 - 2.4m)",
-        "labelEn": "Medium (1.0-2.4m)",
+        "id": "0_1m",
+        "labelUz": "0 dan 1m gacha",
+        "labelEn": "0 to 1m Wide",
+        "iconSrc": "/sr4s_icons/shoulder-right-narrow.png",
+        "scoreWeight": 3
+      },
+      {
+        "id": "1_2_4m",
+        "labelUz": "1 dan 2.4m gacha",
+        "labelEn": "1 to 2.4m Wide",
         "iconSrc": "/sr4s_icons/shoulder-right-medium.png",
         "scoreWeight": 4
       },
       {
-        "id": "narrow",
-        "labelUz": "Tor yelka (< 1.0m)",
-        "labelEn": "Narrow (<1.0m)",
-        "iconSrc": "/sr4s_icons/shoulder-right-narrow.png",
-        "scoreWeight": 2
-      },
-      {
-        "id": "none",
-        "labelUz": "Yelka yo‘q (None)",
-        "labelEn": "None",
-        "iconSrc": "/sr4s_icons/shoulder-right-none.png",
-        "scoreWeight": 1
+        "id": "gt_2_4m",
+        "labelUz": "2.4m dan ortiq",
+        "labelEn": "> 2.4m Wide",
+        "iconSrc": "/sr4s_icons/shoulder-right-wide.png",
+        "scoreWeight": 5
       }
     ]
   },
