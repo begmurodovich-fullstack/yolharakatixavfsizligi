@@ -16,6 +16,10 @@ export interface AttributeDefinition {
   currentValueId: string;
   customValue?: string;
   isInput?: boolean;
+  isSlider?: boolean;
+  min?: number;
+  max?: number;
+  step?: number;
   inputUnit?: string;
   options: AttributeOption[];
 }
@@ -1376,37 +1380,37 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-31",
     "nameUz": "Hovli va tijorat kirish yo‘llari",
     "nameEn": "Driveways",
-    "currentValueId": "commercial",
+    "currentValueId": "2_plus_residential",
     "options": [
       {
-        "id": "commercial",
-        "labelUz": "Tijorat / Tashkilot kirish yo‘li",
-        "labelEn": "Commercial",
-        "iconSrc": "/sr4s_icons/driveway-commercial.png",
-        "scoreWeight": 3
-      },
-      {
-        "id": "1_2",
-        "labelUz": "1 - 2 ta kirish yo‘li",
-        "labelEn": "1-2 Driveways",
+        "id": "1_2_residential",
+        "labelUz": "1 yoki 2 ta turar-joy kirish yo‘li",
+        "labelEn": "1 or 2 Residential",
         "iconSrc": "/sr4s_icons/driveway-1-2.png",
         "scoreWeight": 4
       },
       {
-        "id": "3_plus",
-        "labelUz": "3 va undan ortiq kirish yo‘li",
-        "labelEn": "3+ Driveways",
+        "id": "2_plus_residential",
+        "labelUz": "> 2 ta turar-joy kirish yo‘li",
+        "labelEn": "> 2 Residential",
         "iconSrc": "/sr4s_icons/driveway-3-plus.png",
+        "scoreWeight": 3
+      },
+      {
+        "id": "commercial",
+        "labelUz": "Tijorat kirish yo‘li",
+        "labelEn": "Commercial",
+        "iconSrc": "/sr4s_icons/driveway-commercial.png",
         "scoreWeight": 2
       },
       {
-        "id": "none",
-        "labelUz": "Kirish yo‘llari yo‘q",
-        "labelEn": "None",
-        "iconSrc": "/sr4s_icons/icon-not-present.png",
+        "id": "not_applicable",
+        "labelUz": "Qo‘llanmaydi",
+        "labelEn": "Not Applicable",
+        "iconSrc": "/sr4s_icons/icon-na.png",
         "scoreWeight": 5,
-        "badgeText": "NONE",
-        "badgeColor": "teal"
+        "badgeText": "NA",
+        "badgeColor": "orange"
       }
     ]
   },
@@ -1430,7 +1434,7 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "options": [
       {
         "id": "adequate",
-        "labelUz": "Yetarli / Xavfsiz (Adequate)",
+        "labelUz": "Yetarli / Xavfsiz",
         "labelEn": "Adequate",
         "iconSrc": "/sr4s_icons/icon-adequate.png",
         "scoreWeight": 5,
@@ -1439,7 +1443,7 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
       },
       {
         "id": "poor",
-        "labelUz": "Xavfli / Ko‘rinishi yomon (Poor)",
+        "labelUz": "Xavfli / Ko‘rinishi yomon",
         "labelEn": "Poor",
         "iconSrc": "/sr4s_icons/icon-poor.png",
         "scoreWeight": 1,
@@ -1447,9 +1451,9 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
         "badgeColor": "red"
       },
       {
-        "id": "na",
-        "labelUz": "Chorraha yo‘q (NA)",
-        "labelEn": "NA",
+        "id": "not_applicable",
+        "labelUz": "Chorraha yo‘q",
+        "labelEn": "Not Applicable",
         "iconSrc": "/sr4s_icons/icon-na.png",
         "scoreWeight": 5,
         "badgeText": "NA",
@@ -1466,28 +1470,28 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "options": [
       {
         "id": "straight",
-        "labelUz": "To‘g‘ri yo‘l (Straight)",
+        "labelUz": "To‘g‘ri yo‘l",
         "labelEn": "Straight",
         "iconSrc": "/sr4s_icons/curve-straight.png",
         "scoreWeight": 5
       },
       {
         "id": "moderate",
-        "labelUz": "O‘rtacha burilish (Moderate curve)",
+        "labelUz": "O‘rtacha burilish",
         "labelEn": "Moderate",
         "iconSrc": "/sr4s_icons/curve-moderate.png",
         "scoreWeight": 3
       },
       {
         "id": "sharp",
-        "labelUz": "O‘tkir burilish (Sharp curve)",
+        "labelUz": "O‘tkir burilish",
         "labelEn": "Sharp",
         "iconSrc": "/sr4s_icons/curve-sharp.png",
         "scoreWeight": 2
       },
       {
         "id": "very_sharp",
-        "labelUz": "O‘ta xavfli burilish (Very sharp)",
+        "labelUz": "O‘ta keskin burilish",
         "labelEn": "Very Sharp",
         "iconSrc": "/sr4s_icons/curve-very-sharp.png",
         "scoreWeight": 1
@@ -1499,20 +1503,11 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-35",
     "nameUz": "Burilish sifati va ko‘rinishi",
     "nameEn": "Curve Quality",
-    "currentValueId": "na",
+    "currentValueId": "not_curve",
     "options": [
       {
-        "id": "na",
-        "labelUz": "Qo‘llanmaydi (NA - To‘g‘ri yo‘l)",
-        "labelEn": "NA",
-        "iconSrc": "/sr4s_icons/icon-na.png",
-        "scoreWeight": 5,
-        "badgeText": "NA",
-        "badgeColor": "orange"
-      },
-      {
         "id": "adequate",
-        "labelUz": "Yetarli ko‘rish (Adequate)",
+        "labelUz": "Yetarli ko‘rish",
         "labelEn": "Adequate",
         "iconSrc": "/sr4s_icons/icon-adequate.png",
         "scoreWeight": 5,
@@ -1521,12 +1516,21 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
       },
       {
         "id": "poor",
-        "labelUz": "Ko‘rinish xavfli (Poor)",
+        "labelUz": "Ko‘rinish xavfli",
         "labelEn": "Poor",
         "iconSrc": "/sr4s_icons/icon-poor.png",
         "scoreWeight": 1,
         "badgeText": "POOR",
         "badgeColor": "red"
+      },
+      {
+        "id": "not_curve",
+        "labelUz": "Burilish emas",
+        "labelEn": "Not Curve",
+        "iconSrc": "/sr4s_icons/icon-na.png",
+        "scoreWeight": 5,
+        "badgeText": "NA",
+        "badgeColor": "orange"
       }
     ]
   },
@@ -1536,51 +1540,20 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "nameUz": "Tezlik cheklovi belgisi",
     "nameEn": "Speed Limit",
     "currentValueId": "40",
+    "customValue": "40",
+    "isSlider": true,
+    "min": 10,
+    "max": 130,
+    "step": 5,
+    "inputUnit": "km/h",
     "options": [
       {
-        "id": "30",
-        "labelUz": "30 km/soat (BMT xavfsiz maktab standarti)",
-        "labelEn": "30 km/h",
-        "iconSrc": "/sr4s_icons/speed-limit.png",
-        "scoreWeight": 5,
-        "badgeText": "30 km/h",
-        "badgeColor": "dark"
-      },
-      {
         "id": "40",
-        "labelUz": "40 km/soat (Standart maktab hududi)",
+        "labelUz": "40 km/h",
         "labelEn": "40 km/h",
         "iconSrc": "/sr4s_icons/speed-limit.png",
         "scoreWeight": 4,
-        "badgeText": "40 km/h",
-        "badgeColor": "dark"
-      },
-      {
-        "id": "50",
-        "labelUz": "50 km/soat (Shahar tezligi)",
-        "labelEn": "50 km/h",
-        "iconSrc": "/sr4s_icons/speed-limit.png",
-        "scoreWeight": 3,
-        "badgeText": "50 km/h",
-        "badgeColor": "dark"
-      },
-      {
-        "id": "60",
-        "labelUz": "60 km/soat (Magistral shahar ko‘chasi)",
-        "labelEn": "60 km/h",
-        "iconSrc": "/sr4s_icons/speed-limit.png",
-        "scoreWeight": 2,
-        "badgeText": "60 km/h",
-        "badgeColor": "dark"
-      },
-      {
-        "id": "70",
-        "labelUz": "70+ km/soat (Katta trassa)",
-        "labelEn": "70+ km/h",
-        "iconSrc": "/sr4s_icons/speed-limit.png",
-        "scoreWeight": 1,
-        "badgeText": "70 km/h",
-        "badgeColor": "dark"
+        "badgeText": "40 km/h"
       }
     ]
   },
@@ -1590,42 +1563,20 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "nameUz": "Haqiqiy harakat tezligi (Operating Speed)",
     "nameEn": "Operating Speed",
     "currentValueId": "45",
+    "customValue": "45",
+    "isSlider": true,
+    "min": 10,
+    "max": 130,
+    "step": 5,
+    "inputUnit": "km/h",
     "options": [
       {
-        "id": "30",
-        "labelUz": "30 km/soat (Sokin harakat)",
-        "labelEn": "30 km/h",
-        "iconSrc": "/sr4s_icons/operating-speed.png",
-        "scoreWeight": 5,
-        "badgeText": "30 km/h",
-        "badgeColor": "dark"
-      },
-      {
         "id": "45",
-        "labelUz": "45 km/soat (O‘rtacha harakat)",
+        "labelUz": "45 km/h",
         "labelEn": "45 km/h",
         "iconSrc": "/sr4s_icons/operating-speed.png",
         "scoreWeight": 4,
-        "badgeText": "45 km/h",
-        "badgeColor": "dark"
-      },
-      {
-        "id": "60",
-        "labelUz": "60 km/soat (Yuqori tezlik)",
-        "labelEn": "60 km/h",
-        "iconSrc": "/sr4s_icons/operating-speed.png",
-        "scoreWeight": 2,
-        "badgeText": "60 km/h",
-        "badgeColor": "dark"
-      },
-      {
-        "id": "75",
-        "labelUz": "75+ km/soat (O‘ta xavfli tezlik)",
-        "labelEn": "75+ km/h",
-        "iconSrc": "/sr4s_icons/operating-speed.png",
-        "scoreWeight": 1,
-        "badgeText": "75 km/h",
-        "badgeColor": "dark"
+        "badgeText": "45 km/h"
       }
     ]
   },
@@ -1637,22 +1588,22 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "currentValueId": "not_present",
     "options": [
       {
-        "id": "not_present",
-        "labelUz": "Mavjud emas (Not Present)",
-        "labelEn": "Not Present",
-        "iconSrc": "/sr4s_icons/icon-not-present.png",
-        "scoreWeight": 2,
-        "badgeText": "NOT PRESENT",
-        "badgeColor": "red"
-      },
-      {
         "id": "present",
-        "labelUz": "Mavjud (Sun’iy notekislik / Radar bor)",
+        "labelUz": "Mavjud",
         "labelEn": "Present",
         "iconSrc": "/sr4s_icons/icon-present.png",
         "scoreWeight": 5,
         "badgeText": "PRESENT",
         "badgeColor": "teal"
+      },
+      {
+        "id": "not_present",
+        "labelUz": "Mavjud emas",
+        "labelEn": "Not Present",
+        "iconSrc": "/sr4s_icons/icon-not-present.png",
+        "scoreWeight": 2,
+        "badgeText": "NOT PRESENT",
+        "badgeColor": "red"
       }
     ]
   },
@@ -1661,16 +1612,15 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-39",
     "nameUz": "Mototsikl va mopedlar ulushi",
     "nameEn": "Motorcycle %",
-    "currentValueId": "na",
+    "currentValueId": "not_recorded",
     "options": [
       {
-        "id": "na",
-        "labelUz": "Qo‘llanmaydi / Kam (NA)",
-        "labelEn": "NA",
+        "id": "not_recorded",
+        "labelUz": "Yozib olinmagan",
+        "labelEn": "Not recorded",
         "iconSrc": "/sr4s_icons/motorcycle-percent-na.png",
         "scoreWeight": 5,
-        "badgeText": "NA",
-        "badgeColor": "teal"
+        "badgeText": "NA"
       },
       {
         "id": "0",
@@ -1681,30 +1631,58 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
       },
       {
         "id": "1_5",
-        "labelUz": "1 - 5%",
-        "labelEn": "1-5%",
+        "labelUz": "1% - 5%",
+        "labelEn": "1% - 5%",
         "iconSrc": "/sr4s_icons/motorcycle-percent-1-5.png",
         "scoreWeight": 4
       },
       {
         "id": "6_10",
-        "labelUz": "6 - 10%",
-        "labelEn": "6-10%",
+        "labelUz": "6% - 10%",
+        "labelEn": "6% - 10%",
         "iconSrc": "/sr4s_icons/motorcycle-percent-6-10.png",
-        "scoreWeight": 3
+        "scoreWeight": 4
       },
       {
         "id": "11_20",
-        "labelUz": "11 - 20%",
-        "labelEn": "11-20%",
+        "labelUz": "11% - 20%",
+        "labelEn": "11% - 20%",
         "iconSrc": "/sr4s_icons/motorcycle-percent-11-20.png",
+        "scoreWeight": 3
+      },
+      {
+        "id": "21_40",
+        "labelUz": "21% - 40%",
+        "labelEn": "21% - 40%",
+        "iconSrc": "/sr4s_icons/motorcycle-percent-21-40.png",
+        "scoreWeight": 3
+      },
+      {
+        "id": "41_60",
+        "labelUz": "41% - 60%",
+        "labelEn": "41% - 60%",
+        "iconSrc": "/sr4s_icons/motorcycle-percent-41-60.png",
         "scoreWeight": 2
       },
       {
-        "id": "21_plus",
-        "labelUz": "20%+ Yuqori ulush",
-        "labelEn": "21-40%",
-        "iconSrc": "/sr4s_icons/motorcycle-percent-21-40.png",
+        "id": "61_80",
+        "labelUz": "61% - 80%",
+        "labelEn": "61% - 80%",
+        "iconSrc": "/sr4s_icons/motorcycle-percent-61-80.png",
+        "scoreWeight": 2
+      },
+      {
+        "id": "81_99",
+        "labelUz": "81% - 99%",
+        "labelEn": "81% - 99%",
+        "iconSrc": "/sr4s_icons/motorcycle-percent-81-99.png",
+        "scoreWeight": 1
+      },
+      {
+        "id": "100",
+        "labelUz": "100%",
+        "labelEn": "100%",
+        "iconSrc": "/sr4s_icons/motorcycle-percent-100.png",
         "scoreWeight": 1
       }
     ]
@@ -1714,50 +1692,63 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-40",
     "nameUz": "Og‘ir yuk mashinalari ulushi",
     "nameEn": "HGV %",
-    "currentValueId": "na",
+    "currentValueId": "not_recorded",
     "options": [
       {
-        "id": "na",
-        "labelUz": "Qo‘llanmaydi / Kam (NA)",
-        "labelEn": "NA",
+        "id": "not_recorded",
+        "labelUz": "Yozib olinmagan",
+        "labelEn": "Not recorded",
         "iconSrc": "/sr4s_icons/hgv-percent-na.png",
         "scoreWeight": 5,
-        "badgeText": "NA",
-        "badgeColor": "teal"
+        "badgeText": "NA"
       },
       {
         "id": "0_5",
-        "labelUz": "0 - 5%",
-        "labelEn": "0-5%",
+        "labelUz": "0% dan <5% gacha",
+        "labelEn": "0% to <5%",
         "iconSrc": "/sr4s_icons/hgv-percent-0-5.png",
         "scoreWeight": 5
       },
       {
         "id": "5_10",
-        "labelUz": "5 - 10%",
-        "labelEn": "5-10%",
+        "labelUz": "5% dan <10% gacha",
+        "labelEn": "5% to <10%",
         "iconSrc": "/sr4s_icons/hgv-percent-5-10.png",
         "scoreWeight": 4
       },
       {
         "id": "10_15",
-        "labelUz": "10 - 15%",
-        "labelEn": "10-15%",
+        "labelUz": "10% dan <15% gacha",
+        "labelEn": "10% to <15%",
         "iconSrc": "/sr4s_icons/hgv-percent-10-15.png",
         "scoreWeight": 3
       },
       {
         "id": "15_20",
-        "labelUz": "15 - 20%",
-        "labelEn": "15-20%",
+        "labelUz": "15% dan <20% gacha",
+        "labelEn": "15% to <20%",
         "iconSrc": "/sr4s_icons/hgv-percent-15-20.png",
+        "scoreWeight": 3
+      },
+      {
+        "id": "20_30",
+        "labelUz": "20% dan <30% gacha",
+        "labelEn": "20% to <30%",
+        "iconSrc": "/sr4s_icons/hgv-percent-20-30.png",
         "scoreWeight": 2
       },
       {
-        "id": "20_plus",
-        "labelUz": "20%+ Yuqori og‘ir yuk oqimi",
-        "labelEn": "20-30%",
-        "iconSrc": "/sr4s_icons/hgv-percent-20-30.png",
+        "id": "30_40",
+        "labelUz": "30% dan <40% gacha",
+        "labelEn": "30% to <40%",
+        "iconSrc": "/sr4s_icons/hgv-percent-30-40.png",
+        "scoreWeight": 2
+      },
+      {
+        "id": "40_plus",
+        "labelUz": ">= 40%",
+        "labelEn": ">= 40%",
+        "iconSrc": "/sr4s_icons/hgv-percent-40-plus.png",
         "scoreWeight": 1
       }
     ]

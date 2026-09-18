@@ -112,14 +112,44 @@ export function Sr4sDemonstrator() {
   const [attributes, setAttributes] = useState<AttributeDefinition[]>(OFFICIAL_40_ATTRIBUTES_DATA);
   const [activeModalAttr, setActiveModalAttr] = useState<AttributeDefinition | null>(null);
   const [inputVal, setInputVal] = useState<string>('');
+  const [sliderVal, setSliderVal] = useState<number>(40);
   const [isSaving, setIsSaving] = useState(false);
 
-  // When opening modal, initialize inputVal if it is an input attribute
+  // When opening modal, initialize inputVal or sliderVal
   const handleOpenModal = (attr: AttributeDefinition) => {
     setActiveModalAttr(attr);
     if (attr.isInput) {
       setInputVal(attr.customValue || attr.currentValueId || '');
     }
+    if (attr.isSlider) {
+      setSliderVal(parseInt(attr.customValue || attr.currentValueId || '40', 10));
+    }
+  };
+
+  const handleSliderChange = (attrId: string, val: number) => {
+    setSliderVal(val);
+    setAttributes((prev) =>
+      prev.map((attr) =>
+        attr.id === attrId
+          ? {
+              ...attr,
+              currentValueId: String(val),
+              customValue: String(val),
+              options: [
+                {
+                  ...attr.options[0],
+                  id: String(val),
+                  labelEn: `${val} km/h`,
+                  labelUz: `${val} km/h`,
+                  badgeText: `${val} km/h`,
+                  scoreWeight:
+                    val <= 30 ? 5 : val <= 40 ? 4 : val <= 50 ? 3 : val <= 60 ? 2 : 1,
+                },
+              ],
+            }
+          : attr
+      )
+    );
   };
 
   // Dynamic Star Rating calculation
@@ -139,6 +169,11 @@ export function Sr4sDemonstrator() {
         } else {
           totalScoreWeight += 4;
         }
+        maxPossibleScore += 5;
+      } else if (attr.isSlider) {
+        const speed = parseFloat(attr.customValue || attr.currentValueId) || 40;
+        const weight = speed <= 30 ? 5 : speed <= 40 ? 4 : speed <= 50 ? 3 : speed <= 60 ? 2 : 1;
+        totalScoreWeight += weight;
         maxPossibleScore += 5;
       } else {
         const selected = attr.options.find((o) => o.id === attr.currentValueId) || attr.options[0];
@@ -410,17 +445,27 @@ export function Sr4sDemonstrator() {
                         />
 
                         {/* Speed limit overlay if speed card */}
-                        {attr.id === 'speed_limit' && currentOption?.badgeText && (
-                          <span className="absolute text-[11px] font-black text-slate-900 font-mono tracking-tight pointer-events-none mt-0.5">
-                            {currentOption.badgeText.replace(' km/h', '')}
-                          </span>
+                        {attr.id === 'speed_limit' && (
+                          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                            <span className="text-xs sm:text-[13px] font-black text-slate-900 leading-none">
+                              {attr.customValue || attr.currentValueId}
+                            </span>
+                            <span className="text-[7px] font-bold text-slate-800 leading-none mt-0.5">
+                              km/h
+                            </span>
+                          </div>
                         )}
 
                         {/* Operating speed overlay */}
-                        {attr.id === 'operating_speed' && currentOption?.badgeText && (
-                          <span className="absolute bottom-1 text-[10px] font-black text-slate-900 font-mono tracking-tight pointer-events-none">
-                            {currentOption.badgeText.replace(' km/h', '')}
-                          </span>
+                        {attr.id === 'operating_speed' && (
+                          <div className="absolute right-0.5 bottom-0.5 flex flex-col items-center justify-center pointer-events-none">
+                            <span className="text-xs sm:text-[13px] font-black text-slate-900 leading-none">
+                              {attr.customValue || attr.currentValueId}
+                            </span>
+                            <span className="text-[7px] font-bold text-slate-800 leading-none mt-0.5">
+                              km/h
+                            </span>
+                          </div>
                         )}
                       </>
                     )}
@@ -455,18 +500,18 @@ export function Sr4sDemonstrator() {
             {/* Red '×' close button top right */}
             <button
               onClick={() => setActiveModalAttr(null)}
-              className="absolute top-2.5 right-3 text-red-500 hover:text-red-700 font-bold text-2xl leading-none transition-colors p-1"
+              className="absolute top-2.5 right-3 text-red-500 hover:text-red-700 font-bold text-2xl leading-none transition-colors p-1 cursor-pointer"
               aria-label="Close"
             >
               ×
             </button>
 
-            {/* Modal Title (e.g. Vehicles / Day, Crossing Flow, Intersection Type) */}
+            {/* Modal Title (e.g. Vehicles / Day, Speed Limit, Crossing Flow, Intersection Type) */}
             <h3 className="text-xl sm:text-2xl font-normal text-slate-800 text-center tracking-tight mb-5 select-none">
               {activeModalAttr.nameEn}
             </h3>
 
-            {/* Editable Input Mode for numeric/custom attributes */}
+            {/* Mode 1: Editable Input Mode for numeric/custom attributes */}
             {activeModalAttr.isInput ? (
               <form
                 onSubmit={(e) => {
@@ -491,8 +536,33 @@ export function Sr4sDemonstrator() {
                   <Check className="w-5 h-5 text-teal-600 stroke-[2.5]" />
                 </button>
               </form>
+            ) : activeModalAttr.isSlider ? (
+              /* Mode 2: Slider Mode for Speed Limit and Operating Speed */
+              <div className="w-full max-w-sm sm:max-w-md mx-auto my-6 flex items-center justify-center gap-4 sm:gap-6">
+                <div className="relative flex-1 flex items-center">
+                  <input
+                    type="range"
+                    min={activeModalAttr.min || 10}
+                    max={activeModalAttr.max || 130}
+                    step={activeModalAttr.step || 5}
+                    value={sliderVal}
+                    onChange={(e) =>
+                      handleSliderChange(activeModalAttr.id, parseInt(e.target.value, 10))
+                    }
+                    className="w-full h-2.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#009688]"
+                  />
+                </div>
+                <div className="flex items-stretch border border-[#009688] rounded-md overflow-hidden bg-white shadow-2xs">
+                  <div className="px-3.5 py-2 min-w-[42px] flex items-center justify-center font-bold text-slate-800 text-sm sm:text-base">
+                    {sliderVal}
+                  </div>
+                  <div className="bg-[#009688] text-white px-3 py-2 flex items-center justify-center font-semibold text-xs sm:text-sm select-none">
+                    km/h
+                  </div>
+                </div>
+              </div>
             ) : (
-              /* Option Cards Horizontal Row */
+              /* Mode 3: Option Cards Horizontal Row */
               <div className="flex flex-row items-end justify-center gap-3 sm:gap-6 flex-wrap">
                 {activeModalAttr.options.map((option) => {
                   const isSelected = option.id === activeModalAttr.currentValueId;
@@ -519,20 +589,6 @@ export function Sr4sDemonstrator() {
                           className="object-contain max-h-full max-w-full drop-shadow-2xs"
                           unoptimized
                         />
-
-                        {/* Speed limit badge overlay */}
-                        {activeModalAttr.id === 'speed_limit' && option.badgeText && (
-                          <span className="absolute text-[11px] font-black text-slate-900 font-mono tracking-tight pointer-events-none mt-0.5">
-                            {option.badgeText.replace(' km/h', '')}
-                          </span>
-                        )}
-
-                        {/* Operating speed badge overlay */}
-                        {activeModalAttr.id === 'operating_speed' && option.badgeText && (
-                          <span className="absolute bottom-1 text-[10px] font-black text-slate-900 font-mono tracking-tight pointer-events-none">
-                            {option.badgeText.replace(' km/h', '')}
-                          </span>
-                        )}
                       </div>
 
                       {/* Option English Label */}
