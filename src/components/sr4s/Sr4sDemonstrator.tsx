@@ -538,7 +538,7 @@ export function Sr4sDemonstrator() {
                 </button>
               </form>
             ) : activeModalAttr.isSlider ? (
-              /* Mode 2: Slider Mode for Speed Limit and Operating Speed */
+              /* Mode 2: Slider Mode for Speed Limit and Operating Speed (Direct Slider + Editable Input) */
               <div className="w-full max-w-sm sm:max-w-md mx-auto my-6 flex items-center justify-center gap-4 sm:gap-6">
                 <div className="relative flex-1 flex items-center">
                   <input
@@ -554,9 +554,20 @@ export function Sr4sDemonstrator() {
                   />
                 </div>
                 <div className="flex items-stretch border border-[#009688] rounded-md overflow-hidden bg-white shadow-2xs">
-                  <div className="px-3.5 py-2 min-w-[42px] flex items-center justify-center font-bold text-slate-800 text-sm sm:text-base">
-                    {sliderVal}
-                  </div>
+                  <input
+                    type="number"
+                    min={activeModalAttr.min || 10}
+                    max={activeModalAttr.max || 130}
+                    step={activeModalAttr.step || 1}
+                    value={sliderVal}
+                    onChange={(e) => {
+                      const val = parseInt(e.target.value, 10);
+                      if (!isNaN(val)) {
+                        handleSliderChange(activeModalAttr.id, val);
+                      }
+                    }}
+                    className="w-14 px-2 py-2 text-center font-bold text-slate-800 text-sm sm:text-base outline-hidden"
+                  />
                   <div className="bg-[#009688] text-white px-3 py-2 flex items-center justify-center font-semibold text-xs sm:text-sm select-none">
                     km/h
                   </div>
