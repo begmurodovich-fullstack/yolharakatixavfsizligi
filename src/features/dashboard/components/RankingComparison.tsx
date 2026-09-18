@@ -8,13 +8,20 @@ import { GitCompare, TrendingUp, CheckCircle, ShieldCheck } from 'lucide-react';
 interface RankingComparisonProps {
   averages: ComparativeAverages | null;
   schoolName: string;
+  districtName?: string;
+  regionName?: string;
 }
 
-export function RankingComparison({ averages, schoolName }: RankingComparisonProps) {
-  const schoolScore = averages?.schoolScore ?? 84;
-  const districtAvg = averages?.districtAverage ?? 78;
-  const regionAvg = averages?.regionAverage ?? 74;
-  const republicAvg = averages?.republicAverage ?? 71;
+export function RankingComparison({
+  averages,
+  schoolName,
+  districtName = 'Qiziltepa tumani',
+  regionName = 'Navoiy viloyati',
+}: RankingComparisonProps) {
+  const schoolScore = averages?.schoolScore ?? 0;
+  const districtAvg = averages?.districtAverage ?? 0;
+  const regionAvg = averages?.regionAverage ?? 0;
+  const republicAvg = averages?.republicAverage ?? 0;
 
   const comparisonItems = [
     {
@@ -26,14 +33,14 @@ export function RankingComparison({ averages, schoolName }: RankingComparisonPro
     },
     {
       label: 'Tuman o‘rtachasi',
-      sublabel: 'G‘ijduvon tumani',
+      sublabel: districtName,
       score: districtAvg,
       isPrimary: false,
       color: '#64748b',
     },
     {
       label: 'Viloyat o‘rtachasi',
-      sublabel: 'Buxoro viloyati',
+      sublabel: regionName,
       score: regionAvg,
       isPrimary: false,
       color: '#64748b',
@@ -88,9 +95,9 @@ export function RankingComparison({ averages, schoolName }: RankingComparisonPro
               </div>
               <div className="text-right">
                 <span className={`font-extrabold font-mono ${item.isPrimary ? 'text-teal-700 text-base' : 'text-slate-700'}`}>
-                  {item.score} ball
+                  {item.score > 0 ? `${((item.score / 100) * 4 + 1).toFixed(1)} ★` : '0 (Baholanmagan)'}
                 </span>
-                <span className="text-[10px] text-slate-400 block">/ 100</span>
+                <span className="text-[10px] text-slate-400 block">{item.score > 0 ? '5 yulduzli' : 'Kutilmoqda'}</span>
               </div>
             </div>
 
@@ -102,10 +109,16 @@ export function RankingComparison({ averages, schoolName }: RankingComparisonPro
         ))}
       </div>
 
-      <div className="mt-4 pt-3 border-t border-slate-100 flex items-center gap-2 text-xs text-emerald-800 font-medium">
-        <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+      <div className="mt-4 pt-3 border-t border-slate-100 flex items-center gap-2 text-xs text-slate-700 font-medium">
+        <CheckCircle className="w-4 h-4 text-teal-600 shrink-0" />
         <span>
-          Maktabingiz tuman o‘rtacha ko‘rsatkichidan <strong>+{schoolScore - districtAvg} ball</strong> yuqori natijaga ega.
+          {schoolScore > 0 ? (
+            <>
+              Maktabingiz ko‘rsatkichi: <strong>{((schoolScore / 100) * 4 + 1).toFixed(1)} ★</strong>.
+            </>
+          ) : (
+            'Maktabingiz hali o‘z-o‘zini baholashdan o‘tkazilmagan (Baholash kutilmoqda).'
+          )}
         </span>
       </div>
     </div>

@@ -42,10 +42,10 @@ export function StatisticsPreview({ criterionScores }: StatisticsPreviewProps) {
           </div>
           <div>
             <h2 className="text-base font-bold text-slate-900">
-              Mezonlar Bo‘yicha Natijadorlik (%)
+              Xavfsizlik Parametrlari Tahlili
             </h2>
             <p className="text-xs text-slate-500">
-              Har bir xavfsizlik parametri bo‘yicha foiz ko‘rsatkichi
+              Har bir modul bo‘yicha xavfsizlik darajasi
             </p>
           </div>
         </div>
@@ -53,7 +53,7 @@ export function StatisticsPreview({ criterionScores }: StatisticsPreviewProps) {
         <div className="flex items-center gap-3">
           <div className="hidden sm:flex items-center gap-1 text-xs text-teal-700 font-semibold">
             <TrendingUp className="w-3.5 h-3.5" />
-            <span>Davlat normativi: &ge;80%</span>
+            <span>Xalqaro standart: 4-5★</span>
           </div>
           <a
             href="/school/statistics"

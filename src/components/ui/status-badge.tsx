@@ -16,6 +16,15 @@ export function getStarRating(score: number): {
   starIcons: string;
   description: string;
 } {
+  if (!score || score <= 0) {
+    return {
+      stars: 0,
+      label: 'Baholanmagan',
+      badgeClass: 'bg-slate-100 text-slate-700 border-slate-300',
+      starIcons: '⚪️',
+      description: 'Baholash hali o‘tkazilmagan',
+    };
+  }
   if (score >= 90) {
     return {
       stars: 5,

@@ -248,7 +248,12 @@ export default function SchoolDashboardPage() {
           <StatisticsPreview criterionScores={criterionScores} />
         </div>
         <div className="lg:col-span-5">
-          <RankingComparison averages={averages} schoolName={school.name} />
+          <RankingComparison
+            averages={averages}
+            schoolName={school.name}
+            districtName={school.districtName || 'Qiziltepa tumani'}
+            regionName={school.regionName || 'Navoiy viloyati'}
+          />
         </div>
       </div>
 

@@ -30,16 +30,16 @@ export const SCORE_THRESHOLDS = {
  */
 export const DEMO_ACCOUNTS: DemoAccount[] = [
   {
-    label: 'Maktab Mas’uli (School User)',
-    email: 'school24@gijduvon.uz',
-    passwordHint: 'Maktab@1234',
+    label: 'Maktab Mas’uli (Qiziltepa 1-maktab)',
+    email: 'sch_3814@maktab.uz',
+    passwordHint: 'Maktab@24',
     role: UserRole.SCHOOL_USER,
-    description: '24-umumta\'lim maktabi, G\'ijduvon tumani, Buxoro viloyati',
+    description: '1-sonli umumta\'lim maktabi, Qiziltepa tumani, Navoiy viloyati',
     schoolInfo: {
-      schoolNumber: '24',
-      schoolName: '24-sonli umumta\'lim maktabi',
-      districtName: 'G\'ijduvon tumani',
-      regionName: 'Buxoro viloyati',
+      schoolNumber: '1',
+      schoolName: '1-sonli umumta\'lim maktabi',
+      districtName: 'Qiziltepa tumani',
+      regionName: 'Navoiy viloyati',
       directorName: 'Maktab Mas’uli',
     },
   },
