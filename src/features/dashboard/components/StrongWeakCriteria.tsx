@@ -4,10 +4,21 @@ import React from 'react';
 import { CriterionScoreInfo } from './CriteriaOverview';
 import { CheckCircle2, AlertTriangle, TrendingUp, TrendingDown } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
+import { Sr4sPictogram, Sr4sPictoType } from '@/components/ui/sr4s-icon';
 
 interface StrongWeakCriteriaProps {
   criterionScores: CriterionScoreInfo[];
 }
+
+const MODULE_PICTO_MAP: Record<number, Sr4sPictoType> = {
+  1: 'sidewalk',
+  2: 'crossing',
+  3: 'speed',
+  4: 'school_zone',
+  5: 'traffic_calming',
+  6: 'sight_distance',
+  7: 'lighting',
+};
 
 export function StrongWeakCriteria({ criterionScores }: StrongWeakCriteriaProps) {
   const hasAnyAssessed = criterionScores.some((c) => c.earnedScore > 0);
@@ -69,9 +80,12 @@ export function StrongWeakCriteria({ criterionScores }: StrongWeakCriteriaProps)
             strongCriteria.map((item) => (
               <div key={item.criterion.id} className="rounded-xl bg-white p-4 border border-emerald-100 space-y-2 shadow-2xs">
                 <div className="flex items-center justify-between text-xs gap-2">
-                  <span className="font-bold text-slate-900 truncate">
-                    {item.criterion.title}
-                  </span>
+                  <div className="flex items-center gap-2 truncate">
+                    <Sr4sPictogram type={MODULE_PICTO_MAP[item.criterion.order ?? 1] || 'speed'} size={24} className="rounded-md shrink-0" />
+                    <span className="font-bold text-slate-900 truncate">
+                      {item.criterion.title}
+                    </span>
+                  </div>
                   <span className="font-bold text-emerald-700 font-mono shrink-0">
                     {((item.percentage / 100) * 4 + 1).toFixed(1)} ★
                   </span>
@@ -102,9 +116,12 @@ export function StrongWeakCriteria({ criterionScores }: StrongWeakCriteriaProps)
             weakCriteria.map((item) => (
               <div key={item.criterion.id} className="rounded-xl bg-white p-4 border border-amber-100 space-y-2 shadow-2xs">
                 <div className="flex items-center justify-between text-xs gap-2">
-                  <span className="font-bold text-slate-900 truncate">
-                    {item.criterion.title}
-                  </span>
+                  <div className="flex items-center gap-2 truncate">
+                    <Sr4sPictogram type={MODULE_PICTO_MAP[item.criterion.order ?? 1] || 'speed'} size={24} className="rounded-md shrink-0" />
+                    <span className="font-bold text-slate-900 truncate">
+                      {item.criterion.title}
+                    </span>
+                  </div>
                   <span className="font-bold text-amber-700 font-mono shrink-0">
                     {((item.percentage / 100) * 4 + 1).toFixed(1)} ★
                   </span>

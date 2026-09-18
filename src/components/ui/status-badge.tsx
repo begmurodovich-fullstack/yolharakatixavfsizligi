@@ -8,6 +8,7 @@ import {
   SchoolStatus,
 } from '@/types';
 import { CheckCircle2, Clock, AlertTriangle, XCircle, ShieldCheck, Star } from 'lucide-react';
+import { Sr4sGoldStars } from '@/components/ui/sr4s-icon';
 
 export function getStarRating(score: number): {
   stars: number;
@@ -92,7 +93,7 @@ export function StarRatingBadge({
         className
       )}
     >
-      {showIcons && <span className="text-xs tracking-wider">{info.starIcons}</span>}
+      {showIcons && <Sr4sGoldStars stars={info.stars} size={14} className="shrink-0" />}
       <span>{info.label}</span>
     </span>
   );

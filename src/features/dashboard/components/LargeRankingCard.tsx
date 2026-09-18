@@ -3,6 +3,7 @@
 import React from 'react';
 import { SchoolRankingOverview } from '@/types';
 import { ScoreStatusBadge } from '@/components/ui/status-badge';
+import { Sr4sStarBadge, Sr4sGoldStars } from '@/components/ui/sr4s-icon';
 import { Progress } from '@/components/ui/progress';
 import { Trophy, Medal, Building2, Map, Shield, TrendingUp } from 'lucide-react';
 
@@ -49,19 +50,9 @@ export function LargeRankingCard({ rankingOverview, currentScore }: LargeRanking
             Xavfsizlik Yulduzli Bahosi
           </div>
           <div className="space-y-1">
-            <span className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-mono block">
-              {score > 0
-                ? score >= 90
-                  ? '⭐️⭐️⭐️⭐️⭐️'
-                  : score >= 75
-                  ? '⭐️⭐️⭐️⭐️'
-                  : score >= 60
-                  ? '⭐️⭐️⭐️'
-                  : score >= 45
-                  ? '⭐️⭐️'
-                  : '⭐️'
-                : '⚪️ Baholanmagan'}
-            </span>
+            <div className="pt-1">
+              <Sr4sStarBadge stars={score > 0 ? (score >= 90 ? 5 : score >= 75 ? 4 : score >= 60 ? 3 : score >= 45 ? 2 : 1) : 0} size="md" />
+            </div>
             <div className="pt-1">
               <ScoreStatusBadge score={score} />
             </div>

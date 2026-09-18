@@ -5,7 +5,18 @@ import Link from 'next/link';
 import { Sparkles, ArrowRight, Layers, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Sr4sPictogram, Sr4sPictoType } from '@/components/ui/sr4s-icon';
 import { MOCK_CRITERIA } from '@/data/mock/criteria';
+
+const MODULE_PICTO_MAP: Record<number, Sr4sPictoType> = {
+  1: 'sidewalk',
+  2: 'crossing',
+  3: 'speed',
+  4: 'school_zone',
+  5: 'traffic_calming',
+  6: 'sight_distance',
+  7: 'lighting',
+};
 
 export function CriteriaSection() {
   return (
@@ -33,7 +44,8 @@ export function CriteriaSection() {
               className="bg-slate-50 border-slate-200 text-slate-900 hover:border-teal-500 hover:shadow-md transition-all flex flex-col justify-between"
             >
               <CardHeader className="p-5 pb-2">
-                <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center justify-between mb-3">
+                  <Sr4sPictogram type={MODULE_PICTO_MAP[crit.order ?? 1] || 'speed'} size={38} className="rounded-xl shadow-xs" />
                   <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-teal-50 text-teal-800 border border-teal-200">
                     Modul {crit.order}
                   </span>

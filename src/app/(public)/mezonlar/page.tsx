@@ -23,6 +23,17 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { MOCK_CRITERIA, MOCK_QUESTIONS } from '@/data/mock/criteria';
+import { Sr4sPictogram, Sr4sPictoType } from '@/components/ui/sr4s-icon';
+
+const MODULE_PICTO_MAP: Record<number, Sr4sPictoType> = {
+  1: 'sidewalk',
+  2: 'crossing',
+  3: 'speed',
+  4: 'school_zone',
+  5: 'traffic_calming',
+  6: 'sight_distance',
+  7: 'lighting',
+};
 
 export default function MezonlarPage() {
   const { user } = useAuth();
@@ -169,8 +180,10 @@ export default function MezonlarPage() {
                   onClick={() => toggleExpand(criterion.id)}
                   className="p-5 sm:p-6 bg-slate-50/70 hover:bg-slate-100/70 cursor-pointer flex items-center justify-between gap-4 select-none border-b border-slate-200"
                 >
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-4">
+                    <Sr4sPictogram type={MODULE_PICTO_MAP[criterion.order ?? 1] || 'speed'} size={48} className="rounded-2xl shadow-xs shrink-0" />
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
                       <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-teal-50 text-teal-800 border border-teal-200">
                         Modul {criterion.order}
                       </span>
@@ -184,6 +197,7 @@ export default function MezonlarPage() {
                     <p className="text-xs sm:text-sm text-slate-600">
                       {criterion.description}
                     </p>
+                    </div>
                   </div>
 
                   <div className="shrink-0 p-2 rounded-xl bg-white border border-slate-200 text-slate-500 shadow-2xs">
