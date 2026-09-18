@@ -66,7 +66,7 @@ export function RankingComparison({
               Qiyosiy Taqqoslash
             </h2>
             <p className="text-xs text-slate-500">
-              Maktab bali va hududiy o‘rtacha ko‘rsatkichlar
+              Maktab xavfsizlik bahosi va hududiy o‘rtacha ko‘rsatkichlar
             </p>
           </div>
         </div>
@@ -95,9 +95,9 @@ export function RankingComparison({
               </div>
               <div className="text-right">
                 <span className={`font-extrabold font-mono ${item.isPrimary ? 'text-teal-700 text-base' : 'text-slate-700'}`}>
-                  {item.score > 0 ? `${((item.score / 100) * 4 + 1).toFixed(1)} ★` : '0 (Baholanmagan)'}
+                  {item.score > 0 ? `${((item.score / 100) * 4 + 1).toFixed(1)} ★ (Baho)` : 'Baholanmagan'}
                 </span>
-                <span className="text-[10px] text-slate-400 block">{item.score > 0 ? '5 yulduzli' : 'Kutilmoqda'}</span>
+                <span className="text-[10px] text-slate-400 block">{item.score > 0 ? '5 yulduzli tizim' : 'Kutilmoqda'}</span>
               </div>
             </div>
 

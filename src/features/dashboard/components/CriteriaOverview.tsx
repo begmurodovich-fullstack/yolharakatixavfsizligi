@@ -89,7 +89,7 @@ export function CriteriaOverview({ criterionScores }: CriteriaOverviewProps) {
               <div className="space-y-2 pt-3 border-t border-slate-100">
                 <div className="flex items-baseline justify-between">
                   <span className="text-sm font-extrabold text-slate-900 font-mono">
-                    {item.earnedScore} <span className="text-[11px] text-slate-400 font-normal">/ {item.maxScore}</span>
+                    {item.earnedScore > 0 ? `${((item.percentage / 100) * 4 + 1).toFixed(1)} ★` : '—'}
                   </span>
                   <ScoreStatusBadge score={item.percentage} showScore={false} className="text-[10px] py-0 px-2" />
                 </div>

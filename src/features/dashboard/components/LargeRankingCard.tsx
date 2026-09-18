@@ -30,7 +30,7 @@ export function LargeRankingCard({ rankingOverview, currentScore }: LargeRanking
           </div>
           <div>
             <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900">
-              Joriy Xavfsizlik Bali va Reyting
+              Joriy Xavfsizlik Bahosi va Reyting
             </h2>
             <p className="text-xs text-slate-500">
               2025-2026 O‘quv yili baholash xulosasi
@@ -46,11 +46,21 @@ export function LargeRankingCard({ rankingOverview, currentScore }: LargeRanking
         {/* Left: Star Rating Display */}
         <div className="md:col-span-5 space-y-3">
           <div className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
-            Xavfsizlik Yulduz Reytingi
+            Xavfsizlik Yulduzli Bahosi
           </div>
           <div className="space-y-1">
             <span className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-mono block">
-              {score >= 90 ? '⭐️⭐️⭐️⭐️⭐️' : score >= 75 ? '⭐️⭐️⭐️⭐️' : score >= 60 ? '⭐️⭐️⭐️' : score >= 45 ? '⭐️⭐️' : '⭐️'}
+              {score > 0
+                ? score >= 90
+                  ? '⭐️⭐️⭐️⭐️⭐️'
+                  : score >= 75
+                  ? '⭐️⭐️⭐️⭐️'
+                  : score >= 60
+                  ? '⭐️⭐️⭐️'
+                  : score >= 45
+                  ? '⭐️⭐️'
+                  : '⭐️'
+                : '⚪️ Baholanmagan'}
             </span>
             <div className="pt-1">
               <ScoreStatusBadge score={score} />
