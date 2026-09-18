@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <rect width="100" height="100" rx="16" fill="#0284C7" />
+  <circle cx="50" cy="24" r="9" fill="#FFFFFF" />
+  <!-- Walking child / pedestrian -->
+  <path d="M48 36 L52 36 L56 54 L66 68 L60 72 L52 58 L46 68 L36 68 L46 52 L42 42 L34 46 L30 40 L44 36 Z" fill="#FFFFFF" />
+  <rect x="15" y="80" width="70" height="6" rx="3" fill="#BAE6FD" />
+</svg>

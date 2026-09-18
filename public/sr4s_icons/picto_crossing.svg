@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <rect width="100" height="100" rx="16" fill="#2563EB" />
+  <!-- Zebra lines -->
+  <rect x="20" y="70" width="10" height="18" fill="#FFFFFF" transform="skewX(-20)" />
+  <rect x="36" y="70" width="10" height="18" fill="#FFFFFF" transform="skewX(-20)" />
+  <rect x="52" y="70" width="10" height="18" fill="#FFFFFF" transform="skewX(-20)" />
+  <rect x="68" y="70" width="10" height="18" fill="#FFFFFF" transform="skewX(-20)" />
+  <!-- Person walking -->
+  <circle cx="50" cy="22" r="8" fill="#FFFFFF" />
+  <path d="M46 32 L54 32 L60 48 L68 58 L62 62 L56 52 L50 64 L40 64 L48 48 L44 40 L36 44 L32 38 Z" fill="#FFFFFF" />
+</svg>
