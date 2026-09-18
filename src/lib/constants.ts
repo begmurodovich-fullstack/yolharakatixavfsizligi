@@ -8,8 +8,9 @@ export const APP_CONFIG = {
   academicYear: '2025-2026',
   supportEmail: 'azizbekofficialaccaunt@gmail.com',
   supportPhone: '+998 33 585 13 03',
-  telegramBotUsername: 'yolharakatixavfsizligi_bot',
-  telegramBotToken: '8674118429:AAGnRU8AArMUsZYYQIOMx3eF8GUkxhSmpkk',
+  telegramBotUsername: process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME || 'yolharakatixavfsizligi_bot',
+  telegramBotToken: process.env.TELEGRAM_BOT_TOKEN || '8674118429:AAGnRU8AArMUsZYYQIOMx3eF8GUkxhSmpkk',
+  telegramAdminChatId: process.env.TELEGRAM_ADMIN_CHAT_ID || '',
 };
 
 export const SCORE_THRESHOLDS = {

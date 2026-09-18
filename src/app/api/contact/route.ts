@@ -37,47 +37,32 @@ export async function POST(request: NextRequest) {
       `⏱ <b>Sana:</b> ${dateStr}`;
 
     const token = APP_CONFIG.telegramBotToken || '8674118429:AAGnRU8AArMUsZYYQIOMx3eF8GUkxhSmpkk';
+    const adminChatId = APP_CONFIG.telegramAdminChatId;
 
-    // 1. Fetch recent chat IDs from Telegram getUpdates
-    let chatIds: (string | number)[] = [];
-    try {
-      const updatesRes = await fetch(`https://api.telegram.org/bot${token}/getUpdates`);
-      const updatesData = await updatesRes.json();
-      if (updatesData.ok && Array.isArray(updatesData.result)) {
-        const uniqueChats = new Set<string | number>();
-        updatesData.result.forEach((update: any) => {
-          const chatId = update?.message?.chat?.id || update?.my_chat_member?.chat?.id;
-          if (chatId) uniqueChats.add(chatId);
-        });
-        chatIds = Array.from(uniqueChats);
-      }
-    } catch (fetchErr) {
-      console.error('Error fetching Telegram updates:', fetchErr);
-    }
-
-    // 2. Send message to all active users who started the bot
     let sentCount = 0;
-    if (chatIds.length > 0) {
-      for (const chatId of chatIds) {
-        try {
-          const sendRes = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              chat_id: chatId,
-              text: telegramMessage,
-              parse_mode: 'HTML',
-            }),
-          });
-          const sendData = await sendRes.json();
-          if (sendData.ok) sentCount++;
-        } catch (sendErr) {
-          console.error(`Failed to send to chatId ${chatId}:`, sendErr);
-        }
+
+    // Send only to the designated Admin Group / Chat
+    if (adminChatId) {
+      try {
+        const sendRes = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: adminChatId,
+            text: telegramMessage,
+            parse_mode: 'HTML',
+          }),
+        });
+        const sendData = await sendRes.json();
+        if (sendData.ok) sentCount = 1;
+      } catch (sendErr) {
+        console.error(`Failed to send to adminChatId ${adminChatId}:`, sendErr);
       }
+    } else {
+      console.warn('[Contact API] telegramAdminChatId is not set. Message saved locally.');
     }
 
-    console.log(`[Contact API] Form submitted from ${name} (${phone}), sent to ${sentCount} Telegram chats.`);
+    console.log(`[Contact API] Form submitted from ${name} (${phone}), sent to admin.`);
 
     return NextResponse.json({
       success: true,
