@@ -391,26 +391,26 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-11",
     "nameUz": "Yo‘l qiyaligi (Grade)",
     "nameEn": "Grade",
-    "currentValueId": "low",
+    "currentValueId": "grade_low",
     "options": [
       {
-        "id": "low",
-        "labelUz": "Past nishablik (Low < 4%)",
-        "labelEn": "Grade Low",
+        "id": "grade_low",
+        "labelUz": "Nishablik 0 dan 7.5% gacha",
+        "labelEn": "0 to 7.5%",
         "iconSrc": "/sr4s_icons/grade-low.png",
         "scoreWeight": 5
       },
       {
-        "id": "medium",
-        "labelUz": "O‘rtacha nishablik (4 - 8%)",
-        "labelEn": "Grade Medium",
+        "id": "grade_medium",
+        "labelUz": "Nishablik 7.5% dan 10% gacha",
+        "labelEn": "7.5% to 10%",
         "iconSrc": "/sr4s_icons/grade-medium.png",
-        "scoreWeight": 4
+        "scoreWeight": 3
       },
       {
-        "id": "high",
-        "labelUz": "Tik nishablik (High > 8%)",
-        "labelEn": "Grade High",
+        "id": "grade_high",
+        "labelUz": "Nishablik 10% dan yuqori",
+        "labelEn": "> 10%",
         "iconSrc": "/sr4s_icons/grade-high.png",
         "scoreWeight": 2
       }
@@ -424,25 +424,25 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "currentValueId": "undivided",
     "options": [
       {
-        "id": "undivided",
-        "labelUz": "Bo‘linmagan yo‘l (Undivided)",
-        "labelEn": "Undivided",
-        "iconSrc": "/sr4s_icons/carriageway-na.png",
-        "scoreWeight": 3
-      },
-      {
-        "id": "divided",
-        "labelUz": "O‘rtadan ajratilgan (Divided)",
-        "labelEn": "Divided",
+        "id": "divided_north_east",
+        "labelUz": "Shimol / Sharq (Divided A)",
+        "labelEn": "North / East",
         "iconSrc": "/sr4s_icons/carriageway-north-east.png",
         "scoreWeight": 5
       },
       {
-        "id": "one_way",
-        "labelUz": "Bir tomonlama harakat (One Way)",
-        "labelEn": "One Way",
+        "id": "divided_south_west",
+        "labelUz": "Janub / G‘arb (Divided B)",
+        "labelEn": "South / West",
         "iconSrc": "/sr4s_icons/carriageway-south-west.png",
-        "scoreWeight": 4
+        "scoreWeight": 5
+      },
+      {
+        "id": "undivided",
+        "labelUz": "Bo‘linmagan yo‘l (Undivided)",
+        "labelEn": "Not Applicable",
+        "iconSrc": "/sr4s_icons/carriageway-na.png",
+        "scoreWeight": 3
       }
     ]
   },
@@ -451,55 +451,118 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-13",
     "nameUz": "Yo‘l o‘rtasi ajratgichi",
     "nameEn": "Middle of Road",
-    "currentValueId": "broken_wide",
+    "currentValueId": "one_way",
     "options": [
       {
-        "id": "broken_wide",
-        "labelUz": "Keng chiziqli ajratgich",
-        "labelEn": "Wide Markings",
-        "iconSrc": "/sr4s_icons/median-broken-wide-markings.png",
-        "scoreWeight": 4
-      },
-      {
-        "id": "concrete_barrier",
-        "labelUz": "Beton to‘siq (Concrete Barrier)",
-        "labelEn": "Concrete Barrier",
-        "iconSrc": "/sr4s_icons/median-concrete-barrier.png",
-        "scoreWeight": 5
-      },
-      {
-        "id": "metal_barrier",
-        "labelUz": "Metall to‘siq (Metal Barrier)",
-        "labelEn": "Metal Barrier",
-        "iconSrc": "/sr4s_icons/median-metal-barrier.png",
-        "scoreWeight": 5
-      },
-      {
         "id": "center_line",
-        "labelUz": "Oddiy o‘q chiziq (Center Line)",
+        "labelUz": "O‘q chiziq",
         "labelEn": "Center Line",
         "iconSrc": "/sr4s_icons/median-center-line.png",
         "scoreWeight": 3
       },
       {
+        "id": "wide_line",
+        "labelUz": "Keng chiziq < 1m",
+        "labelEn": "Wide Line < 1m",
+        "iconSrc": "/sr4s_icons/median-wide-line.png",
+        "scoreWeight": 4
+      },
+      {
         "id": "hatching",
-        "labelUz": "Shtrixli orolcha (Hatching)",
-        "labelEn": "Hatching",
+        "labelUz": "Shtrixli orolcha > 1m",
+        "labelEn": "Hatching > 1m",
         "iconSrc": "/sr4s_icons/median-hatching.png",
         "scoreWeight": 4
       },
       {
+        "id": "turn_lane",
+        "labelUz": "Burilish qatori",
+        "labelEn": "Turn Lane",
+        "iconSrc": "/sr4s_icons/median-turn-lane.png",
+        "scoreWeight": 4
+      },
+      {
         "id": "flexible_posts",
-        "labelUz": "Ustunlar (Flexible Posts)",
+        "labelUz": "Moslashuvchan ustunchalar",
         "labelEn": "Flexible Posts",
         "iconSrc": "/sr4s_icons/median-flexible-posts.png",
         "scoreWeight": 4
       },
       {
+        "id": "separated_0_1",
+        "labelUz": "Ajratilgan 0 - 1m",
+        "labelEn": "Separated 0 to 1m",
+        "iconSrc": "/sr4s_icons/median-0-1.png",
+        "scoreWeight": 4
+      },
+      {
+        "id": "separated_1_5",
+        "labelUz": "Ajratilgan 1 - 5m",
+        "labelEn": "Separated 1 to 5m",
+        "iconSrc": "/sr4s_icons/median-1-5.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "separated_5_10",
+        "labelUz": "Ajratilgan 5 - 10m",
+        "labelEn": "Separated 5 to 10m",
+        "iconSrc": "/sr4s_icons/median-5-10.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "separated_10_20",
+        "labelUz": "Ajratilgan 10 - 20m",
+        "labelEn": "Separated 10 to 20m",
+        "iconSrc": "/sr4s_icons/median-10-20.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "separated_20_plus",
+        "labelUz": "Ajratilgan 20m+",
+        "labelEn": "Separated 20+m",
+        "iconSrc": "/sr4s_icons/median-20-plus.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "metal_barrier",
+        "labelUz": "Metall to‘siq",
+        "labelEn": "Metal Barrier",
+        "iconSrc": "/sr4s_icons/median-metal-barrier.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "concrete_barrier",
+        "labelUz": "Beton to‘siq",
+        "labelEn": "Concrete Barrier",
+        "iconSrc": "/sr4s_icons/median-concrete-barrier.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "wire_barrier",
+        "labelUz": "Simli to‘siq",
+        "labelEn": "Wire Barrier",
+        "iconSrc": "/sr4s_icons/median-wire-barrier.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "motorcycle_barrier",
+        "labelUz": "Mototsikl xavfsizlik to‘sig‘i",
+        "labelEn": "Motorcycle Barrier",
+        "iconSrc": "/sr4s_icons/median-motorcycle-barrier.png",
+        "scoreWeight": 5
+      },
+      {
         "id": "one_way",
-        "labelUz": "Bir tomonlama (One Way)",
+        "labelUz": "Bir tomonlama harakat",
         "labelEn": "One Way",
         "iconSrc": "/sr4s_icons/median-one-way.png",
+        "scoreWeight": 5
+      },
+      {
+        "id": "broken_wide_markings",
+        "labelUz": "Keng uzuq chiziqli oraliq (>0.6m)",
+        "labelEn": "Broken wide median markings (>0.6m)",
+        "iconSrc": "/sr4s_icons/median-broken-wide-markings.png",
         "scoreWeight": 4
       }
     ]
@@ -513,7 +576,7 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "options": [
       {
         "id": "adequate",
-        "labelUz": "Yetarli va aniq (Adequate)",
+        "labelUz": "Yetarli va aniq",
         "labelEn": "Adequate",
         "iconSrc": "/sr4s_icons/icon-adequate.png",
         "scoreWeight": 5,
@@ -522,7 +585,7 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
       },
       {
         "id": "poor",
-        "labelUz": "Yetarli emas / O‘chgan (Poor)",
+        "labelUz": "Yetarli emas / O‘chgan",
         "labelEn": "Poor",
         "iconSrc": "/sr4s_icons/icon-poor.png",
         "scoreWeight": 1,
@@ -540,7 +603,7 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "options": [
       {
         "id": "present",
-        "labelUz": "Mavjud va yorug‘ (Present)",
+        "labelUz": "Mavjud va yorug‘",
         "labelEn": "Present",
         "iconSrc": "/sr4s_icons/icon-present.png",
         "scoreWeight": 5,
@@ -549,7 +612,7 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
       },
       {
         "id": "not_present",
-        "labelUz": "Mavjud emas / Qorong‘i (Not Present)",
+        "labelUz": "Mavjud emas / Qorong‘i",
         "labelEn": "Not Present",
         "iconSrc": "/sr4s_icons/icon-not-present.png",
         "scoreWeight": 1,
