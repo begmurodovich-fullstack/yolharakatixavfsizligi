@@ -11,8 +11,7 @@ interface RecommendationCardProps {
 }
 
 export function RecommendationCard({ criterionScores, hasMissingEvidence }: RecommendationCardProps) {
-  // Generate recommendations dynamically from weakest criteria
-  const sortedAsc = [...criterionScores].sort((a, b) => a.percentage - b.percentage);
+  const hasAnyAssessed = criterionScores.some((c) => c.earnedScore > 0);
 
   const recommendations: Array<{
     id: string;
@@ -22,45 +21,58 @@ export function RecommendationCard({ criterionScores, hasMissingEvidence }: Reco
     actionText: string;
   }> = [];
 
-  if (hasMissingEvidence) {
+  if (!hasAnyAssessed) {
     recommendations.push({
-      id: 'rec-evidence',
-      title: 'Majburiy foto-dalillarni to‘ldiring',
-      description: 'Ekspert tasdiqlashi uchun maktab darvozasi va piyodalar o‘tish joyining yangi fotosuratlarini yuklang.',
-      severity: 'HIGH',
-      actionText: 'Foto yuklash',
+      id: 'rec-start',
+      title: 'Maktab yo‘l harakati xavfsizligi monitoringini boshlang',
+      description: 'Maktab atrofidagi piyodalar o‘tish joyi, yo‘l belgilari va trotuarlar holati bo‘yicha mezonlarga javob bering va foto-dalillarni yuklang.',
+      severity: 'LOW',
+      actionText: 'Baholashni boshlash',
     });
-  }
+  } else {
+    // Generate recommendations dynamically from weakest criteria
+    const sortedAsc = [...criterionScores].sort((a, b) => a.percentage - b.percentage);
 
-  // Iterate over weak criteria to generate recommendations
-  sortedAsc.slice(0, 3).forEach((item) => {
-    if (item.percentage < 60) {
+    if (hasMissingEvidence) {
       recommendations.push({
-        id: `rec-${item.criterion.id}`,
-        title: `${item.criterion.title} infratuzilmasini yaxshilash`,
-        description: `Ko‘rsatkich ${item.percentage}% ni tashkil qilmoqda. Tuman Yo‘l Harakati Xavfsizligi xizmatiga murojaat qilish tavsiya etiladi.`,
+        id: 'rec-evidence',
+        title: 'Majburiy foto-dalillarni to‘ldiring',
+        description: 'Ekspert tasdiqlashi uchun maktab darvozasi va piyodalar o‘tish joyining yangi fotosuratlarini yuklang.',
         severity: 'HIGH',
-        actionText: 'Tafsilotlar',
-      });
-    } else if (item.percentage < 80) {
-      recommendations.push({
-        id: `rec-${item.criterion.id}`,
-        title: `${item.criterion.title} holatini qayta ko‘rib chiqish`,
-        description: `Ko‘rsatkich ${item.percentage}% (O‘rtacha). Standart talablari bo‘yicha texnik kamchiliklarni bartaraf eting.`,
-        severity: 'MEDIUM',
-        actionText: 'Ko‘rib chiqish',
+        actionText: 'Foto yuklash',
       });
     }
-  });
 
-  if (recommendations.length === 0) {
-    recommendations.push({
-      id: 'rec-maintain',
-      title: 'Xavfsizlik darajasini bir maromda saqlang',
-      description: 'Maktabingiz barcha mezonlar bo‘yicha a’lo darajani egallagan. Doimiy profilaktika va nazoratni davom ettiring.',
-      severity: 'LOW',
-      actionText: 'Monitoring',
+    // Iterate over weak criteria to generate recommendations
+    sortedAsc.slice(0, 3).forEach((item) => {
+      if (item.percentage < 60) {
+        recommendations.push({
+          id: `rec-${item.criterion.id}`,
+          title: `${item.criterion.title} infratuzilmasini yaxshilash`,
+          description: `Ko‘rsatkich ${item.percentage}% ni tashkil qilmoqda. Tuman Yo‘l Harakati Xavfsizligi xizmatiga murojaat qilish tavsiya etiladi.`,
+          severity: 'HIGH',
+          actionText: 'Tafsilotlar',
+        });
+      } else if (item.percentage < 80) {
+        recommendations.push({
+          id: `rec-${item.criterion.id}`,
+          title: `${item.criterion.title} holatini qayta ko‘rib chiqish`,
+          description: `Ko‘rsatkich ${item.percentage}% (O‘rtacha). Standart talablari bo‘yicha texnik kamchiliklarni bartaraf eting.`,
+          severity: 'MEDIUM',
+          actionText: 'Ko‘rib chiqish',
+        });
+      }
     });
+
+    if (recommendations.length === 0) {
+      recommendations.push({
+        id: 'rec-maintain',
+        title: 'Xavfsizlik darajasini bir maromda saqlang',
+        description: 'Maktabingiz barcha mezonlar bo‘yicha a’lo darajani egallagan. Doimiy profilaktika va nazoratni davom ettiring.',
+        severity: 'LOW',
+        actionText: 'Monitoring',
+      });
+    }
   }
 
   return (
