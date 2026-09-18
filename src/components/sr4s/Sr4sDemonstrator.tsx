@@ -313,11 +313,7 @@ export function Sr4sDemonstrator() {
         <div className="lg:col-span-4 flex flex-col items-center justify-between text-center lg:sticky lg:top-8 bg-gradient-to-b from-slate-50/80 to-slate-100/40 p-6 rounded-2xl border border-slate-200/80">
           {/* Instruction Text */}
           <p className="text-sm font-medium text-slate-600 max-w-xs leading-snug mb-4">
-            Click on an icon to change it&apos;s value, and see the effect on star ratings.
-            <br />
-            <span className="text-xs text-slate-400 font-normal mt-1 block">
-              (Yulduzli bahoga ta’sirini ko‘rish uchun piktogramma ustiga bosing)
-            </span>
+            Piktogrammani tanlab, uning qiymatini o‘zgartiring va yulduzli bahoga ta’sirini ko‘ring.
           </p>
 
           {/* Project Logo & Branding */}
@@ -339,7 +335,7 @@ export function Sr4sDemonstrator() {
                 Maktabga Xavfsiz Qadam
               </h3>
               <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-teal-50 border border-teal-200/80 text-[10px] font-bold text-teal-800 uppercase tracking-wide">
-                <span>Milliy Loyiha</span>
+                <span>Milliy Dastur</span>
               </div>
             </div>
           </div>
@@ -374,7 +370,7 @@ export function Sr4sDemonstrator() {
 
             {/* Decimal Score Label */}
             <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-              Decimal Star Ratings: <span className="text-yellow-600">{decimalScore}</span>
+              Yulduzli reyting: <span className="text-yellow-600">{decimalScore}</span>
             </div>
 
             {/* Star Level Status Badge */}
@@ -437,7 +433,7 @@ export function Sr4sDemonstrator() {
                       <>
                         <Image
                           src={currentOption?.iconSrc || '/sr4s_icons/icon-good.png'}
-                          alt={attr.nameEn}
+                          alt={attr.nameUz}
                           width={64}
                           height={64}
                           className="object-contain max-h-full max-w-full drop-shadow-2xs"
@@ -471,13 +467,13 @@ export function Sr4sDemonstrator() {
                     )}
                   </div>
 
-                  {/* Attribute Title (English 1st matching real screenshot + Uzbek tooltip) */}
+                  {/* Attribute Title (Uzbek primary + English code) */}
                   <div className="w-full mt-1.5 space-y-0.5">
-                    <span className="text-[11px] font-semibold text-slate-800 leading-tight block line-clamp-2">
-                      {attr.nameEn}
+                    <span className="text-[11px] font-bold text-slate-800 leading-tight block line-clamp-2">
+                      {attr.nameUz}
                     </span>
                     <span className="text-[9px] text-slate-400 block truncate">
-                      {attr.nameUz}
+                      {attr.nameEn}
                     </span>
                   </div>
                 </button>
@@ -501,15 +497,20 @@ export function Sr4sDemonstrator() {
             <button
               onClick={() => setActiveModalAttr(null)}
               className="absolute top-2.5 right-3 text-red-500 hover:text-red-700 font-bold text-2xl leading-none transition-colors p-1 cursor-pointer"
-              aria-label="Close"
+              aria-label="Yopish"
             >
               ×
             </button>
 
-            {/* Modal Title (e.g. Vehicles / Day, Speed Limit, Crossing Flow, Intersection Type) */}
-            <h3 className="text-xl sm:text-2xl font-normal text-slate-800 text-center tracking-tight mb-5 select-none">
-              {activeModalAttr.nameEn}
-            </h3>
+            {/* Modal Title (Uzbek primary + English sub) */}
+            <div className="text-center mb-5 select-none space-y-0.5">
+              <h3 className="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight">
+                {activeModalAttr.nameUz}
+              </h3>
+              <p className="text-xs text-slate-400 font-medium">
+                {activeModalAttr.nameEn}
+              </p>
+            </div>
 
             {/* Mode 1: Editable Input Mode for numeric/custom attributes */}
             {activeModalAttr.isInput ? (
@@ -525,7 +526,7 @@ export function Sr4sDemonstrator() {
                   value={inputVal}
                   onChange={(e) => setInputVal(e.target.value)}
                   className="flex-1 px-4 py-3 text-base sm:text-lg text-slate-800 font-medium outline-hidden"
-                  placeholder="Enter value..."
+                  placeholder="Qiymatni kiriting..."
                   autoFocus
                 />
                 <button
@@ -583,7 +584,7 @@ export function Sr4sDemonstrator() {
                       <div className="w-14 h-14 sm:w-16 sm:h-16 relative flex items-center justify-center mb-1 select-none">
                         <Image
                           src={option.iconSrc}
-                          alt={option.labelEn}
+                          alt={option.labelUz}
                           width={64}
                           height={64}
                           className="object-contain max-h-full max-w-full drop-shadow-2xs"
@@ -591,14 +592,14 @@ export function Sr4sDemonstrator() {
                         />
                       </div>
 
-                      {/* Option English Label */}
-                      <span className="text-xs sm:text-sm text-slate-800 font-normal text-center leading-tight max-w-[75px] sm:max-w-[90px] break-words select-none">
-                        {option.labelEn}
+                      {/* Option Uzbek Label (Primary) */}
+                      <span className="text-xs sm:text-sm text-slate-800 font-semibold text-center leading-tight max-w-[85px] sm:max-w-[100px] break-words select-none">
+                        {option.labelUz}
                       </span>
 
-                      {/* Uzbek subtitle (compact, subtle helper) */}
+                      {/* Option English subtitle (Secondary) */}
                       <span className="text-[10px] text-slate-400 text-center leading-tight mt-0.5 max-w-[85px] truncate select-none">
-                        {option.labelUz}
+                        {option.labelEn}
                       </span>
                     </button>
                   );
