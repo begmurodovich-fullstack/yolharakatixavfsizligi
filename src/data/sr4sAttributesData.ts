@@ -205,47 +205,47 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-06",
     "nameUz": "Yo‘l qatorlari soni",
     "nameEn": "Number of Lanes",
-    "currentValueId": "1_2",
+    "currentValueId": "1_1",
     "options": [
       {
-        "id": "1_2",
-        "labelUz": "1 & 1 qatorli harakat",
-        "labelEn": "1 & 1",
-        "iconSrc": "/sr4s_icons/number-of-lanes-1-2.png",
-        "scoreWeight": 4
-      },
-      {
-        "id": "1",
-        "labelUz": "1 qatorli harakat",
-        "labelEn": "1 lane",
+        "id": "1_1",
+        "labelUz": "Har bir yo‘nalishda 1 tadan",
+        "labelEn": "1 each way",
         "iconSrc": "/sr4s_icons/number-of-lanes-1.png",
         "scoreWeight": 5
       },
       {
-        "id": "2",
-        "labelUz": "2 qatorli harakat",
-        "labelEn": "2 lanes",
-        "iconSrc": "/sr4s_icons/number-of-lanes-2.png",
+        "id": "2_1",
+        "labelUz": "1 va 2 qatorli",
+        "labelEn": "1 & 2",
+        "iconSrc": "/sr4s_icons/number-of-lanes-1-2.png",
         "scoreWeight": 4
       },
       {
-        "id": "2_3",
-        "labelUz": "2 & 2 yoki 3 qatorli",
+        "id": "2_2",
+        "labelUz": "Har bir yo‘nalishda 2 tadan",
+        "labelEn": "2 each way",
+        "iconSrc": "/sr4s_icons/number-of-lanes-2.png",
+        "scoreWeight": 3
+      },
+      {
+        "id": "3_2",
+        "labelUz": "2 va 3 qatorli",
         "labelEn": "2 & 3",
         "iconSrc": "/sr4s_icons/number-of-lanes-2-3.png",
         "scoreWeight": 3
       },
       {
-        "id": "3",
-        "labelUz": "3 qatorli harakat",
-        "labelEn": "3 lanes",
+        "id": "3_3",
+        "labelUz": "Har bir yo‘nalishda 3 tadan",
+        "labelEn": "3 each way",
         "iconSrc": "/sr4s_icons/number-of-lanes-3.png",
         "scoreWeight": 2
       },
       {
-        "id": "4",
-        "labelUz": "4 va undan ortiq qatorli",
-        "labelEn": "4+ lanes",
+        "id": "4_4",
+        "labelUz": "Har bir yo‘nalishda 4 tadan",
+        "labelEn": "4 each way",
         "iconSrc": "/sr4s_icons/number-of-lanes-4.png",
         "scoreWeight": 1
       }
@@ -260,10 +260,10 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "options": [
       {
         "id": "wide",
-        "labelUz": "Keng yo‘l qatori (Wide >= 3.25m)",
+        "labelUz": "Keng yo‘l qatori (>= 3.25m)",
         "labelEn": "Wide",
         "iconSrc": "/sr4s_icons/lane-width-wide.png",
-        "scoreWeight": 4,
+        "scoreWeight": 5,
         "badgeText": "WIDE",
         "badgeColor": "teal"
       },
@@ -278,10 +278,10 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
       },
       {
         "id": "narrow",
-        "labelUz": "Tor qator (Narrow < 2.75m)",
+        "labelUz": "Tor qator (< 2.75m)",
         "labelEn": "Narrow",
         "iconSrc": "/sr4s_icons/lane-width-narrow.png",
-        "scoreWeight": 3,
+        "scoreWeight": 2,
         "badgeText": "NARROW",
         "badgeColor": "teal"
       }
@@ -295,22 +295,22 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "currentValueId": "not_present",
     "options": [
       {
-        "id": "not_present",
-        "labelUz": "Mavjud emas (Not Present)",
-        "labelEn": "Not Present",
-        "iconSrc": "/sr4s_icons/icon-not-present.png",
-        "scoreWeight": 3,
-        "badgeText": "NOT PRESENT",
-        "badgeColor": "red"
-      },
-      {
         "id": "present",
-        "labelUz": "Mavjud (Present)",
+        "labelUz": "Mavjud",
         "labelEn": "Present",
         "iconSrc": "/sr4s_icons/icon-present.png",
         "scoreWeight": 5,
         "badgeText": "PRESENT",
         "badgeColor": "teal"
+      },
+      {
+        "id": "not_present",
+        "labelUz": "Mavjud emas",
+        "labelEn": "Not Present",
+        "iconSrc": "/sr4s_icons/icon-not-present.png",
+        "scoreWeight": 3,
+        "badgeText": "NOT PRESENT",
+        "badgeColor": "red"
       }
     ]
   },
@@ -323,7 +323,7 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "options": [
       {
         "id": "good",
-        "labelUz": "Yaxshi (Good)",
+        "labelUz": "Yaxshi",
         "labelEn": "Good",
         "iconSrc": "/sr4s_icons/icon-good.png",
         "scoreWeight": 5,
@@ -332,7 +332,7 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
       },
       {
         "id": "medium",
-        "labelUz": "O‘rtacha (Medium)",
+        "labelUz": "O‘rtacha",
         "labelEn": "Medium",
         "iconSrc": "/sr4s_icons/icon-medium.png",
         "scoreWeight": 3,
@@ -341,7 +341,7 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
       },
       {
         "id": "poor",
-        "labelUz": "Yomon / O‘nqir-cho‘nqir (Poor)",
+        "labelUz": "Yomon / O‘nqir-cho‘nqir",
         "labelEn": "Poor",
         "iconSrc": "/sr4s_icons/icon-poor.png",
         "scoreWeight": 1,
@@ -359,7 +359,7 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "options": [
       {
         "id": "good",
-        "labelUz": "Yaxshi (Good)",
+        "labelUz": "Yaxshi",
         "labelEn": "Good",
         "iconSrc": "/sr4s_icons/icon-good.png",
         "scoreWeight": 5,
@@ -368,7 +368,7 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
       },
       {
         "id": "medium",
-        "labelUz": "O‘rtacha (Medium)",
+        "labelUz": "O‘rtacha",
         "labelEn": "Medium",
         "iconSrc": "/sr4s_icons/icon-medium.png",
         "scoreWeight": 3,
@@ -377,7 +377,7 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
       },
       {
         "id": "poor",
-        "labelUz": "Yomon (Sirpanchiq / Poor)",
+        "labelUz": "Sirpanchiq / Yomon",
         "labelEn": "Poor",
         "iconSrc": "/sr4s_icons/icon-poor.png",
         "scoreWeight": 1,
