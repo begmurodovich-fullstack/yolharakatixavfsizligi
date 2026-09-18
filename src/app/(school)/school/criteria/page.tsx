@@ -14,15 +14,11 @@ import {
 
 import {
   CriteriaHeader,
-  CriterionDetailCard,
 } from '@/features/criteria/components';
 import { Sr4sDemonstrator } from '@/components/sr4s/Sr4sDemonstrator';
 
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ErrorState } from '@/components/ui/error-state';
-import { Search, ChevronDown, ChevronUp } from 'lucide-react';
 
 export default function SchoolCriteriaPage() {
   const { user } = useAuth();
@@ -154,65 +150,7 @@ export default function SchoolCriteriaPage() {
 
       {/* 2. Interactive SR4S Calculator / Demonstrator */}
       <div className="space-y-2">
-        <div className="text-sm font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
-          <span>Xalqaro iRAP SR4S Interaktiv Kalkulyatori</span>
-        </div>
         <Sr4sDemonstrator />
-      </div>
-
-      {/* 3. Search & Expand All Bar */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-        <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-          <Input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Mezon nomi yoki tavsifi bo‘yicha qidiruv..."
-            className="pl-9 text-xs h-9.5 rounded-xl"
-          />
-        </div>
-
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() => setExpandAll(!expandAll)}
-          className="text-xs font-semibold gap-1.5 border-slate-200 self-end sm:self-auto"
-        >
-          {expandAll ? (
-            <>
-              <ChevronUp className="w-3.5 h-3.5" />
-              <span>Barchasini yopish</span>
-            </>
-          ) : (
-            <>
-              <ChevronDown className="w-3.5 h-3.5" />
-              <span>Barcha savollarni ochish</span>
-            </>
-          )}
-        </Button>
-      </div>
-
-      {/* 4. Criteria List */}
-      <div className="space-y-4">
-        {filteredCriteria.map((criterion) => {
-          const critQuestions = questions.filter((q) => q.criterionId === criterion.id);
-          const { earned, percentage } = getCriterionMetrics(criterion.id, criterion.maxScore);
-
-          return (
-            <CriterionDetailCard
-              key={criterion.id}
-              criterion={criterion}
-              questions={critQuestions}
-              earnedScore={earned}
-              maxScore={criterion.maxScore}
-              percentage={percentage}
-              schoolAnswers={assessment?.answers || {}}
-              defaultExpanded={expandAll}
-            />
-          );
-        })}
       </div>
     </div>
   );
