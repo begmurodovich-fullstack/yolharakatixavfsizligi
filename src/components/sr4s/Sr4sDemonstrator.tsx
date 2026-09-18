@@ -5,6 +5,7 @@ import { cn } from '@/lib/cn';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/components/ui/toast';
 import { Button } from '@/components/ui/button';
+import { Sr4sAttributeGrid } from '@/components/sr4s/Sr4sAttributeGrid';
 import {
   Building2,
   Home,
