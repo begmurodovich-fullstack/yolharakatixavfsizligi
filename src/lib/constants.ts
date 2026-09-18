@@ -10,7 +10,7 @@ export const APP_CONFIG = {
   supportPhone: '+998 33 585 13 03',
   telegramBotUsername: process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME || 'yolharakatixavfsizligi_bot',
   telegramBotToken: process.env.TELEGRAM_BOT_TOKEN || '8674118429:AAGnRU8AArMUsZYYQIOMx3eF8GUkxhSmpkk',
-  telegramAdminChatId: process.env.TELEGRAM_ADMIN_CHAT_ID || '',
+  telegramAdminChatId: process.env.TELEGRAM_ADMIN_CHAT_ID || '-1004479328930',
 };
 
 export const SCORE_THRESHOLDS = {
