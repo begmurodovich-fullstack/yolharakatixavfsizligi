@@ -251,17 +251,28 @@ export function Sr4sDemonstrator() {
             </span>
           </p>
 
-          {/* Demonstrator Art (Official Children Artwork) */}
-          <div className="w-full max-w-[280px] sm:max-w-[320px] aspect-square relative my-2 flex items-center justify-center select-none">
-            <Image
-              src="/sr4s_icons/demonstrator-art.png"
-              alt="Star Rating for Schools Demonstrator Artwork"
-              width={340}
-              height={340}
-              priority
-              className="object-contain drop-shadow-sm hover:scale-102 transition-transform duration-300"
-              unoptimized
-            />
+          {/* Project Logo & Branding */}
+          <div className="w-full flex flex-col items-center justify-center my-3 p-4 rounded-2xl bg-white/80 border border-slate-200/90 shadow-xs backdrop-blur-xs">
+            <div className="w-36 h-36 sm:w-44 sm:h-44 relative flex items-center justify-center select-none">
+              <Image
+                src="/logo.svg"
+                alt="Maktabga Xavfsiz Qadam"
+                width={176}
+                height={176}
+                priority
+                className="object-contain drop-shadow-md hover:scale-105 transition-transform duration-300 max-h-full max-w-full"
+                unoptimized
+              />
+            </div>
+
+            <div className="mt-2 space-y-1 text-center">
+              <h3 className="text-base sm:text-lg font-black tracking-tight text-slate-900 bg-gradient-to-r from-teal-700 to-emerald-700 bg-clip-text text-transparent">
+                Maktabga Xavfsiz Qadam
+              </h3>
+              <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-teal-50 border border-teal-200/80 text-[10px] font-bold text-teal-800 uppercase tracking-wide">
+                <span>Milliy Loyiha</span>
+              </div>
+            </div>
           </div>
 
           {/* Star Rating Display */}
