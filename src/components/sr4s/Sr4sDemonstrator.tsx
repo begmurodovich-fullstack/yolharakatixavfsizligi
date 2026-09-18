@@ -396,29 +396,32 @@ export function Sr4sDemonstrator() {
         </div>
       </div>
 
-      {/* Interactive Option Picker Modal */}
+      {/* Interactive Option Picker Modal (1-to-1 match with official SR4S demonstrator) */}
       {activeModalAttr && (
-        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-lg w-full overflow-hidden animate-in zoom-in-95 duration-200">
-            {/* Modal Header */}
-            <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
-              <div className="space-y-0.5">
-                <span className="text-[11px] font-bold text-teal-600 uppercase tracking-wider font-mono">
-                  {activeModalAttr.code} • Mezonni o‘zgartirish
-                </span>
-                <h3 className="text-lg font-black text-slate-900">{activeModalAttr.nameEn}</h3>
-                <p className="text-xs text-slate-500">{activeModalAttr.nameUz}</p>
-              </div>
-              <button
-                onClick={() => setActiveModalAttr(null)}
-                className="p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
+        <div
+          className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-150"
+          onClick={() => setActiveModalAttr(null)}
+        >
+          <div
+            className="bg-white rounded-lg shadow-2xl border border-slate-100 relative px-6 sm:px-10 pt-6 pb-7 max-w-4xl w-auto min-w-[300px] max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-150"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Red '×' close button top right */}
+            <button
+              onClick={() => setActiveModalAttr(null)}
+              className="absolute top-2.5 right-3 text-red-500 hover:text-red-700 font-bold text-2xl leading-none transition-colors p-1"
+              aria-label="Close"
+            >
+              ×
+            </button>
 
-            {/* Modal Options List */}
-            <div className="p-4 max-h-[65vh] overflow-y-auto space-y-2">
+            {/* Modal Title (e.g. Land use left, Area Type, Vehicle Parking) */}
+            <h3 className="text-xl sm:text-2xl font-normal text-slate-800 text-center tracking-tight mb-5 select-none">
+              {activeModalAttr.nameEn}
+            </h3>
+
+            {/* Option Cards Horizontal Row */}
+            <div className="flex flex-row items-end justify-center gap-3 sm:gap-6 flex-wrap">
               {activeModalAttr.options.map((option) => {
                 const isSelected = option.id === activeModalAttr.currentValueId;
 
@@ -426,77 +429,52 @@ export function Sr4sDemonstrator() {
                   <button
                     key={option.id}
                     onClick={() => handleSelectOption(activeModalAttr.id, option.id)}
+                    type="button"
                     className={cn(
-                      'w-full flex items-center gap-4 p-3.5 rounded-2xl border text-left transition-all duration-150',
+                      'group flex flex-col items-center justify-end p-2 transition-all cursor-pointer rounded-xs min-w-[70px] sm:min-w-[80px]',
                       isSelected
-                        ? 'bg-teal-50/80 border-teal-500 shadow-xs'
-                        : 'bg-white border-slate-200 hover:bg-slate-50 hover:border-slate-300'
+                        ? 'border border-[#009688] shadow-2xs'
+                        : 'border border-transparent hover:border-slate-300'
                     )}
                   >
                     {/* Option Icon */}
-                    <div className="w-14 h-14 relative flex-shrink-0 flex items-center justify-center bg-slate-50 rounded-xl border border-slate-100 p-1">
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 relative flex items-center justify-center mb-1 select-none">
                       <Image
                         src={option.iconSrc}
                         alt={option.labelEn}
-                        width={52}
-                        height={52}
+                        width={64}
+                        height={64}
                         className="object-contain max-h-full max-w-full drop-shadow-2xs"
                         unoptimized
                       />
-                    </div>
 
-                    {/* Option Details */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-bold text-slate-900 block truncate">
-                          {option.labelEn}
+                      {/* Speed limit badge overlay */}
+                      {activeModalAttr.id === 'speed_limit' && option.badgeText && (
+                        <span className="absolute text-[11px] font-black text-slate-900 font-mono tracking-tight pointer-events-none mt-0.5">
+                          {option.badgeText.replace(' km/h', '')}
                         </span>
-                        {option.badgeText && (
-                          <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700">
-                            {option.badgeText}
-                          </span>
-                        )}
-                      </div>
-                      <span className="text-xs text-slate-600 block mt-0.5 line-clamp-1">
-                        {option.labelUz}
-                      </span>
-                      <div className="flex items-center gap-1.5 mt-1.5">
-                        <span className="text-[10px] text-slate-400 font-medium">Xavfsizlik darajasi:</span>
-                        <div className="flex items-center gap-0.5">
-                          {[1, 2, 3, 4, 5].map((s) => (
-                            <span
-                              key={s}
-                              className={cn(
-                                'w-2 h-2 rounded-full',
-                                s <= option.scoreWeight ? 'bg-teal-500' : 'bg-slate-200'
-                              )}
-                            />
-                          ))}
-                        </div>
-                      </div>
+                      )}
+
+                      {/* Operating speed badge overlay */}
+                      {activeModalAttr.id === 'operating_speed' && option.badgeText && (
+                        <span className="absolute bottom-1 text-[10px] font-black text-slate-900 font-mono tracking-tight pointer-events-none">
+                          {option.badgeText.replace(' km/h', '')}
+                        </span>
+                      )}
                     </div>
 
-                    {/* Selected Checkmark */}
-                    {isSelected && (
-                      <div className="w-6 h-6 rounded-full bg-teal-500 text-white flex items-center justify-center flex-shrink-0 shadow-xs">
-                        <Check className="w-4 h-4 stroke-[3]" />
-                      </div>
-                    )}
+                    {/* Option English Label */}
+                    <span className="text-xs sm:text-sm text-slate-800 font-normal text-center leading-tight max-w-[75px] sm:max-w-[90px] break-words select-none">
+                      {option.labelEn}
+                    </span>
+
+                    {/* Uzbek subtitle (compact, subtle helper) */}
+                    <span className="text-[10px] text-slate-400 text-center leading-tight mt-0.5 max-w-[85px] truncate select-none">
+                      {option.labelUz}
+                    </span>
                   </button>
                 );
               })}
-            </div>
-
-            {/* Modal Footer */}
-            <div className="p-4 bg-slate-50 border-t border-slate-100 flex justify-end">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setActiveModalAttr(null)}
-                className="text-xs font-semibold"
-              >
-                Yopish
-              </Button>
             </div>
           </div>
         </div>

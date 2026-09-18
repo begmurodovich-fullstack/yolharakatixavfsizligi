@@ -26,6 +26,13 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "currentValueId": "residential",
     "options": [
       {
+        "id": "undeveloped",
+        "labelUz": "Bo‘sh yer / Ochiq maydon",
+        "labelEn": "Undeveloped",
+        "iconSrc": "/sr4s_icons/land-use-undeveloped.png",
+        "scoreWeight": 5
+      },
+      {
         "id": "residential",
         "labelUz": "Aholi punkti (Turar joy)",
         "labelEn": "Residential",
@@ -40,11 +47,11 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
         "scoreWeight": 3
       },
       {
-        "id": "educational",
-        "labelUz": "Maktab / Ta’lim hududi",
-        "labelEn": "Educational",
-        "iconSrc": "/sr4s_icons/land-use-educational.png",
-        "scoreWeight": 5
+        "id": "industrial",
+        "labelUz": "Sanoat korxonasi",
+        "labelEn": "Industrial",
+        "iconSrc": "/sr4s_icons/land-use-industrial.png",
+        "scoreWeight": 2
       },
       {
         "id": "farming",
@@ -54,17 +61,10 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
         "scoreWeight": 4
       },
       {
-        "id": "industrial",
-        "labelUz": "Sanoat korxonasi",
-        "labelEn": "Industrial",
-        "iconSrc": "/sr4s_icons/land-use-industrial.png",
-        "scoreWeight": 2
-      },
-      {
-        "id": "undeveloped",
-        "labelUz": "Bo‘sh yer / Ochiq maydon",
-        "labelEn": "Undeveloped",
-        "iconSrc": "/sr4s_icons/land-use-undeveloped.png",
+        "id": "school",
+        "labelUz": "Maktab / Ta’lim hududi",
+        "labelEn": "School",
+        "iconSrc": "/sr4s_icons/school-warning-signs-markings.png",
         "scoreWeight": 5
       }
     ]
@@ -77,6 +77,13 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "currentValueId": "residential",
     "options": [
       {
+        "id": "undeveloped",
+        "labelUz": "Bo‘sh yer / Ochiq maydon",
+        "labelEn": "Undeveloped",
+        "iconSrc": "/sr4s_icons/land-use-undeveloped.png",
+        "scoreWeight": 5
+      },
+      {
         "id": "residential",
         "labelUz": "Aholi punkti (Turar joy)",
         "labelEn": "Residential",
@@ -91,11 +98,11 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
         "scoreWeight": 3
       },
       {
-        "id": "educational",
-        "labelUz": "Maktab / Ta’lim hududi",
-        "labelEn": "Educational",
-        "iconSrc": "/sr4s_icons/land-use-educational.png",
-        "scoreWeight": 5
+        "id": "industrial",
+        "labelUz": "Sanoat korxonasi",
+        "labelEn": "Industrial",
+        "iconSrc": "/sr4s_icons/land-use-industrial.png",
+        "scoreWeight": 2
       },
       {
         "id": "farming",
@@ -105,17 +112,10 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
         "scoreWeight": 4
       },
       {
-        "id": "industrial",
-        "labelUz": "Sanoat korxonasi",
-        "labelEn": "Industrial",
-        "iconSrc": "/sr4s_icons/land-use-industrial.png",
-        "scoreWeight": 2
-      },
-      {
-        "id": "undeveloped",
-        "labelUz": "Bo‘sh yer / Ochiq maydon",
-        "labelEn": "Undeveloped",
-        "iconSrc": "/sr4s_icons/land-use-undeveloped.png",
+        "id": "school",
+        "labelUz": "Maktab / Ta’lim hududi",
+        "labelEn": "School",
+        "iconSrc": "/sr4s_icons/school-warning-signs-markings.png",
         "scoreWeight": 5
       }
     ]
@@ -128,18 +128,18 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "currentValueId": "urban",
     "options": [
       {
-        "id": "urban",
-        "labelUz": "Shahar hududi (Urban)",
-        "labelEn": "Urban",
-        "iconSrc": "/sr4s_icons/area-type-urban.png",
-        "scoreWeight": 4
-      },
-      {
         "id": "rural",
-        "labelUz": "Qishloq / Ochiq hudud (Rural)",
+        "labelUz": "Qishloq / Ochiq hudud",
         "labelEn": "Rural",
         "iconSrc": "/sr4s_icons/area-type-rural.png",
         "scoreWeight": 3
+      },
+      {
+        "id": "urban",
+        "labelUz": "Shahar hududi",
+        "labelEn": "Urban",
+        "iconSrc": "/sr4s_icons/area-type-urban.png",
+        "scoreWeight": 4
       }
     ]
   },
@@ -148,28 +148,28 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-04",
     "nameUz": "Avtomobil to‘xtash joyi",
     "nameEn": "Vehicle Parking",
-    "currentValueId": "two_sides",
+    "currentValueId": "none",
     "options": [
       {
-        "id": "two_sides",
-        "labelUz": "Ikki tomonda to‘xtash bor",
-        "labelEn": "Two sides",
-        "iconSrc": "/sr4s_icons/vehicle-parking-two-sides.png",
-        "scoreWeight": 2
+        "id": "none",
+        "labelUz": "To‘xtash joyi yo‘q",
+        "labelEn": "None",
+        "iconSrc": "/sr4s_icons/vehicle-parking-none.png",
+        "scoreWeight": 5
       },
       {
         "id": "one_side",
         "labelUz": "Bir tomonda to‘xtash bor",
-        "labelEn": "One side",
+        "labelEn": "One Side",
         "iconSrc": "/sr4s_icons/vehicle-parking-one-side.png",
         "scoreWeight": 3
       },
       {
-        "id": "none",
-        "labelUz": "To‘xtash joyi yo‘q / Taqiqlangan",
-        "labelEn": "None",
-        "iconSrc": "/sr4s_icons/vehicle-parking-none.png",
-        "scoreWeight": 5
+        "id": "two_side",
+        "labelUz": "Ikki tomonda to‘xtash bor",
+        "labelEn": "Two Side",
+        "iconSrc": "/sr4s_icons/vehicle-parking-two-sides.png",
+        "scoreWeight": 2
       }
     ]
   },
@@ -182,7 +182,7 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "options": [
       {
         "id": "adequate",
-        "labelUz": "Yetarli ko‘rish masofasi (Adequate)",
+        "labelUz": "Yetarli ko‘rish masofasi",
         "labelEn": "Adequate",
         "iconSrc": "/sr4s_icons/icon-adequate.png",
         "scoreWeight": 5,
@@ -191,7 +191,7 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
       },
       {
         "id": "poor",
-        "labelUz": "Yetarli emas / Cheklangan (Poor)",
+        "labelUz": "Yetarli emas / Cheklangan",
         "labelEn": "Poor",
         "iconSrc": "/sr4s_icons/icon-poor.png",
         "scoreWeight": 2,
