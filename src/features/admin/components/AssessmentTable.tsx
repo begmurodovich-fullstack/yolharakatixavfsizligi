@@ -6,22 +6,64 @@ import { GenericStatusBadge } from '@/components/ui/status-badge';
 import { Button } from '@/components/ui/button';
 import { School as SchoolIcon, MapPin, Eye, Star } from 'lucide-react';
 import { cn } from '@/lib/cn';
-import { SR4S_STAR_LEVELS } from '@/components/sr4s/Sr4sDemonstrator';
+import { OFFICIAL_SR4S_STAR_LEVELS, Sr4sStarLevel } from '@/lib/sr4sCalculation';
 
-/** Convert percentage (0–100) → SR4S star rating (1.0–5.0) */
-function pctToStar(pct: number): number {
-  const star = Number((1 + (pct / 100) * 4).toFixed(1));
+/** Calculate accurate SR4S star rating (1.0–5.0) */
+function getStarVal(ass: Assessment): number {
+  const crit = (ass as any).criterionScores;
+  if (crit?.starRating) {
+    const parsed = parseFloat(String(crit.starRating));
+    if (!isNaN(parsed) && parsed >= 1.0 && parsed <= 5.0) return parsed;
+  }
+  if (ass.reviewerNotes) {
+    const match = ass.reviewerNotes.match(/([\d\.]+)\s*Yulduz/i);
+    if (match) {
+      const parsed = parseFloat(match[1]);
+      if (!isNaN(parsed) && parsed >= 1.0 && parsed <= 5.0) return parsed;
+    }
+  }
+  const score = ass.score ?? ass.percentage ?? 0;
+  if (score <= 0) return 1.0;
+  const star = Math.round((score / 20) * 10) / 10;
   return Math.min(5.0, Math.max(1.0, star));
 }
 
-/** Get the SR4S level object for a given percentage */
-function getStarLevel(pct: number) {
-  const star = pctToStar(pct);
-  if (star >= 5.0) return SR4S_STAR_LEVELS[4];
-  if (star >= 4.0) return SR4S_STAR_LEVELS[3];
-  if (star >= 3.0) return SR4S_STAR_LEVELS[2];
-  if (star >= 2.0) return SR4S_STAR_LEVELS[1];
-  return SR4S_STAR_LEVELS[0];
+/** Get the SR4S level object for a given star score */
+function getStarLevel(starVal: number): Sr4sStarLevel {
+  if (starVal >= 4.5) {
+    return OFFICIAL_SR4S_STAR_LEVELS.find((l) => l.starCount === 5) || OFFICIAL_SR4S_STAR_LEVELS[0];
+  }
+  if (starVal >= 3.5) {
+    return OFFICIAL_SR4S_STAR_LEVELS.find((l) => l.starCount === 4) || OFFICIAL_SR4S_STAR_LEVELS[1];
+  }
+  if (starVal >= 2.5) {
+    return OFFICIAL_SR4S_STAR_LEVELS.find((l) => l.starCount === 3) || OFFICIAL_SR4S_STAR_LEVELS[2];
+  }
+  if (starVal >= 1.5) {
+    return OFFICIAL_SR4S_STAR_LEVELS.find((l) => l.starCount === 2) || OFFICIAL_SR4S_STAR_LEVELS[3];
+  }
+  return OFFICIAL_SR4S_STAR_LEVELS.find((l) => l.starCount === 1) || OFFICIAL_SR4S_STAR_LEVELS[4];
+}
+
+/** Format date in Uzbek locale nicely (e.g. 19-sentabr, 2026, 23:15) */
+function formatDateUz(dateStr?: string | null): string {
+  if (!dateStr) return 'Loyiha holatida';
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return 'Loyiha holatida';
+    const day = String(d.getDate()).padStart(2, '0');
+    const months = [
+      'yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun',
+      'iyul', 'avgust', 'sentabr', 'oktabr', 'noyabr', 'dekabr'
+    ];
+    const monthName = months[d.getMonth()];
+    const year = d.getFullYear();
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    return `${day}-${monthName}, ${year} ${hours}:${minutes}`;
+  } catch {
+    return dateStr || 'Loyiha holatida';
+  }
 }
 
 interface AssessmentTableProps {
@@ -61,9 +103,8 @@ export function AssessmentTable({
           <tbody className="divide-y divide-slate-100">
             {assessments.map((ass) => {
               const school = schools.find((s) => s.id === ass.schoolId);
-              const pct = ass.percentage ?? 0;
-              const starVal = pctToStar(pct);
-              const lvl = getStarLevel(pct);
+              const starVal = getStarVal(ass);
+              const lvl = getStarLevel(starVal);
               const filledStars = Math.round(starVal);
 
               return (
@@ -112,7 +153,7 @@ export function AssessmentTable({
                         ))}
                       </div>
                       <span className={cn('text-[11px] font-black font-mono', lvl.starTextClass)}>
-                        {starVal} / 5.0
+                        {starVal.toFixed(1)} / 5.0
                       </span>
                     </div>
                   </td>
@@ -135,16 +176,8 @@ export function AssessmentTable({
                   </td>
 
                   {/* Date */}
-                  <td className="py-4 px-5 text-slate-500 font-mono text-[11px]">
-                    {ass.submittedAt ? (
-                      new Date(ass.submittedAt).toLocaleDateString('uz-UZ', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                      })
-                    ) : (
-                      'Loyiha holatida'
-                    )}
+                  <td className="py-4 px-5 text-slate-600 font-medium text-[11px] whitespace-nowrap">
+                    {formatDateUz(ass.submittedAt)}
                   </td>
 
                   {/* Action */}

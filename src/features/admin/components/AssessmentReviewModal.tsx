@@ -6,7 +6,6 @@ import { GenericStatusBadge } from '@/components/ui/status-badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/cn';
-import { SR4S_STAR_LEVELS } from '@/components/sr4s/Sr4sDemonstrator';
 import {
   X,
   ClipboardCheck,
@@ -14,20 +13,43 @@ import {
   School as SchoolIcon,
   Star,
 } from 'lucide-react';
+import { OFFICIAL_SR4S_STAR_LEVELS, Sr4sStarLevel } from '@/lib/sr4sCalculation';
 
-/** Convert percentage (0–100) → SR4S star rating (1.0–5.0) */
-function pctToStar(pct: number): number {
-  const star = Number((1 + (pct / 100) * 4).toFixed(1));
+/** Calculate accurate SR4S star rating (1.0–5.0) */
+function getStarVal(ass: Assessment): number {
+  const crit = (ass as any).criterionScores;
+  if (crit?.starRating) {
+    const parsed = parseFloat(String(crit.starRating));
+    if (!isNaN(parsed) && parsed >= 1.0 && parsed <= 5.0) return parsed;
+  }
+  if (ass.reviewerNotes) {
+    const match = ass.reviewerNotes.match(/([\d\.]+)\s*Yulduz/i);
+    if (match) {
+      const parsed = parseFloat(match[1]);
+      if (!isNaN(parsed) && parsed >= 1.0 && parsed <= 5.0) return parsed;
+    }
+  }
+  const score = ass.score ?? ass.percentage ?? 0;
+  if (score <= 0) return 1.0;
+  const star = Math.round((score / 20) * 10) / 10;
   return Math.min(5.0, Math.max(1.0, star));
 }
 
-function getStarLevel(pct: number) {
-  const star = pctToStar(pct);
-  if (star >= 5.0) return SR4S_STAR_LEVELS[4];
-  if (star >= 4.0) return SR4S_STAR_LEVELS[3];
-  if (star >= 3.0) return SR4S_STAR_LEVELS[2];
-  if (star >= 2.0) return SR4S_STAR_LEVELS[1];
-  return SR4S_STAR_LEVELS[0];
+/** Get the SR4S level object for a given star score */
+function getStarLevel(starVal: number): Sr4sStarLevel {
+  if (starVal >= 4.5) {
+    return OFFICIAL_SR4S_STAR_LEVELS.find((l) => l.starCount === 5) || OFFICIAL_SR4S_STAR_LEVELS[0];
+  }
+  if (starVal >= 3.5) {
+    return OFFICIAL_SR4S_STAR_LEVELS.find((l) => l.starCount === 4) || OFFICIAL_SR4S_STAR_LEVELS[1];
+  }
+  if (starVal >= 2.5) {
+    return OFFICIAL_SR4S_STAR_LEVELS.find((l) => l.starCount === 3) || OFFICIAL_SR4S_STAR_LEVELS[2];
+  }
+  if (starVal >= 1.5) {
+    return OFFICIAL_SR4S_STAR_LEVELS.find((l) => l.starCount === 2) || OFFICIAL_SR4S_STAR_LEVELS[3];
+  }
+  return OFFICIAL_SR4S_STAR_LEVELS.find((l) => l.starCount === 1) || OFFICIAL_SR4S_STAR_LEVELS[4];
 }
 
 interface AssessmentReviewModalProps {
@@ -98,9 +120,8 @@ export function AssessmentReviewModal({
 
         {/* SR4S Star Rating Banner */}
         {(() => {
-          const pct = assessment.percentage ?? 0;
-          const starVal = pctToStar(pct);
-          const lvl = getStarLevel(pct);
+          const starVal = getStarVal(assessment);
+          const lvl = getStarLevel(starVal);
           const filledStars = Math.round(starVal);
           return (
             <div className={cn('p-5 rounded-2xl border space-y-4', lvl.cardBgClass ?? 'bg-slate-50', lvl.cardBorderClass ?? 'border-slate-200')}>
@@ -121,7 +142,7 @@ export function AssessmentReviewModal({
                       />
                     ))}
                     <span className={cn('ml-2 text-2xl font-black font-mono', lvl.starTextClass)}>
-                      {starVal}
+                      {starVal.toFixed(1)}
                     </span>
                     <span className="text-sm text-slate-400 font-mono ml-0.5">/ 5.0</span>
                   </div>
@@ -141,7 +162,7 @@ export function AssessmentReviewModal({
                     {lvl.starCount}★ {lvl.colorName}
                   </span>
                   <span className="text-[11px] text-slate-400 font-mono">
-                    Indeks: {pct}%
+                    Indeks: {assessment.percentage ?? Math.round(starVal * 20)}%
                   </span>
                 </div>
               </div>
