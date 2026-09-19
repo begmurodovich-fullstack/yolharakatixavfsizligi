@@ -106,6 +106,10 @@ export interface IrapCalculationResult {
   severityFactor: number;
   alongLikelihood: number;
   crossingLikelihood: number;
+  parkingFactor?: number;
+  curveFactor?: number;
+  hgvFactor?: number;
+  motoFactor?: number;
 }
 
 /**
@@ -135,16 +139,38 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
   // 3. Hodisa Oqibati Og'irligi (Severity Factor)
   let severity = 1.0;
   
-  // Og'ir yuk mashinalari ulushi
+  // Og'ir yuk mashinalari ulushi (HGV % - SR4S-40)
+  // Katta massali yuk mashinalari to'qnashuvda o'lim/og'ir jarohat xavfini keskin oshiradi
   const hgv = valMap['hgv_percent'];
-  if (hgv === 'above_20') severity *= 1.35;
-  else if (hgv === '10_20') severity *= 1.20;
-  else if (hgv === '5_10') severity *= 1.10;
+  let hgvFactor = 1.0;
+  switch (hgv) {
+    case '40_plus': hgvFactor = 1.60; break;
+    case '30_40': hgvFactor = 1.45; break;
+    case '20_30': hgvFactor = 1.35; break;
+    case '15_20': hgvFactor = 1.25; break;
+    case '10_15': hgvFactor = 1.18; break;
+    case '5_10': hgvFactor = 1.10; break;
+    default: hgvFactor = 1.0; break; // 0_5, not_recorded
+  }
+  severity *= hgvFactor;
 
-  // Mototsikl va mopedlar ulushi
+  // Mototsikl va mopedlar ulushi (Motorcycle % - SR4S-39)
+  // 2 g'ildirakli tezkor motorli transport vositalari oqimi xavfga ta'sir qiladi
   const moto = valMap['motorcycle_percent'];
-  if (moto === 'above_30') severity *= 1.20;
-  else if (moto === '15_30') severity *= 1.10;
+  let motoFactor = 1.0;
+  let motoLikelihoodMult = 1.0;
+  switch (moto) {
+    case '100':
+    case '81_99': motoFactor = 1.25; motoLikelihoodMult = 1.20; break;
+    case '61_80':
+    case '41_60': motoFactor = 1.18; motoLikelihoodMult = 1.15; break;
+    case '21_40': motoFactor = 1.12; motoLikelihoodMult = 1.10; break;
+    case '11_20': motoFactor = 1.06; motoLikelihoodMult = 1.05; break;
+    case '6_10':
+    case '1_5': motoFactor = 1.02; break;
+    default: break; // 0, not_recorded
+  }
+  severity *= motoFactor;
 
   // Qiyalik (Grade)
   if (valMap['grade'] === 'grade_high') severity *= 1.15;
@@ -153,8 +179,30 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
   // Yo'l o'rtasi ajratgichi
   if (valMap['middle_of_road'] === 'physical_barrier') severity *= 0.85;
 
+  // Avtomobil to'xtash joyi (Parkovka - SR4S-04)
+  // Yo'l chetida to'xtab turgan mashinalar bolalarni ko'rishni to'sadi (masking effekti)
+  const parking = valMap['vehicle_parking'];
+  let parkingFactor = 1.0;
+  if (parking === 'two_side') parkingFactor = 1.25;
+  else if (parking === 'one_side') parkingFactor = 1.12;
+
+  // Yo'l burilishi turi va sifati (Curve Type SR4S-34 & Curve Quality SR4S-35)
+  // O'tkir va keskin burilishlar, yomon ko'rinish tormoz masofasini va to'qnashuv xavfini oshiradi
+  const curveType = valMap['curve_type'];
+  let curveFactor = 1.0;
+  if (curveType === 'very_sharp') curveFactor *= 1.35;
+  else if (curveType === 'sharp') curveFactor *= 1.22;
+  else if (curveType === 'moderate') curveFactor *= 1.10;
+
+  if (valMap['curve_quality'] === 'poor') curveFactor *= 1.20;
+
   // 4. CTS Along (Bo'ylama Harakat Xavf Bali)
   let alongLikelihood = 1.0;
+
+  // Parkovka, yo'l burilishi va mototsikl oqimining bo'ylama xavf ehtimoliga ta'siri
+  alongLikelihood *= parkingFactor;
+  alongLikelihood *= curveFactor;
+  alongLikelihood *= motoLikelihoodMult;
 
   // Trotuar turi va ajratilishi (chap va o'ng tomonlar)
   const getSidewalkFactor = (sw: string) => {
@@ -227,6 +275,10 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
 
   // 5. CTS Crossing (Yo'lni Kesib O'tish Xavf Bali)
   let crossingLikelihood = 1.0;
+
+  // Parkovka va yo'l burilishining kesib o'tish xavfiga ta'siri
+  crossingLikelihood *= parkingFactor;
+  crossingLikelihood *= curveFactor;
 
   // Asosiy yo'l piyodalar o'tish joyi turi
   const crossMain = valMap['crossing_main_road'] || 'marked';
@@ -332,5 +384,9 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
     severityFactor: Math.round(severity * 100) / 100,
     alongLikelihood: Math.round(alongLikelihood * 100) / 100,
     crossingLikelihood: Math.round(crossingLikelihood * 100) / 100,
+    parkingFactor: Math.round(parkingFactor * 100) / 100,
+    curveFactor: Math.round(curveFactor * 100) / 100,
+    hgvFactor: Math.round(hgvFactor * 100) / 100,
+    motoFactor: Math.round(motoFactor * 100) / 100,
   };
 }

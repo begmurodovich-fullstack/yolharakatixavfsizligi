@@ -151,12 +151,27 @@ export function Sr4sDemonstrator() {
           if (attr.id === 'vehicles_per_day') {
             return { ...attr, currentValueId: '200', customValue: '200' };
           }
+          if (attr.id === 'vehicle_parking') {
+            return { ...attr, currentValueId: 'none' };
+          }
+          if (attr.id === 'curve_type') {
+            return { ...attr, currentValueId: 'straight' };
+          }
+          if (attr.id === 'curve_quality') {
+            return { ...attr, currentValueId: 'not_curve' };
+          }
+          if (attr.id === 'hgv_percent') {
+            return { ...attr, currentValueId: '0_5' };
+          }
+          if (attr.id === 'motorcycle_percent') {
+            return { ...attr, currentValueId: '0' };
+          }
           return attr;
         })
       );
       info('5 Yulduzli namunali xavfsiz sharoit yuklandi (Tezlik 30 km/h, patrul, orolchali zebra)');
     } else if (level === 'danger') {
-      // 1-2 Yulduzli xavfli holat (Tezlik 70 km/h, trotuar yo'q, zebra yo'q, yuqori oqim)
+      // 1-2 Yulduzli xavfli holat (Tezlik 70 km/h, trotuar yo'q, zebra yo'q, yuqori oqim, og'ir yuk va ikki tomonlama parkovka)
       setAttributes((prev) =>
         prev.map((attr) => {
           if (attr.id === 'operating_speed') {
@@ -192,10 +207,25 @@ export function Sr4sDemonstrator() {
           if (attr.id === 'vehicles_per_day') {
             return { ...attr, currentValueId: '12000', customValue: '12000' };
           }
+          if (attr.id === 'vehicle_parking') {
+            return { ...attr, currentValueId: 'two_side' };
+          }
+          if (attr.id === 'curve_type') {
+            return { ...attr, currentValueId: 'sharp' };
+          }
+          if (attr.id === 'curve_quality') {
+            return { ...attr, currentValueId: 'poor' };
+          }
+          if (attr.id === 'hgv_percent') {
+            return { ...attr, currentValueId: '20_30' };
+          }
+          if (attr.id === 'motorcycle_percent') {
+            return { ...attr, currentValueId: '21_40' };
+          }
           return attr;
         })
       );
-      info('1-2 Yulduzli xavfli yo‘l sharoiti yuklandi (Tezlik yuqori, trotuar va zebra yo‘q)');
+      info('1-2 Yulduzli xavfli yo‘l sharoiti yuklandi (Tezlik yuqori, yuk mashinalari, xavfli burilish va parkovka)');
     } else {
       // 3 Yulduzli o'rtacha holat (BMT talabi)
       setAttributes((prev) =>
@@ -226,6 +256,21 @@ export function Sr4sDemonstrator() {
           }
           if (attr.id === 'vehicles_per_day') {
             return { ...attr, currentValueId: '3500', customValue: '3500' };
+          }
+          if (attr.id === 'vehicle_parking') {
+            return { ...attr, currentValueId: 'one_side' };
+          }
+          if (attr.id === 'curve_type') {
+            return { ...attr, currentValueId: 'moderate' };
+          }
+          if (attr.id === 'curve_quality') {
+            return { ...attr, currentValueId: 'adequate' };
+          }
+          if (attr.id === 'hgv_percent') {
+            return { ...attr, currentValueId: '5_10' };
+          }
+          if (attr.id === 'motorcycle_percent') {
+            return { ...attr, currentValueId: '6_10' };
           }
           return attr;
         })
@@ -720,7 +765,7 @@ export function Sr4sDemonstrator() {
                     Likelihood (Ehtimollik)
                   </div>
                   <p className="text-slate-600 leading-relaxed">
-                    YTH yuzaga kelish ehtimoli. Bo‘ylama yurishda trotuar borligi va uning kengligi/ajratilishi; Kesib o‘tishda esa piyodalar o‘tish joyi turi (zebra, svetofor, sun‘iy do‘nglik), maktab patrul nazoratchisi va ko‘rish masofasi.
+                    YTH sodir bo‘lish ehtimoli. Trotuar kengligi va ajratilishi, o‘tish joyi turi, ko‘rish masofasi, shuningdek <strong>Avtomobil to‘xtash joyi (Parkovka — bolalarni to‘sish xavfi +12%–25%)</strong> va <strong>Yo‘l burilishi turi (+10%–35%)</strong> bevosita ta’sir qiladi.
                   </p>
                 </div>
                 <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/60 space-y-1.5">
@@ -728,7 +773,7 @@ export function Sr4sDemonstrator() {
                     Severity (Oqibat Og‘irligi)
                   </div>
                   <p className="text-slate-600 leading-relaxed">
-                    Hodisa yuz berganda og‘ir jarohat yoki o‘lim xavfi. Og‘ir yuk mashinalari ulushi (HGV %), mototsikllar, qiyalik darajasi va yo‘l o‘rtasi ajratgich to‘siqlari ta‘sir qiladi.
+                    Hodisa yuz berganda og‘ir jarohat yoki o‘lim xavfi. <strong>Og‘ir yuk mashinalari ulushi (HGV % — halokatlilikni +10%–60% ga oshiradi)</strong>, <strong>Mototsikl va mopedlar ulushi (+2%–25%)</strong>, yo‘l qiyaligi va ajratgich to‘siqlar ta’sir qiladi.
                   </p>
                 </div>
                 <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/60 space-y-1.5">
