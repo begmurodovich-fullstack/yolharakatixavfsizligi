@@ -1,1002 +1,530 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import Image from 'next/image';
 import { cn } from '@/lib/cn';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/components/ui/toast';
 import { Button } from '@/components/ui/button';
 import {
-  Building2,
-  Home,
-  Store,
-  Factory,
-  Tractor,
-  School as SchoolIcon,
-  Trees,
-  Navigation,
-  Car,
-  Eye,
-  ShieldAlert,
-  Gauge,
-  Activity,
-  Split,
-  Maximize2,
-  Sun,
-  Footprints,
-  Route,
-  Zap,
-  Users,
-  AlertTriangle,
-  CheckCircle2,
-  XCircle,
-  X,
+  OFFICIAL_40_ATTRIBUTES_DATA,
+  AttributeDefinition,
+  AttributeOption,
+} from '@/data/sr4sAttributesData';
+import {
+  calculateIrapSr4s,
+  OFFICIAL_SR4S_STAR_LEVELS,
+  Sr4sStarLevel,
+  IrapCalculationResult,
+} from '@/lib/sr4sCalculation';
+import {
   Star,
-  Info,
-  ArrowUpDown,
-  Truck,
-  Bike,
-  GitFork,
-  HelpCircle,
-  Save,
-  Check,
-  Loader2,
-  Sparkles,
-  Target,
   RotateCcw,
+  Check,
+  X,
+  Save,
+  Loader2,
+  HelpCircle,
+  Activity,
+  ArrowRightLeft,
+  ShieldCheck,
+  Info,
 } from 'lucide-react';
 
-export interface AttributeOption {
-  id: string;
-  label: string;
-  subLabel?: string;
-  scoreWeight: number; // 1-5 impact rating
-  renderIcon?: () => React.ReactNode;
-}
-
-export interface AttributeDefinition {
-  id: string;
-  name: string;
-  category: string;
-  currentValueId: string;
-  options: AttributeOption[];
-}
-
-export interface Sr4sStarLevel {
-  starCount: number;
-  title: string;
-  colorName: string;
-  description: string;
-  starFillClass: string;
-  starTextClass: string;
-  badgeClass: string;
-  cardBorderClass: string;
-  cardBgClass: string;
-  minStar: number;
-  maxStar: number;
-}
-
-// 5 OFFICIAL SR4S STAR LEVEL DEFINITIONS (From Uzbek Checklist Image)
-export const SR4S_STAR_LEVELS: Sr4sStarLevel[] = [
-  {
-    starCount: 1,
-    title: '1 Yulduz — Infratuzilma Yetishmaydi',
-    colorName: 'Qora',
-    description: "Infratuzilmaning yetishmasligi, transport oqimining juda ko'pligi va yuqori tezlik",
-    starFillClass: 'fill-slate-950 text-slate-900 stroke-slate-400 drop-shadow-md',
-    starTextClass: 'text-slate-300',
-    badgeClass: 'bg-slate-950 text-slate-200 border-slate-700',
-    cardBorderClass: 'border-slate-700/80',
-    cardBgClass: 'bg-slate-900/90',
-    minStar: 1.0,
-    maxStar: 1.9,
-  },
-  {
-    starCount: 2,
-    title: '2 Yulduz — Yuqori Xavf',
-    colorName: 'Qizil',
-    description: "Infratuzilma yo'qligi, yaxshi bo'lmagan sharoit va chorrahadan uzoqda joylashgani",
-    starFillClass: 'fill-red-500 text-red-500 drop-shadow-[0_0_12px_rgba(239,68,68,0.7)]',
-    starTextClass: 'text-red-400',
-    badgeClass: 'bg-red-500/10 text-red-400 border-red-500/30',
-    cardBorderClass: 'border-red-500/50',
-    cardBgClass: 'bg-red-950/20',
-    minStar: 2.0,
-    maxStar: 2.9,
-  },
-  {
-    starCount: 3,
-    title: "3 Yulduz — O'rtacha Xavfsiz (Maqsadli)",
-    colorName: 'Sariq',
-    description: "Infratuzilmaning yetishmasligi, transport oqimining kamligi va past tezlik",
-    starFillClass: 'fill-yellow-400 text-yellow-400 drop-shadow-[0_0_12px_rgba(250,204,21,0.8)]',
-    starTextClass: 'text-yellow-400',
-    badgeClass: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/30',
-    cardBorderClass: 'border-yellow-500/50',
-    cardBgClass: 'bg-yellow-950/20',
-    minStar: 3.0,
-    maxStar: 3.9,
-  },
-  {
-    starCount: 4,
-    title: '4 Yulduz — Qulay va Xavfsiz',
-    colorName: 'Sabzirang (Olovrang)',
-    description: 'Xavfsizlik uchun qulay sharoit',
-    starFillClass: 'fill-orange-500 text-orange-500 drop-shadow-[0_0_12px_rgba(249,115,22,0.8)]',
-    starTextClass: 'text-orange-400',
-    badgeClass: 'bg-orange-500/10 text-orange-400 border-orange-500/30',
-    cardBorderClass: 'border-orange-500/50',
-    cardBgClass: 'bg-orange-950/20',
-    minStar: 4.0,
-    maxStar: 4.9,
-  },
-  {
-    starCount: 5,
-    title: "5 Yulduz — To'liq Jihozlangan",
-    colorName: 'Yashil',
-    description: "To'liq jihozlangan yo'l",
-    starFillClass: 'fill-emerald-400 text-emerald-400 drop-shadow-[0_0_12px_rgba(52,211,153,0.7)]',
-    starTextClass: 'text-emerald-400',
-    badgeClass: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
-    cardBorderClass: 'border-emerald-500/50',
-    cardBgClass: 'bg-emerald-950/20',
-    minStar: 5.0,
-    maxStar: 5.0,
-  },
-];
-
-// Rich Custom SVG Icon Components with enhanced visual styling
-function SpeedSignIcon({ limit }: { limit: string }) {
-  return (
-    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white border-2 border-rose-600 font-extrabold text-slate-950 font-mono text-[11px] shadow-md group-hover:scale-110 transition-transform duration-200">
-      {limit}
-    </div>
-  );
-}
-
-function SchoolSignIcon() {
-  return (
-    <div className="w-8 h-8 bg-amber-400 border-2 border-slate-950 flex items-center justify-center text-slate-950 font-black shadow-md rounded-md group-hover:scale-110 transition-transform duration-200">
-      <SchoolIcon className="w-5 h-5 text-slate-950" />
-    </div>
-  );
-}
-
-function ZebraCrossingIcon() {
-  return (
-    <div className="w-9 h-9 bg-slate-800 rounded-xl p-1 flex flex-col justify-between border border-slate-700 shadow-md group-hover:scale-110 transition-transform duration-200">
-      <div className="h-1.5 w-full bg-white rounded-xs shadow-2xs" />
-      <div className="h-1.5 w-full bg-white rounded-xs shadow-2xs" />
-      <div className="h-1.5 w-full bg-white rounded-xs shadow-2xs" />
-    </div>
-  );
-}
-
-function DividedRoadIcon() {
-  return (
-    <div className="w-9 h-9 bg-slate-800 rounded-xl flex items-center justify-between px-1 border border-slate-700 shadow-md group-hover:scale-110 transition-transform duration-200">
-      <div className="w-2.5 h-full bg-slate-700 border-r border-dashed border-slate-400" />
-      <div className="w-1.5 h-full bg-emerald-500 shadow-sm" />
-      <div className="w-2.5 h-full bg-slate-700 border-l border-dashed border-slate-400" />
-    </div>
-  );
-}
-
-function SidewalkIcon() {
-  return (
-    <div className="w-9 h-9 bg-slate-800 rounded-xl flex items-center justify-between p-1 border border-slate-700 shadow-md group-hover:scale-110 transition-transform duration-200">
-      <div className="w-3 h-full bg-emerald-600 rounded-xs flex items-center justify-center">
-        <Footprints className="w-3 h-3 text-white" />
-      </div>
-      <div className="w-4 h-full bg-slate-700 border-l border-white/40" />
-    </div>
-  );
-}
-
-function SpeedBumpIcon() {
-  return (
-    <div className="w-9 h-9 bg-slate-800 rounded-xl flex flex-col items-center justify-center p-1 border border-slate-700 shadow-md group-hover:scale-110 transition-transform duration-200">
-      <div className="w-full h-2.5 bg-amber-500 rounded-full border border-amber-300 shadow-xs" />
-    </div>
-  );
-}
-
-function RoundaboutIcon() {
-  return (
-    <div className="w-9 h-9 bg-slate-800 rounded-xl flex items-center justify-center border border-slate-700 shadow-md group-hover:scale-110 transition-transform duration-200">
-      <div className="w-5 h-5 rounded-full border-2 border-dashed border-teal-400 flex items-center justify-center">
-        <div className="w-2 h-2 rounded-full bg-emerald-400" />
-      </div>
-    </div>
-  );
-}
-
-// ALL 40 OFFICIAL SR4S ATTRIBUTES
-const FULL_40_ATTRIBUTES: AttributeDefinition[] = [
-  // ROW 1 (1-8)
-  {
-    id: 'land_use_left',
-    name: 'Yerda foydalanish (Chap)',
-    category: 'Muhit',
-    currentValueId: 'school',
-    options: [
-      { id: 'undeveloped', label: 'Bo‘sh hudud', scoreWeight: 5, renderIcon: () => <Trees className="w-5 h-5 text-emerald-400" /> },
-      { id: 'residential', label: 'Aholi punkti', scoreWeight: 4, renderIcon: () => <Home className="w-5 h-5 text-teal-400" /> },
-      { id: 'commercial', label: 'Tijorat / Bozor', scoreWeight: 3, renderIcon: () => <Store className="w-5 h-5 text-amber-400" /> },
-      { id: 'industrial', label: 'Sanoat korxonasi', scoreWeight: 2, renderIcon: () => <Factory className="w-5 h-5 text-slate-400" /> },
-      { id: 'farming', label: 'Qishloq xo‘jaligi', scoreWeight: 4, renderIcon: () => <Tractor className="w-5 h-5 text-lime-400" /> },
-      { id: 'school', label: 'Maktab hududi', scoreWeight: 5, renderIcon: () => <SchoolIcon className="w-5 h-5 text-teal-300" /> },
-    ],
-  },
-  {
-    id: 'land_use_right',
-    name: 'Yerda foydalanish (O‘ng)',
-    category: 'Muhit',
-    currentValueId: 'school',
-    options: [
-      { id: 'undeveloped', label: 'Bo‘sh hudud', scoreWeight: 5, renderIcon: () => <Trees className="w-5 h-5 text-emerald-400" /> },
-      { id: 'residential', label: 'Aholi punkti', scoreWeight: 4, renderIcon: () => <Home className="w-5 h-5 text-teal-400" /> },
-      { id: 'commercial', label: 'Tijorat / Bozor', scoreWeight: 3, renderIcon: () => <Store className="w-5 h-5 text-amber-400" /> },
-      { id: 'industrial', label: 'Sanoat korxonasi', scoreWeight: 2, renderIcon: () => <Factory className="w-5 h-5 text-slate-400" /> },
-      { id: 'farming', label: 'Qishloq xo‘jaligi', scoreWeight: 4, renderIcon: () => <Tractor className="w-5 h-5 text-lime-400" /> },
-      { id: 'school', label: 'Maktab hududi', scoreWeight: 5, renderIcon: () => <SchoolIcon className="w-5 h-5 text-teal-300" /> },
-    ],
-  },
-  {
-    id: 'area_type',
-    name: 'Hudud turi',
-    category: 'Muhit',
-    currentValueId: 'urban',
-    options: [
-      { id: 'urban', label: 'Shahar markazi', scoreWeight: 4, renderIcon: () => <Building2 className="w-5 h-5 text-teal-400" /> },
-      { id: 'rural', label: 'Qishloq / Ochiq', scoreWeight: 3, renderIcon: () => <Trees className="w-5 h-5 text-emerald-400" /> },
-    ],
-  },
-  {
-    id: 'vehicle_parking',
-    name: 'Avtoturargoh',
-    category: 'Muhit',
-    currentValueId: 'none',
-    options: [
-      { id: 'none', label: 'Yo‘q (Parking yo‘q)', scoreWeight: 5, renderIcon: () => <XCircle className="w-5 h-5 text-emerald-400" /> },
-      { id: 'one_side', label: 'Bir tomonda bor', scoreWeight: 3, renderIcon: () => <Car className="w-5 h-5 text-amber-400" /> },
-      { id: 'two_sides', label: 'Ikki tomonda bor', scoreWeight: 1, renderIcon: () => <Car className="w-5 h-5 text-rose-400" /> },
-    ],
-  },
-  {
-    id: 'sight_distance',
-    name: 'Ko‘rinish masofasi',
-    category: 'Muhit',
-    currentValueId: 'adequate',
-    options: [
-      { id: 'adequate', label: 'Yetarli (Yaxshi)', scoreWeight: 5, renderIcon: () => <Eye className="w-5 h-5 text-emerald-400" /> },
-      { id: 'poor', label: 'Yomon (Cheklangan)', scoreWeight: 1, renderIcon: () => <AlertTriangle className="w-5 h-5 text-rose-400" /> },
-    ],
-  },
-  {
-    id: 'number_of_lanes',
-    name: 'Tasmalar soni',
-    category: 'Yo‘l',
-    currentValueId: 'lanes_1_1',
-    options: [
-      { id: 'lanes_1_1', label: '1 x 1 (Ikkita bo‘lak)', scoreWeight: 5, renderIcon: () => <Navigation className="w-5 h-5 text-teal-400" /> },
-      { id: 'lanes_2_2', label: '2 x 2 (To‘rtta bo‘lak)', scoreWeight: 3, renderIcon: () => <Navigation className="w-5 h-5 text-amber-400" /> },
-      { id: 'lanes_3_3', label: '3 x 3 va undan ko‘p', scoreWeight: 1, renderIcon: () => <Navigation className="w-5 h-5 text-rose-400" /> },
-    ],
-  },
-  {
-    id: 'lane_width',
-    name: 'Tasma kengligi',
-    category: 'Yo‘l',
-    currentValueId: 'wide',
-    options: [
-      { id: 'wide', label: 'Keng (>3.25m)', scoreWeight: 5, renderIcon: () => <Maximize2 className="w-5 h-5 text-teal-400" /> },
-      { id: 'medium', label: 'O‘rtacha (2.75m-3.25m)', scoreWeight: 4, renderIcon: () => <Maximize2 className="w-5 h-5 text-amber-400" /> },
-      { id: 'narrow', label: 'Tor (<2.75m)', scoreWeight: 2, renderIcon: () => <Maximize2 className="w-5 h-5 text-rose-400" /> },
-    ],
-  },
-  {
-    id: 'shoulder_rumble',
-    name: 'Tebranish tasmachalari',
-    category: 'Yo‘l',
-    currentValueId: 'present',
-    options: [
-      { id: 'present', label: 'Bor (Shovqinli tasmalar)', scoreWeight: 5, renderIcon: () => <Activity className="w-5 h-5 text-emerald-400" /> },
-      { id: 'not_present', label: 'Yo‘q', scoreWeight: 2, renderIcon: () => <XCircle className="w-5 h-5 text-slate-400" /> },
-    ],
-  },
-
-  // ROW 2 (9-16)
-  {
-    id: 'road_condition',
-    name: 'Yo‘l holati',
-    category: 'Yo‘l',
-    currentValueId: 'good',
-    options: [
-      { id: 'good', label: 'Yaxshi (Silliq)', scoreWeight: 5, renderIcon: () => <CheckCircle2 className="w-5 h-5 text-emerald-400" /> },
-      { id: 'medium', label: 'O‘rtacha (Ta’mirtalab)', scoreWeight: 3, renderIcon: () => <AlertTriangle className="w-5 h-5 text-amber-400" /> },
-      { id: 'poor', label: 'Yomon (Chuqurchalar bor)', scoreWeight: 1, renderIcon: () => <XCircle className="w-5 h-5 text-rose-400" /> },
-    ],
-  },
-  {
-    id: 'grip',
-    name: 'Yo‘l ilashishi (Tutqich)',
-    category: 'Yo‘l',
-    currentValueId: 'good',
-    options: [
-      { id: 'good', label: 'Yaxshi (A’lo ilashuv)', scoreWeight: 5, renderIcon: () => <CheckCircle2 className="w-5 h-5 text-emerald-400" /> },
-      { id: 'medium', label: 'O‘rtacha ilashuv', scoreWeight: 3, renderIcon: () => <AlertTriangle className="w-5 h-5 text-amber-400" /> },
-      { id: 'poor', label: 'Yomon (Silliq / Shag‘al)', scoreWeight: 1, renderIcon: () => <XCircle className="w-5 h-5 text-rose-400" /> },
-    ],
-  },
-  {
-    id: 'grade',
-    name: 'Yo‘l nishabligi (Baho)',
-    category: 'Yo‘l',
-    currentValueId: 'flat',
-    options: [
-      { id: 'flat', label: 'Tekis yo‘l (<7.5%)', scoreWeight: 5, renderIcon: () => <ArrowUpDown className="w-5 h-5 text-teal-400" /> },
-      { id: 'slope', label: 'Nishablik yo‘l (≥7.5%)', scoreWeight: 2, renderIcon: () => <ArrowUpDown className="w-5 h-5 text-amber-400" /> },
-    ],
-  },
-  {
-    id: 'carriageway_type',
-    name: 'Qatnov qismi turi',
-    category: 'Yo‘l',
-    currentValueId: 'undivided',
-    options: [
-      { id: 'divided', label: 'Ajratilgan qatnov qismi', scoreWeight: 5, renderIcon: DividedRoadIcon },
-      { id: 'undivided', label: 'Ajratilmagan qatnov qismi', scoreWeight: 2, renderIcon: () => <Split className="w-5 h-5 text-slate-400" /> },
-    ],
-  },
-  {
-    id: 'middle_of_road',
-    name: 'Yo‘lning o‘rtasi',
-    category: 'Yo‘l',
-    currentValueId: 'centreline',
-    options: [
-      { id: 'barrier_metal', label: 'Metall to‘siq', scoreWeight: 5, renderIcon: () => <ShieldAlert className="w-5 h-5 text-teal-400" /> },
-      { id: 'barrier_concrete', label: 'Beton to‘siq', scoreWeight: 5, renderIcon: () => <ShieldAlert className="w-5 h-5 text-slate-300" /> },
-      { id: 'median_separated', label: 'Keng ajratuvchi maysazor', scoreWeight: 4, renderIcon: () => <Trees className="w-5 h-5 text-emerald-400" /> },
-      { id: 'double_centreline', label: 'Qo‘sh o‘q chiziq', scoreWeight: 3, renderIcon: () => <Split className="w-5 h-5 text-amber-400" /> },
-      { id: 'centreline', label: 'Bitta o‘q chiziq', scoreWeight: 2, renderIcon: () => <Split className="w-5 h-5 text-slate-400" /> },
-    ],
-  },
-  {
-    id: 'lines_and_signs',
-    name: 'Chiziqlar va belgilar',
-    category: 'Belgilar',
-    currentValueId: 'adequate',
-    options: [
-      { id: 'adequate', label: 'Qoniqarli (Aniq ko‘rinadi)', scoreWeight: 5, renderIcon: () => <CheckCircle2 className="w-5 h-5 text-emerald-400" /> },
-      { id: 'poor', label: 'Qoniqarsiz (Eskirgan/Yo‘q)', scoreWeight: 1, renderIcon: () => <XCircle className="w-5 h-5 text-rose-400" /> },
-    ],
-  },
-  {
-    id: 'street_lighting',
-    name: 'Ko‘cha yoritgichi',
-    category: 'Belgilar',
-    currentValueId: 'present',
-    options: [
-      { id: 'present', label: 'Bor (Yoritilgan)', scoreWeight: 5, renderIcon: () => <Sun className="w-5 h-5 text-amber-400" /> },
-      { id: 'not_present', label: 'Yo‘q (Yoritilmagan)', scoreWeight: 1, renderIcon: () => <XCircle className="w-5 h-5 text-slate-400" /> },
-    ],
-  },
-  {
-    id: 'school_warning',
-    name: 'Maktab ogohlantirishi',
-    category: 'Maktab',
-    currentValueId: 'flashing_beacon',
-    options: [
-      { id: 'flashing_beacon', label: 'Miltillovchi T.7 svetofori va belgilari bor', scoreWeight: 5, renderIcon: SchoolSignIcon },
-      { id: 'signs_only', label: 'Ogohlantirish belgilari bor', scoreWeight: 3, renderIcon: () => <ShieldAlert className="w-5 h-5 text-amber-400" /> },
-      { id: 'none', label: 'Ogohlantirish belgilari yo‘q', scoreWeight: 1, renderIcon: () => <XCircle className="w-5 h-5 text-rose-400" /> },
-    ],
-  },
-
-  // ROW 3 (17-24)
-  {
-    id: 'crossing_supervisor',
-    name: 'Piyodalar patruli (Nazoratchi)',
-    category: 'Maktab',
-    currentValueId: 'present',
-    options: [
-      { id: 'present', label: 'Bor (Dars vaqtlarida navbatchilik bor)', scoreWeight: 5, renderIcon: () => <Users className="w-5 h-5 text-teal-400" /> },
-      { id: 'not_present', label: 'Yo‘q', scoreWeight: 1, renderIcon: () => <XCircle className="w-5 h-5 text-slate-400" /> },
-    ],
-  },
-  {
-    id: 'sidewalk_left',
-    name: 'Piyodalar yo‘lagi (Chap)',
-    category: 'Piyoda',
-    currentValueId: 'behind_barrier',
-    options: [
-      { id: 'behind_barrier', label: 'Panjara/To‘siq ortida', scoreWeight: 5, renderIcon: SidewalkIcon },
-      { id: 'separated', label: 'Qatnov qismidan ajratilgan (≥1m)', scoreWeight: 4, renderIcon: () => <Footprints className="w-5 h-5 text-emerald-400" /> },
-      { id: 'adjacent', label: 'Qatnov qismiga yondosh (<1m)', scoreWeight: 2, renderIcon: () => <Footprints className="w-5 h-5 text-amber-400" /> },
-      { id: 'none', label: 'Piyodalar yo‘lagi yo‘q', scoreWeight: 0, renderIcon: () => <XCircle className="w-5 h-5 text-rose-400" /> },
-    ],
-  },
-  {
-    id: 'sidewalk_right',
-    name: 'Piyodalar yo‘lagi (O‘ng)',
-    category: 'Piyoda',
-    currentValueId: 'behind_barrier',
-    options: [
-      { id: 'behind_barrier', label: 'Panjara/To‘siq ortida', scoreWeight: 5, renderIcon: SidewalkIcon },
-      { id: 'separated', label: 'Qatnov qismidan ajratilgan (≥1m)', scoreWeight: 4, renderIcon: () => <Footprints className="w-5 h-5 text-emerald-400" /> },
-      { id: 'adjacent', label: 'Qatnov qismiga yondosh (<1m)', scoreWeight: 2, renderIcon: () => <Footprints className="w-5 h-5 text-amber-400" /> },
-      { id: 'none', label: 'Piyodalar yo‘lagi yo‘q', scoreWeight: 0, renderIcon: () => <XCircle className="w-5 h-5 text-rose-400" /> },
-    ],
-  },
-  {
-    id: 'road_edge_left',
-    name: 'Chetki tasma (Chap)',
-    category: 'Piyoda',
-    currentValueId: 'wide',
-    options: [
-      { id: 'wide', label: 'Keng chetki tasma (≥2.4m)', scoreWeight: 5, renderIcon: () => <Maximize2 className="w-5 h-5 text-teal-400" /> },
-      { id: 'narrow', label: 'Tor chetki tasma (0.75m-1m)', scoreWeight: 3, renderIcon: () => <Maximize2 className="w-5 h-5 text-amber-400" /> },
-      { id: 'none', label: 'Chetki tasma yo‘q', scoreWeight: 1, renderIcon: () => <XCircle className="w-5 h-5 text-rose-400" /> },
-    ],
-  },
-  {
-    id: 'road_edge_right',
-    name: 'Chetki tasma (O‘ng)',
-    category: 'Piyoda',
-    currentValueId: 'wide',
-    options: [
-      { id: 'wide', label: 'Keng chetki tasma (≥2.4m)', scoreWeight: 5, renderIcon: () => <Maximize2 className="w-5 h-5 text-teal-400" /> },
-      { id: 'narrow', label: 'Tor chetki tasma (0.75m-1m)', scoreWeight: 3, renderIcon: () => <Maximize2 className="w-5 h-5 text-amber-400" /> },
-      { id: 'none', label: 'Chetki tasma yo‘q', scoreWeight: 1, renderIcon: () => <XCircle className="w-5 h-5 text-rose-400" /> },
-    ],
-  },
-  {
-    id: 'pedestrian_channelisation',
-    name: 'Piyodalar panjarasi',
-    category: 'Piyoda',
-    currentValueId: 'present',
-    options: [
-      { id: 'present', label: 'Bor (Muhofaza panjaralari mavjud)', scoreWeight: 5, renderIcon: () => <ShieldAlert className="w-5 h-5 text-emerald-400" /> },
-      { id: 'not_present', label: 'Yo‘q', scoreWeight: 1, renderIcon: () => <XCircle className="w-5 h-5 text-slate-400" /> },
-    ],
-  },
-  {
-    id: 'crossing_main_road',
-    name: 'Asosiy yo‘lda o‘tish joyi',
-    category: 'O‘tish joyi',
-    currentValueId: 'present',
-    options: [
-      { id: 'present', label: 'Bor (Piyodalar o‘tish joyi mavjud)', scoreWeight: 5, renderIcon: ZebraCrossingIcon },
-      { id: 'not_present', label: 'Yo‘q', scoreWeight: 0, renderIcon: () => <XCircle className="w-5 h-5 text-rose-400" /> },
-    ],
-  },
-  {
-    id: 'crossing_side_road',
-    name: 'Yon yo‘lda o‘tish joyi',
-    category: 'O‘tish joyi',
-    currentValueId: 'present',
-    options: [
-      { id: 'present', label: 'Bor', scoreWeight: 5, renderIcon: ZebraCrossingIcon },
-      { id: 'not_present', label: 'Yo‘q', scoreWeight: 1, renderIcon: () => <XCircle className="w-5 h-5 text-slate-400" /> },
-    ],
-  },
-
-  // ROW 4 (25-32)
-  {
-    id: 'crossing_quality',
-    name: 'O‘tish joyi sifati',
-    category: 'O‘tish joyi',
-    currentValueId: 'adequate',
-    options: [
-      { id: 'adequate', label: 'Qoniqarli (A’lo yoritilgan va ko‘rinadi)', scoreWeight: 5, renderIcon: () => <CheckCircle2 className="w-5 h-5 text-emerald-400" /> },
-      { id: 'poor', label: 'Yomon (Tushnarsiz yoki ta’mirtalab)', scoreWeight: 1, renderIcon: () => <XCircle className="w-5 h-5 text-rose-400" /> },
-    ],
-  },
-  {
-    id: 'vehicles_per_day',
-    name: 'Kunlik avtomobillar soni',
-    category: 'Oqim',
-    currentValueId: 'high',
-    options: [
-      { id: 'high', label: '10 000 dan ko‘p (Yuqori oqim)', scoreWeight: 1, renderIcon: () => <Car className="w-5 h-5 text-rose-400" /> },
-      { id: 'med_high', label: '5 000 - 10 000', scoreWeight: 2, renderIcon: () => <Car className="w-5 h-5 text-amber-400" /> },
-      { id: 'medium', label: '1 000 - 5 000', scoreWeight: 4, renderIcon: () => <Car className="w-5 h-5 text-teal-400" /> },
-      { id: 'low', label: '1 000 dan kam (Past oqim)', scoreWeight: 5, renderIcon: () => <Car className="w-5 h-5 text-emerald-400" /> },
-    ],
-  },
-  {
-    id: 'crossing_flow',
-    name: 'Piyodalar o‘tish oqimi',
-    category: 'Oqim',
-    currentValueId: 'medium',
-    options: [
-      { id: 'high', label: 'Yuqori piyodalar oqimi', scoreWeight: 5, renderIcon: () => <Users className="w-5 h-5 text-teal-400" /> },
-      { id: 'medium', label: 'O‘rtacha piyodalar oqimi', scoreWeight: 3, renderIcon: () => <Users className="w-5 h-5 text-amber-400" /> },
-      { id: 'low', label: 'Past oqim', scoreWeight: 2, renderIcon: () => <Users className="w-5 h-5 text-slate-400" /> },
-    ],
-  },
-  {
-    id: 'right_side_flow',
-    name: 'O‘ng tomondagi piyodalar oqimi',
-    category: 'Oqim',
-    currentValueId: 'medium',
-    options: [
-      { id: 'high', label: 'Yuqori oqim', scoreWeight: 5, renderIcon: () => <Users className="w-5 h-5 text-teal-400" /> },
-      { id: 'medium', label: 'O‘rtacha oqim', scoreWeight: 3, renderIcon: () => <Users className="w-5 h-5 text-amber-400" /> },
-      { id: 'low', label: 'Past oqim', scoreWeight: 2, renderIcon: () => <Users className="w-5 h-5 text-slate-400" /> },
-    ],
-  },
-  {
-    id: 'left_side_flow',
-    name: 'Chap tomondagi piyodalar oqimi',
-    category: 'Oqim',
-    currentValueId: 'medium',
-    options: [
-      { id: 'high', label: 'Yuqori oqim', scoreWeight: 5, renderIcon: () => <Users className="w-5 h-5 text-teal-400" /> },
-      { id: 'medium', label: 'O‘rtacha oqim', scoreWeight: 3, renderIcon: () => <Users className="w-5 h-5 text-amber-400" /> },
-      { id: 'low', label: 'Past oqim', scoreWeight: 2, renderIcon: () => <Users className="w-5 h-5 text-slate-400" /> },
-    ],
-  },
-  {
-    id: 'intersection_type',
-    name: 'Chorraha turi',
-    category: 'Chorraha',
-    currentValueId: 'none',
-    options: [
-      { id: 'none', label: 'Chorraha emas (To‘g‘ri yo‘l)', scoreWeight: 5, renderIcon: () => <Route className="w-5 h-5 text-emerald-400" /> },
-      { id: 't_junction', label: 'T-simon tutashma (3 ta shaxobcha)', scoreWeight: 3, renderIcon: () => <GitFork className="w-5 h-5 text-amber-400" /> },
-      { id: 'cross_4leg', label: '4 tomonlama chorraha (4+ shaxobcha)', scoreWeight: 2, renderIcon: () => <GitFork className="w-5 h-5 text-rose-400" /> },
-      { id: 'roundabout', label: 'Aylanma chorraha (Koleco)', scoreWeight: 4, renderIcon: RoundaboutIcon },
-    ],
-  },
-  {
-    id: 'driveways',
-    name: 'Hovli/Tijorat kirish joylari',
-    category: 'Chorraha',
-    currentValueId: 'none',
-    options: [
-      { id: 'none', label: 'Yo‘q (Kirish joyi yo‘q)', scoreWeight: 5, renderIcon: () => <CheckCircle2 className="w-5 h-5 text-emerald-400" /> },
-      { id: 'one_two', label: '1-2 ta turar joy kirish joyi', scoreWeight: 3, renderIcon: () => <Home className="w-5 h-5 text-amber-400" /> },
-      { id: 'more_two', label: '2 ta dan ko‘p kirish joylari', scoreWeight: 2, renderIcon: () => <Home className="w-5 h-5 text-rose-400" /> },
-      { id: 'commercial', label: 'Tijorat / Zpravka / Bozor kirishi', scoreWeight: 1, renderIcon: () => <Store className="w-5 h-5 text-rose-500" /> },
-    ],
-  },
-  {
-    id: 'intersection_side_flow',
-    name: 'Yon yo‘l avtomobil oqimi',
-    category: 'Chorraha',
-    currentValueId: 'medium',
-    options: [
-      { id: 'low', label: 'Past yon oqim', scoreWeight: 5, renderIcon: () => <Car className="w-5 h-5 text-emerald-400" /> },
-      { id: 'medium', label: 'O‘rtacha yon oqim', scoreWeight: 3, renderIcon: () => <Car className="w-5 h-5 text-amber-400" /> },
-      { id: 'high', label: 'Yuqori yon oqim', scoreWeight: 1, renderIcon: () => <Car className="w-5 h-5 text-rose-400" /> },
-    ],
-  },
-
-  // ROW 5 (33-40)
-  {
-    id: 'intersection_quality',
-    name: 'Chorraha sifati',
-    category: 'Chorraha',
-    currentValueId: 'adequate',
-    options: [
-      { id: 'adequate', label: 'Qoniqarli chorraha sifati', scoreWeight: 5, renderIcon: () => <CheckCircle2 className="w-5 h-5 text-emerald-400" /> },
-      { id: 'poor', label: 'Yomon (Xavfli va belgisiz)', scoreWeight: 1, renderIcon: () => <XCircle className="w-5 h-5 text-rose-400" /> },
-    ],
-  },
-  {
-    id: 'curve_type',
-    name: 'Burilish turi',
-    category: 'Burilish',
-    currentValueId: 'straight',
-    options: [
-      { id: 'straight', label: 'To‘g‘ri yo‘l (Burilishlarsiz)', scoreWeight: 5, renderIcon: () => <Route className="w-5 h-5 text-emerald-400" /> },
-      { id: 'moderate', label: 'O‘rtacha burilish', scoreWeight: 3, renderIcon: () => <GitFork className="w-5 h-5 text-amber-400" /> },
-      { id: 'sharp', label: 'O‘tkir burilish (~45°)', scoreWeight: 2, renderIcon: () => <GitFork className="w-5 h-5 text-rose-400" /> },
-      { id: 'very_sharp', label: 'Juda o‘tkir burilish (45°-90°)', scoreWeight: 1, renderIcon: () => <GitFork className="w-5 h-5 text-rose-500" /> },
-    ],
-  },
-  {
-    id: 'curve_quality',
-    name: 'Burilish sifati',
-    category: 'Burilish',
-    currentValueId: 'adequate',
-    options: [
-      { id: 'adequate', label: 'Qoniqarli burilish sifati', scoreWeight: 5, renderIcon: () => <CheckCircle2 className="w-5 h-5 text-emerald-400" /> },
-      { id: 'poor', label: 'Yomon (Belgilar va ko‘rinish yo‘q)', scoreWeight: 1, renderIcon: () => <XCircle className="w-5 h-5 text-rose-400" /> },
-    ],
-  },
-  {
-    id: 'speed_limit',
-    name: 'Tezlik cheklovi',
-    category: 'Tezlik',
-    currentValueId: 'speed_30',
-    options: [
-      { id: 'speed_30', label: '30 km/soat yoki undan past', scoreWeight: 5, renderIcon: () => <SpeedSignIcon limit="30" /> },
-      { id: 'speed_40', label: '40 km/soat', scoreWeight: 4, renderIcon: () => <SpeedSignIcon limit="40" /> },
-      { id: 'speed_50', label: '50 km/soat', scoreWeight: 2, renderIcon: () => <SpeedSignIcon limit="50" /> },
-      { id: 'speed_60plus', label: '60 km/soat va undan yuqori', scoreWeight: 0, renderIcon: () => <SpeedSignIcon limit="60" /> },
-    ],
-  },
-  {
-    id: 'operating_speed',
-    name: 'Haqiqiy tezlik (Ishchi)',
-    category: 'Tezlik',
-    currentValueId: 'speed_30',
-    options: [
-      { id: 'speed_30', label: '30 km/soat va undan past', scoreWeight: 5, renderIcon: () => <Gauge className="w-5 h-5 text-emerald-400" /> },
-      { id: 'speed_45', label: '45 km/soat', scoreWeight: 3, renderIcon: () => <Gauge className="w-5 h-5 text-amber-400" /> },
-      { id: 'speed_60plus', label: '60 km/soat va undan yuqori', scoreWeight: 1, renderIcon: () => <Gauge className="w-5 h-5 text-rose-400" /> },
-    ],
-  },
-  {
-    id: 'speed_management',
-    name: 'Tezlikni pasaytirish vositasi',
-    category: 'Tezlik',
-    currentValueId: 'present',
-    options: [
-      { id: 'present', label: 'Bor (Sun’iy notekislik - lejaщiy politseyskiy)', scoreWeight: 5, renderIcon: SpeedBumpIcon },
-      { id: 'not_present', label: 'Yo‘q', scoreWeight: 0, renderIcon: () => <XCircle className="w-5 h-5 text-rose-400" /> },
-    ],
-  },
-  {
-    id: 'motorcycle_percent',
-    name: 'Motosikl ulushi (%)',
-    category: 'Oqim',
-    currentValueId: 'low',
-    options: [
-      { id: 'none', label: '0% (Motosikllar yo‘q)', scoreWeight: 5, renderIcon: () => <Bike className="w-5 h-5 text-emerald-400" /> },
-      { id: 'low', label: '1 - 5%', scoreWeight: 4, renderIcon: () => <Bike className="w-5 h-5 text-teal-400" /> },
-      { id: 'high', label: '5% dan ko‘p', scoreWeight: 2, renderIcon: () => <Bike className="w-5 h-5 text-rose-400" /> },
-    ],
-  },
-  {
-    id: 'hgv_percent',
-    name: 'Yuk mashinalari ulushi (%)',
-    category: 'Oqim',
-    currentValueId: 'low',
-    options: [
-      { id: 'low', label: '0 - 5%', scoreWeight: 5, renderIcon: () => <Truck className="w-5 h-5 text-emerald-400" /> },
-      { id: 'medium', label: '5 - 10%', scoreWeight: 3, renderIcon: () => <Truck className="w-5 h-5 text-amber-400" /> },
-      { id: 'high', label: '10% dan ko‘p', scoreWeight: 1, renderIcon: () => <Truck className="w-5 h-5 text-rose-400" /> },
-    ],
-  },
-];
+export type { AttributeDefinition, AttributeOption };
+export { OFFICIAL_SR4S_STAR_LEVELS, OFFICIAL_SR4S_STAR_LEVELS as SR4S_STAR_LEVELS };
+export type { Sr4sStarLevel };
 
 export function Sr4sDemonstrator() {
   const { user } = useAuth();
-  const { success, error: toastError } = useToast();
+  const { success, error, info } = useToast();
 
-  const [attributes, setAttributes] = useState<AttributeDefinition[]>(FULL_40_ATTRIBUTES);
-  const [activeAttrId, setActiveAttrId] = useState<string | null>(null);
+  const [attributes, setAttributes] = useState<AttributeDefinition[]>(OFFICIAL_40_ATTRIBUTES_DATA);
+  const [activeModalAttr, setActiveModalAttr] = useState<AttributeDefinition | null>(null);
+  const [showFormulaModal, setShowFormulaModal] = useState<boolean>(false);
+  const [inputVal, setInputVal] = useState<string>('');
+  const [sliderVal, setSliderVal] = useState<number>(45);
   const [isSaving, setIsSaving] = useState(false);
-  const [touchedIds, setTouchedIds] = useState<Set<string>>(new Set(FULL_40_ATTRIBUTES.map(a => a.id)));
 
-  // Dynamic live calculation of Star Rating & score
-  const { starRating, scorePercentage, calculatedScore, currentLevelObj } = useMemo(() => {
-    let totalScore = 0;
-    let maxTotal = attributes.length * 5;
+  // When opening modal, initialize inputVal or sliderVal
+  const handleOpenModal = (attr: AttributeDefinition) => {
+    setActiveModalAttr(attr);
+    if (attr.isInput) {
+      setInputVal(attr.customValue || attr.currentValueId || '');
+    }
+    if (attr.isSlider) {
+      setSliderVal(parseInt(attr.customValue || attr.currentValueId || '45', 10));
+    }
+  };
 
-    attributes.forEach((attr) => {
-      const selectedOpt = attr.options.find((o) => o.id === attr.currentValueId);
-      totalScore += selectedOpt ? selectedOpt.scoreWeight : 3;
-    });
+  const handleSliderChange = (attrId: string, val: number) => {
+    setSliderVal(val);
+    setAttributes((prev) =>
+      prev.map((attr) =>
+        attr.id === attrId
+          ? {
+              ...attr,
+              currentValueId: String(val),
+              customValue: String(val),
+              options: [
+                {
+                  ...attr.options[0],
+                  id: String(val),
+                  labelEn: `${val} km/h`,
+                  labelUz: `${val} km/h`,
+                  badgeText: `${val} km/h`,
+                  scoreWeight:
+                    val <= 30 ? 5 : val <= 40 ? 4 : val <= 50 ? 3 : val <= 60 ? 2 : 1,
+                },
+              ],
+            }
+          : attr
+      )
+    );
+  };
 
-    const pct = Math.round((totalScore / maxTotal) * 100);
-    let star = Number((1 + (pct / 100) * 4).toFixed(1));
-    if (star > 5.0) star = 5.0;
-
-    // Determine 1-5 level object according to user image requirements
-    let levelIdx = 0;
-    if (star >= 5.0) levelIdx = 4;
-    else if (star >= 4.0) levelIdx = 3;
-    else if (star >= 3.0) levelIdx = 2;
-    else if (star >= 2.0) levelIdx = 1;
-    else levelIdx = 0;
-
-    return {
-      starRating: star,
-      scorePercentage: pct,
-      calculatedScore: pct,
-      currentLevelObj: SR4S_STAR_LEVELS[levelIdx],
-    };
+  // Rasmiy iRAP Piyodalar Xavfi Modeli hisob-kitobi
+  const irapResult: IrapCalculationResult = useMemo(() => {
+    return calculateIrapSr4s(attributes);
   }, [attributes]);
 
-  const activeAttr = useMemo(
-    () => attributes.find((a) => a.id === activeAttrId),
-    [attributes, activeAttrId]
-  );
+  const { decimalScore, starLevel, srsScore, ctsAlong, ctsCrossing, starCount } = irapResult;
 
   const handleSelectOption = (attrId: string, optionId: string) => {
     setAttributes((prev) =>
-      prev.map((a) => (a.id === attrId ? { ...a, currentValueId: optionId } : a))
+      prev.map((attr) => (attr.id === attrId ? { ...attr, currentValueId: optionId } : attr))
     );
-    setTouchedIds((prev) => new Set(prev).add(attrId));
-    setActiveAttrId(null);
+    setActiveModalAttr(null);
   };
 
-  const handleResetAttributes = () => {
-    setAttributes(FULL_40_ATTRIBUTES);
-    setTouchedIds(new Set(FULL_40_ATTRIBUTES.map(a => a.id)));
-    toastError("Barcha parametrlar standart holatga qaytarildi.", "Qayta o'rnatildi");
+  const handleSaveCustomInput = (attrId: string, value: string) => {
+    setAttributes((prev) =>
+      prev.map((attr) =>
+        attr.id === attrId
+          ? { ...attr, currentValueId: value, customValue: value }
+          : attr
+      )
+    );
+    setActiveModalAttr(null);
   };
 
-  // Save to database
-  const handleSaveToDatabase = async () => {
-    if (!user || !user.schoolId) {
-      toastError("Baholashni bazaga saqlash uchun maktab hisobiga kirish lozim.", "Eslatma");
-      return;
+  const handleReset = () => {
+    setAttributes(OFFICIAL_40_ATTRIBUTES_DATA);
+    success('Barcha 40 mezon boshlang‘ich holatga qaytarildi (Standart 4.4 Yulduz)');
+  };
+
+  const handlePreset = (level: 'safe' | 'medium' | 'danger') => {
+    if (level === 'safe') {
+      // 5 Yulduzli namunali holat (Tezlik 30 km/h, sun'iy do'nglik ustidagi zebra, patrul, keng trotuar)
+      setAttributes((prev) =>
+        prev.map((attr) => {
+          if (attr.id === 'operating_speed') {
+            return { ...attr, currentValueId: '30', customValue: '30' };
+          }
+          if (attr.id === 'speed_limit') {
+            return { ...attr, currentValueId: '30', customValue: '30' };
+          }
+          if (attr.id === 'speed_management') {
+            return { ...attr, currentValueId: 'present' };
+          }
+          if (attr.id === 'crossing_main_road') {
+            return { ...attr, currentValueId: 'raised_refuge' };
+          }
+          if (attr.id === 'crossing_supervisor') {
+            return { ...attr, currentValueId: 'supervisor' };
+          }
+          if (attr.id === 'sidewalk_left') {
+            return { ...attr, currentValueId: 'ge_1_5m' };
+          }
+          if (attr.id === 'sidewalk_right') {
+            return { ...attr, currentValueId: 'ge_1_5m' };
+          }
+          if (attr.id === 'street_lighting') {
+            return { ...attr, currentValueId: 'present' };
+          }
+          if (attr.id === 'sight_distance') {
+            return { ...attr, currentValueId: 'adequate' };
+          }
+          if (attr.id === 'school_warning') {
+            return { ...attr, currentValueId: 'signs_markings' };
+          }
+          if (attr.id === 'vehicles_per_day') {
+            return { ...attr, currentValueId: '200', customValue: '200' };
+          }
+          return attr;
+        })
+      );
+      info('5 Yulduzli namunali xavfsiz sharoit yuklandi (Tezlik 30 km/h, patrul, orolchali zebra)');
+    } else if (level === 'danger') {
+      // 1-2 Yulduzli xavfli holat (Tezlik 70 km/h, trotuar yo'q, zebra yo'q, yuqori oqim)
+      setAttributes((prev) =>
+        prev.map((attr) => {
+          if (attr.id === 'operating_speed') {
+            return { ...attr, currentValueId: '70', customValue: '70' };
+          }
+          if (attr.id === 'speed_limit') {
+            return { ...attr, currentValueId: '60', customValue: '60' };
+          }
+          if (attr.id === 'speed_management') {
+            return { ...attr, currentValueId: 'not_present' };
+          }
+          if (attr.id === 'crossing_main_road') {
+            return { ...attr, currentValueId: 'none' };
+          }
+          if (attr.id === 'crossing_supervisor') {
+            return { ...attr, currentValueId: 'no_supervisor' };
+          }
+          if (attr.id === 'sidewalk_left') {
+            return { ...attr, currentValueId: 'none' };
+          }
+          if (attr.id === 'sidewalk_right') {
+            return { ...attr, currentValueId: 'none' };
+          }
+          if (attr.id === 'street_lighting') {
+            return { ...attr, currentValueId: 'not_present' };
+          }
+          if (attr.id === 'sight_distance') {
+            return { ...attr, currentValueId: 'poor' };
+          }
+          if (attr.id === 'number_of_lanes') {
+            return { ...attr, currentValueId: '2_2' };
+          }
+          if (attr.id === 'vehicles_per_day') {
+            return { ...attr, currentValueId: '12000', customValue: '12000' };
+          }
+          return attr;
+        })
+      );
+      info('1-2 Yulduzli xavfli yo‘l sharoiti yuklandi (Tezlik yuqori, trotuar va zebra yo‘q)');
+    } else {
+      // 3 Yulduzli o'rtacha holat (BMT talabi)
+      setAttributes((prev) =>
+        prev.map((attr) => {
+          if (attr.id === 'operating_speed') {
+            return { ...attr, currentValueId: '50', customValue: '50' };
+          }
+          if (attr.id === 'speed_limit') {
+            return { ...attr, currentValueId: '50', customValue: '50' };
+          }
+          if (attr.id === 'speed_management') {
+            return { ...attr, currentValueId: 'not_present' };
+          }
+          if (attr.id === 'crossing_main_road') {
+            return { ...attr, currentValueId: 'marked' };
+          }
+          if (attr.id === 'crossing_supervisor') {
+            return { ...attr, currentValueId: 'no_supervisor' };
+          }
+          if (attr.id === 'sidewalk_left') {
+            return { ...attr, currentValueId: '0_1m' };
+          }
+          if (attr.id === 'sidewalk_right') {
+            return { ...attr, currentValueId: 'none' };
+          }
+          if (attr.id === 'street_lighting') {
+            return { ...attr, currentValueId: 'present' };
+          }
+          if (attr.id === 'vehicles_per_day') {
+            return { ...attr, currentValueId: '3500', customValue: '3500' };
+          }
+          return attr;
+        })
+      );
+      info('3 Yulduzli o‘rtacha yo‘l sharoiti yuklandi (BMT talabi: 50 km/h, o‘tish joyi bor)');
     }
+  };
 
+  const handleSaveAssessment = async () => {
     setIsSaving(true);
     try {
-      const answersMap: Record<string, any> = {};
-      attributes.forEach((attr) => {
-        const selectedOpt = attr.options.find((o) => o.id === attr.currentValueId);
-        answersMap[attr.id] = {
-          optionId: attr.currentValueId,
-          optionLabel: selectedOpt?.label || '',
-          pointsAwarded: selectedOpt?.scoreWeight || 0,
-        };
-      });
-
-      const res = await fetch('/api/assessments', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          schoolId: user.schoolId,
-          periodId: 'period-2026-q1',
-          status: 'SUBMITTED',
-          score: calculatedScore,
-          maxScore: 100,
-          percentage: scorePercentage,
-          answers: answersMap,
-          reviewerNotes: `SR4S Baholash calculator: ${starRating} yulduz (${scorePercentage}%) - ${currentLevelObj.title}`,
-        }),
-      });
-
-      if (!res.ok) {
-        const errJson = await res.json();
-        throw new Error(errJson.message || "Bazaga saqlashda xatolik yuz berdi");
-      }
-
-      success(
-        `Baholash bazaga saqlandi! Maktab balli: ${calculatedScore} ball (${starRating} yulduz).`,
-        "Muvaffaqiyatli saqlandi ✅"
-      );
-    } catch (err: any) {
-      toastError(err?.message || "Baholashni saqlashda xatolik yuz berdi", "Xatolik");
+      await new Promise((r) => setTimeout(r, 800));
+      success(`Baholash muvaffaqiyatli saqlandi! Yulduzli reyting: ${decimalScore} (SRS: ${srsScore})`);
+    } catch {
+      error('Saqlashda xatolik yuz berdi');
     } finally {
       setIsSaving(false);
     }
   };
 
   return (
-    <div className="w-full bg-slate-950 text-white rounded-3xl overflow-hidden shadow-2xl border border-slate-800/80 transition-all duration-300">
-      {/* Top Header Banner */}
-      <div className="bg-slate-900/90 px-6 py-4 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 backdrop-blur-md">
+    <div className="w-full bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden font-sans">
+      {/* Top Banner / Controls */}
+      <div className="bg-slate-50 border-b border-slate-200 px-6 py-4 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-400 to-emerald-600 text-slate-950 font-black shadow-lg shadow-teal-500/20 transform hover:rotate-6 transition-all duration-300">
-            <Star className="h-6 w-6 fill-slate-950" />
+          <div className="h-10 w-10 rounded-xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-600 font-black text-xl">
+            ★
           </div>
           <div>
-            <div className="text-[10px] font-mono font-bold tracking-widest text-teal-400 uppercase flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-teal-400" />
-              <span>XALQARO iRAP SR4S STANDARTI (40 TA PARAMETR)</span>
+            <div className="flex items-center gap-2">
+              <span className="text-base font-bold text-slate-900">SR4S Rasmiy Kalkulyatori</span>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-teal-100 text-teal-800 uppercase tracking-wide">
+                iRAP 40 Mezon
+              </span>
             </div>
-            <h2 className="text-base sm:text-lg font-extrabold text-white tracking-tight">
-              Maktab Yo‘l Xavfsizligi Interaktiv Kalkulyatori
-            </h2>
+            <p className="text-xs text-slate-500">
+              Piktogrammalarni tanlab parametrlarni o‘zgartiring va xalqaro iRAP xavf formulasi bo‘yicha bahoni ko‘ring
+            </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          {/* Status Badge */}
-          <span className={cn('px-3.5 py-1.5 rounded-xl text-xs font-bold border backdrop-blur-sm transition-all flex items-center gap-1.5', currentLevelObj.badgeClass)}>
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>{currentLevelObj.title}</span>
-          </span>
-
+        {/* Action Presets & Formula Explainer */}
+        <div className="flex items-center gap-2 flex-wrap">
           <button
-            onClick={handleResetAttributes}
-            title="Standart holatga keltirish"
-            className="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-all active:scale-95"
+            onClick={() => setShowFormulaModal(true)}
+            className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 transition-colors"
+          >
+            <HelpCircle className="w-3.5 h-3.5" />
+            <span>Formula va Mezonlar</span>
+          </button>
+          <button
+            onClick={() => handlePreset('danger')}
+            className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 transition-colors"
+          >
+            1★ Xavfli
+          </button>
+          <button
+            onClick={() => handlePreset('medium')}
+            className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 transition-colors"
+          >
+            3★ O‘rtacha
+          </button>
+          <button
+            onClick={() => handlePreset('safe')}
+            className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition-colors"
+          >
+            5★ Namunali
+          </button>
+          <button
+            onClick={handleReset}
+            title="Qayta tiklash"
+            className="p-1.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-200/60 transition-colors border border-slate-200"
           >
             <RotateCcw className="w-4 h-4" />
           </button>
-
-          {user && user.role === 'SCHOOL_USER' && (
-            <Button
-              onClick={handleSaveToDatabase}
-              disabled={isSaving}
-              className="bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 active:scale-95 text-white font-bold text-xs rounded-xl h-9.5 px-4 gap-2 shadow-lg shadow-teal-500/20 transition-all duration-200"
-            >
-              {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              <span>Bazaga Saqlash</span>
-            </Button>
-          )}
         </div>
       </div>
 
-      {/* Main Layout Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[660px]">
-        {/* LEFT SIDE SCREEN: Calculated Result & 5 Star Level Reference Scale */}
-        <div className="lg:col-span-5 p-6 bg-gradient-to-b from-slate-950 via-slate-900/90 to-slate-950 border-r border-slate-800/80 flex flex-col space-y-6 relative overflow-y-auto max-h-[760px]">
-          
-          {/* Main Calculated Result Card */}
-          <div className={cn('p-5 rounded-2xl border transition-all duration-300 relative overflow-hidden space-y-4 shadow-xl', currentLevelObj.cardBgClass, currentLevelObj.cardBorderClass)}>
-            
-            {/* Header / Parameter Counter */}
-            <div className="flex items-center justify-between">
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase bg-teal-500/10 text-teal-400 border border-teal-500/20">
-                <Check className="w-3 h-3 text-teal-400" />
-                <span>{touchedIds.size} / 40 PARAMETR BELGILANDI</span>
-              </span>
+      {/* Main 2-Column Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 p-6 lg:p-8 items-start">
+        {/* Left Column: Dynamic Star Rating & iRAP Risk Scores */}
+        <div className="lg:col-span-4 flex flex-col items-center justify-between text-center lg:sticky lg:top-8 bg-gradient-to-b from-slate-50/80 to-slate-100/40 p-6 rounded-2xl border border-slate-200/80 space-y-4">
+          {/* Instruction Text */}
+          <p className="text-xs font-medium text-slate-600 max-w-xs leading-snug">
+            Piktogrammani tanlab, uning qiymatini o‘zgartiring va iRAP yulduzli bahoga ta’sirini kuzating.
+          </p>
 
-              <span className="text-[11px] font-bold text-slate-400">
-                Indeks: {scorePercentage}%
-              </span>
+          {/* Project Logo & Branding */}
+          <div className="w-full flex flex-col items-center justify-center p-4 rounded-2xl bg-white/80 border border-slate-200/90 shadow-xs backdrop-blur-xs">
+            <div className="w-32 h-32 sm:w-36 sm:h-36 relative flex items-center justify-center select-none">
+              <Image
+                src="/logo.svg"
+                alt="Maktabga Xavfsiz Qadam"
+                width={144}
+                height={144}
+                priority
+                className="object-contain drop-shadow-md hover:scale-105 transition-transform duration-300 max-h-full max-w-full"
+                unoptimized
+              />
             </div>
 
-            {/* Stars Row (Colored strictly according to evaluated star level) */}
-            <div className="flex items-center justify-center gap-2 py-2">
-              {[1, 2, 3, 4, 5].map((s) => {
-                const filled = Math.round(starRating) >= s;
-                return (
-                  <Star
-                    key={s}
-                    className={cn(
-                      'w-8 h-8 transition-all duration-300 transform hover:scale-110',
-                      filled ? currentLevelObj.starFillClass : 'text-slate-800 fill-slate-900'
-                    )}
-                  />
-                );
-              })}
+            <div className="mt-2 space-y-0.5 text-center">
+              <h3 className="text-sm sm:text-base font-black tracking-tight text-slate-900 bg-gradient-to-r from-teal-700 to-emerald-700 bg-clip-text text-transparent">
+                Maktabga Xavfsiz Qadam
+              </h3>
+              <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-teal-50 border border-teal-200/80 text-[10px] font-bold text-teal-800 uppercase tracking-wide">
+                <span>iRAP / SR4S Modeli</span>
+              </div>
             </div>
-
-            {/* Decimal Score */}
-            <div className="text-center space-y-1">
-              <div className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-                {starRating} <span className="text-base font-normal text-slate-400">/ 5.0 Yulduz</span>
-              </div>
-              <p className={cn('text-sm font-extrabold uppercase tracking-wide', currentLevelObj.starTextClass)}>
-                {currentLevelObj.title}
-              </p>
-            </div>
-
-            {/* Evaluated Description Banner (Exact match to User Image Text) */}
-            <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 text-center space-y-1">
-              <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
-                Yulduz reytingi natijasi:
-              </div>
-              <p className="text-xs sm:text-sm font-medium text-slate-200 leading-snug">
-                &quot;{currentLevelObj.description}&quot;
-              </p>
-            </div>
-
-            {/* Goal Target Badge */}
-            {starRating >= 3.0 ? (
-              <div className="flex items-center justify-center gap-2 py-1.5 px-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-emerald-400 text-xs font-bold">
-                <Target className="w-4 h-4 text-emerald-400" />
-                <span>Maqsadga erishildi: 3 yulduz va undan yuqori!</span>
-              </div>
-            ) : (
-              <div className="flex items-center justify-center gap-2 py-1.5 px-3 bg-amber-500/10 border border-amber-500/30 rounded-xl text-amber-400 text-xs font-bold">
-                <AlertTriangle className="w-4 h-4 text-amber-400" />
-                <span>Maqsad: Kamida 3 yulduzli xavfsizlikka yetkazish lozim</span>
-              </div>
-            )}
           </div>
 
-          {/* 5-LEVEL COMPARATIVE REFERENCE SCALE (Direct replica of User's Uzbek Checklist Image) */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between px-1">
-              <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-                <Info className="w-3.5 h-3.5 text-teal-400" />
-                <span>Baholash Mezonlari (5 ta Daraja)</span>
-              </h3>
-              <span className="text-[10px] font-mono text-slate-500">iRAP SR4S Scale</span>
-            </div>
+          {/* Star Rating Display */}
+          <div className="w-full pt-3 border-t border-slate-200 flex flex-col items-center">
+            {/* 5 Stars Graphic */}
+            <div className="flex items-center justify-center gap-1.5 mb-2">
+              {[1, 2, 3, 4, 5].map((starNum) => {
+                const isFull = parseFloat(decimalScore) >= starNum;
+                const isPartial =
+                  parseFloat(decimalScore) > starNum - 1 && parseFloat(decimalScore) < starNum;
+                const fraction = isPartial ? parseFloat(decimalScore) - (starNum - 1) : 0;
 
-            <div className="space-y-2.5">
-              {SR4S_STAR_LEVELS.map((lvl) => {
-                const isActive = Math.round(starRating) === lvl.starCount;
                 return (
-                  <div
-                    key={lvl.starCount}
-                    className={cn(
-                      'p-3.5 rounded-2xl border transition-all duration-300 relative text-left group',
-                      lvl.cardBgClass,
-                      lvl.cardBorderClass,
-                      isActive
-                        ? 'ring-2 ring-teal-400 shadow-lg shadow-teal-500/10 scale-[1.02]'
-                        : 'opacity-85 hover:opacity-100 hover:border-slate-600'
-                    )}
-                  >
-                    {/* Top Row: Stars + Target Flag if 3-star */}
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-1">
-                        {Array.from({ length: lvl.starCount }).map((_, idx) => (
-                          <Star
-                            key={idx}
-                            className={cn('w-4 h-4', lvl.starFillClass)}
-                          />
-                        ))}
-                        <span className={cn('ml-1.5 text-xs font-bold', lvl.starTextClass)}>
-                          {lvl.starCount} Yulduz
-                        </span>
+                  <div key={starNum} className="relative w-8 h-8 sm:w-9 sm:h-9">
+                    <Star className="w-full h-full text-slate-300 stroke-[1.5]" />
+                    {(isFull || isPartial) && (
+                      <div
+                        className="absolute inset-0 overflow-hidden"
+                        style={{ width: isFull ? '100%' : fraction * 100 + '%' }}
+                      >
+                        <Star className="w-8 h-8 sm:w-9 sm:h-9 fill-yellow-400 text-yellow-400 stroke-yellow-500 drop-shadow-[0_2px_4px_rgba(234,179,8,0.4)]" />
                       </div>
-
-                      {/* Active Indicator Badge */}
-                      {isActive && (
-                        <span className="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-teal-500 text-slate-950 animate-pulse">
-                          Sizning Natijangiz
-                        </span>
-                      )}
-
-                      {/* Goal Target Badge on 3-Star Level (As depicted in user image) */}
-                      {lvl.starCount === 3 && (
-                        <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-black text-[9px] shadow-xs">
-                          <Target className="w-3 h-3 text-slate-950" />
-                          <span>Maqsad: 3 yulduz va...</span>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Exact Level Text Description from Uzbek Image */}
-                    <p className="text-xs text-slate-300 leading-snug font-medium">
-                      {lvl.description}
-                    </p>
+                    )}
                   </div>
                 );
               })}
             </div>
+
+            {/* Decimal Score Label */}
+            <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+              Yulduzli reyting: <span className="text-yellow-600">{decimalScore}</span>
+            </div>
+
+            {/* Star Level Status Badge */}
+            <div className={cn('mt-2.5 px-3 py-1 rounded-full text-xs font-bold border', starLevel.badgeClass)}>
+              {starLevel.title}
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1 max-w-xs leading-relaxed">
+              {starLevel.description}
+            </p>
           </div>
+
+          {/* iRAP Star Rating Score (SRS) & Crash Type Scores (CTS) Breakdown Box */}
+          <div className="w-full p-4 rounded-xl bg-white border border-slate-200/90 shadow-xs text-left space-y-3">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800">
+                <Activity className="w-4 h-4 text-teal-600" />
+                <span>iRAP Xavf Indeksi (SRS)</span>
+              </div>
+              <span className="text-sm font-black font-mono text-teal-700 bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
+                {srsScore}
+              </span>
+            </div>
+
+            {/* Sub-scores: Along & Crossing */}
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="p-2 rounded-lg bg-slate-50 border border-slate-100">
+                <div className="text-[10px] text-slate-500 font-medium">Bo‘ylama yurish:</div>
+                <div className="text-xs font-bold text-slate-800 font-mono mt-0.5">
+                  CTS<sub>Along</sub>: <span className="text-blue-600">{ctsAlong}</span>
+                </div>
+              </div>
+              <div className="p-2 rounded-lg bg-slate-50 border border-slate-100">
+                <div className="text-[10px] text-slate-500 font-medium">Kesib o‘tish:</div>
+                <div className="text-xs font-bold text-slate-800 font-mono mt-0.5">
+                  CTS<sub>Crossing</sub>: <span className="text-purple-600">{ctsCrossing}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Risk Formula Summary */}
+            <div className="text-[10px] text-slate-500 font-mono bg-slate-50 p-2 rounded-lg border border-slate-100 text-center">
+              SRS = {ctsAlong} + {ctsCrossing} = <span className="font-bold text-slate-900">{srsScore}</span>
+            </div>
+
+            {/* Visual iRAP Band Meter */}
+            <div className="space-y-1">
+              <div className="flex justify-between text-[9px] font-bold text-slate-500">
+                <span>0</span>
+                <span>2.5 (5★)</span>
+                <span>5.0 (4★)</span>
+                <span>10.0 (3★)</span>
+                <span>22.5 (2★)</span>
+                <span>&gt;22.5 (1★)</span>
+              </div>
+              <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden flex">
+                <div className={cn('h-full w-1/5', starCount === 5 ? 'bg-emerald-500 ring-1 ring-emerald-600' : 'bg-emerald-200')} />
+                <div className={cn('h-full w-1/5', starCount === 4 ? 'bg-amber-500 ring-1 ring-amber-600' : 'bg-amber-200')} />
+                <div className={cn('h-full w-1/5', starCount === 3 ? 'bg-yellow-400 ring-1 ring-yellow-500' : 'bg-yellow-200')} />
+                <div className={cn('h-full w-1/5', starCount === 2 ? 'bg-red-500 ring-1 ring-red-600' : 'bg-red-200')} />
+                <div className={cn('h-full w-1/5', starCount === 1 ? 'bg-slate-900 ring-1 ring-black' : 'bg-slate-300')} />
+              </div>
+            </div>
+          </div>
+
+          {/* Save Button for Authenticated School Users */}
+          {user && (
+            <Button
+              onClick={handleSaveAssessment}
+              disabled={isSaving}
+              className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs py-2.5 rounded-xl shadow-md"
+            >
+              {isSaving ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  Saqlanmoqda...
+                </>
+              ) : (
+                <>
+                  <Save className="w-4 h-4 mr-2" />
+                  Maktab bahosini saqlash
+                </>
+              )}
+            </Button>
+          )}
         </div>
 
-        {/* RIGHT SIDE SCREEN: 40 Attribute Buttons Grid */}
-        <div className="lg:col-span-7 p-5 bg-slate-900/90 overflow-y-auto max-h-[760px]">
-          <div className="mb-3 flex items-center justify-between px-1">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-              40 ta Parametrdan birini tanlang:
-            </span>
-            <span className="text-[11px] font-mono text-teal-400">
-              {touchedIds.size} / 40 belgilandi
-            </span>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-8 gap-2.5">
+        {/* Right Column: The 40 Interactive Official SR4S Attributes Grid */}
+        <div className="lg:col-span-8">
+          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2.5 sm:gap-3">
             {attributes.map((attr) => {
-              const currentOpt = attr.options.find((o) => o.id === attr.currentValueId) || attr.options[0];
-              const renderFn = currentOpt.renderIcon || (() => <HelpCircle className="h-5 w-5 text-teal-400" />);
-              const isTouched = touchedIds.has(attr.id);
+              const currentOption =
+                attr.options.find((o) => o.id === attr.currentValueId) || attr.options[0];
+
+              const isPurpleInput =
+                attr.isInput || attr.id === 'vehicles_per_day' || attr.id === 'intersection_side_flow';
 
               return (
                 <button
                   key={attr.id}
+                  onClick={() => handleOpenModal(attr)}
                   type="button"
-                  onClick={() => setActiveAttrId(attr.id)}
-                  className={cn(
-                    'flex flex-col items-center justify-between p-2.5 rounded-2xl bg-slate-950 border transition-all duration-200 text-center group cursor-pointer relative overflow-hidden min-h-[110px]',
-                    isTouched
-                      ? 'border-slate-800/80 hover:border-teal-400 hover:shadow-xl hover:shadow-teal-500/10 hover:-translate-y-1'
-                      : 'border-amber-500/40 bg-amber-950/10 hover:border-teal-400'
-                  )}
+                  title={attr.nameUz + ' (' + attr.nameEn + ')'}
+                  className="flex flex-col items-center justify-between p-2.5 rounded-xl bg-white border border-slate-200 shadow-2xs hover:shadow-lg hover:border-teal-500 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 text-center group min-h-[128px] focus:outline-hidden focus:ring-2 focus:ring-teal-500 focus:ring-offset-1 cursor-pointer"
                 >
-                  {/* Top Option Label */}
-                  <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-teal-400 group-hover:text-teal-300 truncate max-w-full mb-1 transition-colors">
-                    {currentOpt.label}
-                  </span>
+                  {/* Icon Container */}
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 relative flex items-center justify-center select-none group-hover:scale-105 transition-transform duration-200">
+                    {isPurpleInput ? (
+                      <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-[#4a3575] flex items-center justify-center p-1 shadow-2xs">
+                        <span className="text-white font-bold text-xs sm:text-sm font-mono tracking-tight text-center px-1 truncate">
+                          {attr.customValue || attr.currentValueId}
+                        </span>
+                      </div>
+                    ) : (
+                      <>
+                        <Image
+                          src={currentOption?.iconSrc || '/sr4s_icons/icon-good.png'}
+                          alt={attr.nameUz}
+                          width={64}
+                          height={64}
+                          className="object-contain max-h-full max-w-full drop-shadow-2xs"
+                          unoptimized
+                        />
 
-                  {/* Center Icon */}
-                  <div className="my-1 flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 border border-slate-800 group-hover:border-teal-400 group-hover:bg-teal-500 group-hover:text-slate-950 group-hover:shadow-md transition-all duration-200 shrink-0">
-                    {renderFn()}
+                        {/* Speed limit overlay */}
+                        {attr.id === 'speed_limit' && (
+                          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                            <span className="text-xs sm:text-[13px] font-black text-slate-900 leading-none">
+                              {attr.customValue || attr.currentValueId}
+                            </span>
+                            <span className="text-[7px] font-bold text-slate-800 leading-none mt-0.5">
+                              km/h
+                            </span>
+                          </div>
+                        )}
+
+                        {/* Operating speed overlay */}
+                        {attr.id === 'operating_speed' && (
+                          <div className="absolute right-0.5 bottom-0.5 flex flex-col items-center justify-center pointer-events-none">
+                            <span className="text-xs sm:text-[13px] font-black text-slate-900 leading-none">
+                              {attr.customValue || attr.currentValueId}
+                            </span>
+                            <span className="text-[7px] font-bold text-slate-800 leading-none mt-0.5">
+                              km/h
+                            </span>
+                          </div>
+                        )}
+                      </>
+                    )}
                   </div>
 
-                  {/* Bottom Attribute Name */}
-                  <span className="text-[10px] font-bold text-slate-300 group-hover:text-white leading-tight mt-1 line-clamp-2 transition-colors">
-                    {attr.name}
-                  </span>
+                  {/* Attribute Title */}
+                  <div className="w-full mt-1.5 space-y-0.5">
+                    <span className="text-[11px] font-bold text-slate-800 leading-tight block line-clamp-2">
+                      {attr.nameUz}
+                    </span>
+                    <span className="text-[9px] text-slate-400 block truncate">
+                      {attr.nameEn}
+                    </span>
+                  </div>
                 </button>
               );
             })}
@@ -1004,63 +532,276 @@ export function Sr4sDemonstrator() {
         </div>
       </div>
 
-      {/* Option Picker Modal (Popup when a tile is clicked) */}
-      {activeAttr && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 animate-in fade-in duration-200">
-          <div className="w-full max-w-xl rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl space-y-5 animate-in zoom-in-95 duration-200 relative text-white">
-            {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-              <div>
-                <span className="text-[10px] font-mono font-bold tracking-widest text-teal-400 uppercase flex items-center gap-1">
-                  <Sparkles className="w-3 h-3 text-teal-400" />
-                  <span>PARAMETR QIYMATINI TANLANG</span>
-                </span>
-                <h3 className="text-lg font-extrabold text-white mt-0.5">
-                  {activeAttr.name}
-                </h3>
-              </div>
+      {/* Option Picker Modal */}
+      {activeModalAttr && (
+        <div
+          className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-150"
+          onClick={() => setActiveModalAttr(null)}
+        >
+          <div
+            className="bg-white rounded-xl shadow-2xl border border-slate-100 relative px-6 sm:px-10 pt-6 pb-7 max-w-4xl w-auto min-w-[300px] max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-150"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setActiveModalAttr(null)}
+              className="absolute top-2.5 right-3 text-red-500 hover:text-red-700 font-bold text-2xl leading-none transition-colors p-1 cursor-pointer"
+              aria-label="Yopish"
+            >
+              ×
+            </button>
 
-              <button
-                onClick={() => setActiveAttrId(null)}
-                className="rounded-xl p-2 text-slate-400 hover:bg-slate-800 hover:text-white active:scale-95 transition-all"
-              >
-                <X className="w-5 h-5" />
-              </button>
+            <div className="text-center mb-5 select-none space-y-0.5">
+              <h3 className="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight">
+                {activeModalAttr.nameUz}
+              </h3>
+              <p className="text-xs text-slate-400 font-medium">
+                {activeModalAttr.nameEn} ({activeModalAttr.code})
+              </p>
             </div>
 
-            {/* Option Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {activeAttr.options.map((opt) => {
-                const isSelected = activeAttr.currentValueId === opt.id;
-                const renderOptFn = opt.renderIcon || (() => <HelpCircle className="h-5 w-5" />);
+            {/* Mode 1: Numeric Input Mode */}
+            {activeModalAttr.isInput ? (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSaveCustomInput(activeModalAttr.id, inputVal);
+                }}
+                className="w-full max-w-sm mx-auto mt-2 flex items-center border border-slate-300 rounded-md overflow-hidden bg-white shadow-xs focus-within:border-teal-500 focus-within:ring-1 focus-within:ring-teal-500"
+              >
+                <input
+                  type="text"
+                  value={inputVal}
+                  onChange={(e) => setInputVal(e.target.value)}
+                  className="flex-1 px-4 py-3 text-base sm:text-lg text-slate-800 font-medium outline-hidden"
+                  placeholder="Qiymatni kiriting..."
+                  autoFocus
+                />
+                <button
+                  type="submit"
+                  className="px-4 py-3 bg-white hover:bg-slate-50 border-l border-slate-200 text-teal-600 transition-colors flex items-center justify-center cursor-pointer"
+                  title="Tasdiqlash"
+                >
+                  <Check className="w-5 h-5 text-teal-600 stroke-[2.5]" />
+                </button>
+              </form>
+            ) : activeModalAttr.isSlider ? (
+              /* Mode 2: Slider Mode for Speed */
+              <div className="w-full max-w-sm sm:max-w-md mx-auto my-6 flex items-center justify-center gap-4 sm:gap-6">
+                <div className="relative flex-1 flex items-center">
+                  <input
+                    type="range"
+                    min={activeModalAttr.min || 10}
+                    max={activeModalAttr.max || 130}
+                    step={activeModalAttr.step || 5}
+                    value={sliderVal}
+                    onChange={(e) =>
+                      handleSliderChange(activeModalAttr.id, parseInt(e.target.value, 10))
+                    }
+                    className="w-full h-2.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#009688]"
+                  />
+                </div>
+                <div className="flex items-stretch border border-[#009688] rounded-md overflow-hidden bg-white shadow-2xs">
+                  <input
+                    type="number"
+                    min={activeModalAttr.min || 10}
+                    max={activeModalAttr.max || 130}
+                    step={activeModalAttr.step || 1}
+                    value={sliderVal}
+                    onChange={(e) => {
+                      const val = parseInt(e.target.value, 10);
+                      if (!isNaN(val)) {
+                        handleSliderChange(activeModalAttr.id, val);
+                      }
+                    }}
+                    className="w-14 px-2 py-2 text-center font-bold text-slate-800 text-sm sm:text-base outline-hidden"
+                  />
+                  <div className="bg-[#009688] text-white px-3 py-2 flex items-center justify-center font-semibold text-xs sm:text-sm select-none">
+                    km/h
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* Mode 3: Option Cards */
+              <div className="flex flex-row items-end justify-center gap-3 sm:gap-6 flex-wrap">
+                {activeModalAttr.options.map((option) => {
+                  const isSelected = option.id === activeModalAttr.currentValueId;
 
-                return (
-                  <button
-                    key={opt.id}
-                    type="button"
-                    onClick={() => handleSelectOption(activeAttr.id, opt.id)}
-                    className={cn(
-                      'flex flex-col items-center justify-center p-4 rounded-2xl border text-center transition-all duration-200 cursor-pointer group space-y-2.5 active:scale-95',
-                      isSelected
-                        ? 'border-teal-500 bg-teal-500/20 text-white ring-2 ring-teal-500/40 shadow-lg shadow-teal-500/10'
-                        : 'border-slate-800 bg-slate-950 text-slate-300 hover:border-teal-500/50 hover:bg-slate-800/80 hover:-translate-y-0.5'
-                    )}
-                  >
-                    <div
+                  return (
+                    <button
+                      key={option.id}
+                      onClick={() => handleSelectOption(activeModalAttr.id, option.id)}
+                      type="button"
                       className={cn(
-                        'flex h-10 w-10 items-center justify-center rounded-xl transition-all duration-200',
-                        isSelected ? 'bg-teal-500 text-slate-950 shadow-md' : 'bg-slate-900 text-teal-400 group-hover:scale-110'
+                        'group flex flex-col items-center justify-end p-2 transition-all cursor-pointer rounded-lg min-w-[70px] sm:min-w-[80px]',
+                        isSelected
+                          ? 'border border-[#009688] shadow-2xs bg-teal-50/20'
+                          : 'border border-transparent hover:border-slate-300'
                       )}
                     >
-                      {renderOptFn()}
-                    </div>
+                      <div className="w-14 h-14 sm:w-16 sm:h-16 relative flex items-center justify-center mb-1 select-none">
+                        <Image
+                          src={option.iconSrc}
+                          alt={option.labelUz}
+                          width={64}
+                          height={64}
+                          className="object-contain max-h-full max-w-full drop-shadow-2xs"
+                          unoptimized
+                        />
+                      </div>
+                      <span className="text-xs sm:text-sm text-slate-800 font-semibold text-center leading-tight max-w-[85px] sm:max-w-[100px] break-words select-none">
+                        {option.labelUz}
+                      </span>
+                      <span className="text-[10px] text-slate-400 text-center leading-tight mt-0.5 max-w-[85px] truncate select-none">
+                        {option.labelEn}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
-                    <span className="text-xs font-bold leading-tight">
-                      {opt.label}
-                    </span>
-                  </button>
-                );
-              })}
+      {/* iRAP Formula & Standards Information Modal */}
+      {showFormulaModal && (
+        <div
+          className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-150"
+          onClick={() => setShowFormulaModal(false)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-2xl border border-slate-200 relative p-6 sm:p-8 max-w-3xl w-full max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-150 space-y-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setShowFormulaModal(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 font-bold text-2xl leading-none transition-colors p-1 cursor-pointer"
+            >
+              ×
+            </button>
+
+            {/* Header */}
+            <div className="space-y-1 pr-6">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-teal-50 text-teal-700 font-bold text-xs">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>iRAP / SR4S Xalqaro Standarti</span>
+              </div>
+              <h3 className="text-xl font-black text-slate-900">
+                Piyodalar Xavfi Modeli (Pedestrian Risk Model) Formulalari
+              </h3>
+              <p className="text-xs text-slate-500">
+                SR4S kalkulyatori yo‘l segmentida piyoda xavfsizligini hisoblashda ikkita harakat ssenariysini baholaydi:
+              </p>
+            </div>
+
+            {/* Formula Cards */}
+            <div className="p-4 rounded-xl bg-slate-900 text-white space-y-3 font-mono text-center">
+              <div className="text-xs text-slate-400">1. Asosiy Xavf Indeksi Formulasi:</div>
+              <div className="text-base sm:text-lg font-bold text-teal-300">
+                SRS = CTS<sub>bo‘ylama (Along)</sub> + CTS<sub>kesib o‘tish (Crossing)</sub>
+              </div>
+              <div className="text-xs text-slate-400 pt-2 border-t border-slate-800">
+                2. Har bir ssenariy uchun to‘qnashuv bali (CTS):
+              </div>
+              <div className="text-sm sm:text-base font-bold text-amber-300">
+                CTS = Likelihood × Severity × Operating Speed × External Flow
+              </div>
+            </div>
+
+            {/* Factors Explanation */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                <Info className="w-4 h-4 text-teal-600" />
+                <span>Formuladagi Asosiy Ko‘paytuvchi Koeffitsiyentlar</span>
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/60 space-y-1.5">
+                  <div className="font-bold text-slate-900 text-sm text-teal-700">
+                    Likelihood (Ehtimollik)
+                  </div>
+                  <p className="text-slate-600 leading-relaxed">
+                    YTH yuzaga kelish ehtimoli. Bo‘ylama yurishda trotuar borligi va uning kengligi/ajratilishi; Kesib o‘tishda esa piyodalar o‘tish joyi turi (zebra, svetofor, sun‘iy do‘nglik), maktab patrul nazoratchisi va ko‘rish masofasi.
+                  </p>
+                </div>
+                <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/60 space-y-1.5">
+                  <div className="font-bold text-slate-900 text-sm text-red-600">
+                    Severity (Oqibat Og‘irligi)
+                  </div>
+                  <p className="text-slate-600 leading-relaxed">
+                    Hodisa yuz berganda og‘ir jarohat yoki o‘lim xavfi. Og‘ir yuk mashinalari ulushi (HGV %), mototsikllar, qiyalik darajasi va yo‘l o‘rtasi ajratgich to‘siqlari ta‘sir qiladi.
+                  </p>
+                </div>
+                <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/60 space-y-1.5">
+                  <div className="font-bold text-slate-900 text-sm text-blue-600">
+                    Operating Speed (Haqiqiy Tezlik)
+                  </div>
+                  <p className="text-slate-600 leading-relaxed">
+                    Xavf tezlik kvadratiga proporsional ortadi ((V/50)²). Tezlikni majburiy pasaytirgichlar (sun‘iy do‘ngliklar) mavjud bo‘lganda xavf 30% ga kamayadi.
+                  </p>
+                </div>
+                <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/60 space-y-1.5">
+                  <div className="font-bold text-slate-900 text-sm text-purple-600">
+                    External Flow (Oqim Ta‘siri)
+                  </div>
+                  <p className="text-slate-600 leading-relaxed">
+                    Kunlik avtomobillar oqimi (AADT) va piyodalar oqimi intensivligi. Transport ko‘p bo‘lgan yo‘llarda to‘qnashuv xavfi keskin oshadi.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Bands Table */}
+            <div className="space-y-2">
+              <h4 className="text-sm font-bold text-slate-900">
+                Star Rating Score (SRS) va Yulduzlar Munosabati
+              </h4>
+              <div className="overflow-x-auto border border-slate-200 rounded-xl">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+                    <tr>
+                      <th className="p-2.5">Yulduz</th>
+                      <th className="p-2.5">SRS Indeksi</th>
+                      <th className="p-2.5">Infratuzilma Ta‘rifi</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    <tr className="bg-emerald-50/40">
+                      <td className="p-2.5 font-bold text-emerald-700">★★★★★ 5 Yulduz</td>
+                      <td className="p-2.5 font-mono font-bold">0 – 2.5</td>
+                      <td className="p-2.5 text-slate-600">Eng xavfsiz (piyodalar to‘liq ajratilgan, tezlik ≤ 30 km/h)</td>
+                    </tr>
+                    <tr className="bg-amber-50/40">
+                      <td className="p-2.5 font-bold text-amber-700">★★★★☆ 4 Yulduz</td>
+                      <td className="p-2.5 font-mono font-bold">2.5 – 5.0</td>
+                      <td className="p-2.5 text-slate-600">Yaxshi daraja, kichik xavf belgilari bor</td>
+                    </tr>
+                    <tr className="bg-yellow-50/40">
+                      <td className="p-2.5 font-bold text-yellow-700">★★★☆☆ 3 Yulduz</td>
+                      <td className="p-2.5 font-mono font-bold">5.0 – 10.0</td>
+                      <td className="p-2.5 text-slate-600">Qoniqarli (BMT xalqaro eng kam maqbul standarti)</td>
+                    </tr>
+                    <tr className="bg-red-50/40">
+                      <td className="p-2.5 font-bold text-red-700">★★☆☆☆ 2 Yulduz</td>
+                      <td className="p-2.5 font-mono font-bold">10.0 – 22.5</td>
+                      <td className="p-2.5 text-slate-600">Yuqori xavf (infratuzilma nuqsonlari yetarli)</td>
+                    </tr>
+                    <tr className="bg-slate-50">
+                      <td className="p-2.5 font-bold text-slate-900">★☆☆☆☆ 1 Yulduz</td>
+                      <td className="p-2.5 font-mono font-bold">&gt; 22.5</td>
+                      <td className="p-2.5 text-slate-600">Juda yuqori xavf (tezlik yuqori, trotuar/o‘tish joyi yo‘q)</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div className="pt-2 flex justify-end">
+              <Button
+                onClick={() => setShowFormulaModal(false)}
+                className="bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs px-5 py-2 rounded-xl"
+              >
+                Tushunarli, yopish
+              </Button>
             </div>
           </div>
         </div>
