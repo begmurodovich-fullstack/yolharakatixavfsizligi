@@ -108,7 +108,7 @@ export function CoordinateVerificationCard({
 
             {school.coordinates?.addressNotes && (
               <div className="pt-1 border-t border-slate-200/60 text-[11px] text-slate-500 truncate">
-                Mo'ljal: {school.coordinates.addressNotes}
+                Mo&apos;ljal: {school.coordinates.addressNotes}
               </div>
             )}
           </div>

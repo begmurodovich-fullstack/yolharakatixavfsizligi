@@ -139,7 +139,7 @@ export default function AdminAssessmentsPage() {
             Maktablar Baholash Monitoringi
           </h1>
           <p className="text-xs text-slate-500 max-w-2xl leading-relaxed">
-            Maktablar tomonidan 8 ta mezon bo‘yicha to‘ldirilgan o‘z-o‘zini baholash anketalarini tekshirish va rasmiy tasdiqlash.
+            Maktablar tomonidan 40 ta xalqaro iRAP SR4S parametri bo&apos;yicha to&apos;ldirilgan yo&apos;l xavfsizligi baholash natijalarini tekshirish va rasmiy tasdiqlash.
           </p>
         </div>
 

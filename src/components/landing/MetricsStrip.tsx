@@ -26,9 +26,9 @@ export function MetricsStrip() {
       icon: School,
     },
     {
-      label: 'Yo‘l xavfsizligi mezoni',
-      value: '8 ta',
-      subtext: '100 ballik milliy standart',
+      label: 'SR4S xavfsizlik parametri',
+      value: '40 ta',
+      subtext: 'BMT & iRAP xalqaro standarti',
       icon: ShieldAlert,
     },
     {

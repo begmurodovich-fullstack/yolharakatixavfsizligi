@@ -41,7 +41,7 @@ export function HeroSection() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 text-xs font-medium text-slate-700">
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-teal-600 shrink-0" />
-                <span>8 ta davlat standarti mezoni</span>
+                <span>40 ta xalqaro SR4S parametri</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-teal-600 shrink-0" />

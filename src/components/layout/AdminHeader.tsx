@@ -3,7 +3,6 @@
 import React from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { usePermissions } from '@/hooks/usePermissions';
-import { DemoAccountSwitcher } from '@/features/auth/components/DemoAccountSwitcher';
 import { UserRole } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Menu, LogOut, Crown, Shield } from 'lucide-react';
@@ -35,7 +34,7 @@ export function AdminHeader({ onOpenMobileSidebar }: AdminHeaderProps) {
         </div>
       </div>
 
-      {/* Right side: Role badge, Persona switcher, Logout */}
+      {/* Right side: Role badge, User info, Logout */}
       <div className="flex items-center gap-3">
         {/* Role Badge */}
         <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border">
@@ -52,7 +51,11 @@ export function AdminHeader({ onOpenMobileSidebar }: AdminHeaderProps) {
           )}
         </div>
 
-        <DemoAccountSwitcher />
+        {user && (
+          <div className="text-xs font-bold text-slate-800 hidden md:block">
+            {user.name}
+          </div>
+        )}
 
         <Button
           variant="ghost"

@@ -217,7 +217,7 @@ export default function AdminCoordinatesPage() {
             Geolokatsiya Koordinatalarini Tasdiqlash
           </h1>
           <p className="text-xs text-slate-500 max-w-2xl leading-relaxed">
-            Maktab mas'ullari kiritgan GPS koordinatalarini tekshirish va tasdiqlash. Faqat tasdiqlangan maktablar ommaviy xaritada aks etadi.
+            Maktab mas&apos;ullari kiritgan GPS koordinatalarini tekshirish va tasdiqlash. Faqat tasdiqlangan maktablar ommaviy xaritada aks etadi.
           </p>
         </div>
 

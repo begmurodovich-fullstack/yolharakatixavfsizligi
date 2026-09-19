@@ -1,10 +1,28 @@
 'use client';
 
 import React from 'react';
-import { Assessment, School, AssessmentStatus } from '@/types';
-import { GenericStatusBadge, ScoreStatusBadge } from '@/components/ui/status-badge';
+import { Assessment, School } from '@/types';
+import { GenericStatusBadge } from '@/components/ui/status-badge';
 import { Button } from '@/components/ui/button';
-import { School as SchoolIcon, MapPin, Eye, Clock, CheckCircle2 } from 'lucide-react';
+import { School as SchoolIcon, MapPin, Eye, Star } from 'lucide-react';
+import { cn } from '@/lib/cn';
+import { SR4S_STAR_LEVELS } from '@/components/sr4s/Sr4sDemonstrator';
+
+/** Convert percentage (0–100) → SR4S star rating (1.0–5.0) */
+function pctToStar(pct: number): number {
+  const star = Number((1 + (pct / 100) * 4).toFixed(1));
+  return Math.min(5.0, Math.max(1.0, star));
+}
+
+/** Get the SR4S level object for a given percentage */
+function getStarLevel(pct: number) {
+  const star = pctToStar(pct);
+  if (star >= 5.0) return SR4S_STAR_LEVELS[4];
+  if (star >= 4.0) return SR4S_STAR_LEVELS[3];
+  if (star >= 3.0) return SR4S_STAR_LEVELS[2];
+  if (star >= 2.0) return SR4S_STAR_LEVELS[1];
+  return SR4S_STAR_LEVELS[0];
+}
 
 interface AssessmentTableProps {
   assessments: Assessment[];
@@ -33,8 +51,8 @@ export function AssessmentTable({
             <tr className="border-b border-slate-200 bg-slate-50 text-slate-700 font-bold uppercase tracking-wider text-[11px]">
               <th className="py-4 px-5">Maktab</th>
               <th className="py-4 px-5">Hudud</th>
-              <th className="py-4 px-5 text-right">Ball</th>
-              <th className="py-4 px-5 text-center">Xavfsizlik</th>
+              <th className="py-4 px-5 text-center">SR4S Reytingi</th>
+              <th className="py-4 px-5 text-center">Daraja</th>
               <th className="py-4 px-5 text-center">Holat</th>
               <th className="py-4 px-5">Topshirilgan vaqt</th>
               <th className="py-4 px-5 text-center w-28">Amal</th>
@@ -43,6 +61,10 @@ export function AssessmentTable({
           <tbody className="divide-y divide-slate-100">
             {assessments.map((ass) => {
               const school = schools.find((s) => s.id === ass.schoolId);
+              const pct = ass.percentage ?? 0;
+              const starVal = pctToStar(pct);
+              const lvl = getStarLevel(pct);
+              const filledStars = Math.round(starVal);
 
               return (
                 <tr key={ass.id} className="hover:bg-slate-50/70 transition-colors">
@@ -57,7 +79,7 @@ export function AssessmentTable({
                           {school?.name || 'Maktab'}
                         </span>
                         <span className="text-[11px] text-slate-400 font-mono">
-                          {Object.keys(ass.answers || {}).length} ta savolga javob
+                          {Object.keys(ass.answers || {}).length} ta parametr baholandi
                         </span>
                       </div>
                     </div>
@@ -73,15 +95,38 @@ export function AssessmentTable({
                     </div>
                   </td>
 
-                  {/* Score */}
-                  <td className="py-4 px-5 text-right font-mono font-black text-sm text-slate-900">
-                    {ass.score}
-                    <span className="text-[10px] text-slate-400 font-normal ml-0.5">/ {ass.maxScore}</span>
+                  {/* SR4S Star Rating */}
+                  <td className="py-4 px-5 text-center">
+                    <div className="flex flex-col items-center gap-1">
+                      <div className="flex items-center gap-0.5">
+                        {[1, 2, 3, 4, 5].map((s) => (
+                          <Star
+                            key={s}
+                            className={cn(
+                              'w-4 h-4 transition-colors',
+                              s <= filledStars
+                                ? lvl.starFillClass
+                                : 'fill-slate-200 text-slate-200'
+                            )}
+                          />
+                        ))}
+                      </div>
+                      <span className={cn('text-[11px] font-black font-mono', lvl.starTextClass)}>
+                        {starVal} / 5.0
+                      </span>
+                    </div>
                   </td>
 
-                  {/* Score Status */}
+                  {/* Daraja */}
                   <td className="py-4 px-5 text-center">
-                    <ScoreStatusBadge score={ass.score} showScore={false} />
+                    <span
+                      className={cn(
+                        'inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold border',
+                        lvl.badgeClass
+                      )}
+                    >
+                      {lvl.starCount}★ {lvl.colorName}
+                    </span>
                   </td>
 
                   {/* Status */}
@@ -111,7 +156,7 @@ export function AssessmentTable({
                       className="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl h-8.5 px-3 shadow-xs gap-1"
                     >
                       <Eye className="w-3.5 h-3.5" />
-                      <span>Ko‘rish</span>
+                      <span>Ko&apos;rish</span>
                     </Button>
                   </td>
                 </tr>

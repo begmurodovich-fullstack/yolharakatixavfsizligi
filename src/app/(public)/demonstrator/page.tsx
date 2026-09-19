@@ -21,7 +21,7 @@ export default function DemonstratorPage() {
               <span>SR4S Interaktiv Demonstratori (O‘zbekiston)</span>
             </h1>
             <p className="text-xs text-slate-400 max-w-2xl leading-relaxed">
-              Birlashgan Millatlar Tashkiloti va iRAP tomonidan tavsiya etilgan "Star Rating for Schools" yo‘l xavfsizligi interaktiv kalkulyatori.
+              Birlashgan Millatlar Tashkiloti va iRAP tomonidan tavsiya etilgan &quot;Star Rating for Schools&quot; yo‘l xavfsizligi interaktiv kalkulyatori.
             </p>
           </div>
         </div>
