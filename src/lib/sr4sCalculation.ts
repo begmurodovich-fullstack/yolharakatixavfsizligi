@@ -113,7 +113,10 @@ export interface IrapCalculationResult {
 }
 
 /**
- * 40 ta rasmiy mezon asosida iRAP Piyodalar Xavfi Modelini hisoblash
+ * 40 ta rasmiy mezon asosida iRAP Piyodalar Xavfi Modeli hisob-kitobi.
+ * sayt1.docx dagi rasmiy baholash qoidalari bo'yicha:
+ * Baza reyting: 4.6 Yulduz.
+ * Faqat Wordda tilga olingan mezonlar baholashga aniq o'zgarishlar kiritadi.
  */
 export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalculationResult {
   const valMap: Record<string, string> = {};
@@ -121,259 +124,271 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
     valMap[attr.id] = attr.customValue || attr.currentValueId || '';
   });
 
-  // 1. Haqiqiy Tezlik Koeffitsiyenti (Operating Speed Factor)
-  // iRAP bazaviy tezlik: 50 km/h (1.0). Xavf tezlik kvadratiga proporsional.
-  const speed = parseFloat(valMap['operating_speed'] || '40') || 40;
-  let speedFactor = Math.pow(speed / 50, 2.0);
+  // Boshlang'ich (baza) yulduzli reyting: 4.6 Yulduz
+  let starScore = 4.6;
 
-  // Tezlikni pasaytirgichlar (speed management) mavjud bo'lsa, xavf 30% ga kamayadi
-  if (valMap['speed_management'] === 'present') {
-    speedFactor *= 0.70;
-  }
-
-  // 2. Tashqi Harakat Oqimi (External Flow Influence)
-  // AADT (kunlik transport oqimi) bo'yicha logaritmik shkala
-  const vpd = parseFloat(valMap['vehicles_per_day'] || '100') || 100;
-  const flowBase = Math.max(0.35, Math.min(1.5, Math.log10(Math.max(vpd, 10)) / 4));
-
-  // 3. Hodisa Oqibati Og'irligi (Severity Factor)
-  let severity = 1.0;
-  
-  // Og'ir yuk mashinalari ulushi (HGV % - SR4S-40)
-  // Katta massali yuk mashinalari to'qnashuvda o'lim/og'ir jarohat xavfini keskin oshiradi
-  const hgv = valMap['hgv_percent'];
-  let hgvFactor = 1.0;
-  switch (hgv) {
-    case '40_plus': hgvFactor = 1.60; break;
-    case '30_40': hgvFactor = 1.45; break;
-    case '20_30': hgvFactor = 1.35; break;
-    case '15_20': hgvFactor = 1.25; break;
-    case '10_15': hgvFactor = 1.18; break;
-    case '5_10': hgvFactor = 1.10; break;
-    default: hgvFactor = 1.0; break; // 0_5, not_recorded
-  }
-  severity *= hgvFactor;
-
-  // Mototsikl va mopedlar ulushi (Motorcycle % - SR4S-39)
-  // 2 g'ildirakli tezkor motorli transport vositalari oqimi xavfga ta'sir qiladi
-  const moto = valMap['motorcycle_percent'];
-  let motoFactor = 1.0;
-  let motoLikelihoodMult = 1.0;
-  switch (moto) {
-    case '100':
-    case '81_99': motoFactor = 1.25; motoLikelihoodMult = 1.20; break;
-    case '61_80':
-    case '41_60': motoFactor = 1.18; motoLikelihoodMult = 1.15; break;
-    case '21_40': motoFactor = 1.12; motoLikelihoodMult = 1.10; break;
-    case '11_20': motoFactor = 1.06; motoLikelihoodMult = 1.05; break;
-    case '6_10':
-    case '1_5': motoFactor = 1.02; break;
-    default: break; // 0, not_recorded
-  }
-  severity *= motoFactor;
-
-  // Qiyalik (Grade)
-  if (valMap['grade'] === 'grade_high') severity *= 1.15;
-  else if (valMap['grade'] === 'grade_medium') severity *= 1.05;
-
-  // Yo'l o'rtasi ajratgichi
-  if (valMap['middle_of_road'] === 'physical_barrier') severity *= 0.85;
-
-  // Avtomobil to'xtash joyi (Parkovka - SR4S-04)
-  // Yo'l chetida to'xtab turgan mashinalar bolalarni ko'rishni to'sadi (masking effekti)
+  // 1. Parkovka (vehicle_parking - SR4S-04):
+  // Parkovka bir tomonlama tanlansa 0.1 ayirilsin, ikki tomonlama bolsa 0.2 ayirilsin
   const parking = valMap['vehicle_parking'];
   let parkingFactor = 1.0;
-  if (parking === 'two_side') parkingFactor = 1.25;
-  else if (parking === 'one_side') parkingFactor = 1.12;
+  if (parking === 'one_side') {
+    starScore -= 0.1;
+    parkingFactor = 1.12;
+  } else if (parking === 'two_side') {
+    starScore -= 0.2;
+    parkingFactor = 1.25;
+  }
 
-  // Yo'l burilishi turi va sifati (Curve Type SR4S-34 & Curve Quality SR4S-35)
-  // O'tkir va keskin burilishlar, yomon ko'rinish tormoz masofasini va to'qnashuv xavfini oshiradi
+  // 2. Ko'rinish masofasi (sight_distance - SR4S-05):
+  // Ko`rinish masofasi taminlanmagan bo`lsa 0.4 ga ayirilsin
+  if (valMap['sight_distance'] === 'poor') {
+    starScore -= 0.4;
+  }
+
+  // 3. Qatorlar soni (number_of_lanes - SR4S-06):
+  // qatorlar soni 2&1 da 0.3 ga ayirilsin, 2&2 da 0.4 ga ayirilsin, 3&2 da 0.7 ga ayirilsin yoki 3&3 da 0.7 qoshilsin, 4&4 da 0.6 qoshilsin
+  const lanes = valMap['number_of_lanes'];
+  if (lanes === '2_1') starScore -= 0.3;
+  else if (lanes === '2_2') starScore -= 0.4;
+  else if (lanes === '3_2') starScore -= 0.7;
+  else if (lanes === '3_3') starScore += 0.7;
+  else if (lanes === '4_4') starScore += 0.6;
+
+  // 4. Yo'l qoplamasi holati (road_condition - SR4S-09):
+  // yol xolati orta va yomon bolganda 0.1 ga ayirilsin
+  const roadCond = valMap['road_condition'];
+  if (roadCond === 'medium' || roadCond === 'poor') {
+    starScore -= 0.1;
+  }
+
+  // 5. Tishlashish koeffitsienti (grip - SR4S-10):
+  // tishlashish koeffitsienti ortada 0.3 ga ayirilsin va yomonda 0.7 ga ayirilsin
+  const grip = valMap['grip'];
+  if (grip === 'medium') starScore -= 0.3;
+  else if (grip === 'poor') starScore -= 0.7;
+
+  // 6. Yo'l qiyaligi (grade - SR4S-11):
+  // yol qiyaligi 7.5 dan 10 gachada 0.1 ga, 10 dan yuqorida 0.2 ga ayirilsin
+  const grade = valMap['grade'];
+  if (grade === 'grade_medium') starScore -= 0.1;
+  else if (grade === 'grade_high') starScore -= 0.2;
+
+  // 7. Yo'l o'rta ajratuvchisi (middle_of_road - SR4S-13):
+  // yol orta ajratuvchisi oq chiziq, keng chiziq 1 m li, shtrix li orolcha 1 metrdan katta yoki burilish qatorida moslashuvchi ustunchalarda va keng uzuq chiziqda 0.6 oraliqda ham 0.4 ayirilsin, ajratilgan qism va metal tosiq beton tosiqda, simli va motosikl xavfsizlik tosiqlarida 0.3 ga ayirilsin, bir tomonli harakatda ozgarmasin
+  const mor = valMap['middle_of_road'];
+  if (
+    mor === 'center_line' ||
+    mor === 'wide_line' ||
+    mor === 'hatching' ||
+    mor === 'turn_lane' ||
+    mor === 'flexible_posts' ||
+    mor === 'broken_wide_markings'
+  ) {
+    starScore -= 0.4;
+  } else if (
+    mor === 'separated_0_1' ||
+    mor === 'separated_1_5' ||
+    mor === 'separated_5_10' ||
+    mor === 'separated_10_20' ||
+    mor === 'separated_20_plus' ||
+    mor === 'metal_barrier' ||
+    mor === 'concrete_barrier' ||
+    mor === 'wire_barrier' ||
+    mor === 'motorcycle_barrier'
+  ) {
+    starScore -= 0.3;
+  }
+  // 'one_way' da o'zgarmasin
+
+  // 8. Yo'l chiziqlari va belgilar (lines_and_signs - SR4S-14):
+  // yol chiziqlar va belgilar yetarli emas yoki ochganda 0.1 ga ayirilsin
+  if (valMap['lines_and_signs'] === 'poor') {
+    starScore -= 0.1;
+  }
+
+  // 9. Ko'chalarni yoritish (street_lighting - SR4S-15):
+  // kochalarni yoritish mavjud emas yoki qorongi bolsa 0.2 ga ayirilsin
+  if (valMap['street_lighting'] === 'not_present') {
+    starScore -= 0.2;
+  }
+
+  // 10. O'tish nazoratchisi (crossing_supervisor - SR4S-17):
+  // Otish nazoratchisi bolsa 0.2 qoshilsin
+  if (valMap['crossing_supervisor'] === 'supervisor') {
+    starScore += 0.2;
+  }
+
+  // 11. Trotuarlar (sidewalk_left - SR4S-18):
+  // trotuar yoq bolsa 1 ayirilsin, trotuar 3 m dan katta bolsa yoki tosiq orqasida bolsa 0.1 qoshilsin, tuproq yol bolsa 0.3 ayirilsin orta va velosiped yolagi bolsa 0.2 ayirilsin
+  const swLeft = valMap['sidewalk_left'];
+  if (swLeft === 'none') starScore -= 1.0;
+  else if (swLeft === 'gt_3m' || swLeft === 'barrier') starScore += 0.1;
+  else if (swLeft === 'poor') starScore -= 0.3;
+  else if (swLeft === 'moderate' || swLeft === 'shared') starScore -= 0.2;
+
+  // 12. O'tish joyi sifati (crossing_quality - SR4S-25):
+  // otish joyini sifati yomon bolsa 0.3 ayir
+  if (valMap['crossing_quality'] === 'poor') {
+    starScore -= 0.3;
+  }
+
+  // 13. Og'ir yuk mashinalari ulushi (hgv_percent - SR4S-40):
+  // ogir yuk mashinalari ham 10 dan 30 foizgacha 0.1 ga 30 dan 40 gacha va undan yuqorisi 0.2 ga ozgarishi kerak
+  const hgv = valMap['hgv_percent'];
+  let hgvFactor = 1.0;
+  if (hgv === '10_15' || hgv === '15_20' || hgv === '20_30') {
+    starScore -= 0.1;
+    hgvFactor = 1.25;
+  } else if (hgv === '30_40' || hgv === '40_plus') {
+    starScore -= 0.2;
+    hgvFactor = 1.50;
+  }
+
+  // 14. Mototsikl va mopedlar ulushi (motorcycle_percent - SR4S-39):
+  // motosikllarniki ham 21 dan 100 foizgacha 0.1 ga ozgarishi kerak
+  const moto = valMap['motorcycle_percent'];
+  let motoFactor = 1.0;
+  if (
+    moto === '21_40' ||
+    moto === '41_60' ||
+    moto === '61_80' ||
+    moto === '81_99' ||
+    moto === '100'
+  ) {
+    starScore -= 0.1;
+    motoFactor = 1.15;
+  }
+
+  // 15. Yo'l burilishi turi (curve_type - SR4S-34):
+  // yolni burilish turi ortacha burilish 0.2 ga otkir burilish 0.7 ga va ota keskin burilish 1 ga teng bolsin
   const curveType = valMap['curve_type'];
   let curveFactor = 1.0;
-  if (curveType === 'very_sharp') curveFactor *= 1.35;
-  else if (curveType === 'sharp') curveFactor *= 1.22;
-  else if (curveType === 'moderate') curveFactor *= 1.10;
+  if (curveType === 'moderate') {
+    starScore -= 0.2;
+    curveFactor = 1.10;
+  } else if (curveType === 'sharp') {
+    starScore -= 0.7;
+    curveFactor = 1.25;
+  } else if (curveType === 'very_sharp') {
+    starScore -= 1.0;
+    curveFactor = 1.40;
+  }
 
-  if (valMap['curve_quality'] === 'poor') curveFactor *= 1.20;
+  // 16. Burilish sifati va ko'rinishi (curve_quality - SR4S-35):
+  // burulish sifati va korinishi yomon bolsa 0.1 ga ayirilsin
+  if (valMap['curve_quality'] === 'poor') {
+    starScore -= 0.1;
+    curveFactor *= 1.20;
+  }
 
-  // 4. CTS Along (Bo'ylama Harakat Xavf Bali)
-  let alongLikelihood = 1.0;
+  // 17. Tezlikni majburiy pasaytirgichlar (speed_management - SR4S-38):
+  // tezlikni majburiy pasaytirgichlar bolsa 0.2 qoshilsin
+  if (valMap['speed_management'] === 'present') {
+    starScore += 0.2;
+  }
 
-  // Parkovka, yo'l burilishi va mototsikl oqimining bo'ylama xavf ehtimoliga ta'siri
-  alongLikelihood *= parkingFactor;
-  alongLikelihood *= curveFactor;
-  alongLikelihood *= motoLikelihoodMult;
+  // 18. Chorraha xavfsizlik sifati (intersection_quality - SR4S-33):
+  // chorraha xavfsizlik sifati yomon bolsa 0.1 ga ayirilsin
+  if (valMap['intersection_quality'] === 'poor') {
+    starScore -= 0.1;
+  }
 
-  // Trotuar turi va ajratilishi (chap va o'ng tomonlar)
-  const getSidewalkFactor = (sw: string) => {
-    switch (sw) {
-      case 'barrier':
-      case 'physical_barrier_ge_1_5m': return 0.20; // Parapet/to'siq bilan to'liq ajratilgan trotuar
-      case 'gt_3m': return 0.30;
-      case '1_3m':
-      case 'ge_1_5m': return 0.45; // Keng trotuar (1-3m)
-      case '0_1m': return 0.70; // Tor trotuar (0-1m)
-      case 'shared': return 0.50; // Umumiy velo-piyoda yo'lak
-      case 'moderate':
-      case 'informal_path': return 1.10; // Qorishiq/tuproq yo'l
-      case 'poor': return 1.50;
-      case 'none': return 2.20; // Trotuar mutlaqo yo'q (yo'l yoqasida yurish)
-      default: return 0.70;
-    }
-  };
-  const swLeft = valMap['sidewalk_left'] || '1_3m';
-  const swRight = valMap['sidewalk_right'] || '0_1m';
-  const swAvg = (getSidewalkFactor(swLeft) + getSidewalkFactor(swRight)) / 2;
-  alongLikelihood *= swAvg;
+  // 19. Cheklangan tezlik (speed_limit - SR4S-36):
+  // cheklangan tezlik 45 dan oshmasa ozmarmasin agar oshsa 50 va ungacha 0.4 ayirilsin, 60 va ungacha 1 ayirilsin, 70 va ungacha 1.3 ayirilsin, 80 va ungacha 1.6 ayirilsin, 90 va ungacha va undan yuqorisiga ham 1.7 ayirilsin
+  const speedLimit = parseFloat(valMap['speed_limit'] || '40') || 40;
+  if (speedLimit > 80) starScore -= 1.7;
+  else if (speedLimit > 70) starScore -= 1.6;
+  else if (speedLimit > 60) starScore -= 1.3;
+  else if (speedLimit > 50) starScore -= 1.0;
+  else if (speedLimit > 45) starScore -= 0.4;
 
-  // Yo'l chekkasi (yelka) kengligi
-  const getShoulderFactor = (re: string) => {
-    switch (re) {
-      case 'gt_2_4m':
-      case 'ge_2_4m': return 0.85;
-      case '1_2_4m': return 0.92;
-      case '0_1m': return 1.0;
-      case 'none': return 1.15;
-      default: return 1.0;
-    }
-  };
-  const reLeft = valMap['road_edge_left'] || '0_1m';
-  const reRight = valMap['road_edge_right'] || '0_1m';
-  alongLikelihood *= (getShoulderFactor(reLeft) + getShoulderFactor(reRight)) / 2;
+  // 20. Haqiqiy harakat tezligi (operating_speed - SR4S-37):
+  // harakat tezligi 45 da ozgarmasin 50 va ungacha 0.4 ga ayirilsin, 60 da 1.3 ga ayirilsin, 70 va ungacha 1.7 ga ayirilsin, 80 tezlikda 1.9 ga ayirilsin, 90 va ungacha 2.7 ga ayirilsin
+  const speed = parseFloat(valMap['operating_speed'] || '40') || 40;
+  if (speed > 80) starScore -= 2.7;
+  else if (speed > 70) starScore -= 1.9;
+  else if (speed > 60) starScore -= 1.7;
+  else if (speed > 50) starScore -= 1.3;
+  else if (speed > 45) starScore -= 0.4;
 
-  // Ko'rish masofasi
-  if (valMap['sight_distance'] === 'poor') alongLikelihood *= 1.45;
-
-  // Yo'l qoplamasi holati va grip
-  if (valMap['road_condition'] === 'poor') alongLikelihood *= 1.25;
-  else if (valMap['road_condition'] === 'medium') alongLikelihood *= 1.10;
-  if (valMap['grip'] === 'poor') alongLikelihood *= 1.20;
-
-  // Ko'cha yoritilishi
-  if (valMap['street_lighting'] === 'not_present') alongLikelihood *= 1.35;
-
-  // Maktab ogohlantirishi
-  if (valMap['school_warning'] === 'signs_markings') alongLikelihood *= 0.85;
-  else if (valMap['school_warning'] === 'none') alongLikelihood *= 1.15;
-
-  // Kirish yo'llari (driveways)
-  const driveways = valMap['driveways'];
-  if (driveways === '2_plus_commercial') alongLikelihood *= 1.25;
-  else if (driveways === '2_plus_residential') alongLikelihood *= 1.10;
-
-  // Qatorlar soni
-  const lanes = valMap['number_of_lanes'];
-  if (lanes === '2_2') alongLikelihood *= 1.20;
-  else if (lanes === '3_2' || lanes === '3_3') alongLikelihood *= 1.40;
-
-  // Bo'ylama piyodalar oqimi
-  const alongFlowMult = (valMap['left_side_flow'] === 'present' || valMap['right_side_flow'] === 'present') ? 1.0 : 0.6;
-
-  // Bo'ylama kalibratsiya koeffitsiyenti
-  const BASE_ALONG_CONST = 3.8;
-  const ctsAlong = BASE_ALONG_CONST * alongLikelihood * severity * speedFactor * flowBase * alongFlowMult;
-
-  // 5. CTS Crossing (Yo'lni Kesib O'tish Xavf Bali)
-  let crossingLikelihood = 1.0;
-
-  // Parkovka va yo'l burilishining kesib o'tish xavfiga ta'siri
-  crossingLikelihood *= parkingFactor;
-  crossingLikelihood *= curveFactor;
-
-  // Asosiy yo'l piyodalar o'tish joyi turi
+  // 21. Asosiy yo'l piyodalar o'tish joyi (crossing_main_road - SR4S-23):
+  // asosiy piyodalar otish joyi yoq bolsa 0.2 ayirilsin, svetoforli yoki koprik /tunnelli bolsa 0.3 qoshilsin, belgilanmagan bolsa 0.2 ayirilsin, xavfsizlik orolchali bolsa 0.1 qoshilsin, svetofor va orolchalik bolsa 0.3 qoshilsin, zebra va orolchalik bolsa 0.2 qoshilsin, kotarilgan va zebra bolsa 0.1 qoshilsin, kotarilgan va orolchalik bolsa 0.2 qoshilsin, kotarilgan va orolchalik va zebra bolsa ham 0.2 qoshilsin
   const crossMain = valMap['crossing_main_road'] || 'marked';
-  switch (crossMain) {
-    case 'bridge_tunnel':
-    case 'grade_separated': crossingLikelihood *= 0.08; break;
-    case 'lights_refuge':
-    case 'signal_refuge': crossingLikelihood *= 0.25; break;
-    case 'raised_refuge': crossingLikelihood *= 0.35; break;
-    case 'lights':
-    case 'signal_no_refuge': crossingLikelihood *= 0.45; break;
-    case 'raised_marked':
-    case 'raised': crossingLikelihood *= 0.50; break;
-    case 'marked_refuge': crossingLikelihood *= 0.65; break;
-    case 'marked': crossingLikelihood *= 0.85; break;
-    case 'refuge':
-    case 'refuge_only': crossingLikelihood *= 1.10; break;
-    case 'unmarked':
-    case 'none': crossingLikelihood *= 2.40; break;
-    default: crossingLikelihood *= 0.85;
+  if (crossMain === 'none' || crossMain === 'unmarked') starScore -= 0.2;
+  else if (crossMain === 'lights' || crossMain === 'bridge_tunnel' || crossMain === 'lights_refuge') starScore += 0.3;
+  else if (crossMain === 'refuge' || crossMain === 'raised_marked') starScore += 0.1;
+  else if (crossMain === 'marked_refuge' || crossMain === 'raised_refuge' || crossMain === 'raised_marked_refuge') starScore += 0.2;
+
+  // 22. Yon yo'l piyodalar o'tish joyi (crossing_side_road - SR4S-24):
+  // yon yol piyodalar otish joyi yoq bolsa 1.4 ayirilsin, kotarilgan bolsa 0.9 ayirilsin, koprik /tunnelli bolsa 0.2 qoshilsin, chizilgan bolsa 1 ayirilsin, belgilanmagan bolsa 1.4 ayirilsin, xavfsizlik orolchasi bolsa 0.8 ayirilsin, svetafor va orolcha bolsa 0.1 qoshilsin, zebra va orolcha, kotarilgan va zebra bolsa 0.7 ayirilsin, kotarilgan va orolchalik bolsa 0.6 ayirilsin, kotarilgan, zebra va orolchalik bolsa 0.3 ayirilsin
+  const crossSide = valMap['crossing_side_road'] || 'lights';
+  if (crossSide === 'none' || crossSide === 'unmarked') starScore -= 1.4;
+  else if (crossSide === 'marked') starScore -= 1.0;
+  else if (crossSide === 'raised') starScore -= 0.9;
+  else if (crossSide === 'refuge') starScore -= 0.8;
+  else if (crossSide === 'marked_refuge' || crossSide === 'raised_marked') starScore -= 0.7;
+  else if (crossSide === 'raised_refuge') starScore -= 0.6;
+  else if (crossSide === 'raised_marked_refuge') starScore -= 0.3;
+  else if (crossSide === 'bridge_tunnel') starScore += 0.2;
+  else if (crossSide === 'lights_refuge') starScore += 0.1;
+
+  // 23. Chorraha turi (intersection_type - SR4S-30):
+  // chorraha turida qoshilish qatori bolsa 0.2 ayirilsin, to`rt tomonli + burilish qatori bolsa 0.1 ayirilsin. to`rt tomonli + burilish qatori va svetaforli bolsa ham 0.1 ayirilsin. Aylanma harakat bolsa 0.2 ayirilsin, kichik aylanma harakatda 0.1 ayirilsin, chorraha yoq bolsa 0.1 qoshilsin, qisqa qoshilish yolagi bolsa 0.2 ayirilsin, ajratish qatori bolsa 0.1 ayirilsin
+  const interType = valMap['intersection_type'] || '4_leg';
+  if (interType === 'merge_lane' || interType === 'roundabout' || interType === 'short_merge') starScore -= 0.2;
+  else if (
+    interType === '4_leg_turn_lane' ||
+    interType === '4_leg_turn_signal' ||
+    interType === '3_leg_turn_lane' ||
+    interType === '3_leg_turn_signal' ||
+    interType === 'mini_roundabout' ||
+    interType === 'diverge_lane'
+  ) {
+    starScore -= 0.1;
+  } else if (interType === 'no_intersection') {
+    starScore += 0.1;
   }
 
-  // O'tish joyi nazoratchisi (Maktab patrul xizmati - xavfni 60% ga kamaytiradi!)
-  if (valMap['crossing_supervisor'] === 'supervisor') {
-    crossingLikelihood *= 0.40;
-  }
+  // Yulduzli bahoni 1.0 va 5.0 oralig'ida yaxlitlash
+  const roundedDecimal = Math.max(1.0, Math.min(5.0, Math.round(starScore * 10) / 10));
 
-  // O'tish joyi sifati
-  if (valMap['crossing_quality'] === 'poor') crossingLikelihood *= 1.35;
+  // Yulduzlar soni va iRAP SRS/CTS xavf ko'rsatkichlarini mutanosib hisoblash
+  let starCount = 5;
+  let srsScore: number;
 
-  // Yo'l qatorlari soni
-  if (lanes === '2_1') crossingLikelihood *= 1.15;
-  else if (lanes === '2_2') crossingLikelihood *= 1.45;
-  else if (lanes === '3_2' || lanes === '3_3') crossingLikelihood *= 1.80;
-
-  // Ko'rish masofasi
-  if (valMap['sight_distance'] === 'poor') crossingLikelihood *= 1.50;
-
-  // Chorraha turi va sifati
-  const interType = valMap['intersection_type'];
-  if (interType === '4_leg_signal') crossingLikelihood *= 0.90;
-  else if (interType === '4_leg_roundabout' || interType === '3_leg_roundabout') crossingLikelihood *= 0.80;
-  else if (interType === '4_leg' || interType === '4_leg_stop') crossingLikelihood *= 1.25;
-  else if (interType === '3_leg') crossingLikelihood *= 1.10;
-
-  if (valMap['intersection_quality'] === 'poor') crossingLikelihood *= 1.25;
-
-  // Piyodalarni yo'naltiruvchi panjara
-  if (valMap['pedestrian_channelisation'] === 'present') crossingLikelihood *= 0.85;
-
-  // Kesib o'tish piyodalar oqimi
-  const crossFlowMult = valMap['crossing_flow'] === 'present' ? 1.0 : 0.6;
-
-  // Kesib o'tish kalibratsiya koeffitsiyenti
-  const BASE_CROSSING_CONST = 3.8;
-  const ctsCrossing = BASE_CROSSING_CONST * crossingLikelihood * severity * speedFactor * flowBase * crossFlowMult;
-
-  // 6. Jami SRS (Star Rating Score)
-  const srsScore = ctsAlong + ctsCrossing;
-
-  // 7. SRS ballidan Yulduzlar Darajasiga O'tkazish (Rasmiy iRAP Bandlari):
-  // 0 - 2.5: 5 Yulduz (4.5 - 5.0 oralig'i, standart parametrlar = 4.6 Yulduz)
-  // 2.5 - 5.0: 4 Yulduz (4.0 - 4.5 oralig'i)
-  // 5.0 - 10.0: 3 Yulduz (3.0 - 4.0 oralig'i)
-  // 10.0 - 22.5: 2 Yulduz (2.0 - 3.0 oralig'i)
-  // > 22.5: 1 Yulduz (1.0 - 2.0 oralig'i)
-  let starCount = 3;
-  let decimalVal = 3.0;
-
-  if (srsScore <= 2.5) {
+  if (roundedDecimal >= 4.5) {
     starCount = 5;
-    decimalVal = 5.0 - (srsScore / 2.5) * 0.5;
-  } else if (srsScore <= 5.0) {
+    srsScore = Math.max(0.1, ((5.0 - roundedDecimal) / 0.5) * 2.5);
+  } else if (roundedDecimal >= 4.0) {
     starCount = 4;
-    decimalVal = 4.5 - ((srsScore - 2.5) / 2.5) * 0.5;
-  } else if (srsScore <= 10.0) {
+    srsScore = 2.5 + ((4.5 - roundedDecimal) / 0.5) * 2.5;
+  } else if (roundedDecimal >= 3.0) {
     starCount = 3;
-    decimalVal = 4.0 - ((srsScore - 5.0) / 5.0) * 1.0;
-  } else if (srsScore <= 22.5) {
+    srsScore = 5.0 + ((4.0 - roundedDecimal) / 1.0) * 5.0;
+  } else if (roundedDecimal >= 2.0) {
     starCount = 2;
-    decimalVal = 3.0 - ((srsScore - 10.0) / 12.5) * 1.0;
+    srsScore = 10.0 + ((3.0 - roundedDecimal) / 1.0) * 12.5;
   } else {
     starCount = 1;
-    decimalVal = Math.max(1.0, 2.0 - ((srsScore - 22.5) / 25.0) * 1.0);
+    srsScore = 22.5 + ((2.0 - roundedDecimal) / 1.0) * 25.0;
   }
 
-  const roundedDecimal = Math.round(decimalVal * 10) / 10;
+  srsScore = Math.round(srsScore * 100) / 100;
+  const ctsAlong = Math.round(srsScore * 0.35 * 100) / 100;
+  const ctsCrossing = Math.round((srsScore - ctsAlong) * 100) / 100;
+
   const matchedLevel =
     OFFICIAL_SR4S_STAR_LEVELS.find((l) => l.starCount === starCount) ||
     OFFICIAL_SR4S_STAR_LEVELS[1];
 
+  const vpd = parseFloat(valMap['vehicles_per_day'] || '100') || 100;
+  const speedFactor = Math.pow(speed / 50, 2.0);
+  const flowBase = Math.max(0.35, Math.min(1.5, Math.log10(Math.max(vpd, 10)) / 4));
+
   return {
-    srsScore: Math.round(srsScore * 100) / 100,
-    ctsAlong: Math.round(ctsAlong * 100) / 100,
-    ctsCrossing: Math.round(ctsCrossing * 100) / 100,
+    srsScore,
+    ctsAlong,
+    ctsCrossing,
     starCount,
     decimalScore: roundedDecimal.toFixed(1),
     percentFill: (roundedDecimal / 5) * 100,
@@ -381,9 +396,9 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
     operatingSpeed: speed,
     speedFactor: Math.round(speedFactor * 100) / 100,
     flowFactor: Math.round(flowBase * 100) / 100,
-    severityFactor: Math.round(severity * 100) / 100,
-    alongLikelihood: Math.round(alongLikelihood * 100) / 100,
-    crossingLikelihood: Math.round(crossingLikelihood * 100) / 100,
+    severityFactor: Math.round(hgvFactor * motoFactor * 100) / 100,
+    alongLikelihood: Math.round(parkingFactor * curveFactor * 100) / 100,
+    crossingLikelihood: Math.round(parkingFactor * curveFactor * 100) / 100,
     parkingFactor: Math.round(parkingFactor * 100) / 100,
     curveFactor: Math.round(curveFactor * 100) / 100,
     hgvFactor: Math.round(hgvFactor * 100) / 100,
