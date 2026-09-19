@@ -12,6 +12,7 @@ import {
   CheckCircle2,
   School as SchoolIcon,
   Star,
+  RotateCcw,
 } from 'lucide-react';
 import { OFFICIAL_SR4S_STAR_LEVELS, Sr4sStarLevel } from '@/lib/sr4sCalculation';
 
@@ -59,6 +60,8 @@ interface AssessmentReviewModalProps {
   questions: Question[];
   onClose: () => void;
   onVerify: (assessmentId: string, status: AssessmentStatus.VERIFIED | AssessmentStatus.REJECTED, notes: string) => Promise<void>;
+  onAllowRetake?: (assessmentId: string, reason: string) => Promise<void>;
+  onRevokeRetake?: (assessmentId: string) => Promise<void>;
 }
 
 export function AssessmentReviewModal({
@@ -68,8 +71,11 @@ export function AssessmentReviewModal({
   questions: _questions,
   onClose,
   onVerify,
+  onAllowRetake,
+  onRevokeRetake,
 }: AssessmentReviewModalProps) {
   const [inspectorNotes, setInspectorNotes] = useState(assessment?.reviewerNotes || '');
+  const [retakeReason, setRetakeReason] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!assessment) return null;
@@ -80,6 +86,28 @@ export function AssessmentReviewModal({
     setIsSubmitting(true);
     try {
       await onVerify(assessment.id, status, inspectorNotes);
+      onClose();
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleAllowRetakeSubmit = async () => {
+    if (!onAllowRetake) return;
+    setIsSubmitting(true);
+    try {
+      await onAllowRetake(assessment.id, retakeReason || 'Administrator tomonidan qayta baholashga ruxsat berildi');
+      onClose();
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleRevokeRetakeSubmit = async () => {
+    if (!onRevokeRetake) return;
+    setIsSubmitting(true);
+    try {
+      await onRevokeRetake(assessment.id);
       onClose();
     } finally {
       setIsSubmitting(false);
@@ -222,6 +250,74 @@ export function AssessmentReviewModal({
             placeholder="masalan: Maktab ma’lumotlari joyiga chiqib tekshirildi, barcha mezonlar tasdiqlandi"
             className="text-xs h-10 rounded-xl"
           />
+        </div>
+
+        {/* Re-Assessment Permission Control Section */}
+        <div className="p-4 rounded-2xl bg-indigo-50/50 border border-indigo-200/80 space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div className="space-y-0.5">
+              <div className="text-xs font-black text-indigo-950 flex items-center gap-1.5">
+                <RotateCcw className="w-4 h-4 text-indigo-600" />
+                <span>Qayta Baholash Huquqi (Qayta topshirishga ruxsat)</span>
+              </div>
+              <p className="text-[11px] text-slate-500">
+                Maktab 40 ta mezonni qaytadan to‘ldirishi uchun ruxsat berish yoki uni boshqarish
+              </p>
+            </div>
+
+            {assessment.status === AssessmentStatus.RETAKE_ALLOWED ? (
+              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800 border border-indigo-300">
+                <RotateCcw className="w-3 h-3" />
+                <span>Qayta topshirish ochiq</span>
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">
+                Qulflangan
+              </span>
+            )}
+          </div>
+
+          {assessment.status !== AssessmentStatus.RETAKE_ALLOWED ? (
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-1">
+              <Input
+                type="text"
+                value={retakeReason}
+                onChange={(e) => setRetakeReason(e.target.value)}
+                placeholder="Ruxsat berish sababi (masalan: Yangi yo‘l belgilari o‘rnatildi, qayta baholansin)"
+                className="text-xs h-9.5 rounded-xl bg-white"
+              />
+              <Button
+                type="button"
+                onClick={handleAllowRetakeSubmit}
+                disabled={isSubmitting || !onAllowRetake}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl h-9.5 px-4 shrink-0 gap-1.5 shadow-xs"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Qayta baholashga ruxsat berish</span>
+              </Button>
+            </div>
+          ) : (
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 rounded-xl bg-white border border-indigo-200 text-xs">
+              <div className="text-indigo-950">
+                <span className="font-bold">Maktabga qayta topshirishga ruxsat berilgan.</span>
+                <span className="block text-[11px] text-slate-500 mt-0.5">
+                  Maktab o‘z kabinetida 40 ta mezonni qaytadan kiritib saqlashi mumkin.
+                </span>
+              </div>
+              {onRevokeRetake && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleRevokeRetakeSubmit}
+                  disabled={isSubmitting}
+                  className="text-xs font-bold text-rose-700 border-rose-200 hover:bg-rose-50 h-8 px-3 rounded-xl shrink-0"
+                >
+                  Ruxsatni bekor qilish
+                </Button>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Actions */}

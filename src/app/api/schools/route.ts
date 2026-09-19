@@ -94,6 +94,8 @@ export async function GET(request: NextRequest) {
         roadType: s.road_type || 'URBAN',
         coordinateStatus: s.coordinate_status,
         status: s.status,
+        canReassess: Boolean(s.can_reassess),
+        reassessReason: s.reassess_reason || null,
         coordinates: {
           latitude: s.latitude,
           longitude: s.longitude,

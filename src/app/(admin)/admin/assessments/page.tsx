@@ -89,6 +89,60 @@ export default function AdminAssessmentsPage() {
     }
   };
 
+  // Handle Allow Re-assessment (Qayta baholashga ruxsat berish)
+  const handleAllowRetake = async (assessmentId: string, reason: string) => {
+    try {
+      const res = await fetch('/api/assessments', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: assessmentId,
+          action: 'ALLOW_RETAKE',
+          reason,
+          adminName: user?.name || 'IIV YHXX Administratori',
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Xatolik yuz berdi');
+
+      setAssessments((prev) =>
+        prev.map((a) =>
+          a.id === assessmentId ? { ...a, status: AssessmentStatus.RETAKE_ALLOWED, reviewerNotes: reason } : a
+        )
+      );
+      success('Maktabga qayta baholash uchun ruxsat berildi!', 'Ruxsat berildi');
+      loadData();
+    } catch (e: any) {
+      toastError(e?.message || 'Ruxsat berishda xatolik', 'Xatolik');
+    }
+  };
+
+  // Handle Revoke Re-assessment (Ruxsatni bekor qilish)
+  const handleRevokeRetake = async (assessmentId: string) => {
+    try {
+      const res = await fetch('/api/assessments', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: assessmentId,
+          action: 'REVOKE_RETAKE',
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Xatolik yuz berdi');
+
+      setAssessments((prev) =>
+        prev.map((a) =>
+          a.id === assessmentId ? { ...a, status: AssessmentStatus.SUBMITTED } : a
+        )
+      );
+      success('Qayta baholash ruxsati bekor qilindi.', 'Bekor qilindi');
+      loadData();
+    } catch (e: any) {
+      toastError(e?.message || 'Bekor qilishda xatolik', 'Xatolik');
+    }
+  };
+
   // Filter assessments
   const filteredAssessments = useMemo(() => {
     if (statusFilter === 'ALL') return assessments;
@@ -170,6 +224,10 @@ export default function AdminAssessmentsPage() {
             label: `Jarayonda (${assessments.filter((a) => a.status === AssessmentStatus.IN_PROGRESS).length})`,
           },
           {
+            id: AssessmentStatus.RETAKE_ALLOWED,
+            label: `Qayta ruxsat berilgan (${assessments.filter((a) => a.status === AssessmentStatus.RETAKE_ALLOWED).length})`,
+          },
+          {
             id: AssessmentStatus.REJECTED,
             label: `Qaytarilgan (${assessments.filter((a) => a.status === AssessmentStatus.REJECTED).length})`,
           },
@@ -210,6 +268,8 @@ export default function AdminAssessmentsPage() {
           questions={questions}
           onClose={() => setReviewModalAssessment(null)}
           onVerify={handleVerifyAssessment}
+          onAllowRetake={handleAllowRetake}
+          onRevokeRetake={handleRevokeRetake}
         />
       )}
     </div>

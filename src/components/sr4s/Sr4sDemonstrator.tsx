@@ -29,6 +29,10 @@ import {
   Activity,
   ArrowRightLeft,
   ShieldCheck,
+  ShieldAlert,
+  Lock,
+  Unlock,
+  AlertCircle,
   Info,
 } from 'lucide-react';
 
@@ -52,6 +56,13 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
   const [sliderVal, setSliderVal] = useState<number>(40);
   const [isSaving, setIsSaving] = useState(false);
 
+  // Assessment locking & Retake state
+  const [existingAssessment, setExistingAssessment] = useState<any>(null);
+  const [isLocked, setIsLocked] = useState<boolean>(false);
+  const [isRetakeAllowed, setIsRetakeAllowed] = useState<boolean>(false);
+  const [reassessReason, setReassessReason] = useState<string | null>(null);
+  const [confirmedAttrIds, setConfirmedAttrIds] = useState<Set<string>>(new Set());
+
   // Preload previously saved assessment for this school if exists
   useEffect(() => {
     const targetSchoolId = school?.id || user?.schoolId;
@@ -65,7 +76,22 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
         const list = await res.json();
         if (Array.isArray(list) && list.length > 0 && isMounted) {
           const latest = list[0];
+          setExistingAssessment(latest);
+
+          const retakeAllowed =
+            latest.status === 'RETAKE_ALLOWED' ||
+            Boolean(latest.canReassess) ||
+            Boolean(school?.canReassess);
+          setIsRetakeAllowed(retakeAllowed);
+          setReassessReason(latest.reassessReason || school?.reassessReason || null);
+
+          const isSubmittedOrVerified =
+            latest.status === 'SUBMITTED' || latest.status === 'VERIFIED';
+          setIsLocked(isSubmittedOrVerified && !retakeAllowed);
+
           if (latest.answers && typeof latest.answers === 'object') {
+            const answeredKeys = Object.keys(latest.answers);
+            setConfirmedAttrIds(new Set(answeredKeys));
             setAttributes((prev) =>
               prev.map((attr) => {
                 const savedAns = latest.answers[attr.id];
@@ -89,7 +115,24 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
     return () => {
       isMounted = false;
     };
-  }, [school?.id, user?.schoolId]);
+  }, [school?.id, school?.canReassess, school?.reassessReason, user?.schoolId]);
+
+  const handleConfirmAll = () => {
+    if (isLocked) return;
+    setConfirmedAttrIds(new Set(attributes.map((a) => a.id)));
+    success('Barcha 40 ta mezon tasdiqlangan deb belgilandi!', 'Tasdiqlandi');
+  };
+
+  const handleJumpToMissing = () => {
+    const missing = attributes.find((a) => !confirmedAttrIds.has(a.id));
+    if (missing) {
+      const el = document.getElementById(`attr-card-${missing.id}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      handleOpenModal(missing);
+    }
+  };
 
   // When opening modal, initialize inputVal or sliderVal
   const handleOpenModal = (attr: AttributeDefinition) => {
@@ -103,7 +146,9 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
   };
 
   const handleSliderChange = (attrId: string, val: number) => {
+    if (isLocked) return;
     setSliderVal(val);
+    setConfirmedAttrIds((prev) => new Set(prev).add(attrId));
     setAttributes((prev) =>
       prev.map((attr) =>
         attr.id === attrId
@@ -136,13 +181,22 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
   const { decimalScore, starLevel, srsScore, ctsAlong, ctsCrossing, starCount } = irapResult;
 
   const handleSelectOption = (attrId: string, optionId: string) => {
+    if (isLocked) {
+      info('Baholash topshirilgan. O‘zgartirish uchun admin ruxsati zarur.', 'Qulflangan');
+      return;
+    }
     setAttributes((prev) =>
       prev.map((attr) => (attr.id === attrId ? { ...attr, currentValueId: optionId } : attr))
     );
+    setConfirmedAttrIds((prev) => new Set(prev).add(attrId));
     setActiveModalAttr(null);
   };
 
   const handleSaveCustomInput = (attrId: string, value: string) => {
+    if (isLocked) {
+      info('Baholash topshirilgan. O‘zgartirish uchun admin ruxsati zarur.', 'Qulflangan');
+      return;
+    }
     setAttributes((prev) =>
       prev.map((attr) =>
         attr.id === attrId
@@ -150,15 +204,26 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
           : attr
       )
     );
+    setConfirmedAttrIds((prev) => new Set(prev).add(attrId));
     setActiveModalAttr(null);
   };
 
   const handleReset = () => {
+    if (isLocked) {
+      info('Baholash topshirilgan. Qayta baholash uchun administrator ruxsati zarur.', 'Qulflangan');
+      return;
+    }
     setAttributes(OFFICIAL_40_ATTRIBUTES_DATA);
+    setConfirmedAttrIds(new Set(OFFICIAL_40_ATTRIBUTES_DATA.map((a) => a.id)));
     success('Barcha 40 mezon boshlang‘ich holatga qaytarildi (Standart 4.6 Yulduz)');
   };
 
   const handlePreset = (level: 'safe' | 'medium' | 'danger') => {
+    if (isLocked) {
+      info('Baholash topshirilgan. O‘zgartirish uchun admin ruxsati zarur.', 'Qulflangan');
+      return;
+    }
+    setConfirmedAttrIds(new Set(OFFICIAL_40_ATTRIBUTES_DATA.map((a) => a.id)));
     if (level === 'safe') {
       // 5 Yulduzli namunali holat (Tezlik 30 km/h, sun'iy do'nglik ustidagi zebra, patrul, keng trotuar)
       setAttributes((prev) =>
@@ -325,6 +390,24 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
   };
 
   const handleSaveAssessment = async () => {
+    if (isLocked) {
+      error(
+        'Baholash allaqachon topshirilgan va qulflangan. Qayta baholash uchun administrator ruxsati zarur.',
+        'Qulflangan'
+      );
+      return;
+    }
+
+    if (confirmedAttrIds.size < 40) {
+      const remaining = 40 - confirmedAttrIds.size;
+      error(
+        `Baholashni saqlash uchun barcha 40 ta mezonni ko‘rib chiqish va belgilash shart! Hozirda yana ${remaining} ta mezon belgilanmagan.`,
+        '40 ta mezon to‘liq emas'
+      );
+      handleJumpToMissing();
+      return;
+    }
+
     setIsSaving(true);
     try {
       const targetSchoolId = school?.id || user?.schoolId || 'sch-3837';
@@ -391,7 +474,11 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
         body: JSON.stringify({ currentScore: score100 }),
       }).catch((e) => console.warn('School current score sync warning:', e));
 
-      // 3. Tizim bo'ylab hodisani tarqatish (header va boshqa komponentlar yangilanishi uchun)
+      // 3. Shaklni qulflash va retake huquqini yopish
+      setIsLocked(true);
+      setIsRetakeAllowed(false);
+
+      // 4. Tizim bo'ylab hodisani tarqatish (header va boshqa komponentlar yangilanishi uchun)
       if (typeof window !== 'undefined') {
         window.dispatchEvent(
           new CustomEvent('school-score-updated', {
@@ -474,6 +561,51 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
         </div>
       </div>
 
+      {/* Locked Status Alert Banner */}
+      {isLocked && (
+        <div className="mx-6 mt-4 p-4 rounded-2xl bg-amber-500/10 border border-amber-300 flex items-start gap-3.5 text-amber-900 animate-in fade-in duration-200">
+          <div className="p-2 bg-amber-100 rounded-xl text-amber-700 shrink-0">
+            <Lock className="w-5 h-5" />
+          </div>
+          <div className="flex-1 text-sm">
+            <div className="font-bold flex items-center gap-2">
+              <span>Baholash topshirilgan va qulflangan (Faqat ko‘rish rejimi)</span>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-200 text-amber-900 uppercase tracking-wide">
+                Bir martalik baholash
+              </span>
+            </div>
+            <p className="mt-1 text-xs text-amber-800 leading-relaxed">
+              Ushbu maktab uchun 40 ta mezonli baholash topshirilgan. Nizomga muvofiq, ma’lumotlarni o‘zgartirish yoki qayta baholash uchun IIV YHXX yoki tuman mas’uli tomonidan admin paneldan <strong>«Qayta baholashga ruxsat berish»</strong> huquqi berilishi kerak.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Retake Allowed Alert Banner */}
+      {isRetakeAllowed && (
+        <div className="mx-6 mt-4 p-4 rounded-2xl bg-indigo-50 border border-indigo-200 flex items-start gap-3.5 text-indigo-950 animate-in fade-in duration-200">
+          <div className="p-2 bg-indigo-100 rounded-xl text-indigo-700 shrink-0">
+            <Unlock className="w-5 h-5" />
+          </div>
+          <div className="flex-1 text-sm">
+            <div className="font-bold flex items-center gap-2">
+              <span>Administrator tomonidan qayta baholashga ruxsat berilgan</span>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-200 text-indigo-900 uppercase tracking-wide">
+                Qayta baholash faol
+              </span>
+            </div>
+            {reassessReason && (
+              <p className="mt-1 text-xs text-indigo-800">
+                <strong>Ruxsat sababi:</strong> {reassessReason}
+              </p>
+            )}
+            <p className="mt-1 text-[11px] text-indigo-700">
+              40 ta mezonni to‘liq ko‘rib chiqib yangilangan bahoni saqlashingiz mumkin. Saqlangandan so‘ng forma avtomatik tarzda qayta qulflanadi.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Main 2-Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 p-6 lg:p-8 items-start">
         {/* Left Column: Dynamic Star Rating & iRAP Risk Scores */}
@@ -491,100 +623,95 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
                 alt="Maktabga Xavfsiz Qadam"
                 width={144}
                 height={144}
+                className="object-contain max-h-full max-w-full drop-shadow-sm"
                 priority
-                className="object-contain drop-shadow-md hover:scale-105 transition-transform duration-300 max-h-full max-w-full"
-                unoptimized
               />
             </div>
+            <div className="mt-1 flex items-center gap-1.5">
+              <span className="text-xs font-bold text-slate-700">Maktabga Xavfsiz Qadam</span>
+            </div>
+            <span className="text-[10px] text-slate-400 font-medium">
+              O‘zbekiston Respublikasi IIV YHXX & BMT Standarti
+            </span>
+          </div>
 
-            <div className="mt-2 space-y-0.5 text-center">
-              <h3 className="text-sm sm:text-base font-black tracking-tight text-slate-900 bg-gradient-to-r from-teal-700 to-emerald-700 bg-clip-text text-transparent">
-                Maktabga Xavfsiz Qadam
-              </h3>
-              <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-teal-50 border border-teal-200/80 text-[10px] font-bold text-teal-800 uppercase tracking-wide">
-                <span>iRAP / SR4S Modeli</span>
-              </div>
+          {/* Big Star Badge */}
+          <div
+            className={cn(
+              'w-full py-4 px-3 rounded-2xl border flex flex-col items-center justify-center transition-all duration-300 shadow-xs',
+              starLevel.cardBgClass,
+              starLevel.cardBorderClass
+            )}
+          >
+            <div className="flex items-center justify-center gap-1.5 mb-1">
+              {[1, 2, 3, 4, 5].map((s) => (
+                <Star
+                  key={s}
+                  className={cn(
+                    'w-6 h-6 sm:w-7 sm:h-7 transition-all duration-300',
+                    s <= starCount
+                      ? 'fill-amber-400 text-amber-500 drop-shadow-xs'
+                      : 'text-slate-300 fill-slate-100'
+                  )}
+                />
+              ))}
+            </div>
+
+            <div className="flex items-baseline gap-1 mt-0.5">
+              <span className={cn('text-3xl sm:text-4xl font-black tracking-tight', starLevel.starTextClass)}>
+                {decimalScore}
+              </span>
+              <span className="text-xs font-bold text-slate-500">/ 5.0</span>
+            </div>
+
+            <div className="mt-1 text-center">
+              <span className={cn('text-xs sm:text-sm font-black', starLevel.starTextClass)}>
+                {starLevel.title}
+              </span>
+              <p className="text-[10px] text-slate-500 line-clamp-1 mt-0.5">
+                {starLevel.description}
+              </p>
             </div>
           </div>
 
-          {/* Star Rating Display */}
-          <div className="w-full pt-3 border-t border-slate-200 flex flex-col items-center">
-            {/* 5 Stars Graphic */}
-            <div className="flex items-center justify-center gap-1.5 mb-2">
-              {[1, 2, 3, 4, 5].map((starNum) => {
-                const isFull = parseFloat(decimalScore) >= starNum;
-                const isPartial =
-                  parseFloat(decimalScore) > starNum - 1 && parseFloat(decimalScore) < starNum;
-                const fraction = isPartial ? parseFloat(decimalScore) - (starNum - 1) : 0;
-
-                return (
-                  <div key={starNum} className="relative w-8 h-8 sm:w-9 sm:h-9">
-                    <Star className="w-full h-full text-slate-300 stroke-[1.5]" />
-                    {(isFull || isPartial) && (
-                      <div
-                        className="absolute inset-0 overflow-hidden"
-                        style={{ width: isFull ? '100%' : fraction * 100 + '%' }}
-                      >
-                        <Star className="w-8 h-8 sm:w-9 sm:h-9 fill-yellow-400 text-yellow-400 stroke-yellow-500 drop-shadow-[0_2px_4px_rgba(234,179,8,0.4)]" />
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Decimal Score Label */}
-            <div className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-              Yulduzli reyting: <span className="text-yellow-600">{decimalScore}</span>
-            </div>
-
-            {/* Star Level Status Badge */}
-            <div className={cn('mt-2.5 px-3 py-1 rounded-full text-xs font-bold border', starLevel.badgeClass)}>
-              {starLevel.title}
-            </div>
-            <p className="text-[11px] text-slate-500 mt-1 max-w-xs leading-relaxed">
-              {starLevel.description}
-            </p>
-          </div>
-
-          {/* iRAP Star Rating Score (SRS) & Crash Type Scores (CTS) Breakdown Box */}
-          <div className="w-full p-4 rounded-xl bg-white border border-slate-200/90 shadow-xs text-left space-y-3">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800">
-                <Activity className="w-4 h-4 text-teal-600" />
-                <span>iRAP Xavf Indeksi (SRS)</span>
+          {/* iRAP Risk Model Metrics (SRS & CTS) */}
+          <div className="w-full bg-white rounded-xl border border-slate-200 p-3 space-y-2.5 text-left text-xs shadow-2xs">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+              <div className="flex items-center gap-1.5 font-bold text-slate-800">
+                <Activity className="w-3.5 h-3.5 text-teal-600" />
+                <span>iRAP Xavf Ko‘rsatkichlari</span>
               </div>
-              <span className="text-sm font-black font-mono text-teal-700 bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
-                {srsScore}
+              <span className="text-[10px] font-mono bg-teal-50 text-teal-700 px-1.5 py-0.5 rounded font-semibold">
+                SRS: {srsScore}
               </span>
             </div>
 
-            {/* Sub-scores: Along & Crossing */}
-            <div className="grid grid-cols-2 gap-2 text-xs">
+            <div className="grid grid-cols-2 gap-2 text-[11px]">
               <div className="p-2 rounded-lg bg-slate-50 border border-slate-100">
-                <div className="text-[10px] text-slate-500 font-medium">Bo‘ylama yurish:</div>
-                <div className="text-xs font-bold text-slate-800 font-mono mt-0.5">
-                  CTS<sub>Along</sub>: <span className="text-blue-600">{ctsAlong}</span>
+                <div className="text-slate-500 flex items-center gap-1">
+                  <ArrowRightLeft className="w-3 h-3 text-slate-400" />
+                  <span>Bo‘ylama (Along)</span>
+                </div>
+                <div className="font-bold text-slate-800 mt-0.5 font-mono text-xs">
+                  CTS: {ctsAlong}
                 </div>
               </div>
+
               <div className="p-2 rounded-lg bg-slate-50 border border-slate-100">
-                <div className="text-[10px] text-slate-500 font-medium">Kesib o‘tish:</div>
-                <div className="text-xs font-bold text-slate-800 font-mono mt-0.5">
-                  CTS<sub>Crossing</sub>: <span className="text-purple-600">{ctsCrossing}</span>
+                <div className="text-slate-500 flex items-center gap-1">
+                  <ArrowRightLeft className="w-3 h-3 text-slate-400 rotate-90" />
+                  <span>Kesib o‘tish (Crossing)</span>
+                </div>
+                <div className="font-bold text-slate-800 mt-0.5 font-mono text-xs">
+                  CTS: {ctsCrossing}
                 </div>
               </div>
             </div>
 
-            {/* Risk Formula Summary */}
-            <div className="text-[10px] text-slate-500 font-mono bg-slate-50 p-2 rounded-lg border border-slate-100 text-center">
-              SRS = {ctsAlong} + {ctsCrossing} = <span className="font-bold text-slate-900">{srsScore}</span>
-            </div>
-
-            {/* Visual iRAP Band Meter */}
-            <div className="space-y-1">
-              <div className="flex justify-between text-[9px] font-bold text-slate-500">
-                <span>0</span>
-                <span>2.5 (5★)</span>
+            {/* Scale visual guide */}
+            <div className="pt-1">
+              <div className="flex justify-between text-[9px] text-slate-400 mb-1 font-mono">
+                <span>0 (5★)</span>
                 <span>5.0 (4★)</span>
                 <span>10.0 (3★)</span>
                 <span>22.5 (2★)</span>
@@ -602,28 +729,113 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
 
           {/* Save Button for Authenticated School Users */}
           {(user || school) && (
-            <Button
-              onClick={handleSaveAssessment}
-              disabled={isSaving}
-              className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs py-2.5 rounded-xl shadow-md"
-            >
-              {isSaving ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                  Saqlanmoqda...
-                </>
-              ) : (
-                <>
-                  <Save className="w-4 h-4 mr-2" />
-                  Maktab bahosini saqlash
-                </>
+            <div className="w-full space-y-2">
+              <Button
+                onClick={handleSaveAssessment}
+                disabled={isSaving || isLocked}
+                className={cn(
+                  'w-full font-bold text-xs py-2.5 rounded-xl shadow-md transition-all duration-150',
+                  isLocked
+                    ? 'bg-slate-300 hover:bg-slate-300 text-slate-600 cursor-not-allowed border border-slate-300'
+                    : confirmedAttrIds.size < 40
+                    ? 'bg-amber-600 hover:bg-amber-700 text-white'
+                    : 'bg-teal-600 hover:bg-teal-700 text-white'
+                )}
+              >
+                {isSaving ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                    Saqlanmoqda...
+                  </>
+                ) : isLocked ? (
+                  <>
+                    <Lock className="w-4 h-4 mr-2 text-slate-500" />
+                    Baholash topshirilgan (Qulflangan)
+                  </>
+                ) : confirmedAttrIds.size < 40 ? (
+                  <>
+                    <AlertCircle className="w-4 h-4 mr-2 text-amber-200" />
+                    Saqlash ({confirmedAttrIds.size}/40 belgilangan)
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-4 h-4 mr-2" />
+                    Maktab bahosini saqlash (40/40)
+                  </>
+                )}
+              </Button>
+              {isLocked && (
+                <p className="text-[11px] text-amber-800 bg-amber-50/80 p-2 rounded-lg border border-amber-200 leading-tight text-center">
+                  🔒 Baholash topshirilgan. Takroriy baholash uchun administrator ruxsati zarur.
+                </p>
               )}
-            </Button>
+              {!isLocked && confirmedAttrIds.size < 40 && (
+                <p className="text-[11px] text-amber-700 text-center leading-tight">
+                  ⚠️ Saqlash uchun yana {40 - confirmedAttrIds.size} ta mezonni belgilash shart.
+                </p>
+              )}
+            </div>
           )}
         </div>
 
         {/* Right Column: The 40 Interactive Official SR4S Attributes Grid */}
         <div className="lg:col-span-8">
+          {/* 40 Criteria Progress & Completion Tracker */}
+          <div className="mb-4 p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div
+                className={cn(
+                  'w-10 h-10 rounded-xl flex items-center justify-center font-black text-xs shrink-0',
+                  confirmedAttrIds.size === 40
+                    ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                    : 'bg-amber-100 text-amber-900 border border-amber-300'
+                )}
+              >
+                {confirmedAttrIds.size}/40
+              </div>
+              <div>
+                <div className="text-xs font-bold text-slate-900 flex items-center gap-2">
+                  <span>40 ta Mezon To‘ldirilishi:</span>
+                  {confirmedAttrIds.size === 40 ? (
+                    <span className="text-emerald-700 font-extrabold flex items-center gap-1">
+                      <Check className="w-3.5 h-3.5 stroke-[3]" /> To‘liq belgilandi
+                    </span>
+                  ) : (
+                    <span className="text-amber-800 font-semibold">
+                      Yana {40 - confirmedAttrIds.size} ta mezon qoldi
+                    </span>
+                  )}
+                </div>
+                <p className="text-[11px] text-slate-500">
+                  Rasmiy nizomga muvofiq, barcha 40 ta piktogramma ko‘rib chiqilishi va tasdiqlanishi shart.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              {confirmedAttrIds.size < 40 && (
+                <button
+                  type="button"
+                  onClick={handleJumpToMissing}
+                  className="px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-600 text-white shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer"
+                >
+                  <AlertCircle className="w-3.5 h-3.5" />
+                  <span>Qolganga o‘tish</span>
+                </button>
+              )}
+              {!isLocked && (
+                <button
+                  type="button"
+                  onClick={handleConfirmAll}
+                  title="Barcha 40 mezonni joriy holatda tasdiqlash"
+                  className="px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 transition-colors cursor-pointer"
+                >
+                  Barchasini tasdiqlash
+                </button>
+              )}
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2.5 sm:gap-3">
             {attributes.map((attr) => {
               const currentOption =
@@ -632,14 +844,39 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
               const isPurpleInput =
                 attr.isInput || attr.id === 'vehicles_per_day' || attr.id === 'intersection_side_flow';
 
+              const isConfirmed = confirmedAttrIds.has(attr.id);
+
               return (
                 <button
                   key={attr.id}
+                  id={`attr-card-${attr.id}`}
                   onClick={() => handleOpenModal(attr)}
                   type="button"
                   title={attr.nameUz + ' (' + attr.nameEn + ')'}
-                  className="flex flex-col items-center justify-between p-2.5 rounded-xl bg-white border border-slate-200 shadow-2xs hover:shadow-lg hover:border-teal-500 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 text-center group min-h-[128px] focus:outline-hidden focus:ring-2 focus:ring-teal-500 focus:ring-offset-1 cursor-pointer"
+                  className={cn(
+                    'relative flex flex-col items-center justify-between p-2.5 rounded-xl bg-white border shadow-2xs hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 text-center group min-h-[128px] focus:outline-hidden focus:ring-2 focus:ring-teal-500 focus:ring-offset-1 cursor-pointer',
+                    isConfirmed ? 'border-slate-200' : 'border-amber-400 bg-amber-50/25 border-dashed',
+                    isLocked ? 'opacity-90 hover:border-slate-300' : 'hover:border-teal-500'
+                  )}
                 >
+                  {/* Status Indicator Badge */}
+                  <div className="absolute top-1.5 right-1.5 z-10">
+                    {isConfirmed ? (
+                      <span
+                        className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-black shadow-2xs"
+                        title="Belgilangan"
+                      >
+                        ✓
+                      </span>
+                    ) : (
+                      <span
+                        className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-amber-500 text-white text-[10px] font-black shadow-2xs animate-pulse"
+                        title="Belgilanmagan!"
+                      >
+                        !
+                      </span>
+                    )}
+                  </div>
                   {/* Icon Container */}
                   <div className="w-14 h-14 sm:w-16 sm:h-16 relative flex items-center justify-center select-none group-hover:scale-105 transition-transform duration-200">
                     {isPurpleInput ? (
@@ -729,11 +966,21 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
               </p>
             </div>
 
+            {isLocked && (
+              <div className="mb-4 p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-center gap-2">
+                <Lock className="w-4 h-4 text-amber-700 shrink-0" />
+                <span>
+                  <strong>Faqat ko‘rish rejimi:</strong> Baholash allaqachon topshirilgan va qulflangan. O‘zgartirish kiritish uchun administrator ruxsati zarur.
+                </span>
+              </div>
+            )}
+
             {/* Mode 1: Numeric Input Mode */}
             {activeModalAttr.isInput ? (
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
+                  if (isLocked) return;
                   handleSaveCustomInput(activeModalAttr.id, inputVal);
                 }}
                 className="w-full max-w-sm mx-auto mt-2 flex items-center border border-slate-300 rounded-md overflow-hidden bg-white shadow-xs focus-within:border-teal-500 focus-within:ring-1 focus-within:ring-teal-500"
@@ -741,18 +988,21 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
                 <input
                   type="text"
                   value={inputVal}
+                  disabled={isLocked}
                   onChange={(e) => setInputVal(e.target.value)}
-                  className="flex-1 px-4 py-3 text-base sm:text-lg text-slate-800 font-medium outline-hidden"
+                  className="flex-1 px-4 py-3 text-base sm:text-lg text-slate-800 font-medium outline-hidden disabled:bg-slate-100 disabled:text-slate-500"
                   placeholder="Qiymatni kiriting..."
-                  autoFocus
+                  autoFocus={!isLocked}
                 />
-                <button
-                  type="submit"
-                  className="px-4 py-3 bg-white hover:bg-slate-50 border-l border-slate-200 text-teal-600 transition-colors flex items-center justify-center cursor-pointer"
-                  title="Tasdiqlash"
-                >
-                  <Check className="w-5 h-5 text-teal-600 stroke-[2.5]" />
-                </button>
+                {!isLocked && (
+                  <button
+                    type="submit"
+                    className="px-4 py-3 bg-white hover:bg-slate-50 border-l border-slate-200 text-teal-600 transition-colors flex items-center justify-center cursor-pointer"
+                    title="Tasdiqlash"
+                  >
+                    <Check className="w-5 h-5 text-teal-600 stroke-[2.5]" />
+                  </button>
+                )}
               </form>
             ) : activeModalAttr.isSlider ? (
               /* Mode 2: Slider Mode for Speed */
@@ -764,10 +1014,11 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
                     max={activeModalAttr.max ?? 150}
                     step={activeModalAttr.step ?? 1}
                     value={sliderVal}
+                    disabled={isLocked}
                     onChange={(e) =>
                       handleSliderChange(activeModalAttr.id, parseInt(e.target.value, 10))
                     }
-                    className="w-full h-2.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#009688]"
+                    className="w-full h-2.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#009688] disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                 </div>
                 <div className="flex items-stretch border border-[#009688] rounded-md overflow-hidden bg-white shadow-2xs">
@@ -777,13 +1028,14 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
                     max={activeModalAttr.max ?? 150}
                     step={activeModalAttr.step ?? 1}
                     value={sliderVal}
+                    disabled={isLocked}
                     onChange={(e) => {
                       const val = parseInt(e.target.value, 10);
                       if (!isNaN(val)) {
                         handleSliderChange(activeModalAttr.id, val);
                       }
                     }}
-                    className="w-14 px-2 py-2 text-center font-bold text-slate-800 text-sm sm:text-base outline-hidden"
+                    className="w-14 px-2 py-2 text-center font-bold text-slate-800 text-sm sm:text-base outline-hidden disabled:bg-slate-100 disabled:text-slate-500"
                   />
                   <div className="bg-[#009688] text-white px-3 py-2 flex items-center justify-center font-semibold text-xs sm:text-sm select-none">
                     km/h
@@ -801,11 +1053,13 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
                       key={option.id}
                       onClick={() => handleSelectOption(activeModalAttr.id, option.id)}
                       type="button"
+                      disabled={isLocked}
                       className={cn(
-                        'group flex flex-col items-center justify-end p-2 transition-all cursor-pointer rounded-lg min-w-[70px] sm:min-w-[80px]',
+                        'group flex flex-col items-center justify-end p-2 transition-all rounded-lg min-w-[70px] sm:min-w-[80px]',
                         isSelected
                           ? 'border border-[#009688] shadow-2xs bg-teal-50/20'
-                          : 'border border-transparent hover:border-slate-300'
+                          : 'border border-transparent hover:border-slate-300',
+                        isLocked ? 'cursor-default' : 'cursor-pointer'
                       )}
                     >
                       <div className="w-14 h-14 sm:w-16 sm:h-16 relative flex items-center justify-center mb-1 select-none">

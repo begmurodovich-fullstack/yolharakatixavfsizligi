@@ -8,6 +8,7 @@ export enum AssessmentStatus {
   SUBMITTED = 'SUBMITTED',
   VERIFIED = 'VERIFIED',
   REJECTED = 'REJECTED',
+  RETAKE_ALLOWED = 'RETAKE_ALLOWED',
 }
 
 export enum EvidenceStatus {

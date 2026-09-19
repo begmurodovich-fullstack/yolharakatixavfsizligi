@@ -155,6 +155,12 @@ export function GenericStatusBadge({ status, className }: GenericStatusBadgeProp
       Icon = Clock;
       break;
 
+    case AssessmentStatus.RETAKE_ALLOWED:
+      label = 'Qayta baholashga ruxsat berilgan';
+      colorClass = 'bg-indigo-50 text-indigo-700 border-indigo-200 font-bold';
+      Icon = Clock;
+      break;
+
     case AssessmentStatus.IN_PROGRESS:
     case CoordinateStatus.PENDING:
     case EvidenceStatus.PENDING:

@@ -61,6 +61,8 @@ export interface School {
   roadType?: RoadType;
   ranking?: number;
   studentCount?: number;
+  canReassess?: boolean;
+  reassessReason?: string;
   createdAt: string;
   updatedAt: string;
 }
