@@ -49,7 +49,7 @@ export function QuickActions({ onOpenPassport }: QuickActionsProps) {
                 Xavfsizlik mezonlari (SR4S)
               </div>
               <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                7 ta modul va 40 ta xalqaro xavfsizlik parametri
+                40 ta rasmiy xalqaro SR4S parametri
               </p>
             </div>
           </div>
@@ -105,7 +105,7 @@ export function QuickActions({ onOpenPassport }: QuickActionsProps) {
               Maktab Yo‘l Xavfsizligi Pasporti (Chop etish / PDF Yuklab olish)
             </div>
             <p className="text-xs text-slate-600">
-              7 ta modul xulosalari, QR-kodli haqiqiylik muhri va rasmiy YHXX blankasi
+              SR4S xavfsizlik xulosalari, QR-kodli haqiqiylik muhri va rasmiy YHXX blankasi
             </p>
           </div>
 

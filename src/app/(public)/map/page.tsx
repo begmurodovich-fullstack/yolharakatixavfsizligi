@@ -141,14 +141,25 @@ export default function PublicMapPage() {
         </div>
 
         <div className="flex items-center gap-3">
-          <Link href="/login">
-            <Button
-              size="sm"
-              className="bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs rounded-xl h-9 px-4 shadow-xs"
-            >
-              <span>Tizimga Kirish</span>
-            </Button>
-          </Link>
+          {user ? (
+            <Link href={user.role === 'ADMIN' || user.role === 'SUPER_ADMIN' ? '/admin' : '/school'}>
+              <Button
+                size="sm"
+                className="bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs rounded-xl h-9 px-4 shadow-xs"
+              >
+                <span>Shaxsiy Kabinet</span>
+              </Button>
+            </Link>
+          ) : (
+            <Link href="/login">
+              <Button
+                size="sm"
+                className="bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs rounded-xl h-9 px-4 shadow-xs"
+              >
+                <span>Tizimga Kirish</span>
+              </Button>
+            </Link>
+          )}
         </div>
       </header>
 

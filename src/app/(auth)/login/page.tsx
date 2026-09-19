@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/components/ui/toast';
@@ -21,13 +21,21 @@ import {
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login, isLoading } = useAuth();
+  const { user, login, isLoading } = useAuth();
   const { success, error } = useToast();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Agar foydalanuvchi tizimga kirgan bo'lsa, avtomatik shaxsiy kabinetga yo'naltirish
+  useEffect(() => {
+    if (user) {
+      const target = user.role === UserRole.SCHOOL_USER ? '/school' : '/admin';
+      router.replace(target);
+    }
+  }, [user, router]);
 
   /**
    * Handle standard credential submission

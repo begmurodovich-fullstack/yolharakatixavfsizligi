@@ -22,8 +22,6 @@ import {
   SchoolWelcomeCard,
   LargeRankingCard,
   AssessmentProgressCard,
-  CriteriaOverview,
-  StrongWeakCriteria,
   RecommendationCard,
   StatisticsPreview,
   RankingComparison,
@@ -31,6 +29,7 @@ import {
   QuickActions,
   CriterionScoreInfo,
 } from '@/features/dashboard/components';
+import { Sr4sDemonstrator } from '@/components/sr4s/Sr4sDemonstrator';
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { ErrorState } from '@/components/ui/error-state';
@@ -230,11 +229,10 @@ export default function SchoolDashboardPage() {
         </div>
       </div>
 
-      {/* 3. 8 Criteria Overview */}
-      <CriteriaOverview criterionScores={criterionScores} />
-
-      {/* 4. Strong and Weak Areas */}
-      <StrongWeakCriteria criterionScores={criterionScores} />
+      {/* 3. Rasmiy SR4S 40 Mezonli Kalkulyator va Baholash */}
+      <div className="space-y-4">
+        <Sr4sDemonstrator />
+      </div>
 
       {/* 5. Recommendations Card */}
       <RecommendationCard

@@ -2,10 +2,12 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ShieldCheck, ArrowLeft, Home, Map, LogIn } from 'lucide-react';
+import { ShieldCheck, ArrowLeft, Home, Map, LogIn, LayoutDashboard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function NotFound() {
+  const { user } = useAuth();
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4 text-white">
       <div className="max-w-md w-full text-center space-y-6">
@@ -36,14 +38,25 @@ export default function NotFound() {
             </Button>
           </Link>
 
-          <Link href="/login">
-            <Button
-              className="w-full bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs rounded-xl h-10 gap-2 shadow-lg shadow-teal-500/20"
-            >
-              <LogIn className="w-4 h-4" />
-              <span>Tizimga Kirish</span>
-            </Button>
-          </Link>
+          {user ? (
+            <Link href={user.role === 'ADMIN' || user.role === 'SUPER_ADMIN' ? '/admin' : '/school'}>
+              <Button
+                className="w-full bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs rounded-xl h-10 gap-2 shadow-lg shadow-teal-500/20"
+              >
+                <LayoutDashboard className="w-4 h-4" />
+                <span>Shaxsiy Kabinet</span>
+              </Button>
+            </Link>
+          ) : (
+            <Link href="/login">
+              <Button
+                className="w-full bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs rounded-xl h-10 gap-2 shadow-lg shadow-teal-500/20"
+              >
+                <LogIn className="w-4 h-4" />
+                <span>Tizimga Kirish</span>
+              </Button>
+            </Link>
+          )}
         </div>
 
         <div className="pt-2">

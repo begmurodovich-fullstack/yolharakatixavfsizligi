@@ -35,7 +35,7 @@ const WORKFLOW_STEPS = [
   {
     step: '02',
     title: '40 ta xalqaro SR4S parametri bo‘yicha baholash',
-    desc: 'Maktab atrofidagi piyodalar yo‘lagi (chap/o‘ng), svetoforlar, tezlik mezonlari, yo‘l chiziqlari va ko‘rinish masofalari 7 ta modulda baholanadi.',
+    desc: 'Maktab atrofidagi piyodalar yo‘lagi (chap/o‘ng), svetoforlar, tezlik mezonlari, yo‘l chiziqlari va ko‘rinish masofalari 40 ta rasmiy iRAP parametri bo‘yicha baholanadi.',
     icon: ClipboardCheck,
     badge: '2-bosqich: SR4S Standart',
   },
@@ -319,7 +319,7 @@ export default function PlatformPage() {
             Maktabingiz Xavfsizligini Hoziroq Baholang
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 max-w-2xl mx-auto">
-            Har bir maktab hisobi orqali tizimga kirib, 7 ta modul bo‘yicha so‘rovnomani to‘ldiring va rasmiy yulduz reytingini oling.
+            Har bir maktab hisobi orqali tizimga kirib, 40 ta xalqaro SR4S parametri bo‘yicha so‘rovnomani to‘ldiring va rasmiy yulduz reytingini oling.
           </p>
           <div className="flex justify-center gap-3 pt-2">
             {user ? (

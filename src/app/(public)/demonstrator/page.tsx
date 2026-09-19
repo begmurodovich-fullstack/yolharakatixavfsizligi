@@ -4,9 +4,11 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Sr4sDemonstrator } from '@/components/sr4s/Sr4sDemonstrator';
-import { ShieldCheck, ArrowLeft, ExternalLink, Sparkles } from 'lucide-react';
+import { ShieldCheck, ArrowLeft, ExternalLink, Sparkles, LayoutDashboard } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function DemonstratorPage() {
+  const { user } = useAuth();
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900">
       {/* Official-style SR4S Top Bar */}
@@ -38,12 +40,22 @@ export default function DemonstratorPage() {
             >
               40 ta Mezon
             </Link>
-            <Link
-              href="/login"
-              className="text-xs font-bold bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-xl transition-all shadow-xs"
-            >
-              Tizimga kirish
-            </Link>
+            {user ? (
+              <Link
+                href={user.role === 'ADMIN' || user.role === 'SUPER_ADMIN' ? '/admin' : '/school'}
+                className="text-xs font-bold bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-xl transition-all shadow-xs flex items-center gap-1.5"
+              >
+                <LayoutDashboard className="w-3.5 h-3.5" />
+                <span>Shaxsiy Kabinet</span>
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="text-xs font-bold bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-xl transition-all shadow-xs"
+              >
+                Tizimga kirish
+              </Link>
+            )}
           </div>
         </div>
       </header>

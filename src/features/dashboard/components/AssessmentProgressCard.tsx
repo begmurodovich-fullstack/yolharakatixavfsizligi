@@ -47,7 +47,7 @@ export function AssessmentProgressCard({ assessment, totalQuestions }: Assessmen
                 Baholash Jarayoni
               </h2>
               <p className="text-xs text-slate-500">
-                7 ta modul va 40 ta SR4S parametri
+                40 ta rasmiy iRAP SR4S parametri
               </p>
             </div>
           </div>

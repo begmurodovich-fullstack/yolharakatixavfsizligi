@@ -171,7 +171,7 @@ export default function AloqaPage() {
                       Metodologiya va SR4S Standartlari
                     </CardTitle>
                     <p className="text-xs text-slate-500">
-                      7 ta modul, savollar va ball hisoblash tizimi
+                      40 ta rasmiy mezon, iRAP formulalari va ball hisoblash tizimi
                     </p>
                   </div>
                 </div>
