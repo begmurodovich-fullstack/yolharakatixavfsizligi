@@ -1,19 +1,31 @@
 'use client';
 
 import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/toast';
 import {
-  MapPin,
   Navigation,
   Compass,
   CheckCircle2,
-  AlertCircle,
   Loader2,
   Crosshair,
   Sparkles,
 } from 'lucide-react';
+
+const InteractiveSatellitePicker = dynamic(
+  () => import('./InteractiveSatellitePicker').then((mod) => mod.InteractiveSatellitePicker),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-64 sm:h-72 rounded-2xl border border-slate-300 bg-slate-100 flex flex-col items-center justify-center gap-2 text-slate-500">
+        <Loader2 className="w-6 h-6 animate-spin text-teal-600" />
+        <span className="text-xs font-semibold">Sun’iy yo‘ldosh xaritasi yuklanmoqda...</span>
+      </div>
+    ),
+  }
+);
 
 interface GpsLocationPickerProps {
   latitude: string;
@@ -80,8 +92,8 @@ export function GpsLocationPicker({
     );
   };
 
-  const parsedLat = parseFloat(latitude) || 40.1032;
-  const parsedLng = parseFloat(longitude) || 64.6756;
+  const parsedLat = !isNaN(parseFloat(latitude)) && parseFloat(latitude) !== 0 ? parseFloat(latitude) : 40.1582;
+  const parsedLng = !isNaN(parseFloat(longitude)) && parseFloat(longitude) !== 0 ? parseFloat(longitude) : 64.9117;
 
   return (
     <div className="space-y-4">
@@ -101,7 +113,7 @@ export function GpsLocationPicker({
           <p
             className={`text-xs ${
               isDark ? 'text-slate-400' : 'text-slate-600'
-            } leading-relaxed`}
+            }`}
           >
             Maktab darvozasi oldida turib tugmani bosing — telefon datchigi aniq koordinatani kiritadi.
           </p>
@@ -137,25 +149,30 @@ export function GpsLocationPicker({
         </div>
       )}
 
-      {/* 2. Visual Pin Preview Canvas */}
-      <div
-        className={`relative rounded-2xl border overflow-hidden h-32 flex items-center justify-center p-4 ${
-          isDark
-            ? 'border-slate-800 bg-slate-950'
-            : 'border-slate-200 bg-slate-100'
-        }`}
-      >
-        {/* Subtle grid pattern */}
-        <div className="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,#334155_1px,transparent_1px),linear-gradient(to_bottom,#334155_1px,transparent_1px)] bg-[size:16px_16px]" />
-
-        <div className="relative z-10 flex flex-col items-center">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-500 text-white shadow-lg ring-4 ring-teal-500/30 animate-bounce">
-            <MapPin className="h-6 w-6" />
-          </div>
-          <div className="mt-1 px-3 py-0.5 rounded-full bg-slate-900 text-white text-[11px] font-mono font-bold border border-slate-700 shadow-md">
-            {parsedLat}° N, {parsedLng}° E
-          </div>
-        </div>
+      {/* 2. Interactive Real Satellite Map Picker */}
+      <div className="space-y-1.5">
+        <label
+          className={`text-xs font-semibold flex items-center justify-between ${
+            isDark ? 'text-slate-300' : 'text-slate-700'
+          }`}
+        >
+          <span className="flex items-center gap-1.5">
+            <span className="text-teal-500">🛰️</span>
+            <span>Sun’iy Yo‘ldosh Xaritasi orqali Aniq Belgilash:</span>
+          </span>
+          <span className="text-[11px] text-slate-400 font-normal">
+            (Xaritadan bosing yoki pinni suring)
+          </span>
+        </label>
+        <InteractiveSatellitePicker
+          latitude={parsedLat}
+          longitude={parsedLng}
+          accuracyMeters={accuracyMeters}
+          onLocationChange={(newLat, newLng) => {
+            onChangeLatitude(newLat.toString());
+            onChangeLongitude(newLng.toString());
+          }}
+        />
       </div>
 
       {/* 3. Coordinate Inputs Grid */}

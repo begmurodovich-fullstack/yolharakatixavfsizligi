@@ -46,8 +46,8 @@ export function FirstLoginOnboardingModal({
   const [studentCount, setStudentCount] = useState(school?.studentCount || 750);
 
   // Step 3: Coordinates
-  const [latitude, setLatitude] = useState(school?.coordinates?.latitude?.toString() || '40.1032');
-  const [longitude, setLongitude] = useState(school?.coordinates?.longitude?.toString() || '64.6756');
+  const [latitude, setLatitude] = useState(school?.coordinates?.latitude?.toString() || '40.1582');
+  const [longitude, setLongitude] = useState(school?.coordinates?.longitude?.toString() || '64.9117');
   const [addressNotes, setAddressNotes] = useState(
     school?.coordinates?.addressNotes || `${school?.name || 'Maktab'} asosiy kirish darvozasi ro‘parasida`
   );
@@ -128,7 +128,7 @@ export function FirstLoginOnboardingModal({
       <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200" />
 
       {/* Dialog Body */}
-      <div className="relative z-10 w-full max-w-xl rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 shadow-2xl animate-in zoom-in-95 duration-200 space-y-6">
+      <div className={`relative z-10 w-full rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 shadow-2xl animate-in zoom-in-95 duration-200 space-y-6 transition-all duration-300 ${step === 3 ? 'max-w-2xl sm:max-w-3xl' : 'max-w-xl'}`}>
         {/* Header Banner */}
         <div className="text-center space-y-2">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-teal-50 text-teal-700 border border-teal-200 shadow-sm">

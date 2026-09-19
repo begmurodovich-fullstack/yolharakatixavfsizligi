@@ -28,7 +28,7 @@ const RealLeafletMap = dynamic(
     loading: () => (
       <div className="w-full h-full flex flex-col items-center justify-center bg-slate-950 text-slate-400 gap-3">
         <div className="h-10 w-10 border-4 border-teal-500 border-t-transparent rounded-full animate-spin" />
-        <span className="text-xs font-mono font-bold">OpenStreetMap Xaritasi Yuklanmoqda...</span>
+        <span className="text-xs font-mono font-bold">Sun’iy Yo‘ldosh Xaritasi Yuklanmoqda...</span>
       </div>
     ),
   }
@@ -134,7 +134,7 @@ export default function PublicMapPage() {
                 O‘zbekiston Maktablari Yo‘l Xavfsizligi Xaritasi
               </div>
               <div className="text-[10px] font-mono text-teal-400">
-                10 110 ta maktab geolokatsiyasi (OpenStreetMap Real Xarita)
+                Respublika maktablari (Sun’iy Yo‘ldosh Sputnik HD Xaritasi)
               </div>
             </div>
           </div>
@@ -400,11 +400,12 @@ export default function PublicMapPage() {
 
               <div className="flex items-center justify-between text-xs font-mono text-slate-300 pt-2 border-t border-slate-800">
                 <span className="text-[11px] text-slate-400">
-                  GPS: {selectedSchool.coordinates?.latitude || 40.1032}° N,{' '}
-                  {selectedSchool.coordinates?.longitude || 64.6756}° E
+                  {selectedSchool.coordinates?.latitude && selectedSchool.coordinates?.longitude
+                    ? `GPS: ${Number(selectedSchool.coordinates.latitude).toFixed(6)}° N, ${Number(selectedSchool.coordinates.longitude).toFixed(6)}° E`
+                    : 'GPS: Lokatsiya belgilanmagan'}
                 </span>
                 <span className="text-[10px] text-emerald-400 font-bold bg-emerald-950/60 border border-emerald-800 px-2 py-0.5 rounded-full">
-                  ✓ Tasdiqlangan
+                  {selectedSchool.coordinateStatus === 'VERIFIED' ? '✓ Tasdiqlangan' : 'Kutilmoqda'}
                 </span>
               </div>
 

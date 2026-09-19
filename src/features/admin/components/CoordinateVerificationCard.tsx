@@ -31,6 +31,18 @@ export function CoordinateVerificationCard({
 }: CoordinateVerificationCardProps) {
   const isPending = school.coordinateStatus === CoordinateStatus.PENDING;
 
+  const lat = school.coordinates?.latitude || 40.1582;
+  const lng = school.coordinates?.longitude || 64.9117;
+  const zoom = 16;
+  const n = Math.pow(2, zoom);
+  const tileX = Math.floor(((lng + 180) / 360) * n);
+  const latRad = (lat * Math.PI) / 180;
+  const tileY = Math.floor(
+    ((1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI) / 2) * n
+  );
+  const satelliteTileUrl = `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${zoom}/${tileY}/${tileX}`;
+  const hybridLabelUrl = `https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/${zoom}/${tileY}/${tileX}`;
+
   return (
     <div
       className={cn(
@@ -40,10 +52,22 @@ export function CoordinateVerificationCard({
           : 'border-slate-200'
       )}
     >
-      {/* Top: Checkbox + Map Preview */}
-      <div className="relative h-44 w-full bg-slate-900 overflow-hidden flex items-center justify-center p-4">
-        {/* Map Grid */}
-        <div className="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,#334155_1px,transparent_1px),linear-gradient(to_bottom,#334155_1px,transparent_1px)] bg-[size:20px_20px]" />
+      {/* Top: Satellite Preview + Checkbox */}
+      <div className="relative h-48 w-full bg-slate-950 overflow-hidden flex items-center justify-center">
+        {/* Real Satellite Tiles */}
+        <img
+          src={satelliteTileUrl}
+          alt={`Sun'iy yo'ldosh: ${school.name}`}
+          className="absolute inset-0 w-full h-full object-cover brightness-95 filter"
+          loading="lazy"
+        />
+        <img
+          src={hybridLabelUrl}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-black/30 pointer-events-none" />
 
         {/* Checkbox for bulk select */}
         <button
@@ -53,25 +77,36 @@ export function CoordinateVerificationCard({
             'absolute top-3 right-3 z-20 flex h-6 w-6 items-center justify-center rounded-md border-2 transition-all',
             isSelected
               ? 'bg-teal-500 border-teal-400 text-white'
-              : 'bg-slate-800/70 border-slate-500 hover:border-teal-400'
+              : 'bg-slate-900/80 border-slate-400 text-white hover:border-teal-400 backdrop-blur-xs'
           )}
         >
           {isSelected && <Check className="w-3.5 h-3.5" />}
         </button>
 
         {/* Center Pin */}
-        <div className="relative z-10 flex flex-col items-center">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-teal-500 text-white shadow-lg ring-4 ring-teal-500/30">
+        <div className="relative z-10 flex flex-col items-center pointer-events-none">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-600 text-white shadow-xl ring-4 ring-teal-500/40 border-2 border-white">
             <MapPin className="h-5 w-5" />
           </div>
-          <div className="mt-1.5 px-2.5 py-0.5 rounded-full bg-slate-950/90 text-white border border-slate-700 text-[10px] font-mono font-bold">
-            {school.coordinates?.latitude?.toFixed(4)}, {school.coordinates?.longitude?.toFixed(4)}
+          <div className="mt-1.5 px-2.5 py-0.5 rounded-full bg-slate-950/90 backdrop-blur-xs text-white border border-teal-500/40 text-[10px] font-mono font-bold shadow-md">
+            {lat.toFixed(6)}, {lng.toFixed(6)}
           </div>
         </div>
 
         <div className="absolute top-3 left-3 z-10">
           <GenericStatusBadge status={school.coordinateStatus} />
         </div>
+
+        {/* External Map Link */}
+        <a
+          href={`https://maps.google.com/?q=${lat},${lng}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Google Xaritada ko‘rish"
+          className="absolute bottom-2.5 right-2.5 z-20 px-2 py-1 bg-slate-950/85 hover:bg-slate-900 text-teal-300 text-[10px] font-bold rounded-lg border border-teal-600/40 backdrop-blur-xs shadow-md transition-colors flex items-center gap-1"
+        >
+          <span>Xaritada ochish ↗</span>
+        </a>
       </div>
 
       {/* Details */}

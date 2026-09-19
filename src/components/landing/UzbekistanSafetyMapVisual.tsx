@@ -172,9 +172,17 @@ export function UzbekistanSafetyMapVisual() {
         </div>
 
         {/* Subtle footer caption */}
-        <div className="relative z-10 mt-2 text-center text-[10px] text-slate-500 flex items-center justify-center gap-1">
-          <Activity className="w-3 h-3 text-teal-500" />
-          <span>Xaritadagi nuqtalarni tanlab hududlar bo‘yicha ko‘rsatkichlarni ko‘rishingiz mumkin</span>
+        <div className="relative z-10 mt-2 text-center text-[10px] text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-1 pt-2 border-t border-slate-800">
+          <span className="flex items-center gap-1 text-slate-400">
+            <Activity className="w-3 h-3 text-teal-500" />
+            <span>Xaritadagi nuqtalarni bosib hududlarni ko‘rishingiz mumkin</span>
+          </span>
+          <a
+            href="/map"
+            className="text-teal-400 hover:text-teal-300 font-bold flex items-center gap-1 text-[11px] hover:underline"
+          >
+            <span>🛰️ Sun’iy yo‘ldosh xaritasini ochish ↗</span>
+          </a>
         </div>
       </div>
     </div>

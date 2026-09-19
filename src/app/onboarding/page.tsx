@@ -44,8 +44,8 @@ export default function OnboardingPage() {
   const [studentCount, setStudentCount] = useState<number>(750);
 
   // Step 3: Coordinates
-  const [latitude, setLatitude] = useState('40.1032');
-  const [longitude, setLongitude] = useState('64.6756');
+  const [latitude, setLatitude] = useState('40.1582');
+  const [longitude, setLongitude] = useState('64.9117');
   const [addressNotes, setAddressNotes] = useState('');
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -73,8 +73,8 @@ export default function OnboardingPage() {
               setDirectorName(sch.directorName || '');
               setStudentCount(sch.studentCount || 750);
               if (sch.coordinates) {
-                setLatitude(sch.coordinates.latitude?.toString() || '40.1032');
-                setLongitude(sch.coordinates.longitude?.toString() || '64.6756');
+                setLatitude(sch.coordinates.latitude?.toString() || '40.1582');
+                setLongitude(sch.coordinates.longitude?.toString() || '64.9117');
                 setAddressNotes(
                   sch.coordinates.addressNotes ||
                     `${sch.name} asosiy kirish darvozasi ro‘parasida`
@@ -197,7 +197,7 @@ export default function OnboardingPage() {
       </div>
 
       {/* Main Container */}
-      <div className="relative z-10 mx-auto w-full max-w-xl my-auto py-8">
+      <div className={`relative z-10 mx-auto w-full my-auto py-8 transition-all duration-300 ${step === 3 ? 'max-w-3xl' : 'max-w-xl'}`}>
         <div className="rounded-3xl border border-slate-800 bg-slate-950/80 backdrop-blur-xl p-6 sm:p-9 shadow-2xl space-y-6">
           {/* Header */}
           <div className="text-center space-y-2">

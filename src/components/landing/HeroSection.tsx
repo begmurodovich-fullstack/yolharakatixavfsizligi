@@ -79,6 +79,12 @@ export function HeroSection() {
                 </Link>
               )}
 
+              <Link href="/map">
+                <Button size="lg" variant="outline" className="border-teal-300 bg-teal-50/70 hover:bg-teal-100 text-teal-900 font-bold gap-2 h-12 px-5 text-sm">
+                  <span>🛰️ Sun’iy yo‘ldosh xaritasi</span>
+                </Button>
+              </Link>
+
               <Link href="/platform">
                 <Button size="lg" variant="outline" className="border-slate-300 text-slate-700 hover:bg-slate-100 font-semibold gap-2 h-12 px-6 text-sm">
                   <BookOpen className="w-4 h-4 text-teal-700" />
