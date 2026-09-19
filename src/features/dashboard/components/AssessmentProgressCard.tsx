@@ -21,18 +21,16 @@ interface AssessmentProgressCardProps {
 }
 
 export function AssessmentProgressCard({ assessment, totalQuestions }: AssessmentProgressCardProps) {
-  const questionsCount = totalQuestions > 0 ? totalQuestions : 17;
+  const questionsCount = totalQuestions > 0 ? totalQuestions : 40;
   const answersCount = assessment ? Object.keys(assessment.answers || {}).length : 0;
   const unansweredCount = Math.max(0, questionsCount - answersCount);
-  const completionPercentage = Math.round((answersCount / questionsCount) * 100);
+  const completionPercentage = questionsCount > 0 ? Math.round((answersCount / questionsCount) * 100) : 0;
 
   // Evidence count calculation
   const evidenceList = assessment?.evidence || [];
-  const requiredEvidenceCount = 4; // 4 mandatory evidence points for road safety
   const uploadedEvidenceCount = evidenceList.length;
-  const missingEvidenceCount = Math.max(0, requiredEvidenceCount - uploadedEvidenceCount);
 
-  const isCompleted = answersCount >= questionsCount;
+  const isCompleted = answersCount >= questionsCount && questionsCount > 0;
   const isVerified = assessment?.status === AssessmentStatus.VERIFIED;
 
   return (
@@ -49,7 +47,7 @@ export function AssessmentProgressCard({ assessment, totalQuestions }: Assessmen
                 Baholash Jarayoni
               </h2>
               <p className="text-xs text-slate-500">
-                8 ta mezon bo‘yicha savolnoma va foto-dalillar
+                40 ta rasmiy iRAP SR4S parametri
               </p>
             </div>
           </div>
@@ -61,7 +59,7 @@ export function AssessmentProgressCard({ assessment, totalQuestions }: Assessmen
         <div className="space-y-4">
           <div className="flex items-baseline justify-between">
             <div className="text-2xl sm:text-3xl font-black text-slate-900 font-mono">
-              {answersCount} <span className="text-sm text-slate-400 font-medium font-sans">/ {questionsCount} savol</span>
+              {answersCount} <span className="text-sm text-slate-400 font-medium font-sans">/ {questionsCount} mezon</span>
             </div>
             <div className="text-lg font-bold font-mono text-teal-700">
               {completionPercentage}%
@@ -76,9 +74,13 @@ export function AssessmentProgressCard({ assessment, totalQuestions }: Assessmen
               <FileQuestion className="w-5 h-5 text-slate-500 shrink-0" />
               <div className="text-xs leading-tight">
                 <div className="font-bold text-slate-900">
-                  {unansweredCount === 0 ? 'Barchasi to‘ldirilgan' : `${unansweredCount} ta savol qoldi`}
+                  {unansweredCount === 0 && answersCount > 0
+                    ? 'Barchasi to‘ldirilgan'
+                    : answersCount === 0
+                    ? 'Baholash boshlanmagan'
+                    : `${unansweredCount} ta savol qoldi`}
                 </div>
-                <div className="text-slate-400 text-[11px] mt-0.5">Savollar holati</div>
+                <div className="text-slate-400 text-[11px] mt-0.5">Mezonlar holati</div>
               </div>
             </div>
 
@@ -92,17 +94,6 @@ export function AssessmentProgressCard({ assessment, totalQuestions }: Assessmen
               </div>
             </div>
           </div>
-
-          {/* Missing Evidence Warning Alert or Success Banner */}
-          {missingEvidenceCount > 0 && (
-            <div className="rounded-2xl border border-amber-200 bg-amber-50/70 p-4 flex items-start gap-3 text-xs text-amber-900">
-              <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-              <div className="leading-relaxed">
-                <strong className="font-semibold">Diqqat:</strong> {missingEvidenceCount} ta majburiy foto-dalil yetishmayapti.
-                Ekspert tekshiruvi uchun rasmlarni yuklang.
-              </div>
-            </div>
-          )}
 
           {isVerified && (
             <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-4 flex items-start gap-3 text-xs text-emerald-900">
@@ -118,9 +109,9 @@ export function AssessmentProgressCard({ assessment, totalQuestions }: Assessmen
 
       {/* CTA Button */}
       <div className="pt-4 border-t border-slate-100">
-        <Link href="/school/assessment" className="w-full block">
+        <Link href="/school/criteria" className="w-full block">
           <Button className="w-full bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold gap-2 h-10 rounded-xl shadow-xs">
-            <span>{isCompleted ? 'Baholash anketasini ko‘rish' : 'Baholashni davom ettirish'}</span>
+            <span>Xavfsizlik mezonlarini ko‘rish</span>
             <ArrowRight className="w-4 h-4" />
           </Button>
         </Link>

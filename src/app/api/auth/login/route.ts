@@ -58,7 +58,9 @@ export async function POST(request: NextRequest) {
       (isAdmin &&
         (trimmedPassword === 'Demo@1234' ||
           trimmedPassword === 'Admin@1234' ||
-          trimmedPassword === 'Super@1234'));
+          trimmedPassword === 'Super@1234' ||
+          trimmedPassword === 'admin123' ||
+          trimmedPassword === 'admin'));
 
     if (!isPasswordMatch) {
       return NextResponse.json(

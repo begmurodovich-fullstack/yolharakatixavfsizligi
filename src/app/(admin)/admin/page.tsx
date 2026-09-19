@@ -2,13 +2,15 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { adminService, AdminDashboardSummary } from '@/services/adminService';
-import { AuditLog } from '@/types';
+import { schoolService } from '@/services/schoolService';
+import { AuditLog, School } from '@/types';
 import {
   AdminStatGrid,
   RegionalDistributionCard,
   PendingQueueCard,
   RecentAuditLogsCard,
 } from '@/features/admin/components';
+import { RoadCategoryStarChart } from '@/features/dashboard/components';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ErrorState } from '@/components/ui/error-state';
 import { ShieldCheck, Calendar, Activity } from 'lucide-react';
@@ -16,6 +18,7 @@ import { ShieldCheck, Calendar, Activity } from 'lucide-react';
 export default function AdminDashboardPage() {
   const [summary, setSummary] = useState<AdminDashboardSummary | null>(null);
   const [logs, setLogs] = useState<AuditLog[]>([]);
+  const [schools, setSchools] = useState<School[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -25,12 +28,14 @@ export default function AdminDashboardPage() {
     setHasError(false);
 
     try {
-      const [dashSummary, auditLogs] = await Promise.all([
+      const [dashSummary, auditLogs, schoolList] = await Promise.all([
         adminService.getDashboardSummary(),
         adminService.getAuditLogs(5),
+        schoolService.getSchools({ limit: 500 }),
       ]);
       setSummary(dashSummary);
       setLogs(auditLogs);
+      setSchools(schoolList);
     } catch (err: any) {
       console.error('Admin dashboard load error:', err);
       setHasError(true);
@@ -104,10 +109,13 @@ export default function AdminDashboardPage() {
       {/* 2. Top KPI Cards */}
       <AdminStatGrid summary={summary} />
 
-      {/* 3. Regional Score Breakdown */}
+      {/* 3. 5-Star Road Category Donut Chart Analysis */}
+      <RoadCategoryStarChart schools={schools} />
+
+      {/* 4. Regional Score Breakdown */}
       <RegionalDistributionCard regionalBreakdown={summary.regionalBreakdown} />
 
-      {/* 4. Action Queue & Live Activity */}
+      {/* 5. Action Queue & Live Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <PendingQueueCard
           pendingEvidenceCount={summary.pendingEvidenceCount}

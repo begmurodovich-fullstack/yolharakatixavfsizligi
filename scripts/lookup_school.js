@@ -1,7 +1,10 @@
 const { Client } = require('pg');
 
 const client = new Client({
-  connectionString: 'postgresql://postgres:dinara2002@localhost:5432/school_road_safety_db',
+  connectionString:
+    process.env.DATABASE_URL ||
+    'postgresql://neondb_owner:npg_KyZTrp7XQ8xl@ep-spring-snow-azgi3kt1.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=require',
+  ssl: { rejectUnauthorized: false },
 });
 
 async function main() {

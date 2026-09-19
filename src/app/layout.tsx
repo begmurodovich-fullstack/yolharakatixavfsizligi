@@ -9,6 +9,13 @@ export const metadata: Metadata = {
   title: `${APP_CONFIG.shortName} — O‘zbekiston Maktab Yo‘l Xavfsizligi Platformasi`,
   description:
     'O‘zbekiston maktablari atrofidagi yo‘l harakati xavfsizligi holatini monitoring qilish, baholash va nazorat qilish milliy platformasi.',
+  icons: {
+    icon: [
+      { url: '/favicon.png', type: 'image/png' },
+    ],
+    shortcut: '/favicon.png',
+    apple: '/favicon.png',
+  },
 };
 
 export default function RootLayout({

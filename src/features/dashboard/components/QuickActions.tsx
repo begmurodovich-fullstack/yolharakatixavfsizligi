@@ -36,7 +36,7 @@ export function QuickActions({ onOpenPassport }: QuickActionsProps) {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Link href="/school/assessment" className="block">
+        <Link href="/school/criteria" className="block">
           <div className="p-5 rounded-2xl border border-slate-200 bg-slate-50/70 hover:bg-teal-50/40 hover:border-teal-500 transition-all flex flex-col justify-between h-full group space-y-3">
             <div className="flex items-center justify-between">
               <span className="p-2.5 rounded-xl bg-teal-700 text-white shadow-2xs">
@@ -46,10 +46,10 @@ export function QuickActions({ onOpenPassport }: QuickActionsProps) {
             </div>
             <div>
               <div className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-teal-950">
-                Baholash anketasi
+                Xavfsizlik mezonlari (SR4S)
               </div>
               <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                8 ta mezon savollarini to‘ldirish va foto yuklash
+                40 ta rasmiy xalqaro SR4S parametri
               </p>
             </div>
           </div>
@@ -87,7 +87,7 @@ export function QuickActions({ onOpenPassport }: QuickActionsProps) {
                 Tahliliy Statistika
               </div>
               <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                Radar, qiyosiy grafiklar va tarixiy o‘sish
+                Radar, qiyosiy grafiklar va tahlil
               </p>
             </div>
           </div>
@@ -105,7 +105,7 @@ export function QuickActions({ onOpenPassport }: QuickActionsProps) {
               Maktab Yo‘l Xavfsizligi Pasporti (Chop etish / PDF Yuklab olish)
             </div>
             <p className="text-xs text-slate-600">
-              8 ta mezon xulosalari, QR-kodli haqiqiylik muhri va rasmiy YHXX blankasi
+              SR4S xavfsizlik xulosalari, QR-kodli haqiqiylik muhri va rasmiy YHXX blankasi
             </p>
           </div>
 

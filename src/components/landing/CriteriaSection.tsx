@@ -6,20 +6,19 @@ import { Sparkles } from 'lucide-react';
 
 export function CriteriaSection() {
   return (
-    <section id="mezonlar" className="py-16 bg-slate-950 text-white">
+    <section className="py-16 bg-white border-y border-slate-200">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-10">
         {/* Section Heading */}
-        <div className="text-center max-w-3xl mx-auto space-y-3">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-teal-500/10 text-teal-400 border border-teal-500/20">
-            <Sparkles className="w-3.5 h-3.5" />
+        <div className="text-center max-w-3xl mx-auto space-y-2">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-teal-50 text-teal-800 border border-teal-200">
+            <Sparkles className="w-3.5 h-3.5 text-teal-600" />
             <span>XALQARO iRAP SR4S STANDARTLARI</span>
           </div>
-          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white">
-            Maktab yo‘l xavfsizligining xalqaro mezonlari
+          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-950">
+            Maktab yo‘l xavfsizligining 40 ta rasmiy mezoni
           </h2>
-          <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-            BMT va iRAP standarti asosida maktab atrofidagi infratuzilma 40 ta parametr bo‘yicha kompleks baholanadi. 
-            Quyida har bir parametrni interaktiv o‘zgartirib, yulduzli reytingni sinab ko‘rishingiz mumkin:
+          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            BMT va iRAP xalqaro metodologiyasi asosida maktab atrofidagi barcha yo‘l infratuzilmasi 40 ta rasmiy mezon va foto-dalillar asosida to‘liq baholanadi.
           </p>
         </div>
 

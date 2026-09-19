@@ -3,6 +3,7 @@
 import React from 'react';
 import { SchoolRankingOverview } from '@/types';
 import { ScoreStatusBadge } from '@/components/ui/status-badge';
+import { Sr4sStarBadge, Sr4sGoldStars } from '@/components/ui/sr4s-icon';
 import { Progress } from '@/components/ui/progress';
 import { Trophy, Medal, Building2, Map, Shield, TrendingUp } from 'lucide-react';
 
@@ -30,7 +31,7 @@ export function LargeRankingCard({ rankingOverview, currentScore }: LargeRanking
           </div>
           <div>
             <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900">
-              Joriy Xavfsizlik Bali va Reyting
+              Joriy Xavfsizlik Bahosi va Reyting
             </h2>
             <p className="text-xs text-slate-500">
               2025-2026 O‘quv yili baholash xulosasi
@@ -43,25 +44,17 @@ export function LargeRankingCard({ rankingOverview, currentScore }: LargeRanking
 
       {/* Main Score Display */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-        {/* Left: Huge Score Number & Bar */}
+        {/* Left: Star Rating Display */}
         <div className="md:col-span-5 space-y-3">
           <div className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
-            Umumiy To‘plangan Ball
+            Xavfsizlik Yulduzli Bahosi
           </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight font-mono">
-              {score}
-            </span>
-            <span className="text-sm text-slate-400 font-medium font-mono">
-              / 100 ball
-            </span>
-          </div>
-
-          <div className="space-y-1.5 pt-1">
-            <Progress value={score} showColorByScore className="h-2" />
-            <div className="flex justify-between text-xs text-slate-500">
-              <span>Davlat talabi: &ge;80 (Xavfsiz)</span>
-              <span className="font-semibold text-slate-800">{score}% bajarilgan</span>
+          <div className="space-y-1">
+            <div className="pt-1">
+              <Sr4sStarBadge stars={score > 0 ? (score >= 90 ? 5 : score >= 75 ? 4 : score >= 60 ? 3 : score >= 45 ? 2 : 1) : 0} size="md" />
+            </div>
+            <div className="pt-1">
+              <ScoreStatusBadge score={score} />
             </div>
           </div>
         </div>

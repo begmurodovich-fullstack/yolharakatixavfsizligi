@@ -42,6 +42,8 @@ export enum SchoolStatus {
   PENDING_VERIFICATION = 'PENDING_VERIFICATION',
 }
 
+export type RoadType = 'INTERNATIONAL' | 'NATIONAL' | 'LOCAL' | 'URBAN';
+
 export interface School {
   id: string;
   schoolNumber: string;
@@ -55,6 +57,8 @@ export interface School {
   coordinateStatus: CoordinateStatus;
   status: SchoolStatus;
   currentScore: number;
+  starRating?: 1 | 2 | 3 | 4 | 5;
+  roadType?: RoadType;
   ranking?: number;
   studentCount?: number;
   createdAt: string;

@@ -106,19 +106,24 @@ export function AdminStatGrid({ summary }: AdminStatGridProps) {
       <div className="rounded-2xl border border-teal-200 bg-teal-50/50 p-5 sm:p-6 shadow-xs flex flex-col justify-between space-y-4">
         <div className="flex items-center justify-between">
           <span className="text-xs font-bold uppercase tracking-wider text-teal-800">
-            Respublika O‘rtacha Bali
+            Respublika O‘rtacha Yulduz Reytingi
           </span>
           <div className="p-2.5 rounded-xl bg-teal-100 text-teal-800">
             <Trophy className="w-5 h-5" />
           </div>
         </div>
         <div>
-          <div className="text-3xl sm:text-4xl font-black text-teal-950 font-mono tracking-tight">
-            {summary.republicAverageScore} <span className="text-sm font-normal text-teal-700 font-sans">/ 100</span>
+          <div className="text-2xl sm:text-3xl font-black text-teal-950 font-mono tracking-tight flex items-center gap-2">
+            <span>{summary.republicAverageScore > 0 ? `${summary.republicAverageScore} ball` : '—'}</span>
+            {summary.republicAverageScore > 0 && (
+              <span className="text-base text-amber-500 font-sans">
+                {summary.republicAverageScore >= 90 ? '⭐️⭐️⭐️⭐️⭐️' : summary.republicAverageScore >= 75 ? '⭐️⭐️⭐️⭐️' : summary.republicAverageScore >= 60 ? '⭐️⭐️⭐️' : summary.republicAverageScore >= 45 ? '⭐️⭐️' : '⭐️'}
+              </span>
+            )}
           </div>
           <div className="flex items-center gap-1.5 mt-1.5 text-xs text-teal-800 font-semibold">
             <TrendingUp className="w-3.5 h-3.5 text-teal-600" />
-            <span>Davlat normativiga muvofiq</span>
+            <span>SR4S 40 xalqaro mezon asosida</span>
           </div>
         </div>
       </div>

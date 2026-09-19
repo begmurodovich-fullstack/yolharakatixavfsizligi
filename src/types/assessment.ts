@@ -20,6 +20,8 @@ export interface QuestionOption {
   id: string;
   label: string;
   points: number;
+  imageUrl?: string;
+  code?: string;
 }
 
 export interface Question {
@@ -31,6 +33,9 @@ export interface Question {
   points: number;
   requiresEvidence: boolean;
   helpGuidance?: string;
+  guideImage?: string;
+  code?: string;
+  subType?: 'LEFT' | 'RIGHT' | 'GENERAL';
 }
 
 export interface Criterion {

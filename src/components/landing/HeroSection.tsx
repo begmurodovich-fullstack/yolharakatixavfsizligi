@@ -4,9 +4,12 @@ import React from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { UzbekistanSafetyMapVisual } from './UzbekistanSafetyMapVisual';
-import { Shield, ArrowRight, BookOpen, CheckCircle, Sparkles } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { Shield, ArrowRight, BookOpen, CheckCircle, Sparkles, LayoutDashboard } from 'lucide-react';
 
 export function HeroSection() {
+  const { user } = useAuth();
+
   return (
     <section id="bosh-sahifa" className="relative overflow-hidden pt-8 pb-16 lg:py-20">
       {/* Background ambient accents */}
@@ -59,19 +62,29 @@ export function HeroSection() {
 
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-4 pt-4">
-              <Link href="/login">
-                <Button size="lg" className="bg-teal-700 hover:bg-teal-800 text-white font-semibold gap-2 shadow-md hover:shadow-lg transition-all h-12 px-7 text-sm">
-                  <span>Tizimga kirish</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
+              {user ? (
+                <Link href={user.role === 'ADMIN' ? '/admin' : '/school'}>
+                  <Button size="lg" className="bg-teal-700 hover:bg-teal-800 text-white font-semibold gap-2 shadow-md hover:shadow-lg transition-all h-12 px-7 text-sm">
+                    <LayoutDashboard className="w-4 h-4" />
+                    <span>{user.role === 'ADMIN' ? 'Admin panelga o‘tish' : 'Baholashni boshlash'}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </Link>
+              ) : (
+                <Link href="/login">
+                  <Button size="lg" className="bg-teal-700 hover:bg-teal-800 text-white font-semibold gap-2 shadow-md hover:shadow-lg transition-all h-12 px-7 text-sm">
+                    <span>Tizimga kirish</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </Link>
+              )}
 
-              <a href="#platform">
+              <Link href="/platform">
                 <Button size="lg" variant="outline" className="border-slate-300 text-slate-700 hover:bg-slate-100 font-semibold gap-2 h-12 px-6 text-sm">
                   <BookOpen className="w-4 h-4 text-teal-700" />
                   <span>Platforma haqida</span>
                 </Button>
-              </a>
+              </Link>
             </div>
 
             {/* Prototype note */}

@@ -35,21 +35,27 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // Ensure directory exists in public/uploads/evidence
-      const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'evidence');
-      if (!fs.existsSync(uploadDir)) {
-        fs.mkdirSync(uploadDir, { recursive: true });
-      }
-
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
 
-      const ext = file.type === 'image/webp' ? 'webp' : file.type === 'image/png' ? 'png' : 'jpg';
-      const filename = `evi_${schoolId}_${questionId}_${Date.now()}.${ext}`;
-      const filePath = path.join(uploadDir, filename);
+      try {
+        // Ensure directory exists in public/uploads/evidence if local
+        const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'evidence');
+        if (!fs.existsSync(uploadDir)) {
+          fs.mkdirSync(uploadDir, { recursive: true });
+        }
 
-      fs.writeFileSync(filePath, buffer);
-      finalImageUrl = `/uploads/evidence/${filename}`;
+        const ext = file.type === 'image/webp' ? 'webp' : file.type === 'image/png' ? 'png' : 'jpg';
+        const filename = `evi_${schoolId}_${questionId}_${Date.now()}.${ext}`;
+        const filePath = path.join(uploadDir, filename);
+
+        fs.writeFileSync(filePath, buffer);
+        finalImageUrl = `/uploads/evidence/${filename}`;
+      } catch (fsErr) {
+        // Vercel serverless read-only filesystem fallback: store as base64 Data URL
+        console.warn('Filesystem write not supported on serverless, fallback to base64 Data URL');
+        finalImageUrl = `data:${file.type};base64,${buffer.toString('base64')}`;
+      }
     }
 
     if (!finalImageUrl) {

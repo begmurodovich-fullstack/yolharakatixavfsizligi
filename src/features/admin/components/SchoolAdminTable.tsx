@@ -43,8 +43,8 @@ export function SchoolAdminTable({
               <th className="py-4 px-5">Maktab nomi</th>
               <th className="py-4 px-5">Hudud (Viloyat / Tuman)</th>
               <th className="py-4 px-5">Direktor</th>
-              <th className="py-4 px-5 text-right">Ball</th>
-              <th className="py-4 px-5 text-center">Xavfsizlik Holati</th>
+              <th className="py-4 px-5 text-center">Yulduz Reytingi</th>
+              <th className="py-4 px-5 text-center">Xavfsizlik Toifasi</th>
               <th className="py-4 px-5 text-center">Geolokatsiya</th>
               <th className="py-4 px-5 text-center w-36">Amallar</th>
             </tr>
@@ -84,15 +84,32 @@ export function SchoolAdminTable({
                   {school.directorName}
                 </td>
 
-                {/* Score */}
-                <td className="py-4 px-5 text-right font-mono font-black text-sm text-slate-900">
-                  {school.currentScore}
-                  <span className="text-[10px] text-slate-400 font-normal ml-0.5">/ 100</span>
+                {/* Star Icons */}
+                <td className="py-4 px-5 text-center font-mono text-sm tracking-wider">
+                  {school.currentScore === 0 ? (
+                    <span className="text-slate-400 text-xs font-sans font-medium">—</span>
+                  ) : school.currentScore >= 90 ? (
+                    '⭐️⭐️⭐️⭐️⭐️'
+                  ) : school.currentScore >= 75 ? (
+                    '⭐️⭐️⭐️⭐️'
+                  ) : school.currentScore >= 60 ? (
+                    '⭐️⭐️⭐️'
+                  ) : school.currentScore >= 45 ? (
+                    '⭐️⭐️'
+                  ) : (
+                    '⭐️'
+                  )}
                 </td>
 
-                {/* Score Status */}
+                {/* Star Status Badge */}
                 <td className="py-4 px-5 text-center">
-                  <ScoreStatusBadge score={school.currentScore} showScore={false} />
+                  {school.currentScore === 0 ? (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-600 border border-slate-200">
+                      Kutilmoqda
+                    </span>
+                  ) : (
+                    <ScoreStatusBadge score={school.currentScore} showScore={false} />
+                  )}
                 </td>
 
                 {/* Coordinate Status */}

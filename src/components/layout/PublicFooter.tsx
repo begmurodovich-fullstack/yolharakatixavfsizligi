@@ -26,7 +26,7 @@ export function PublicFooter() {
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <Phone className="w-3.5 h-3.5 text-teal-400" />
-                +998 (71) 123-45-67
+                {APP_CONFIG.supportPhone}
               </span>
             </div>
           </div>
@@ -38,57 +38,56 @@ export function PublicFooter() {
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <a href="#bosh-sahifa" className="hover:text-teal-400 transition-colors">
+                <a href="/" className="hover:text-teal-400 transition-colors">
                   Bosh sahifa
                 </a>
               </li>
               <li>
-                <a href="#platform" className="hover:text-teal-400 transition-colors">
+                <a href="/platform" className="hover:text-teal-400 transition-colors">
                   Platforma mexanizmi
                 </a>
               </li>
               <li>
-                <a href="#mezonlar" className="hover:text-teal-400 transition-colors">
-                  8 ta xavfsizlik mezoni
+                <a href="/mezonlar" className="hover:text-teal-400 transition-colors">
+                  Xalqaro SR4S mezonlari
                 </a>
               </li>
               <li>
-                <a href="#xarita" className="hover:text-teal-400 transition-colors">
+                <a href="/map" className="hover:text-teal-400 transition-colors">
                   Geolokatsiya xaritasi
                 </a>
               </li>
               <li>
-                <a href="#reyting" className="hover:text-teal-400 transition-colors">
+                <a href="/reyting" className="hover:text-teal-400 transition-colors">
                   Respublika reytingi
                 </a>
               </li>
               <li>
-                <a href="#statistika" className="hover:text-teal-400 transition-colors">
+                <a href="/statistika" className="hover:text-teal-400 transition-colors">
                   Xavfsizlik statistikasi
                 </a>
               </li>
               <li>
-                <a href="#aloqa" className="hover:text-teal-400 transition-colors">
+                <a href="/aloqa" className="hover:text-teal-400 transition-colors">
                   Murojaat va aloqa
                 </a>
               </li>
             </ul>
           </div>
 
-          {/* Prototype note & Developer attribution */}
+          {/* System status note */}
           <div className="space-y-3">
             <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-200">
               Tizim holati
             </h4>
-            <div className="rounded-lg border border-slate-800 bg-slate-900/60 p-3 text-xs text-slate-400 space-y-2">
-              <div>
-                <span className="text-teal-400 font-semibold">V1 Prototip versiya:</span> Tizim ma’lumotlari
-                sinov rejimida ishlamoqda. Haqiqiy OneID integratsiyasi keyingi bosqichda kiritiladi.
+            <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-3.5 text-xs text-slate-300 space-y-2">
+              <div className="flex items-center gap-1.5 text-amber-400 font-bold">
+                <span>⚠️ Pilot Sinov Rejimi</span>
               </div>
-              <div className="pt-2 border-t border-slate-800 flex items-center gap-1.5 text-[11px] text-slate-400">
-                <Code2 className="w-3.5 h-3.5 text-teal-400 shrink-0" />
-                <span>Frontend arxitekturasi: V1 Foundation</span>
-              </div>
+              <p className="text-slate-400 text-[11px] leading-relaxed">
+                Tizim O‘zbekiston Respublikasi maktablari uchun pilot rejimda ishga tushirilgan.
+                Barcha 40 ta SR4S xavfsizlik mezonlari va reytinglar amaliy sinovdan o‘tmoqda.
+              </p>
             </div>
           </div>
         </div>

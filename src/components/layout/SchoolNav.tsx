@@ -16,10 +16,9 @@ import {
 
 const SCHOOL_NAV_ITEMS = [
   { label: 'Boshqaruv paneli', href: '/school', icon: LayoutDashboard, exact: true },
-  { label: 'O‘z-o‘zini baholash', href: '/school/assessment', icon: ClipboardCheck },
+  { label: 'Xavfsizlik mezonlari (SR4S)', href: '/school/criteria', icon: BookOpen },
   { label: 'Reytinglar', href: '/school/rankings', icon: Trophy },
   { label: 'Statistika', href: '/school/statistics', icon: BarChart3 },
-  { label: 'Xavfsizlik mezonlari', href: '/school/criteria', icon: BookOpen },
   { label: 'Geolokatsiya va profil', href: '/school/profile', icon: MapPin },
   { label: 'Bildirishnomalar', href: '/school/notifications', icon: Bell },
 ];

@@ -58,21 +58,28 @@ export class StatisticsService {
     let safeCount = 0;
     let moderateCount = 0;
     let highRiskCount = 0;
+    let assessedCount = 0;
     let verifiedCoordinatesCount = 0;
     let pendingCoordinatesCount = 0;
 
     schools.forEach((s) => {
-      totalScoreSum += s.currentScore;
-      const scoreEval = evaluateScore(s.currentScore);
-      if (scoreEval.status === ScoreStatus.GREEN) safeCount++;
-      else if (scoreEval.status === ScoreStatus.YELLOW) moderateCount++;
-      else highRiskCount++;
+      if (s.currentScore > 0) {
+        assessedCount++;
+        totalScoreSum += s.currentScore;
+        const scoreEval = evaluateScore(s.currentScore);
+        if (scoreEval.status === ScoreStatus.GREEN) safeCount++;
+        else if (scoreEval.status === ScoreStatus.YELLOW) moderateCount++;
+        else highRiskCount++;
+      }
 
       if (s.coordinateStatus === CoordinateStatus.VERIFIED) verifiedCoordinatesCount++;
       else if (s.coordinateStatus === CoordinateStatus.PENDING) pendingCoordinatesCount++;
     });
 
-    const averageScore = Math.round(totalScoreSum / totalSchools);
+    const averageScore = assessedCount > 0 ? Math.round(totalScoreSum / assessedCount) : 0;
+    const safePercentage = assessedCount > 0 ? Math.round((safeCount / assessedCount) * 100) : 0;
+    const moderatePercentage = assessedCount > 0 ? Math.round((moderateCount / assessedCount) * 100) : 0;
+    const highRiskPercentage = assessedCount > 0 ? Math.round((highRiskCount / assessedCount) * 100) : 0;
 
     return {
       totalSchools,
@@ -80,9 +87,9 @@ export class StatisticsService {
       safeCount,
       moderateCount,
       highRiskCount,
-      safePercentage: Math.round((safeCount / totalSchools) * 100),
-      moderatePercentage: Math.round((moderateCount / totalSchools) * 100),
-      highRiskPercentage: Math.round((highRiskCount / totalSchools) * 100),
+      safePercentage,
+      moderatePercentage,
+      highRiskPercentage,
       verifiedCoordinatesCount,
       pendingCoordinatesCount,
       periodName: currentPeriod?.name || '2025-2026 O‘quv yili',
@@ -111,9 +118,9 @@ export class StatisticsService {
 
     return {
       schoolScore,
-      districtAverage: calcAvg(districtSchools) || 78,
-      regionAverage: calcAvg(regionSchools) || 74,
-      republicAverage: calcAvg(republicSchools) || 71,
+      districtAverage: calcAvg(districtSchools),
+      regionAverage: calcAvg(regionSchools),
+      republicAverage: calcAvg(republicSchools),
     };
   }
 
@@ -125,25 +132,15 @@ export class StatisticsService {
     const periods = await repositories.assessment.getPeriods();
     const currentPeriod = periods.find((p) => p.isCurrent);
 
+    // Only return current period data. Historical data will be added when real
+    // multi-period assessments exist in the database.
+    if (!currentScore || currentScore === 0) {
+      return [];
+    }
+
     return [
       {
-        periodId: 'period-2024-spring',
-        periodName: '2023-2024 Bahorgi monitoring',
-        shortName: '2024 Bahor',
-        score: Math.max(45, currentScore - 18),
-        isCurrent: false,
-        status: evaluateScore(Math.max(45, currentScore - 18)).status,
-      },
-      {
-        periodId: 'period-2024-autumn',
-        periodName: '2024-2025 Kuzgi monitoring',
-        shortName: '2024 Kuz',
-        score: Math.max(55, currentScore - 12),
-        isCurrent: false,
-        status: evaluateScore(Math.max(55, currentScore - 12)).status,
-      },
-      {
-        periodId: currentPeriod?.id || 'period-2025-spring',
+        periodId: currentPeriod?.id || 'period-2025-q1',
         periodName: currentPeriod?.name || '2025-2026 Bahorgi monitoring',
         shortName: '2025 Bahor (Joriy)',
         score: currentScore,

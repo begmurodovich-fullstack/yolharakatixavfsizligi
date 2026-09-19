@@ -1,5 +1,7 @@
 import React from 'react';
+import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import {
   MapPin,
   ClipboardCheck,
@@ -106,6 +108,16 @@ export function WorkflowSection() {
               </div>
             );
           })}
+        </div>
+
+        {/* CTA Link to dedicated /platform page */}
+        <div className="flex justify-center mt-10">
+          <Link href="/platform">
+            <Button size="lg" className="bg-slate-900 hover:bg-teal-700 text-white font-semibold gap-2 shadow-sm text-sm">
+              <span>Platforma imkoniyatlari va mexanizmi haqida to‘liq</span>
+              <ArrowRight className="w-4 h-4 text-teal-400" />
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

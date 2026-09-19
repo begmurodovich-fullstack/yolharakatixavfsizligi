@@ -12,11 +12,11 @@ interface RealLeafletMapProps {
 }
 
 const TILE_LAYERS = {
-  voyager: {
-    name: '🎨 Zamonaviy Ko‘chalar (HD)',
-    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-    attribution: '&copy; CartoDB & OpenStreetMap',
-    maxZoom: 20,
+  osm: {
+    name: '🗺️ OpenStreetMap (Standart)',
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    maxZoom: 19,
   },
   satellite: {
     name: '🛰️ Sun’iy Yo‘ldosh (Sputnik)',
@@ -24,10 +24,10 @@ const TILE_LAYERS = {
     attribution: '&copy; Esri World Imagery',
     maxZoom: 19,
   },
-  osm: {
-    name: '🗺️ Standart Topografik',
-    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    attribution: '&copy; OpenStreetMap contributors',
+  voyager: {
+    name: '🎨 Topografik HD',
+    url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
+    attribution: '&copy; OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team',
     maxZoom: 19,
   },
 };
@@ -43,7 +43,7 @@ export function RealLeafletMap({
   const tileLayerRef = useRef<L.TileLayer | null>(null);
   const markerMapRef = useRef<Map<string, L.Marker>>(new Map());
 
-  const [activeLayer, setActiveLayer] = useState<'voyager' | 'satellite' | 'osm'>('voyager');
+  const [activeLayer, setActiveLayer] = useState<'osm' | 'satellite' | 'voyager'>('osm');
   const [showLayerMenu, setShowLayerMenu] = useState(false);
 
   // 1. Initialize Map
@@ -230,7 +230,7 @@ export function RealLeafletMap({
           </div>
           <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 6px; border-top: 1px solid #e2e8f0;">
             <span style="font-size: 12px; font-weight: 800; color: ${pinColor};">
-              ${isAssessed ? `${score} / 100 ball` : '0 ball (Baholanmagan)'}
+              ${isAssessed ? `${((score / 100) * 4 + 1).toFixed(1)} ★ / 5.0 yulduz` : 'Baholanmagan'}
             </span>
             <span style="font-size: 10px; font-weight: 700; background: ${
               isAssessed ? '#ecfdf5' : '#f1f5f9'

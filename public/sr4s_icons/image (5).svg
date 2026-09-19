@@ -1,0 +1,274 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                                            <linearGradient id="star-1-10">
+                                <stop offset="0%" stop-color="rgb(0,0,0)"></stop>
+                                <stop offset="20%" stop-color="rgb(0,0,0)"></stop>
+                                <stop offset="20%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-1-20">
+                                <stop offset="0%" stop-color="rgb(0,0,0)"></stop>
+                                <stop offset="28%" stop-color="rgb(0,0,0)"></stop>
+                                <stop offset="28%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-1-30">
+                                <stop offset="0%" stop-color="rgb(0,0,0)"></stop>
+                                <stop offset="36%" stop-color="rgb(0,0,0)"></stop>
+                                <stop offset="36%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-1-40">
+                                <stop offset="0%" stop-color="rgb(0,0,0)"></stop>
+                                <stop offset="44%" stop-color="rgb(0,0,0)"></stop>
+                                <stop offset="44%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-1-50">
+                                <stop offset="0%" stop-color="rgb(0,0,0)"></stop>
+                                <stop offset="50%" stop-color="rgb(0,0,0)"></stop>
+                                <stop offset="50%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-1-60">
+                                <stop offset="0%" stop-color="rgb(0,0,0)"></stop>
+                                <stop offset="56%" stop-color="rgb(0,0,0)"></stop>
+                                <stop offset="56%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-1-70">
+                                <stop offset="0%" stop-color="rgb(0,0,0)"></stop>
+                                <stop offset="64%" stop-color="rgb(0,0,0)"></stop>
+                                <stop offset="64%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-1-80">
+                                <stop offset="0%" stop-color="rgb(0,0,0)"></stop>
+                                <stop offset="72%" stop-color="rgb(0,0,0)"></stop>
+                                <stop offset="72%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-1-90">
+                                <stop offset="0%" stop-color="rgb(0,0,0)"></stop>
+                                <stop offset="80%" stop-color="rgb(0,0,0)"></stop>
+                                <stop offset="80%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-2-10">
+                                <stop offset="0%" stop-color="rgb(255,0,0)"></stop>
+                                <stop offset="20%" stop-color="rgb(255,0,0)"></stop>
+                                <stop offset="20%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-2-20">
+                                <stop offset="0%" stop-color="rgb(255,0,0)"></stop>
+                                <stop offset="28%" stop-color="rgb(255,0,0)"></stop>
+                                <stop offset="28%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-2-30">
+                                <stop offset="0%" stop-color="rgb(255,0,0)"></stop>
+                                <stop offset="36%" stop-color="rgb(255,0,0)"></stop>
+                                <stop offset="36%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-2-40">
+                                <stop offset="0%" stop-color="rgb(255,0,0)"></stop>
+                                <stop offset="44%" stop-color="rgb(255,0,0)"></stop>
+                                <stop offset="44%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-2-50">
+                                <stop offset="0%" stop-color="rgb(255,0,0)"></stop>
+                                <stop offset="50%" stop-color="rgb(255,0,0)"></stop>
+                                <stop offset="50%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-2-60">
+                                <stop offset="0%" stop-color="rgb(255,0,0)"></stop>
+                                <stop offset="56%" stop-color="rgb(255,0,0)"></stop>
+                                <stop offset="56%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-2-70">
+                                <stop offset="0%" stop-color="rgb(255,0,0)"></stop>
+                                <stop offset="64%" stop-color="rgb(255,0,0)"></stop>
+                                <stop offset="64%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-2-80">
+                                <stop offset="0%" stop-color="rgb(255,0,0)"></stop>
+                                <stop offset="72%" stop-color="rgb(255,0,0)"></stop>
+                                <stop offset="72%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-2-90">
+                                <stop offset="0%" stop-color="rgb(255,0,0)"></stop>
+                                <stop offset="80%" stop-color="rgb(255,0,0)"></stop>
+                                <stop offset="80%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-3-10">
+                                <stop offset="0%" stop-color="rgb(255,170,0)"></stop>
+                                <stop offset="20%" stop-color="rgb(255,170,0)"></stop>
+                                <stop offset="20%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-3-20">
+                                <stop offset="0%" stop-color="rgb(255,170,0)"></stop>
+                                <stop offset="28%" stop-color="rgb(255,170,0)"></stop>
+                                <stop offset="28%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-3-30">
+                                <stop offset="0%" stop-color="rgb(255,170,0)"></stop>
+                                <stop offset="36%" stop-color="rgb(255,170,0)"></stop>
+                                <stop offset="36%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-3-40">
+                                <stop offset="0%" stop-color="rgb(255,170,0)"></stop>
+                                <stop offset="44%" stop-color="rgb(255,170,0)"></stop>
+                                <stop offset="44%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-3-50">
+                                <stop offset="0%" stop-color="rgb(255,170,0)"></stop>
+                                <stop offset="50%" stop-color="rgb(255,170,0)"></stop>
+                                <stop offset="50%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-3-60">
+                                <stop offset="0%" stop-color="rgb(255,170,0)"></stop>
+                                <stop offset="56%" stop-color="rgb(255,170,0)"></stop>
+                                <stop offset="56%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-3-70">
+                                <stop offset="0%" stop-color="rgb(255,170,0)"></stop>
+                                <stop offset="64%" stop-color="rgb(255,170,0)"></stop>
+                                <stop offset="64%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-3-80">
+                                <stop offset="0%" stop-color="rgb(255,170,0)"></stop>
+                                <stop offset="72%" stop-color="rgb(255,170,0)"></stop>
+                                <stop offset="72%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-3-90">
+                                <stop offset="0%" stop-color="rgb(255,170,0)"></stop>
+                                <stop offset="80%" stop-color="rgb(255,170,0)"></stop>
+                                <stop offset="80%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-4-10">
+                                <stop offset="0%" stop-color="rgb(255,255,68)"></stop>
+                                <stop offset="20%" stop-color="rgb(255,255,68)"></stop>
+                                <stop offset="20%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-4-20">
+                                <stop offset="0%" stop-color="rgb(255,255,68)"></stop>
+                                <stop offset="28%" stop-color="rgb(255,255,68)"></stop>
+                                <stop offset="28%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-4-30">
+                                <stop offset="0%" stop-color="rgb(255,255,68)"></stop>
+                                <stop offset="36%" stop-color="rgb(255,255,68)"></stop>
+                                <stop offset="36%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-4-40">
+                                <stop offset="0%" stop-color="rgb(255,255,68)"></stop>
+                                <stop offset="44%" stop-color="rgb(255,255,68)"></stop>
+                                <stop offset="44%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-4-50">
+                                <stop offset="0%" stop-color="rgb(255,255,68)"></stop>
+                                <stop offset="50%" stop-color="rgb(255,255,68)"></stop>
+                                <stop offset="50%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-4-60">
+                                <stop offset="0%" stop-color="rgb(255,255,68)"></stop>
+                                <stop offset="56%" stop-color="rgb(255,255,68)"></stop>
+                                <stop offset="56%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-4-70">
+                                <stop offset="0%" stop-color="rgb(255,255,68)"></stop>
+                                <stop offset="64%" stop-color="rgb(255,255,68)"></stop>
+                                <stop offset="64%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-4-80">
+                                <stop offset="0%" stop-color="rgb(255,255,68)"></stop>
+                                <stop offset="72%" stop-color="rgb(255,255,68)"></stop>
+                                <stop offset="72%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-4-90">
+                                <stop offset="0%" stop-color="rgb(255,255,68)"></stop>
+                                <stop offset="80%" stop-color="rgb(255,255,68)"></stop>
+                                <stop offset="80%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-5-10">
+                                <stop offset="0%" stop-color="rgb(0,153,0)"></stop>
+                                <stop offset="20%" stop-color="rgb(0,153,0)"></stop>
+                                <stop offset="20%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-5-20">
+                                <stop offset="0%" stop-color="rgb(0,153,0)"></stop>
+                                <stop offset="28%" stop-color="rgb(0,153,0)"></stop>
+                                <stop offset="28%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-5-30">
+                                <stop offset="0%" stop-color="rgb(0,153,0)"></stop>
+                                <stop offset="36%" stop-color="rgb(0,153,0)"></stop>
+                                <stop offset="36%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-5-40">
+                                <stop offset="0%" stop-color="rgb(0,153,0)"></stop>
+                                <stop offset="44%" stop-color="rgb(0,153,0)"></stop>
+                                <stop offset="44%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-5-50">
+                                <stop offset="0%" stop-color="rgb(0,153,0)"></stop>
+                                <stop offset="50%" stop-color="rgb(0,153,0)"></stop>
+                                <stop offset="50%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-5-60">
+                                <stop offset="0%" stop-color="rgb(0,153,0)"></stop>
+                                <stop offset="56%" stop-color="rgb(0,153,0)"></stop>
+                                <stop offset="56%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-5-70">
+                                <stop offset="0%" stop-color="rgb(0,153,0)"></stop>
+                                <stop offset="64%" stop-color="rgb(0,153,0)"></stop>
+                                <stop offset="64%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-5-80">
+                                <stop offset="0%" stop-color="rgb(0,153,0)"></stop>
+                                <stop offset="72%" stop-color="rgb(0,153,0)"></stop>
+                                <stop offset="72%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                                    <linearGradient id="star-5-90">
+                                <stop offset="0%" stop-color="rgb(0,153,0)"></stop>
+                                <stop offset="80%" stop-color="rgb(0,153,0)"></stop>
+                                <stop offset="80%" stop-color="transparent"></stop>
+                                <stop offset="100%" stop-color="transparent"></stop>
+                            </linearGradient>
+                                    </defs>
+        </svg>

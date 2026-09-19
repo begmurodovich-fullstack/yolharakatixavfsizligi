@@ -47,18 +47,19 @@ export function RankingHeroCard({ overview, currentScore }: RankingHeroCardProps
 
       {/* Main Score & 3-Tier Ranking Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-        {/* Score Display */}
+        {/* Star Rating Display */}
         <div className="lg:col-span-4 space-y-3">
           <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-            To‘plangan jami ball:
+            Xavfsizlik Yulduz Reytingi:
           </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight font-mono">
-              {score}
+          <div className="flex flex-col gap-1.5">
+            <span className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-mono">
+              {score >= 90 ? '⭐️⭐️⭐️⭐️⭐️' : score >= 75 ? '⭐️⭐️⭐️⭐️' : score >= 60 ? '⭐️⭐️⭐️' : score >= 45 ? '⭐️⭐️' : score > 0 ? '⭐️' : 'Baholanmagan'}
             </span>
-            <span className="text-sm font-medium text-slate-400 font-mono">/ 100</span>
+            <div className="mt-1">
+              <ScoreStatusBadge score={score} />
+            </div>
           </div>
-          <Progress value={score} showColorByScore className="h-2" />
         </div>
 
         {/* 3 Scope Ranks */}

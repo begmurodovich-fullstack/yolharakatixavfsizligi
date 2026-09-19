@@ -1,9 +1,14 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
+import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
-import { Shield, ArrowRight, School, KeyRound } from 'lucide-react';
+import { Shield, ArrowRight, ClipboardCheck, KeyRound, BookOpen } from 'lucide-react';
 
 export function CtaSection() {
+  const { user } = useAuth();
+
   return (
     <section className="py-16 bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -23,23 +28,33 @@ export function CtaSection() {
             </h2>
 
             <p className="text-sm sm:text-base text-slate-300 max-w-xl mx-auto leading-relaxed">
-              Platformaga shaxsiy kabinet orqali kiring, maktabingiz bo‘yicha joriy ko‘rsatkichlarni
-              ko‘rib chiqing va foto-dalillar asosida monitoringda ishtirok eting.
+              Platformaga shaxsiy kabinet orqali kiring, maktabingiz bo‘yicha 40 ta xalqaro SR4S parametri
+              asosida monitoringda ishtirok eting va yulduz reytingini oling.
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-              <Link href="/login">
-                <Button size="lg" className="bg-teal-600 hover:bg-teal-700 text-white font-semibold gap-2 h-12 px-8 text-sm shadow-lg">
-                  <KeyRound className="w-4 h-4" />
-                  <span>Tizimga kirish</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
+              {user ? (
+                <Link href={user.role === 'SCHOOL_USER' ? '/school/criteria' : '/admin'}>
+                  <Button size="lg" className="bg-teal-600 hover:bg-teal-700 text-white font-semibold gap-2 h-12 px-8 text-sm shadow-lg">
+                    <ClipboardCheck className="w-4 h-4" />
+                    <span>Baholashni boshlash</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </Link>
+              ) : (
+                <Link href="/login">
+                  <Button size="lg" className="bg-teal-600 hover:bg-teal-700 text-white font-semibold gap-2 h-12 px-8 text-sm shadow-lg">
+                    <KeyRound className="w-4 h-4" />
+                    <span>Tizimga kirish va Baholash</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </Link>
+              )}
 
-              <Link href="/school">
+              <Link href="/mezonlar">
                 <Button size="lg" variant="outline" className="border-slate-700 text-slate-200 hover:bg-slate-800 hover:text-white font-semibold gap-2 h-12 px-6 text-sm">
-                  <School className="w-4 h-4 text-teal-400" />
-                  <span>Maktab kabineti namoyishi</span>
+                  <BookOpen className="w-4 h-4 text-teal-400" />
+                  <span>40 ta SR4S Mezonlari</span>
                 </Button>
               </Link>
             </div>

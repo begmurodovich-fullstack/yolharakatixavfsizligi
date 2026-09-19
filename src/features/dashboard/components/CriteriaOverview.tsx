@@ -48,16 +48,16 @@ export function CriteriaOverview({ criterionScores }: CriteriaOverviewProps) {
           </div>
           <div>
             <h2 className="text-base font-bold text-slate-900">
-              Yo‘l Xavfsizligi Mezonlari Ko‘rsatkichlari
+              40 ta Rasmiy SR4S Yo‘l Xavfsizligi Mezonlari Nazorati
             </h2>
             <p className="text-xs text-slate-500">
-              Davlat standarti bo‘yicha 8 ta yo‘nalishdagi natijalar
+              O‘zbekiston maktablari uchun iRAP xalqaro baholash standarti
             </p>
           </div>
         </div>
 
         <span className="text-xs font-mono font-bold text-teal-800 bg-teal-50 px-2.5 py-1 rounded-md border border-teal-200 w-fit">
-          Jami: 8 ta mezon
+          Jami: 40 ta savol
         </span>
       </div>
 
@@ -89,7 +89,7 @@ export function CriteriaOverview({ criterionScores }: CriteriaOverviewProps) {
               <div className="space-y-2 pt-3 border-t border-slate-100">
                 <div className="flex items-baseline justify-between">
                   <span className="text-sm font-extrabold text-slate-900 font-mono">
-                    {item.earnedScore} <span className="text-[11px] text-slate-400 font-normal">/ {item.maxScore}</span>
+                    {item.earnedScore > 0 ? `${((item.percentage / 100) * 4 + 1).toFixed(1)} ★` : '—'}
                   </span>
                   <ScoreStatusBadge score={item.percentage} showScore={false} className="text-[10px] py-0 px-2" />
                 </div>

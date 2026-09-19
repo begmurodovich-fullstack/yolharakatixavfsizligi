@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <rect width="100" height="100" rx="16" fill="#334155" />
+  <!-- Lamp post -->
+  <path d="M35 84 L35 30 Q35 18 50 18 L65 18" fill="none" stroke="#E2E8F0" stroke-width="4" stroke-linecap="round" />
+  <polygon points="60,18 72,18 68,26 64,26" fill="#E2E8F0" />
+  <!-- Light beam -->
+  <polygon points="66,26 30,84 90,84" fill="rgba(254, 240, 138, 0.4)" />
+</svg>

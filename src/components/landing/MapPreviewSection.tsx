@@ -1,16 +1,19 @@
 'use client';
 
 import React, { useEffect, useState, useMemo } from 'react';
+import Link from 'next/link';
 import { schoolService } from '@/services/schoolService';
 import { School, Region, CoordinateStatus, ScoreStatus } from '@/types';
 import { evaluateScore } from '@/lib/scoreRules';
 import { ScoreStatusBadge, GenericStatusBadge } from '@/components/ui/status-badge';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import {
   MapPin,
   ShieldCheck,
   Navigation,
   Info,
+  ArrowRight,
 } from 'lucide-react';
 import { cn } from '@/lib/cn';
 
@@ -229,9 +232,16 @@ export function MapPreviewSection() {
 
                   <div className="rounded-xl bg-slate-50 p-4 border border-slate-100 flex items-center justify-between">
                     <div>
-                      <div className="text-[11px] text-slate-500">Joriy xavfsizlik bali:</div>
-                      <div className="text-2xl font-extrabold text-slate-900 mt-0.5">
-                        {selectedSchool.currentScore} <span className="text-xs text-slate-400 font-normal">/ 100</span>
+                      <div className="text-[11px] text-slate-500">Xavfsizlik darajasi:</div>
+                      <div className="text-xl font-extrabold text-slate-900 mt-0.5 flex items-center gap-1">
+                        {selectedSchool.currentScore > 0 ? (
+                          <>
+                            <span>{((selectedSchool.currentScore / 100) * 4 + 1).toFixed(1)}</span>
+                            <span className="text-xs text-amber-500 font-normal">★ (5 yulduzli)</span>
+                          </>
+                        ) : (
+                          <span className="text-sm text-slate-400 font-medium">Baholanmagan</span>
+                        )}
                       </div>
                     </div>
                     <ScoreStatusBadge score={selectedSchool.currentScore} />
@@ -267,6 +277,16 @@ export function MapPreviewSection() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* CTA to full interactive /map page */}
+        <div className="flex justify-center mt-10">
+          <Link href="/map">
+            <Button size="lg" className="bg-slate-900 hover:bg-teal-700 text-white font-semibold gap-2 text-sm shadow-sm">
+              <span>Barcha 10 110 ta maktabni to‘liq xaritada ko‘rish</span>
+              <ArrowRight className="w-4 h-4 text-teal-400" />
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

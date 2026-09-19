@@ -57,14 +57,14 @@ export function EvidenceReviewCard({
           <div className="flex items-center gap-2">
             <SchoolIcon className="w-4 h-4 text-teal-600 shrink-0" />
             <span className="text-xs sm:text-sm font-bold text-slate-900 truncate">
-              {school?.name || '24-umumta’lim maktabi'}
+              {school?.name || 'Maktab'}
             </span>
           </div>
 
           <div className="text-[11px] text-slate-500 flex items-center gap-1.5 pl-6">
             <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
             <span>
-              {school?.districtName || 'G‘ijduvon tumani'}, {school?.regionName || 'Buxoro viloyati'}
+              {school?.districtName || 'Qiziltepa tumani'}{school?.regionName ? `, ${school.regionName}` : ', Navoiy viloyati'}
             </span>
           </div>
 
