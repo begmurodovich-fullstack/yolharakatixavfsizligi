@@ -150,7 +150,15 @@ export default function SchoolCriteriaPage() {
 
       {/* 2. Interactive SR4S Calculator / Demonstrator */}
       <div className="space-y-2">
-        <Sr4sDemonstrator />
+        <Sr4sDemonstrator
+          school={school}
+          onSaveSuccess={(updatedScore) => {
+            if (school) {
+              setSchool({ ...school, currentScore: updatedScore });
+            }
+            loadData();
+          }}
+        />
       </div>
     </div>
   );

@@ -167,9 +167,14 @@ export function AssessmentReviewModal({
                   key={paramId}
                   className="p-3 rounded-xl border border-slate-100 bg-slate-50 flex items-center justify-between text-xs"
                 >
-                  <div className="font-semibold text-slate-800 truncate max-w-[60%]">
-                    {paramId.replace('attr-', 'Parametr #')}
-                    {ans.optionLabel ? <span className="text-slate-400 font-normal ml-1">— {ans.optionLabel}</span> : null}
+                  <div className="font-semibold text-slate-800 truncate max-w-[70%]">
+                    {ans.code ? (
+                      <span className="font-mono text-teal-700 mr-1.5 font-bold">[{ans.code}]</span>
+                    ) : null}
+                    <span>{ans.nameUz || paramId.replace('attr-', 'Parametr #')}</span>
+                    {ans.optionLabel ? (
+                      <span className="text-slate-500 font-normal ml-1.5">— {ans.optionLabel}</span>
+                    ) : null}
                   </div>
                   <div className="font-mono font-bold text-slate-900">
                     {ans.pointsAwarded ?? 0} / 5 ball

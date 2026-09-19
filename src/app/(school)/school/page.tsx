@@ -231,7 +231,15 @@ export default function SchoolDashboardPage() {
 
       {/* 3. Rasmiy SR4S 40 Mezonli Kalkulyator va Baholash */}
       <div className="space-y-4">
-        <Sr4sDemonstrator />
+        <Sr4sDemonstrator
+          school={school}
+          onSaveSuccess={(updatedScore) => {
+            if (school) {
+              setSchool({ ...school, currentScore: updatedScore });
+            }
+            loadDashboardData();
+          }}
+        />
       </div>
 
       {/* 5. Recommendations Card */}

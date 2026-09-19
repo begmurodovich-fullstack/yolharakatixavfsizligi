@@ -65,7 +65,7 @@ export async function PATCH(
   try {
     const { id } = params;
     const body = await request.json();
-    const { directorName, studentCount, latitude, longitude, addressNotes, coordinateStatus } = body;
+    const { directorName, studentCount, latitude, longitude, addressNotes, coordinateStatus, currentScore } = body;
 
     const updated = await query(
       `UPDATE schools
@@ -75,8 +75,9 @@ export async function PATCH(
            longitude = COALESCE($4, longitude),
            address_notes = COALESCE($5, address_notes),
            coordinate_status = COALESCE($6, coordinate_status),
+           current_score = COALESCE($7, current_score),
            updated_at = NOW()
-       WHERE id = $7
+       WHERE id = $8
        RETURNING *`,
       [
         directorName !== undefined ? directorName : null,
@@ -85,6 +86,7 @@ export async function PATCH(
         longitude !== undefined ? parseFloat(longitude) : null,
         addressNotes !== undefined ? addressNotes : null,
         coordinateStatus !== undefined ? coordinateStatus : null,
+        currentScore !== undefined ? Number(currentScore) : null,
         id,
       ]
     );

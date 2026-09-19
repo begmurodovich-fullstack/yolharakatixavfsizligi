@@ -20,6 +20,17 @@ export function SchoolHeader() {
       schoolService.getSchoolById(user.schoolId).then((s) => setSchool(s));
     }
     assessmentService.getCurrentPeriod().then((p) => setPeriod(p));
+
+    const handleScoreUpdate = (e: any) => {
+      if (e.detail?.score !== undefined) {
+        setSchool((prev) => (prev ? { ...prev, currentScore: Number(e.detail.score) } : prev));
+      }
+    };
+
+    window.addEventListener('school-score-updated', handleScoreUpdate);
+    return () => {
+      window.removeEventListener('school-score-updated', handleScoreUpdate);
+    };
   }, [user?.schoolId]);
 
   return (

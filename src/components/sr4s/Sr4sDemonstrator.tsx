@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/cn';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/components/ui/toast';
 import { Button } from '@/components/ui/button';
+import { School } from '@/types';
 import {
   OFFICIAL_40_ATTRIBUTES_DATA,
   AttributeDefinition,
@@ -35,7 +36,12 @@ export type { AttributeDefinition, AttributeOption };
 export { OFFICIAL_SR4S_STAR_LEVELS, OFFICIAL_SR4S_STAR_LEVELS as SR4S_STAR_LEVELS };
 export type { Sr4sStarLevel };
 
-export function Sr4sDemonstrator() {
+export interface Sr4sDemonstratorProps {
+  school?: School | null;
+  onSaveSuccess?: (updatedScore: number, starScore: number) => void;
+}
+
+export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProps = {}) {
   const { user } = useAuth();
   const { success, error, info } = useToast();
 
@@ -45,6 +51,45 @@ export function Sr4sDemonstrator() {
   const [inputVal, setInputVal] = useState<string>('');
   const [sliderVal, setSliderVal] = useState<number>(40);
   const [isSaving, setIsSaving] = useState(false);
+
+  // Preload previously saved assessment for this school if exists
+  useEffect(() => {
+    const targetSchoolId = school?.id || user?.schoolId;
+    if (!targetSchoolId) return;
+
+    let isMounted = true;
+    (async () => {
+      try {
+        const res = await fetch(`/api/assessments?schoolId=${targetSchoolId}`);
+        if (!res.ok) return;
+        const list = await res.json();
+        if (Array.isArray(list) && list.length > 0 && isMounted) {
+          const latest = list[0];
+          if (latest.answers && typeof latest.answers === 'object') {
+            setAttributes((prev) =>
+              prev.map((attr) => {
+                const savedAns = latest.answers[attr.id];
+                if (savedAns) {
+                  return {
+                    ...attr,
+                    currentValueId: savedAns.selectedOptionId || savedAns.value || attr.currentValueId,
+                    customValue: savedAns.value || attr.customValue,
+                  };
+                }
+                return attr;
+              })
+            );
+          }
+        }
+      } catch (err) {
+        console.error('Failed to preload saved school assessment:', err);
+      }
+    })();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [school?.id, user?.schoolId]);
 
   // When opening modal, initialize inputVal or sliderVal
   const handleOpenModal = (attr: AttributeDefinition) => {
@@ -282,10 +327,90 @@ export function Sr4sDemonstrator() {
   const handleSaveAssessment = async () => {
     setIsSaving(true);
     try {
-      await new Promise((r) => setTimeout(r, 800));
-      success(`Baholash muvaffaqiyatli saqlandi! Yulduzli reyting: ${decimalScore} (SRS: ${srsScore})`);
-    } catch {
-      error('Saqlashda xatolik yuz berdi');
+      const targetSchoolId = school?.id || user?.schoolId || 'sch-3837';
+      const starNum = parseFloat(decimalScore) || 4.6;
+      const score100 = Math.round(Math.max(10, Math.min(100, starNum * 20)));
+
+      // 40 ta mezon javoblarini shakllantirish
+      const answersPayload: Record<string, any> = {};
+      attributes.forEach((attr) => {
+        const currentOption =
+          attr.options.find((o) => o.id === attr.currentValueId) || attr.options[0];
+        answersPayload[attr.id] = {
+          questionId: attr.id,
+          code: attr.code,
+          nameUz: attr.nameUz,
+          nameEn: attr.nameEn,
+          selectedOptionId: attr.currentValueId,
+          optionLabel: currentOption?.labelUz || attr.customValue || attr.currentValueId,
+          pointsAwarded: currentOption?.scoreWeight || 4,
+          value: attr.customValue || attr.currentValueId,
+        };
+      });
+
+      const criterionScoresPayload = {
+        srsScore,
+        starRating: decimalScore,
+        ctsAlong,
+        ctsCrossing,
+        operatingSpeed: irapResult.operatingSpeed,
+        speedFactor: irapResult.speedFactor,
+        flowFactor: irapResult.flowFactor,
+        severityFactor: irapResult.severityFactor,
+        alongLikelihood: irapResult.alongLikelihood,
+        crossingLikelihood: irapResult.crossingLikelihood,
+      };
+
+      // 1. Saqlash: /api/assessments ga yuborish
+      const res = await fetch('/api/assessments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          schoolId: targetSchoolId,
+          periodId: 'period-2026-q1',
+          status: 'SUBMITTED',
+          score: score100,
+          maxScore: 100,
+          percentage: score100,
+          answers: answersPayload,
+          criterionScores: criterionScoresPayload,
+          reviewerNotes: `SR4S 40 mezonli baholash: ${decimalScore} Yulduz (SRS: ${srsScore})`,
+          submittedBy: user?.id || null,
+        }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.message || 'Baholashni saqlashda xatolik yuz berdi');
+      }
+
+      // 2. Maktab joriy ballini to'g'ridan-to'g'ri yangilash
+      await fetch(`/api/schools/${targetSchoolId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentScore: score100 }),
+      }).catch((e) => console.warn('School current score sync warning:', e));
+
+      // 3. Tizim bo'ylab hodisani tarqatish (header va boshqa komponentlar yangilanishi uchun)
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(
+          new CustomEvent('school-score-updated', {
+            detail: { score: score100, starScore: starNum, schoolId: targetSchoolId },
+          })
+        );
+      }
+
+      if (onSaveSuccess) {
+        onSaveSuccess(score100, starNum);
+      }
+
+      success(
+        `Baholash muvaffaqiyatli saqlandi va IIV YHXX tasdiqlashiga yuborildi! Yulduzli reyting: ${decimalScore} (SRS: ${srsScore})`,
+        'Muvaffaqiyatli'
+      );
+    } catch (err: any) {
+      console.error('Save assessment error:', err);
+      error(err?.message || 'Saqlashda xatolik yuz berdi', 'Xatolik');
     } finally {
       setIsSaving(false);
     }
@@ -476,7 +601,7 @@ export function Sr4sDemonstrator() {
           </div>
 
           {/* Save Button for Authenticated School Users */}
-          {user && (
+          {(user || school) && (
             <Button
               onClick={handleSaveAssessment}
               disabled={isSaving}
