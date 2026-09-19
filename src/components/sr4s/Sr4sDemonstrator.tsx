@@ -590,9 +590,9 @@ export function Sr4sDemonstrator() {
                 <div className="relative flex-1 flex items-center">
                   <input
                     type="range"
-                    min={activeModalAttr.min || 10}
-                    max={activeModalAttr.max || 130}
-                    step={activeModalAttr.step || 5}
+                    min={activeModalAttr.min ?? 1}
+                    max={activeModalAttr.max ?? 150}
+                    step={activeModalAttr.step ?? 1}
                     value={sliderVal}
                     onChange={(e) =>
                       handleSliderChange(activeModalAttr.id, parseInt(e.target.value, 10))
@@ -603,9 +603,9 @@ export function Sr4sDemonstrator() {
                 <div className="flex items-stretch border border-[#009688] rounded-md overflow-hidden bg-white shadow-2xs">
                   <input
                     type="number"
-                    min={activeModalAttr.min || 10}
-                    max={activeModalAttr.max || 130}
-                    step={activeModalAttr.step || 1}
+                    min={activeModalAttr.min ?? 1}
+                    max={activeModalAttr.max ?? 150}
+                    step={activeModalAttr.step ?? 1}
                     value={sliderVal}
                     onChange={(e) => {
                       const val = parseInt(e.target.value, 10);

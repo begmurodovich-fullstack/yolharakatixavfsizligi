@@ -1542,9 +1542,9 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "currentValueId": "40",
     "customValue": "40",
     "isSlider": true,
-    "min": 10,
-    "max": 130,
-    "step": 5,
+    "min": 1,
+    "max": 150,
+    "step": 1,
     "inputUnit": "km/h",
     "options": [
       {
@@ -1565,9 +1565,9 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "currentValueId": "40",
     "customValue": "40",
     "isSlider": true,
-    "min": 10,
-    "max": 130,
-    "step": 5,
+    "min": 1,
+    "max": 150,
+    "step": 1,
     "inputUnit": "km/h",
     "options": [
       {
