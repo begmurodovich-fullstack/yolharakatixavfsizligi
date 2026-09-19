@@ -43,7 +43,7 @@ export function Sr4sDemonstrator() {
   const [activeModalAttr, setActiveModalAttr] = useState<AttributeDefinition | null>(null);
   const [showFormulaModal, setShowFormulaModal] = useState<boolean>(false);
   const [inputVal, setInputVal] = useState<string>('');
-  const [sliderVal, setSliderVal] = useState<number>(45);
+  const [sliderVal, setSliderVal] = useState<number>(40);
   const [isSaving, setIsSaving] = useState(false);
 
   // When opening modal, initialize inputVal or sliderVal
@@ -53,7 +53,7 @@ export function Sr4sDemonstrator() {
       setInputVal(attr.customValue || attr.currentValueId || '');
     }
     if (attr.isSlider) {
-      setSliderVal(parseInt(attr.customValue || attr.currentValueId || '45', 10));
+      setSliderVal(parseInt(attr.customValue || attr.currentValueId || '40', 10));
     }
   };
 
@@ -110,7 +110,7 @@ export function Sr4sDemonstrator() {
 
   const handleReset = () => {
     setAttributes(OFFICIAL_40_ATTRIBUTES_DATA);
-    success('Barcha 40 mezon boshlang‘ich holatga qaytarildi (Standart 4.4 Yulduz)');
+    success('Barcha 40 mezon boshlang‘ich holatga qaytarildi (Standart 4.6 Yulduz)');
   };
 
   const handlePreset = (level: 'safe' | 'medium' | 'danger') => {

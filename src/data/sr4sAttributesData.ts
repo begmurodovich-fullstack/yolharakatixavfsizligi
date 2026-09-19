@@ -700,7 +700,7 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-18",
     "nameUz": "Trotuar chap tomonda",
     "nameEn": "Sidewalk Left",
-    "currentValueId": "0_1m",
+    "currentValueId": "1_3m",
     "options": [
       {
         "id": "none",
@@ -1562,8 +1562,8 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-37",
     "nameUz": "Haqiqiy harakat tezligi (Operating Speed)",
     "nameEn": "Operating Speed",
-    "currentValueId": "45",
-    "customValue": "45",
+    "currentValueId": "40",
+    "customValue": "40",
     "isSlider": true,
     "min": 10,
     "max": 130,
@@ -1571,12 +1571,12 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "inputUnit": "km/h",
     "options": [
       {
-        "id": "45",
-        "labelUz": "45 km/h",
-        "labelEn": "45 km/h",
+        "id": "40",
+        "labelUz": "40 km/h",
+        "labelEn": "40 km/h",
         "iconSrc": "/sr4s_icons/operating-speed.png",
         "scoreWeight": 4,
-        "badgeText": "45 km/h"
+        "badgeText": "40 km/h"
       }
     ]
   },

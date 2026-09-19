@@ -119,7 +119,7 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
 
   // 1. Haqiqiy Tezlik Koeffitsiyenti (Operating Speed Factor)
   // iRAP bazaviy tezlik: 50 km/h (1.0). Xavf tezlik kvadratiga proporsional.
-  const speed = parseFloat(valMap['operating_speed'] || '45') || 45;
+  const speed = parseFloat(valMap['operating_speed'] || '40') || 40;
   let speedFactor = Math.pow(speed / 50, 2.0);
 
   // Tezlikni pasaytirgichlar (speed management) mavjud bo'lsa, xavf 30% ga kamayadi
@@ -159,16 +159,21 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
   // Trotuar turi va ajratilishi (chap va o'ng tomonlar)
   const getSidewalkFactor = (sw: string) => {
     switch (sw) {
-      case 'physical_barrier_ge_1_5m': return 0.15; // Parapet/to'siq bilan to'liq ajratilgan trotuar
-      case 'physical_barrier_0_1m': return 0.25;
-      case 'ge_1_5m': return 0.40; // Keng trotuar (1.5m+)
+      case 'barrier':
+      case 'physical_barrier_ge_1_5m': return 0.20; // Parapet/to'siq bilan to'liq ajratilgan trotuar
+      case 'gt_3m': return 0.30;
+      case '1_3m':
+      case 'ge_1_5m': return 0.45; // Keng trotuar (1-3m)
       case '0_1m': return 0.70; // Tor trotuar (0-1m)
+      case 'shared': return 0.50; // Umumiy velo-piyoda yo'lak
+      case 'moderate':
       case 'informal_path': return 1.10; // Qorishiq/tuproq yo'l
+      case 'poor': return 1.50;
       case 'none': return 2.20; // Trotuar mutlaqo yo'q (yo'l yoqasida yurish)
       default: return 0.70;
     }
   };
-  const swLeft = valMap['sidewalk_left'] || '0_1m';
+  const swLeft = valMap['sidewalk_left'] || '1_3m';
   const swRight = valMap['sidewalk_right'] || '0_1m';
   const swAvg = (getSidewalkFactor(swLeft) + getSidewalkFactor(swRight)) / 2;
   alongLikelihood *= swAvg;
@@ -176,6 +181,7 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
   // Yo'l chekkasi (yelka) kengligi
   const getShoulderFactor = (re: string) => {
     switch (re) {
+      case 'gt_2_4m':
       case 'ge_2_4m': return 0.85;
       case '1_2_4m': return 0.92;
       case '0_1m': return 1.0;
@@ -216,7 +222,7 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
   const alongFlowMult = (valMap['left_side_flow'] === 'present' || valMap['right_side_flow'] === 'present') ? 1.0 : 0.6;
 
   // Bo'ylama kalibratsiya koeffitsiyenti
-  const BASE_ALONG_CONST = 4.0;
+  const BASE_ALONG_CONST = 3.8;
   const ctsAlong = BASE_ALONG_CONST * alongLikelihood * severity * speedFactor * flowBase * alongFlowMult;
 
   // 5. CTS Crossing (Yo'lni Kesib O'tish Xavf Bali)
@@ -225,14 +231,20 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
   // Asosiy yo'l piyodalar o'tish joyi turi
   const crossMain = valMap['crossing_main_road'] || 'marked';
   switch (crossMain) {
+    case 'bridge_tunnel':
     case 'grade_separated': crossingLikelihood *= 0.08; break;
+    case 'lights_refuge':
     case 'signal_refuge': crossingLikelihood *= 0.25; break;
-    case 'signal_no_refuge': crossingLikelihood *= 0.45; break;
     case 'raised_refuge': crossingLikelihood *= 0.35; break;
+    case 'lights':
+    case 'signal_no_refuge': crossingLikelihood *= 0.45; break;
+    case 'raised_marked':
     case 'raised': crossingLikelihood *= 0.50; break;
     case 'marked_refuge': crossingLikelihood *= 0.65; break;
     case 'marked': crossingLikelihood *= 0.85; break;
+    case 'refuge':
     case 'refuge_only': crossingLikelihood *= 1.10; break;
+    case 'unmarked':
     case 'none': crossingLikelihood *= 2.40; break;
     default: crossingLikelihood *= 0.85;
   }
@@ -269,15 +281,15 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
   const crossFlowMult = valMap['crossing_flow'] === 'present' ? 1.0 : 0.6;
 
   // Kesib o'tish kalibratsiya koeffitsiyenti
-  const BASE_CROSSING_CONST = 4.4;
+  const BASE_CROSSING_CONST = 3.8;
   const ctsCrossing = BASE_CROSSING_CONST * crossingLikelihood * severity * speedFactor * flowBase * crossFlowMult;
 
   // 6. Jami SRS (Star Rating Score)
   const srsScore = ctsAlong + ctsCrossing;
 
   // 7. SRS ballidan Yulduzlar Darajasiga O'tkazish (Rasmiy iRAP Bandlari):
-  // 0 - 2.5: 5 Yulduz (4.5 - 5.0 oralig'i)
-  // 2.5 - 5.0: 4 Yulduz (4.0 - 4.5 oralig'i, standart parametrlar = 4.4 Yulduz)
+  // 0 - 2.5: 5 Yulduz (4.5 - 5.0 oralig'i, standart parametrlar = 4.6 Yulduz)
+  // 2.5 - 5.0: 4 Yulduz (4.0 - 4.5 oralig'i)
   // 5.0 - 10.0: 3 Yulduz (3.0 - 4.0 oralig'i)
   // 10.0 - 22.5: 2 Yulduz (2.0 - 3.0 oralig'i)
   // > 22.5: 1 Yulduz (1.0 - 2.0 oralig'i)
