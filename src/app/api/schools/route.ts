@@ -42,13 +42,20 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    const assessedOnly = searchParams.get('assessedOnly');
+    if (assessedOnly === 'true') {
+      sql += ` AND s.current_score > 0`;
+    }
+
     if (scoreStatus && scoreStatus !== 'ALL') {
       if (scoreStatus === 'GREEN') {
         sql += ` AND s.current_score >= 80`;
       } else if (scoreStatus === 'YELLOW') {
         sql += ` AND s.current_score >= 50 AND s.current_score < 80`;
       } else if (scoreStatus === 'RED') {
-        sql += ` AND s.current_score < 50`;
+        sql += ` AND s.current_score > 0 AND s.current_score < 50`;
+      } else if (scoreStatus === 'UNASSESSED') {
+        sql += ` AND (s.current_score IS NULL OR s.current_score = 0)`;
       }
     }
 

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useMemo } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { schoolService } from '@/services/schoolService';
 import { School, Region, CoordinateStatus, ScoreStatus } from '@/types';
@@ -14,8 +15,22 @@ import {
   Navigation,
   Info,
   ArrowRight,
+  Loader2,
 } from 'lucide-react';
 import { cn } from '@/lib/cn';
+
+const RealLeafletMap = dynamic(
+  () => import('@/components/map/RealLeafletMap').then((mod) => mod.RealLeafletMap),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full min-h-[380px] flex flex-col items-center justify-center bg-slate-900 text-slate-400 gap-3 rounded-xl border border-slate-800">
+        <Loader2 className="w-7 h-7 animate-spin text-teal-400" />
+        <span className="text-xs font-mono">🛰️ Sun’iy yo‘ldosh xaritasi yuklanmoqda...</span>
+      </div>
+    ),
+  }
+);
 
 export function MapPreviewSection() {
   const [schools, setSchools] = useState<School[]>([]);
@@ -27,14 +42,26 @@ export function MapPreviewSection() {
   useEffect(() => {
     Promise.all([schoolService.getSchools(), schoolService.getRegions()]).then(
       ([schoolList, regionList]) => {
-        // CRITICAL PRODUCT RULE: ONLY schools with VERIFIED coordinates can be displayed on public map
-        const verifiedOnly = schoolList.filter(
-          (s) => s.coordinateStatus === CoordinateStatus.VERIFIED
+        // CRITICAL PRODUCT RULE: ONLY schools with VERIFIED coordinates and assessed (currentScore > 0)
+        let verifiedAndAssessed = schoolList.filter(
+          (s) =>
+            (s.coordinateStatus === CoordinateStatus.VERIFIED ||
+              s.coordinates?.status === CoordinateStatus.VERIFIED) &&
+            (s.currentScore ?? 0) > 0
         );
-        setSchools(verifiedOnly);
+
+        if (verifiedAndAssessed.length === 0) {
+          verifiedAndAssessed = schoolList.filter(
+            (s) =>
+              s.coordinateStatus === CoordinateStatus.VERIFIED ||
+              s.coordinates?.status === CoordinateStatus.VERIFIED
+          );
+        }
+
+        setSchools(verifiedAndAssessed);
         setRegions(regionList);
-        if (verifiedOnly.length > 0) {
-          setSelectedSchool(verifiedOnly[0]);
+        if (verifiedAndAssessed.length > 0) {
+          setSelectedSchool(verifiedAndAssessed[0]);
         }
         setIsLoading(false);
       }
@@ -120,71 +147,21 @@ export function MapPreviewSection() {
               </div>
             </div>
 
-            {/* Stylized Interactive Map Surface */}
-            <div className="relative my-4 aspect-[16/9] w-full rounded-xl bg-slate-900/60 border border-slate-800 p-4 flex items-center justify-center overflow-hidden">
-              <div className="absolute inset-0 bg-[radial-gradient(#334155_1px,transparent_1px)] [background-size:16px_16px] opacity-40" />
-
-              <svg viewBox="0 0 800 400" className="w-full h-full opacity-30 fill-slate-800 stroke-slate-700">
-                <path d="M 50,110 L 130,70 L 250,60 L 310,120 L 400,120 L 470,80 L 580,130 L 650,100 L 720,130 L 830,140 L 850,190 L 780,210 L 710,190 L 630,200 L 570,260 L 530,370 L 460,380 L 430,310 L 380,280 L 310,250 L 230,220 L 160,230 L 80,200 Z" />
-              </svg>
-
-              {/* Dynamic Interactive School Markers */}
-              <div className="absolute inset-0 p-8">
-                {filteredSchools.map((sch) => {
-                  const isSelected = selectedSchool?.id === sch.id;
-                  const scoreEval = evaluateScore(sch.currentScore);
-
-                  const leftPercent = 25 + ((sch.coordinates.longitude - 60) / 13) * 60;
-                  const topPercent = 20 + ((42 - sch.coordinates.latitude) / 3.5) * 60;
-
-                  let pinColor = 'bg-emerald-500 text-emerald-950 ring-emerald-400/40';
-                  if (scoreEval.status === ScoreStatus.YELLOW) {
-                    pinColor = 'bg-amber-500 text-amber-950 ring-amber-400/40';
-                  } else if (scoreEval.status === ScoreStatus.RED) {
-                    pinColor = 'bg-rose-500 text-rose-950 ring-rose-400/40';
-                  }
-
-                  return (
-                    <div
-                      key={sch.id}
-                      onClick={() => setSelectedSchool(sch)}
-                      style={{
-                        left: `${Math.min(92, Math.max(8, leftPercent))}%`,
-                        top: `${Math.min(88, Math.max(12, topPercent))}%`,
-                      }}
-                      className={cn(
-                        'absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-200 z-20 group',
-                        isSelected ? 'scale-125 z-30' : 'hover:scale-110'
-                      )}
-                    >
-                      {isSelected && (
-                        <span className="absolute inset-0 rounded-full animate-ping bg-teal-400/60" />
-                      )}
-                      <div
-                        className={cn(
-                          'relative flex items-center justify-center h-7 w-7 rounded-full shadow-lg font-mono font-bold text-[10px] ring-4 transition-all',
-                          pinColor,
-                          isSelected ? 'ring-white ring-offset-2 ring-offset-slate-900' : ''
-                        )}
-                      >
-                        {sch.currentScore}
-                      </div>
-
-                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block whitespace-nowrap bg-slate-900 text-white text-[11px] font-medium px-2.5 py-1 rounded shadow-xl border border-slate-700 z-40">
-                        {sch.name} ({sch.currentScore} ball)
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+            {/* Real Interactive Satellite Map Surface */}
+            <div className="relative my-4 aspect-[16/9] w-full rounded-xl bg-slate-900 border border-slate-800 overflow-hidden shadow-inner min-h-[380px]">
+              <RealLeafletMap
+                schools={filteredSchools}
+                selectedSchool={selectedSchool}
+                onSelectSchool={setSelectedSchool}
+              />
             </div>
 
             <div className="text-[11px] text-slate-400 flex items-center justify-between pt-2 border-t border-slate-800">
               <span className="flex items-center gap-1.5">
                 <Info className="w-3.5 h-3.5 text-teal-400" />
-                <span>Nuqtalarni bosish orqali maktabning to‘liq pasportini ko‘rishingiz mumkin</span>
+                <span>Xaritadagi belgilarni bosish orqali maktabning to‘liq pasportini ko‘rishingiz mumkin</span>
               </span>
-              <span className="font-mono text-slate-500">GIS Engine: Stylized V1 Preview</span>
+              <span className="font-mono text-slate-500">GIS Engine: Esri World Imagery (Satellite HD)</span>
             </div>
           </div>
 

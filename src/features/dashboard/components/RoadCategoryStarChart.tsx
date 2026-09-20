@@ -90,9 +90,17 @@ const STAR_COLORS: Record<number, { name: string; color: string; bg: string; tex
     text: 'text-red-900',
     label: 'O‘ta xavfli (1★)',
   },
+  0: {
+    name: 'Baholanmagan (Kulrang)',
+    color: '#94a3b8',
+    bg: 'bg-slate-100 border-slate-300',
+    text: 'text-slate-600',
+    label: 'Baholanmagan',
+  },
 };
 
-function calculateStar(score: number): 1 | 2 | 3 | 4 | 5 {
+function calculateStarOrUnassessed(score?: number | null): 0 | 1 | 2 | 3 | 4 | 5 {
+  if (score === undefined || score === null || score <= 0) return 0;
   if (score >= 90) return 5;
   if (score >= 75) return 4;
   if (score >= 50) return 3;
@@ -111,10 +119,10 @@ export function RoadCategoryStarChart({ schools = [] }: RoadCategoryStarChartPro
 
   // Aggregate star distributions
   const starData = useMemo(() => {
-    const counts: Record<number, number> = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+    const counts: Record<number, number> = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0, 0: 0 };
 
     filteredSchools.forEach((s) => {
-      const star = s.starRating || calculateStar(s.currentScore || 0);
+      const star = s.starRating || calculateStarOrUnassessed(s.currentScore);
       counts[star] = (counts[star] || 0) + 1;
     });
 
@@ -126,6 +134,7 @@ export function RoadCategoryStarChart({ schools = [] }: RoadCategoryStarChartPro
       { star: 3, count: counts[3], percentage: Math.round((counts[3] / total) * 100), ...STAR_COLORS[3] },
       { star: 2, count: counts[2], percentage: Math.round((counts[2] / total) * 100), ...STAR_COLORS[2] },
       { star: 1, count: counts[1], percentage: Math.round((counts[1] / total) * 100), ...STAR_COLORS[1] },
+      { star: 0, count: counts[0], percentage: Math.round((counts[0] / total) * 100), ...STAR_COLORS[0] },
     ].filter((item) => item.count > 0 || filteredSchools.length === 0);
   }, [filteredSchools]);
 
@@ -231,7 +240,11 @@ export function RoadCategoryStarChart({ schools = [] }: RoadCategoryStarChartPro
               key={item.star}
               className={cn(
                 'p-3 sm:p-3.5 rounded-xl border transition-all flex items-center justify-between gap-3',
-                item.star === 1 ? 'bg-slate-900 border-slate-800 text-white' : 'bg-slate-50/70 border-slate-200'
+                item.star === 1
+                  ? 'bg-red-50/80 border-red-200 text-red-950'
+                  : item.star === 0
+                  ? 'bg-slate-50 border-slate-200 text-slate-800'
+                  : 'bg-slate-50/70 border-slate-200'
               )}
             >
               <div className="flex items-center gap-3 min-w-0">
@@ -241,25 +254,29 @@ export function RoadCategoryStarChart({ schools = [] }: RoadCategoryStarChartPro
                 />
 
                 <div className="flex items-center gap-1 shrink-0">
-                  {Array.from({ length: item.star }).map((_, i) => (
-                    <Star
-                      key={i}
-                      className={cn(
-                        'w-3.5 h-3.5 fill-current',
-                        item.star === 5 && 'text-emerald-500',
-                        item.star === 4 && 'text-orange-500',
-                        item.star === 3 && 'text-amber-500',
-                        item.star === 2 && 'text-red-500',
-                        item.star === 1 && 'text-slate-200'
-                      )}
-                    />
-                  ))}
+                  {item.star > 0 ? (
+                    Array.from({ length: item.star }).map((_, i) => (
+                      <Star
+                        key={i}
+                        className={cn(
+                          'w-3.5 h-3.5 fill-current',
+                          item.star === 5 && 'text-emerald-500',
+                          item.star === 4 && 'text-orange-500',
+                          item.star === 3 && 'text-amber-500',
+                          item.star === 2 && 'text-red-500',
+                          item.star === 1 && 'text-red-700'
+                        )}
+                      />
+                    ))
+                  ) : (
+                    <span className="text-slate-400 text-xs font-mono px-1">⚪</span>
+                  )}
                 </div>
 
                 <span
                   className={cn(
                     'text-xs font-semibold truncate',
-                    item.star === 1 ? 'text-slate-200' : 'text-slate-800'
+                    item.star === 1 ? 'text-red-900' : 'text-slate-800'
                   )}
                 >
                   {item.label}
@@ -270,7 +287,7 @@ export function RoadCategoryStarChart({ schools = [] }: RoadCategoryStarChartPro
                 <span
                   className={cn(
                     'text-xs font-mono font-bold',
-                    item.star === 1 ? 'text-white' : 'text-slate-900'
+                    item.star === 1 ? 'text-red-950' : 'text-slate-900'
                   )}
                 >
                   {item.count} ta
@@ -279,7 +296,9 @@ export function RoadCategoryStarChart({ schools = [] }: RoadCategoryStarChartPro
                   className={cn(
                     'text-xs font-mono font-semibold px-2 py-0.5 rounded-md border',
                     item.star === 1
-                      ? 'bg-slate-800 text-slate-300 border-slate-700'
+                      ? 'bg-red-100 text-red-800 border-red-200'
+                      : item.star === 0
+                      ? 'bg-slate-100 text-slate-600 border-slate-200'
                       : 'bg-white text-slate-700 border-slate-200'
                   )}
                 >

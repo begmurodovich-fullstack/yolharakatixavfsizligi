@@ -6,20 +6,46 @@ function escapeSql(str) {
   return `'${str.toString().replace(/'/g, "''")}'`;
 }
 
-function cleanText(text) {
-  if (!text) return '';
-  return text.toString().trim();
-}
-
-function toLatinSlug(text) {
+function cleanSlug(text) {
   return text
     .toString()
     .toLowerCase()
-    .replace(/[ʻʼ`']/g, '')
-    .replace(/_tumani|_shahar|_shahri/g, '')
+    .replace(/[ʻ’ʼ`'‘]/g, '')
+    .replace(/viloyati|viloyat|respublikasi|respublika/g, '')
+    .replace(/shahri|shahar/g, 'shahar')
+    .replace(/tumani|tuman/g, '')
     .replace(/[^a-z0-9]/gi, '_')
     .replace(/_+/g, '_')
     .replace(/^_+|_+$/g, '');
+}
+
+function cleanRegionSlug(text) {
+  return text
+    .toString()
+    .toLowerCase()
+    .replace(/[ʻ’ʼ`'‘]/g, '')
+    .replace(/viloyati|viloyat|respublikasi|respublika/g, '')
+    .replace(/shahri|shahar/g, 'shahar')
+    .replace(/[^a-z0-9]/gi, '_')
+    .replace(/_+/g, '_')
+    .replace(/^_+|_+$/g, '');
+}
+
+function cleanDistrictSlug(text) {
+  return text
+    .toString()
+    .toLowerCase()
+    .replace(/[ʻ’ʼ`'‘]/g, '')
+    .replace(/tumani|tuman/g, '')
+    .replace(/shahri|shahar/g, 'shahar')
+    .replace(/[^a-z0-9]/gi, '_')
+    .replace(/_+/g, '_')
+    .replace(/^_+|_+$/g, '');
+}
+
+function cleanText(text) {
+  if (!text) return '';
+  return text.toString().trim();
 }
 
 async function main() {
@@ -130,7 +156,7 @@ ${Array.from(districtsMap.values())
 ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, region_id = EXCLUDED.region_id;
 `;
 
-  const usedEmails = new Set();
+  const usedEmails = new Map();
   const schoolRows = [];
   const userRows = [];
 
@@ -151,13 +177,19 @@ ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, region_id = EXCLUDED.region
       ? schoolRawName
       : `${schoolRawName}-maktab`;
 
-    // Clean human-friendly email: e.g. maktab24.gijduvon@maktab.uz
-    const cleanDist = toLatinSlug(distName) || 'hudud';
-    let email = `maktab_${schoolNumber}_${cleanDist}@maktab.uz`;
-    if (usedEmails.has(email)) {
-      email = `maktab_${schoolNumber}_${cleanDist}_${index + 1}@maktab.uz`;
+    // Standard format: maktab_{raqam}_{viloyat}_{tuman}@maktab.uz
+    const cleanReg = cleanRegionSlug(regName) || 'viloyat';
+    const cleanDist = cleanDistrictSlug(distName) || 'tuman';
+    let baseEmail = `maktab_${schoolNumber}_${cleanReg}_${cleanDist}@maktab.uz`;
+    let email = baseEmail;
+    
+    if (usedEmails.has(baseEmail)) {
+      const count = usedEmails.get(baseEmail) + 1;
+      usedEmails.set(baseEmail, count);
+      email = `maktab_${schoolNumber}_${cleanReg}_${cleanDist}_${count}@maktab.uz`;
+    } else {
+      usedEmails.set(baseEmail, 1);
     }
-    usedEmails.add(email);
 
     const initialPassword = `Maktab@${schoolNumber}`;
 

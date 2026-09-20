@@ -26,6 +26,7 @@ export interface AdminDashboardSummary {
   greenCount: number;
   yellowCount: number;
   redCount: number;
+  unassessedCount: number;
   regionalBreakdown: Array<{
     regionId: string;
     regionName: string;
@@ -43,7 +44,7 @@ export class AdminService {
         return summary;
       }
     } catch (e) {
-      console.error('Admin summary API error:', e);
+      console.warn('Dashboard summary API failed, using fallback metrics:', e);
     }
 
     return {
@@ -56,6 +57,7 @@ export class AdminService {
       greenCount: 0,
       yellowCount: 0,
       redCount: 0,
+      unassessedCount: 10110,
       regionalBreakdown: [],
     };
   }

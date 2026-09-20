@@ -10,10 +10,11 @@ export async function GET() {
         COUNT(*) as total_schools,
         COUNT(CASE WHEN coordinate_status = 'VERIFIED' AND latitude IS NOT NULL THEN 1 END) as verified_coords,
         COUNT(CASE WHEN coordinate_status = 'PENDING' AND latitude IS NOT NULL THEN 1 END) as pending_coords,
-        COALESCE(AVG(current_score), 0) as avg_score,
+        COALESCE(AVG(CASE WHEN current_score > 0 THEN current_score END), 0) as avg_score,
         COUNT(CASE WHEN current_score >= 80 THEN 1 END) as green_count,
         COUNT(CASE WHEN current_score >= 50 AND current_score < 80 THEN 1 END) as yellow_count,
-        COUNT(CASE WHEN current_score < 50 THEN 1 END) as red_count
+        COUNT(CASE WHEN current_score > 0 AND current_score < 50 THEN 1 END) as red_count,
+        COUNT(CASE WHEN current_score IS NULL OR current_score = 0 THEN 1 END) as unassessed_count
       FROM schools
     `);
 
@@ -61,6 +62,7 @@ export async function GET() {
       greenCount: Number(stats.green_count) || 0,
       yellowCount: Number(stats.yellow_count) || 0,
       redCount: Number(stats.red_count) || 0,
+      unassessedCount: Number(stats.unassessed_count) || 0,
       regionalBreakdown: formattedRegional,
     });
   } catch (error: any) {

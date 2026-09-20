@@ -32,8 +32,8 @@ export const SCORE_THRESHOLDS = {
 export const DEMO_ACCOUNTS: DemoAccount[] = [
   {
     label: 'Maktab Mas’uli (Qiziltepa 1-maktab)',
-    email: 'sch_3814@maktab.uz',
-    passwordHint: 'Maktab@24',
+    email: 'maktab_1_navoiy_qiziltepa@maktab.uz',
+    passwordHint: 'Maktab@1',
     role: UserRole.SCHOOL_USER,
     description: '1-sonli umumta\'lim maktabi, Qiziltepa tumani, Navoiy viloyati',
     schoolInfo: {

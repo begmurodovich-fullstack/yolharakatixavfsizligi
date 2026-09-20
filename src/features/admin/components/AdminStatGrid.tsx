@@ -41,12 +41,22 @@ export function AdminStatGrid({ summary }: AdminStatGridProps) {
             <div className="text-3xl sm:text-4xl font-black text-slate-900 font-mono tracking-tight">
               {summary.totalSchools}
             </div>
-            <div className="flex items-center gap-2 mt-1.5 text-xs text-slate-500">
+            <div className="flex flex-wrap items-center gap-1.5 mt-1.5 text-xs text-slate-500">
               <span className="text-emerald-700 font-bold">{summary.greenCount} Yashil</span>
               <span>•</span>
               <span className="text-amber-700 font-bold">{summary.yellowCount} Sariq</span>
               <span>•</span>
               <span className="text-rose-700 font-bold">{summary.redCount} Qizil</span>
+              <span>•</span>
+              <span className="text-slate-600 font-bold">
+                {summary.unassessedCount ??
+                  Math.max(
+                    0,
+                    summary.totalSchools -
+                      (summary.greenCount + summary.yellowCount + summary.redCount)
+                  )}{' '}
+                Baholanmagan
+              </span>
             </div>
           </div>
         </div>

@@ -3,8 +3,8 @@ import { User, UserRole } from '@/types';
 export const MOCK_USERS: User[] = [
   {
     id: 'usr-sch-3837',
-    email: 'maktab_24_qiziltepa_tumani@maktab.uz',
-    name: '24-maktab Mas’uli',
+    email: 'maktab_1_navoiy_qiziltepa@maktab.uz',
+    name: '1-maktab Mas’uli (Qiziltepa)',
     role: UserRole.SCHOOL_USER,
     schoolId: 'sch-3837',
     regionId: 'reg-6',
@@ -15,7 +15,7 @@ export const MOCK_USERS: User[] = [
   },
   {
     id: 'usr-school-24',
-    email: 'school24@gijduvon.demo',
+    email: 'maktab_24_buxoro_gijduvon@maktab.uz',
     name: 'Demo Director (24-maktab)',
     role: UserRole.SCHOOL_USER,
     schoolId: 'sch-bux-gij-24',

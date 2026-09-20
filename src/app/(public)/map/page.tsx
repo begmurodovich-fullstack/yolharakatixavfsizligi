@@ -61,10 +61,11 @@ export default function PublicMapPage() {
           }),
           schoolService.getRegions(),
         ]);
-        setSchools(schList);
+        const sorted = [...schList].sort((a, b) => (b.currentScore || 0) - (a.currentScore || 0));
+        setSchools(sorted);
         setRegions(regList);
-        if (schList.length > 0) {
-          setSelectedSchool(schList[0]);
+        if (sorted.length > 0) {
+          setSelectedSchool(sorted[0]);
         }
       } catch (e) {
         console.error('Error loading map data:', e);
@@ -217,9 +218,10 @@ export default function PublicMapPage() {
                 className="w-full text-xs h-9 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 px-2.5 focus:outline-none focus:border-teal-500 font-medium"
               >
                 <option value="ALL">Barcha toifalar</option>
-                <option value="GREEN">🟢 Yashil (&gt;= 80)</option>
-                <option value="YELLOW">🟡 Sariq (50-79)</option>
-                <option value="RED">🔴 Qizil (&lt; 50)</option>
+                <option value="GREEN">🟢 Yashil (&gt;= 80 ball)</option>
+                <option value="YELLOW">🟡 Sariq (50-79 ball)</option>
+                <option value="RED">🔴 Qizil (1-49 ball)</option>
+                <option value="UNASSESSED">⚪ Baholanmagan</option>
               </select>
 
               <select

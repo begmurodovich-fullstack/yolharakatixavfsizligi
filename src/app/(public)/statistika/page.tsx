@@ -57,6 +57,7 @@ export default function StatistikaPage() {
   const threeStar = moderateCount - fourStar;
   const twoStar = Math.round(highRiskCount * 0.7);
   const oneStar = highRiskCount - twoStar;
+  const unassessedCount = Math.max(0, totalSchools - (safeCount + moderateCount + highRiskCount));
   const pct = (n: number) => totalSchools > 0 ? `${((n / totalSchools) * 100).toFixed(1)}%` : '0%';
 
   const starDistributionData = [
@@ -64,7 +65,10 @@ export default function StatistikaPage() {
     { star: '4 Yulduz (Yaxshi)',   count: fourStar,  percentage: pct(fourStar),  color: '#f59e0b', barColor: 'bg-amber-500' },
     { star: '3 Yulduz (O‘rtacha)', count: threeStar, percentage: pct(threeStar), color: '#eab308', barColor: 'bg-yellow-500' },
     { star: '2 Yulduz (Xavfli)',   count: twoStar,   percentage: pct(twoStar),   color: '#ef4444', barColor: 'bg-rose-500' },
-    { star: '1 Yulduz (O‘ta Xavfli)', count: oneStar, percentage: pct(oneStar), color: '#09090b', barColor: 'bg-slate-900' },
+    { star: '1 Yulduz (O‘ta Xavfli)', count: oneStar, percentage: pct(oneStar), color: '#991b1b', barColor: 'bg-red-800' },
+    ...(unassessedCount > 0 ? [
+      { star: 'Baholanmagan (Jarayonda)', count: unassessedCount, percentage: pct(unassessedCount), color: '#94a3b8', barColor: 'bg-slate-400' }
+    ] : []),
   ];
 
   return (
