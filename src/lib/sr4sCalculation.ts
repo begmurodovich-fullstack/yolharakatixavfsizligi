@@ -124,8 +124,8 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
     valMap[attr.id] = attr.customValue || attr.currentValueId || '';
   });
 
-  // Boshlang'ich (baza) yulduzli reyting: 4.6 Yulduz
-  let starScore = 4.6;
+  // Boshlang'ich (baza) yulduzli reyting: mezonlar boshlang'ich holatida (harakat tezligi 40 km/h: +0.3) jami 4.6 Yulduz bo'lishi uchun baza 4.3 qilib mutanosiblashtirilgan
+  let starScore = 4.3;
 
   // 1. Parkovka (vehicle_parking - SR4S-04):
   // Parkovka bir tomonlama tanlansa 0.1 ayirilsin, ikki tomonlama bolsa 0.2 ayirilsin
