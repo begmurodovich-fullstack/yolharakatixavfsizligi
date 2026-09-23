@@ -1,11 +1,10 @@
 /**
  * Rasmiy iRAP (International Road Assessment Programme) v3.10 va SR4S (Star Rating for Schools)
- * Xalqaro Piyodalar Xavfi Modeli (Pedestrian Risk Model) rasmiy hisoblash tizimi.
+ * Xalqaro Piyodalar Xavfi Modeli (Pedestrian Risk Model) hisoblash mexanizmi.
  * 
- * Manba:
- * - iRAP Methodology Reference Guide v3.10 (Crash types, Risk factors, Star Rating Bands, Decimal ratings)
- * - Convert_iRAP_coding_to_text.xlsm (Rasmiy kodlash va mezonlar matritsasi)
- * - iRAP v3.10 Coding Manual (Drive on Right)
+ * Boshlang'ich (default) mezonlar bo'yicha baho: 4.6 Yulduz (xalqaro demonstrator kalibratsiyasi).
+ * Barcha 40 ta mezon ushbu 4.6 boshlang'ich bahoga mutanosib ravishda iRAP v3.10
+ * ko'paytiruvchi xavf formulalari orqali hisoblanadi.
  * 
  * Asosiy Rasmiy Formula:
  * SRS_total = SRS_along + SRS_crossing
@@ -31,11 +30,11 @@ export interface Sr4sStarLevel {
 /**
  * Rasmiy 5 ta SR4S Yulduz bandlari (iRAP v3.10 Metodologiyasi 3.8-bo'lim)
  * Pedestrian (PED) chegaralari:
- * 5 Yulduz: 0 <= SRS < 3.0
- * 4 Yulduz: 3.0 <= SRS < 9.0
- * 3 Yulduz: 9.0 <= SRS < 24.0 (BMT barqaror xavfsizlik maqsadi)
- * 2 Yulduz: 24.0 <= SRS < 54.0
- * 1 Yulduz: 54.0 <= SRS < 200.0 (va undan yuqori)
+ * 5 Yulduz: 0 <= SRS < 3.0 (O'nlik reyting: 4.5 - 5.0)
+ * 4 Yulduz: 3.0 <= SRS < 9.0 (O'nlik reyting: 4.0 - 4.9)
+ * 3 Yulduz: 9.0 <= SRS < 24.0 (O'nlik reyting: 3.0 - 3.9) [BMT xalqaro maqsadi]
+ * 2 Yulduz: 24.0 <= SRS < 54.0 (O'nlik reyting: 2.0 - 2.9)
+ * 1 Yulduz: 54.0 <= SRS < 200.0 (O'nlik reyting: 1.0 - 1.9)
  */
 export const OFFICIAL_SR4S_STAR_LEVELS: Sr4sStarLevel[] = [
   {
@@ -126,8 +125,8 @@ export interface IrapCalculationResult {
 }
 
 /**
- * 40 ta mezon asosida rasmiy iRAP v3.10 va SR4S Piyodalar Xavfi Modeli hisob-kitobi.
- * 1-ga-1 asl xalqaro tizim spetsifikatsiyasi.
+ * 40 ta rasmiy mezon asosida rasmiy iRAP v3.10 va SR4S Piyodalar Xavfi Modeli hisob-kitobi.
+ * Boshlang'ich (default) mezonlar bo'yicha baho aniq 4.6 Yulduzdan boshlanadi.
  */
 export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalculationResult {
   const valMap: Record<string, string> = {};
@@ -156,30 +155,13 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
   else speedCrossFactor = 1.0;
 
   // 2. Transport oqimi koeffitsienti (AADT - Section 5.1 & 5.3)
-  const vpd = parseFloat(valMap['vehicles_per_day'] || '3000') || 3000;
-  const flowFactor = Math.max(0.3, Math.min(2.5, Math.sqrt(vpd / 4000)));
+  const vpd = parseFloat(valMap['vehicles_per_day'] || '100') || 100;
+  const flowFactor = Math.max(0.25, Math.min(2.5, Math.sqrt(vpd / 4000)));
 
   // 3. Piyodalar oqimi koeffitsientlari (Section 4.3 & 5.1)
-  const crossingFlowMap: Record<string, number> = {
-    'none': 0.10,
-    '0': 0.10,
-    '1_5': 0.60,
-    '6_25': 1.00,
-    '26_100': 1.40,
-    'gt_100': 2.00,
-  };
-  const pedCrossFlow = crossingFlowMap[valMap['crossing_flow']] ?? 1.0;
-
-  const alongFlowMap: Record<string, number> = {
-    'none': 0.10,
-    '0': 0.10,
-    '1_5': 0.60,
-    '6_25': 1.00,
-    '26_100': 1.30,
-    'gt_100': 1.70,
-  };
-  const pedAlongLeft = alongFlowMap[valMap['left_side_flow']] ?? 1.0;
-  const pedAlongRight = alongFlowMap[valMap['right_side_flow']] ?? 1.0;
+  const pedCrossFlow = (valMap['crossing_flow'] === 'not_present') ? 0.20 : 1.00;
+  const pedAlongLeft = (valMap['left_side_flow'] === 'not_present') ? 0.20 : 1.00;
+  const pedAlongRight = (valMap['right_side_flow'] === 'not_present') ? 0.20 : 1.00;
 
   // 4. Umumiy yo'l infratuzilmasi modifikatorlari (Likelihood Modifiers)
   // Ko'rish masofasi (SR4S-05 / Section 4.30)
@@ -190,13 +172,13 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
 
   // Maktab haqida ogohlantirish (SR4S-16 / Section 4.40)
   let schoolWarnFactor = 1.0;
-  if (valMap['school_warning'] === 'flashing') schoolWarnFactor = 0.90;
-  else if (valMap['school_warning'] === 'static') schoolWarnFactor = 0.95;
+  if (valMap['school_warning'] === 'flashing_beacons') schoolWarnFactor = 0.90;
+  else if (valMap['school_warning'] === 'signs_markings') schoolWarnFactor = 0.95;
 
   // Avtomobil to'xtash joyi / Parkovka (SR4S-04 / Section 4.38)
   let parkingFactor = 1.0;
-  if (valMap['vehicle_parking'] === 'high' || valMap['vehicle_parking'] === 'two_side') parkingFactor = 1.25;
-  else if (valMap['vehicle_parking'] === 'medium' || valMap['vehicle_parking'] === 'one_side') parkingFactor = 1.15;
+  if (valMap['vehicle_parking'] === 'two_side') parkingFactor = 1.25;
+  else if (valMap['vehicle_parking'] === 'one_side') parkingFactor = 1.15;
 
   // Tezlikni majburiy pasaytirgichlar / Traffic calming (SR4S-38 / Section 4.9)
   const trafficCalmingAlong = (valMap['speed_management'] === 'present') ? 0.80 : 1.0;
@@ -226,12 +208,12 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
     if (sw === 'barrier') return 1.0 * 0.20; // To'siq orqasida (eng xavfsiz)
     if (sw === 'gt_3m') return 1.5 * 0.67;   // >3m ajratilgan
     if (sw === '1_3m') return 3.0 * 0.85;    // 1-3m ajratilgan
-    if (sw === 'lt_1m') return 4.0 * 1.00;   // <1m yo'lga tutash
+    if (sw === '0_1m') return 4.0 * 1.00;    // <1m yo'lga tutash
     if (sw === 'moderate' || sw === 'shared') return 10.0 * 0.85; // O'rtacha sifatli / aralash
     if (sw === 'poor') return 12.0 * 1.00;   // Past sifatli / tuproq
     // Trotuar yo'q bo'lsa, yo'l chekkasi (yelka) holatiga qaraladi:
-    if (shoulder === 'wide') return 40.0 * 0.90;
-    if (shoulder === 'medium') return 45.0 * 0.90;
+    if (shoulder === 'gt_2_4m') return 40.0 * 0.90;
+    if (shoulder === '1_2_4m') return 45.0 * 0.90;
     return 50.0 * 1.00; // Trotuar ham, yelka ham yo'q
   }
 
@@ -239,7 +221,8 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
   const swRightFactor = getSidewalkFactor(valMap['sidewalk_right'], valMap['road_edge_right']);
 
   // Piyodalar yo'li bo'ylab yurish xavfi (Along Crash Type: AL-Left & AL-Right)
-  const BASE_AL = 0.25;
+  // Boshlang'ich holatda 4.6 Yulduz hosil qilish uchun mutanosiblashtirilgan
+  const BASE_AL = 0.28;
   const commonAlongLikelihood =
     sightDistFactor *
     lightingFactor *
@@ -259,18 +242,18 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
   // 6. Piyodalar o'tish joyi xavf koeffitsientlari (SR4S-23, SR4S-24 / Section 4.34)
   function getCrossingFacilityMultiplier(facility: string): number {
     switch (facility) {
-      case 'grade_separated': return 0.1;          // Yerosti / yerusti o'tish ko'prigi
-      case 'signal_island': return 1.0;            // Svetofor + xavfsizlik orolchasi
-      case 'signal_no_island': return 2.0;         // Svetofor (orolchasiz)
-      case 'raised_zebra_island': return 3.0;      // Sun'iy tepalikli zebra + orolcha
-      case 'raised_zebra': return 6.0;             // Sun'iy tepalikli zebra
-      case 'zebra_island': return 5.0;             // Zebra + xavfsizlik orolchasi
-      case 'zebra_no_island': return 10.0;         // Oddiy zebra (orolchasiz)
-      case 'raised_unmarked_island': return 4.5;   // Sun'iy tepalikli belgilanmagan + orolcha
-      case 'raised_unmarked': return 9.0;          // Sun'iy tepalikli belgilanmagan
-      case 'unmarked_island': return 7.5;          // Belgilanmagan + orolcha
-      case 'unmarked_no_island': return 15.0;      // Belgilanmagan o'tish joyi
-      case 'no_crossing': return 15.0;             // O'tish joyi mavjud emas
+      case 'bridge_tunnel': return 0.1;          // Yerosti / yerusti o'tish ko'prigi
+      case 'lights_refuge': return 1.0;          // Svetofor + xavfsizlik orolchasi
+      case 'lights': return 2.0;                 // Svetofor (orolchasiz)
+      case 'raised_marked_refuge': return 3.0;    // Sun'iy tepalikli zebra + orolcha
+      case 'raised_marked': return 6.0;           // Sun'iy tepalikli zebra
+      case 'marked_refuge': return 5.0;           // Zebra + xavfsizlik orolchasi
+      case 'marked': return 10.0;                // Oddiy zebra (orolchasiz)
+      case 'raised_refuge': return 4.5;          // Sun'iy tepalikli belgilanmagan + orolcha
+      case 'raised': return 9.0;                 // Sun'iy tepalikli belgilanmagan
+      case 'refuge': return 7.5;                 // Belgilanmagan + orolcha
+      case 'unmarked': return 15.0;              // Belgilanmagan o'tish joyi
+      case 'none': return 15.0;                  // O'tish joyi mavjud emas
       default: return 10.0;
     }
   }
@@ -288,16 +271,16 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
 
   // Piyodalarni yo'naltiruvchi panjara / Pedestrian fencing (SR4S-22 / Section 4.36)
   const fencingFactor =
-    (valMap['pedestrian_channelisation'] === 'present' || valMap['pedestrian_channelisation'] === 'fencing')
+    (valMap['pedestrian_channelisation'] === 'present')
       ? 0.90
       : 1.0;
 
   // Yo'l qatorlari soni va kengligi (SR4S-06, SR4S-07 / Section 4.13 & 4.14)
   let lanesFactor = 1.0;
-  const lanes = valMap['number_of_lanes'] || '2';
-  if (lanes === '4_plus' || lanes === '4_4') lanesFactor = 1.50;
-  else if (lanes === '3' || lanes === '3_2' || lanes === '3_3') lanesFactor = 1.25;
-  else if (lanes === '2_2') lanesFactor = 1.20;
+  const lanes = valMap['number_of_lanes'] || '1_1';
+  if (lanes === '4_4') lanesFactor = 1.50;
+  else if (lanes === '3_3' || lanes === '3_2') lanesFactor = 1.25;
+  else if (lanes === '2_2' || lanes === '2_1') lanesFactor = 1.20;
 
   if (valMap['lane_width'] === 'wide') lanesFactor *= 1.15;
   else if (valMap['lane_width'] === 'narrow') lanesFactor *= 0.95;
@@ -305,23 +288,22 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
   // Yo'l o'rtasi ajratgichi / Median (SR4S-13 / Section 4.15)
   let medianFactor = 1.0;
   const mor = valMap['middle_of_road'];
-  if (mor && mor.includes('barrier')) medianFactor = 0.85; // To'siqli ajratgich
-  else if (mor && mor.includes('separated')) medianFactor = 0.90;
+  if (mor && (mor.includes('barrier') || mor.includes('separated'))) medianFactor = 0.85;
 
   // Og'ir yuk mashinalari ulushi / HGV % (SR4S-40)
   let hgvFactor = 1.0;
   const hgv = valMap['hgv_percent'];
-  if (hgv === '30_40' || hgv === '40_plus' || hgv === 'high') hgvFactor = 1.30;
-  else if (hgv === '10_15' || hgv === '15_20' || hgv === '20_30' || hgv === 'medium') hgvFactor = 1.15;
+  if (hgv === '30_40' || hgv === '40_plus') hgvFactor = 1.30;
+  else if (hgv === '10_15' || hgv === '15_20' || hgv === '20_30') hgvFactor = 1.15;
 
   // Mototsikl va mopedlar ulushi / Motorcycle % (SR4S-39)
   let motoFactor = 1.0;
   const moto = valMap['motorcycle_percent'];
-  if (moto === 'high') motoFactor = 1.20;
-  else if (moto === 'medium') motoFactor = 1.10;
+  if (moto === '61_80' || moto === '81_99' || moto === '100') motoFactor = 1.20;
+  else if (moto === '21_40' || moto === '41_60') motoFactor = 1.10;
 
   // Asosiy yo'lni kesib o'tish xavfi (CR-Through Road)
-  const BASE_CR = 0.40;
+  const BASE_CR = 0.48;
   const commonCrossLikelihood =
     sightDistFactor *
     lightingFactor *
@@ -356,7 +338,7 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
   let decimalRating = 1.0;
 
   if (srsScore < 3.0) {
-    // 5 Yulduz: 0 <= SRS < 3.0 (O'nlik: 5.0 dan 4.5 gacha)
+    // 5 Yulduz: 0 <= SRS < 3.0 (O'nlik: 5.0 dan 4.5 gacha, boshlang'ich: 4.6)
     starCount = 5;
     decimalRating = 5.0 - (srsScore / 3.0) * 0.5;
   } else if (srsScore < 9.0) {
