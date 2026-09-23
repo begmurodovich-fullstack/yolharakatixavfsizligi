@@ -1,0 +1,1409 @@
+{
+  "baseline": {
+    "starRatingScore": "8.3",
+    "banding": [
+      200,
+      54,
+      24,
+      9,
+      3
+    ],
+    "starRating": 4,
+    "decimalStarRating": "4.1",
+    "along": "3.5",
+    "crossingSide": "2.0",
+    "crossingMain": "2.7"
+  },
+  "attributes": {
+    "vehicle_parking": {
+      "1": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "3.9",
+        "starRating": 3,
+        "srsScore": "9.3",
+        "along": "3.5",
+        "crossingMain": "3.3",
+        "crossingSide": "2.4"
+      },
+      "3": {
+        "decimalStar": "3.9",
+        "starRating": 3,
+        "srsScore": "9.9",
+        "along": "3.5",
+        "crossingMain": "3.7",
+        "crossingSide": "2.6"
+      }
+    },
+    "sight_distance": {
+      "1": {
+        "decimalStar": "4.5",
+        "starRating": 4,
+        "srsScore": "5.8",
+        "along": "2.4",
+        "crossingMain": "1.9",
+        "crossingSide": "1.4"
+      },
+      "2": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      }
+    },
+    "number_of_lanes": {
+      "1": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "3.7",
+        "starRating": 3,
+        "srsScore": "12.5",
+        "along": "4.9",
+        "crossingMain": "5.5",
+        "crossingSide": "2.0"
+      },
+      "3": {
+        "decimalStar": "5.0",
+        "starRating": 5,
+        "srsScore": "2.9",
+        "along": "0.4",
+        "crossingMain": "0.5",
+        "crossingSide": "2.0"
+      },
+      "4": {
+        "decimalStar": "4.9",
+        "starRating": 4,
+        "srsScore": "3.2",
+        "along": "0.5",
+        "crossingMain": "0.7",
+        "crossingSide": "2.0"
+      }
+    },
+    "lane_width": {
+      "1": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.2",
+        "along": "3.5",
+        "crossingMain": "2.6",
+        "crossingSide": "2.0"
+      },
+      "3": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.0",
+        "along": "3.5",
+        "crossingMain": "2.5",
+        "crossingSide": "2.0"
+      }
+    },
+    "shoulder_rumble_strips": {
+      "1": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "4.2",
+        "starRating": 4,
+        "srsScore": "7.6",
+        "along": "2.8",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      }
+    },
+    "road_condition": {
+      "1": {
+        "decimalStar": "4.2",
+        "starRating": 4,
+        "srsScore": "7.3",
+        "along": "2.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "7.8",
+        "along": "3.0",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "3": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      }
+    },
+    "skid_resistance_grip": {
+      "1": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "3.8",
+        "starRating": 3,
+        "srsScore": "11.6",
+        "along": "4.9",
+        "crossingMain": "3.9",
+        "crossingSide": "2.8"
+      },
+      "3": {
+        "decimalStar": "3.4",
+        "starRating": 3,
+        "srsScore": "16.6",
+        "along": "7.0",
+        "crossingMain": "5.5",
+        "crossingSide": "4.0"
+      },
+      "4": {
+        "decimalStar": "2.9",
+        "starRating": 2,
+        "srsScore": "25.0",
+        "along": "10.5",
+        "crossingMain": "8.3",
+        "crossingSide": "6.0"
+      },
+      "5": {
+        "decimalStar": "2.2",
+        "starRating": 2,
+        "srsScore": "45.8",
+        "along": "19.4",
+        "crossingMain": "15.3",
+        "crossingSide": "11.0"
+      }
+    },
+    "grade": {
+      "1": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "4.6",
+        "starRating": 4,
+        "srsScore": "4.8",
+        "along": "0.0",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "3": {
+        "decimalStar": "4.6",
+        "starRating": 4,
+        "srsScore": "4.8",
+        "along": "0.0",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "4": {
+        "decimalStar": "3.9",
+        "starRating": 3,
+        "srsScore": "9.0",
+        "along": "4.2",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      }
+    },
+    "carriageway": {
+      "1": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.2",
+        "along": "3.3",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.2",
+        "along": "3.3",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "3": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      }
+    },
+    "median_type": {
+      "1": {
+        "decimalStar": "3.8",
+        "starRating": 3,
+        "srsScore": "11.1",
+        "along": "3.5",
+        "crossingMain": "5.5",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "3.8",
+        "starRating": 3,
+        "srsScore": "11.1",
+        "along": "3.5",
+        "crossingMain": "5.5",
+        "crossingSide": "2.0"
+      },
+      "3": {
+        "decimalStar": "3.8",
+        "starRating": 3,
+        "srsScore": "11.1",
+        "along": "3.5",
+        "crossingMain": "5.5",
+        "crossingSide": "2.0"
+      },
+      "4": {
+        "decimalStar": "3.8",
+        "starRating": 3,
+        "srsScore": "11.1",
+        "along": "3.5",
+        "crossingMain": "5.5",
+        "crossingSide": "2.0"
+      },
+      "5": {
+        "decimalStar": "3.8",
+        "starRating": 3,
+        "srsScore": "11.1",
+        "along": "3.5",
+        "crossingMain": "5.5",
+        "crossingSide": "2.0"
+      },
+      "6": {
+        "decimalStar": "3.8",
+        "starRating": 3,
+        "srsScore": "11.1",
+        "along": "3.5",
+        "crossingMain": "5.5",
+        "crossingSide": "2.0"
+      },
+      "7": {
+        "decimalStar": "3.8",
+        "starRating": 3,
+        "srsScore": "11.1",
+        "along": "3.5",
+        "crossingMain": "5.5",
+        "crossingSide": "2.0"
+      },
+      "8": {
+        "decimalStar": "3.8",
+        "starRating": 3,
+        "srsScore": "11.8",
+        "along": "4.2",
+        "crossingMain": "5.5",
+        "crossingSide": "2.0"
+      },
+      "9": {
+        "decimalStar": "3.8",
+        "starRating": 3,
+        "srsScore": "11.8",
+        "along": "4.2",
+        "crossingMain": "5.5",
+        "crossingSide": "2.0"
+      },
+      "10": {
+        "decimalStar": "3.8",
+        "starRating": 3,
+        "srsScore": "11.8",
+        "along": "4.2",
+        "crossingMain": "5.5",
+        "crossingSide": "2.0"
+      },
+      "11": {
+        "decimalStar": "3.8",
+        "starRating": 3,
+        "srsScore": "11.8",
+        "along": "4.2",
+        "crossingMain": "5.5",
+        "crossingSide": "2.0"
+      },
+      "12": {
+        "decimalStar": "3.8",
+        "starRating": 3,
+        "srsScore": "11.1",
+        "along": "3.5",
+        "crossingMain": "5.5",
+        "crossingSide": "2.0"
+      },
+      "13": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      }
+    },
+    "delineation": {
+      "1": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "3.9",
+        "starRating": 3,
+        "srsScore": "9.0",
+        "along": "4.2",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      }
+    },
+    "street_lighting": {
+      "1": {
+        "decimalStar": "3.9",
+        "starRating": 3,
+        "srsScore": "10.4",
+        "along": "4.4",
+        "crossingMain": "3.4",
+        "crossingSide": "2.5"
+      },
+      "2": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      }
+    },
+    "school_zone_warning": {
+      "1": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "7.9",
+        "along": "3.3",
+        "crossingMain": "2.6",
+        "crossingSide": "1.9"
+      },
+      "2": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "3": {
+        "decimalStar": "4.0",
+        "starRating": 4,
+        "srsScore": "8.7",
+        "along": "3.7",
+        "crossingMain": "2.9",
+        "crossingSide": "2.1"
+      }
+    },
+    "school_zone_crossing_supervisor": {
+      "1": {
+        "decimalStar": "4.3",
+        "starRating": 4,
+        "srsScore": "7.0",
+        "along": "3.5",
+        "crossingMain": "1.6",
+        "crossingSide": "1.8"
+      },
+      "2": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "3": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      }
+    },
+    "sidewalk_driver_side": {
+      "1": {
+        "decimalStar": "4.3",
+        "starRating": 4,
+        "srsScore": "6.6",
+        "along": "1.8",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "4.3",
+        "starRating": 4,
+        "srsScore": "7.0",
+        "along": "2.2",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "3": {
+        "decimalStar": "4.2",
+        "starRating": 4,
+        "srsScore": "7.7",
+        "along": "2.8",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "4": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "5": {
+        "decimalStar": "2.8",
+        "starRating": 2,
+        "srsScore": "28.6",
+        "along": "23.8",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      }
+    },
+    "sidewalk_passenger_side": {
+      "1": {
+        "decimalStar": "4.3",
+        "starRating": 4,
+        "srsScore": "6.6",
+        "along": "1.8",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "4.3",
+        "starRating": 4,
+        "srsScore": "7.0",
+        "along": "2.2",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "3": {
+        "decimalStar": "4.2",
+        "starRating": 4,
+        "srsScore": "7.7",
+        "along": "2.8",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "4": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "5": {
+        "decimalStar": "2.8",
+        "starRating": 2,
+        "srsScore": "28.6",
+        "along": "23.8",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      }
+    },
+    "paved_shoulder_driver_side": {
+      "1": {
+        "decimalStar": "4.0",
+        "starRating": 4,
+        "srsScore": "8.4",
+        "along": "3.3",
+        "crossingMain": "3.0",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.4",
+        "crossingMain": "2.9",
+        "crossingSide": "2.0"
+      },
+      "3": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "4": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      }
+    },
+    "paved_shoulder_passenger_side": {
+      "1": {
+        "decimalStar": "4.0",
+        "starRating": 4,
+        "srsScore": "8.4",
+        "along": "3.3",
+        "crossingMain": "3.0",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.4",
+        "crossingMain": "2.9",
+        "crossingSide": "2.0"
+      },
+      "3": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "4": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      }
+    },
+    "ped_channelisation": {
+      "1": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "7.8",
+        "along": "3.5",
+        "crossingMain": "2.5",
+        "crossingSide": "1.8"
+      }
+    },
+    "pedestrian_crossing_facilities_inspected_road": {
+      "1": {
+        "decimalStar": "4.5",
+        "starRating": 4,
+        "srsScore": "5.5",
+        "along": "3.5",
+        "crossingMain": "0.0",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "4.5",
+        "starRating": 4,
+        "srsScore": "5.8",
+        "along": "3.5",
+        "crossingMain": "0.2",
+        "crossingSide": "2.0"
+      },
+      "3": {
+        "decimalStar": "4.4",
+        "starRating": 4,
+        "srsScore": "6.1",
+        "along": "3.5",
+        "crossingMain": "0.5",
+        "crossingSide": "2.0"
+      },
+      "4": {
+        "decimalStar": "4.3",
+        "starRating": 4,
+        "srsScore": "6.9",
+        "along": "3.5",
+        "crossingMain": "1.3",
+        "crossingSide": "2.0"
+      },
+      "5": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "6": {
+        "decimalStar": "4.2",
+        "starRating": 4,
+        "srsScore": "7.6",
+        "along": "3.5",
+        "crossingMain": "2.0",
+        "crossingSide": "2.0"
+      },
+      "7": {
+        "decimalStar": "3.9",
+        "starRating": 3,
+        "srsScore": "9.7",
+        "along": "3.5",
+        "crossingMain": "4.1",
+        "crossingSide": "2.0"
+      },
+      "8": {
+        "decimalStar": "3.9",
+        "starRating": 3,
+        "srsScore": "9.7",
+        "along": "3.5",
+        "crossingMain": "4.1",
+        "crossingSide": "2.0"
+      },
+      "9": {
+        "decimalStar": "4.5",
+        "starRating": 4,
+        "srsScore": "5.5",
+        "along": "3.5",
+        "crossingMain": "0.0",
+        "crossingSide": "2.0"
+      },
+      "10": {
+        "decimalStar": "4.5",
+        "starRating": 4,
+        "srsScore": "5.5",
+        "along": "3.5",
+        "crossingMain": "0.0",
+        "crossingSide": "2.0"
+      },
+      "11": {
+        "decimalStar": "4.5",
+        "starRating": 4,
+        "srsScore": "5.5",
+        "along": "3.5",
+        "crossingMain": "0.0",
+        "crossingSide": "2.0"
+      },
+      "12": {
+        "decimalStar": "4.5",
+        "starRating": 4,
+        "srsScore": "5.5",
+        "along": "3.5",
+        "crossingMain": "0.0",
+        "crossingSide": "2.0"
+      },
+      "13": {
+        "decimalStar": "4.5",
+        "starRating": 4,
+        "srsScore": "5.5",
+        "along": "3.5",
+        "crossingMain": "0.0",
+        "crossingSide": "2.0"
+      },
+      "14": {
+        "decimalStar": "4.4",
+        "starRating": 4,
+        "srsScore": "6.3",
+        "along": "3.5",
+        "crossingMain": "0.8",
+        "crossingSide": "2.0"
+      }
+    },
+    "pedestrian_crossing_facilities_intersecting_road": {
+      "1": {
+        "decimalStar": "4.4",
+        "starRating": 4,
+        "srsScore": "6.4",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "0.1"
+      },
+      "2": {
+        "decimalStar": "4.2",
+        "starRating": 4,
+        "srsScore": "7.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "1.0"
+      },
+      "3": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "4": {
+        "decimalStar": "3.6",
+        "starRating": 3,
+        "srsScore": "13.7",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "7.4"
+      },
+      "5": {
+        "decimalStar": "3.1",
+        "starRating": 3,
+        "srsScore": "21.2",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "14.9"
+      },
+      "6": {
+        "decimalStar": "3.4",
+        "starRating": 3,
+        "srsScore": "17.5",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "11.1"
+      },
+      "7": {
+        "decimalStar": "2.8",
+        "starRating": 2,
+        "srsScore": "28.7",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "22.3"
+      },
+      "8": {
+        "decimalStar": "2.8",
+        "starRating": 2,
+        "srsScore": "28.7",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "22.3"
+      },
+      "9": {
+        "decimalStar": "4.4",
+        "starRating": 4,
+        "srsScore": "6.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "0.0"
+      },
+      "10": {
+        "decimalStar": "4.4",
+        "starRating": 4,
+        "srsScore": "6.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "0.0"
+      },
+      "11": {
+        "decimalStar": "4.4",
+        "starRating": 4,
+        "srsScore": "6.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "0.0"
+      },
+      "12": {
+        "decimalStar": "4.4",
+        "starRating": 4,
+        "srsScore": "6.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "0.0"
+      },
+      "13": {
+        "decimalStar": "4.4",
+        "starRating": 4,
+        "srsScore": "6.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "0.0"
+      },
+      "14": {
+        "decimalStar": "3.8",
+        "starRating": 3,
+        "srsScore": "10.8",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "4.4"
+      }
+    },
+    "pedestrian_crossing_quality": {
+      "1": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "3.8",
+        "starRating": 3,
+        "srsScore": "10.7",
+        "along": "3.5",
+        "crossingMain": "4.1",
+        "crossingSide": "3.0"
+      },
+      "3": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      }
+    },
+    "speed_limit": {
+      "20": {
+        "decimalStar": "5.5",
+        "starRating": 5,
+        "srsScore": "1.3",
+        "along": "0.5",
+        "crossingMain": "0.4",
+        "crossingSide": "0.3"
+      },
+      "30": {
+        "decimalStar": "4.9",
+        "starRating": 4,
+        "srsScore": "3.4",
+        "along": "1.4",
+        "crossingMain": "1.1",
+        "crossingSide": "0.8"
+      },
+      "40": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "50": {
+        "decimalStar": "3.0",
+        "starRating": 3,
+        "srsScore": "22.6",
+        "along": "7.1",
+        "crossingMain": "11.3",
+        "crossingSide": "4.0"
+      },
+      "60": {
+        "decimalStar": "2.5",
+        "starRating": 2,
+        "srsScore": "36.0",
+        "along": "11.4",
+        "crossingMain": "18.1",
+        "crossingSide": "6.5"
+      },
+      "70": {
+        "decimalStar": "2.2",
+        "starRating": 2,
+        "srsScore": "45.9",
+        "along": "14.5",
+        "crossingMain": "23.0",
+        "crossingSide": "8.3"
+      },
+      "80": {
+        "decimalStar": "1.8",
+        "starRating": 1,
+        "srsScore": "82.2",
+        "along": "16.1",
+        "crossingMain": "38.4",
+        "crossingSide": "27.6"
+      }
+    },
+    "operating_speed_85th_percentile": {
+      "20": {
+        "decimalStar": "4.5",
+        "starRating": 4,
+        "srsScore": "5.4",
+        "along": "2.3",
+        "crossingMain": "1.8",
+        "crossingSide": "1.3"
+      },
+      "30": {
+        "decimalStar": "4.5",
+        "starRating": 4,
+        "srsScore": "5.4",
+        "along": "2.3",
+        "crossingMain": "1.8",
+        "crossingSide": "1.3"
+      },
+      "40": {
+        "decimalStar": "4.5",
+        "starRating": 4,
+        "srsScore": "5.4",
+        "along": "2.3",
+        "crossingMain": "1.8",
+        "crossingSide": "1.3"
+      },
+      "45": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "50": {
+        "decimalStar": "3.7",
+        "starRating": 3,
+        "srsScore": "12.2",
+        "along": "5.1",
+        "crossingMain": "4.0",
+        "crossingSide": "2.9"
+      },
+      "60": {
+        "decimalStar": "2.8",
+        "starRating": 2,
+        "srsScore": "29.4",
+        "along": "9.3",
+        "crossingMain": "14.8",
+        "crossingSide": "5.3"
+      },
+      "70": {
+        "decimalStar": "2.4",
+        "starRating": 2,
+        "srsScore": "41.6",
+        "along": "13.1",
+        "crossingMain": "20.9",
+        "crossingSide": "7.5"
+      },
+      "80": {
+        "decimalStar": "2.1",
+        "starRating": 2,
+        "srsScore": "48.9",
+        "along": "15.4",
+        "crossingMain": "24.5",
+        "crossingSide": "8.8"
+      }
+    },
+    "speed_management_traffic_calming": {
+      "1": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "4.3",
+        "starRating": 4,
+        "srsScore": "6.6",
+        "along": "2.8",
+        "crossingMain": "2.2",
+        "crossingSide": "1.6"
+      }
+    },
+    "motorcycle_percent": {
+      "1": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "3": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "4": {
+        "decimalStar": "4.0",
+        "starRating": 4,
+        "srsScore": "8.4",
+        "along": "3.5",
+        "crossingMain": "2.9",
+        "crossingSide": "2.0"
+      }
+    },
+    "hgv_percent": {
+      "1": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "3": {
+        "decimalStar": "4.0",
+        "starRating": 4,
+        "srsScore": "8.6",
+        "along": "3.5",
+        "crossingMain": "3.0",
+        "crossingSide": "2.0"
+      },
+      "4": {
+        "decimalStar": "4.0",
+        "starRating": 4,
+        "srsScore": "8.9",
+        "along": "3.5",
+        "crossingMain": "3.3",
+        "crossingSide": "2.0"
+      },
+      "5": {
+        "decimalStar": "3.9",
+        "starRating": 3,
+        "srsScore": "9.1",
+        "along": "3.5",
+        "crossingMain": "3.6",
+        "crossingSide": "2.0"
+      }
+    },
+    "land_use_driver_side": {
+      "1": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.2",
+        "along": "3.3",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.2",
+        "along": "3.3",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "3": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "4": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "5": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "6": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      }
+    },
+    "land_use_passenger_side": {
+      "1": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.2",
+        "along": "3.3",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.2",
+        "along": "3.3",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "3": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "4": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "5": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "6": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      }
+    },
+    "area_type": {
+      "1": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      }
+    },
+    "intersection_type": {
+      "1": {
+        "decimalStar": "3.9",
+        "starRating": 3,
+        "srsScore": "9.5",
+        "along": "3.5",
+        "crossingMain": "3.4",
+        "crossingSide": "2.5"
+      },
+      "2": {
+        "decimalStar": "3.9",
+        "starRating": 3,
+        "srsScore": "9.5",
+        "along": "3.5",
+        "crossingMain": "3.4",
+        "crossingSide": "2.5"
+      },
+      "3": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "4": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "7.9",
+        "along": "3.5",
+        "crossingMain": "2.5",
+        "crossingSide": "1.8"
+      },
+      "5": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "6": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "7.9",
+        "along": "3.5",
+        "crossingMain": "2.5",
+        "crossingSide": "1.8"
+      },
+      "7": {
+        "decimalStar": "4.0",
+        "starRating": 4,
+        "srsScore": "8.7",
+        "along": "3.5",
+        "crossingMain": "3.0",
+        "crossingSide": "2.1"
+      },
+      "8": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      }
+    },
+    "property_access_points": {
+      "1": {
+        "decimalStar": "4.0",
+        "starRating": 4,
+        "srsScore": "8.4",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "3": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.2",
+        "along": "3.4",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "4": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.0",
+        "along": "3.2",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      }
+    },
+    "intersection_quality": {
+      "1": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "3.9",
+        "starRating": 3,
+        "srsScore": "9.3",
+        "along": "3.5",
+        "crossingMain": "3.3",
+        "crossingSide": "2.4"
+      },
+      "3": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      }
+    },
+    "curvature": {
+      "1": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "3.8",
+        "starRating": 3,
+        "srsScore": "11.1",
+        "along": "6.3",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "3": {
+        "decimalStar": "3.4",
+        "starRating": 3,
+        "srsScore": "17.1",
+        "along": "12.3",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "4": {
+        "decimalStar": "2.9",
+        "starRating": 2,
+        "srsScore": "25.9",
+        "along": "21.1",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      }
+    },
+    "quality_of_curve": {
+      "1": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "2": {
+        "decimalStar": "3.9",
+        "starRating": 3,
+        "srsScore": "9.2",
+        "along": "4.4",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      },
+      "3": {
+        "decimalStar": "4.1",
+        "starRating": 4,
+        "srsScore": "8.3",
+        "along": "3.5",
+        "crossingMain": "2.7",
+        "crossingSide": "2.0"
+      }
+    }
+  }
+}

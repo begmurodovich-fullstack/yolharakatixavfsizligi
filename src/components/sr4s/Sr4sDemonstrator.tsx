@@ -89,7 +89,11 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
             latest.status === 'SUBMITTED' || latest.status === 'VERIFIED';
           setIsLocked(isSubmittedOrVerified && !retakeAllowed);
 
-          if (latest.answers && typeof latest.answers === 'object') {
+          if (retakeAllowed) {
+            // Qayta baholash ruxsati bo'lsa, mezonlar boshlang'ich 4.6 holatga qaytadi va hech biri oldindan tasdiqlanmagan (0/40) bo'ladi
+            setConfirmedAttrIds(new Set());
+            setAttributes(OFFICIAL_40_ATTRIBUTES_DATA);
+          } else if (latest.answers && typeof latest.answers === 'object') {
             const answeredKeys = Object.keys(latest.answers);
             setConfirmedAttrIds(new Set(answeredKeys));
             setAttributes((prev) =>
@@ -214,7 +218,7 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
       return;
     }
     setAttributes(OFFICIAL_40_ATTRIBUTES_DATA);
-    setConfirmedAttrIds(new Set(OFFICIAL_40_ATTRIBUTES_DATA.map((a) => a.id)));
+    setConfirmedAttrIds(new Set());
     success('Barcha 40 mezon boshlang‘ich holatga qaytarildi (Standart 4.6 Yulduz)');
   };
 
