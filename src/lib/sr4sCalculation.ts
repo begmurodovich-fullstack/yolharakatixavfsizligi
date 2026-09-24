@@ -2,11 +2,15 @@
  * Rasmiy iRAP (International Road Assessment Programme) v3.10 va SR4S (Star Rating for Schools)
  * Xalqaro Piyodalar Xavfi Modeli (Pedestrian Risk Model) hisoblash mexanizmi.
  * 
- * Boshlang'ich (Baseline) mezonlar bo'yicha baho: Aniq 4.6 Yulduz (SRS: 5.4).
- * Standart 40 ta mezon default holatida: 4.1 Yulduz (SRS: 8.3).
- * Rasmiy Banding Shkalasi: [200, 54, 24, 9, 3]
+ * Boshlang'ich (Baseline) mezonlar bo'yicha baho:
+ *   - along: 1.7
+ *   - crossingMain: 1.9
+ *   - crossingSide: 1.4
+ *   - srsScore: 5.1
+ *   - decimalStarRating: 4.6 ★
+ *   - banding: [200, 54, 24, 9, 3]
  * 
- * Manba: results.starratingforschools.org/demonstrator
+ * Manba: results.starratingforschools.org/model/V31a
  */
 
 import { AttributeDefinition } from '@/data/sr4sAttributesData';
@@ -14,6 +18,7 @@ import {
   SR4S_DIRECT_OPTION_FACTORS,
   DetailedOptionFactor,
 } from '@/data/sr4sDirectOptionFactors';
+import { SR4S_OFFICIAL_BASELINE } from '@/data/sr4sOfficialBaseline';
 
 export interface Sr4sStarLevel {
   starCount: number;
@@ -159,10 +164,10 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
     valMap[attr.id] = attr.customValue || attr.currentValueId || '';
   });
 
-  // Boshlang'ich Baseline (4.6 Yulduz, SRS = 5.4)
-  let along = 2.3;
-  let crossingMain = 1.8;
-  let crossingSide = 1.3;
+  // Rasmiy Baseline: along = 1.7, crossingMain = 1.9, crossingSide = 1.4 (SRS = 5.1, Star = 4.6 ★)
+  let along = SR4S_OFFICIAL_BASELINE.along;
+  let crossingMain = SR4S_OFFICIAL_BASELINE.crossingMain;
+  let crossingSide = SR4S_OFFICIAL_BASELINE.crossingSide;
 
   let speedFactor = 1.0;
   let flowFactor = 1.0;
@@ -219,43 +224,43 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
     }
   });
 
-  // Harakat tezligi (Operating Speed) ta'siri (iRAP v3.10 tezlik funksiyasi)
+  // Harakat tezligi (Operating Speed) ta'siri
   const speed = parseFloat(valMap['operating_speed'] || valMap['speed_limit'] || '40') || 40;
 
   if (speed <= 30) {
-    speedFactor = 0.5;
-    along *= 0.5;
-    crossingMain *= 0.5;
-    crossingSide *= 0.5;
+    speedFactor = 0.6;
+    along *= 0.6;
+    crossingMain *= 0.6;
+    crossingSide *= 0.6;
   } else if (speed <= 40) {
     speedFactor = 1.0;
-    // 40 km/soatda faktor = 1.0 (bazaviy)
+    // 40 km/soatda faktor = 1.0
   } else if (speed <= 45) {
-    speedFactor = 1.35;
-    along *= 1.35;
-    crossingMain *= 1.35;
-    crossingSide *= 1.35;
+    speedFactor = 1.25;
+    along *= 1.25;
+    crossingMain *= 1.25;
+    crossingSide *= 1.25;
   } else if (speed <= 50) {
-    speedFactor = 1.75;
-    along *= 1.75;
-    crossingMain *= 1.75;
-    crossingSide *= 1.75;
+    speedFactor = 1.60;
+    along *= 1.60;
+    crossingMain *= 1.60;
+    crossingSide *= 1.60;
   } else if (speed <= 60) {
-    speedFactor = 2.80;
-    along *= 2.80;
-    crossingMain *= 3.20;
-    crossingSide *= 2.80;
+    speedFactor = 2.50;
+    along *= 2.50;
+    crossingMain *= 2.80;
+    crossingSide *= 2.50;
   } else if (speed <= 70) {
-    speedFactor = 4.20;
-    along *= 4.20;
-    crossingMain *= 5.00;
-    crossingSide *= 4.20;
+    speedFactor = 3.80;
+    along *= 3.80;
+    crossingMain *= 4.50;
+    crossingSide *= 3.80;
   } else {
     // 80+ km/h
-    speedFactor = 5.80;
-    along *= 5.80;
-    crossingMain *= 7.00;
-    crossingSide *= 5.80;
+    speedFactor = 5.20;
+    along *= 5.20;
+    crossingMain *= 6.20;
+    crossingSide *= 5.20;
   }
 
   // Jami SRS (Xavf balli)
