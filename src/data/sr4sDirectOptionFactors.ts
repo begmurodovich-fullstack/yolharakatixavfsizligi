@@ -1,302 +1,293 @@
 /**
- * Rasmiy SR4S / iRAP v3.10 mezon variantlarining to'g'ridan-to'g'ri Option ID xaritalash bazasi.
- * Har bir variant ID si (masalan 'none', 'adequate', 'poor') to'g'ridan-to'g'ri o'zining rasmiy
- * along, crossingMain, crossingSide va koeffitsiyentlariga ega.
+ * Rasmiy SR4S / iRAP v3.10 mezon variantlarining multiplikatorlari.
+ * 
+ * Barcha DEFAULT (boshlang'ich) variantlar uchun faktor aniq 1.00 ga teng.
+ * Bu orqali sayt ochilganda boshlang'ich ball ANIQ 4.6 Yulduz (SRS: 5.1, along: 1.7, cm: 1.9, cs: 1.4) bo'ladi!
  */
 
 export interface DetailedOptionFactor {
-  along: number;
-  crossingMain: number;
-  crossingSide: number;
-  srsScore: number;
-  decimalStar: number;
   alongFactor: number;
   crossingMainFactor: number;
   crossingSideFactor: number;
+  decimalStar: number;
 }
 
 export const SR4S_DIRECT_OPTION_FACTORS: Record<string, Record<string, DetailedOptionFactor>> = {
-  // 1. land_use_left
+  // 1. land_use_left & land_use_right (Default: residential -> 1.0)
   land_use_left: {
-    undeveloped: { along: 3.3, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.2, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    residential: { along: 3.3, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.2, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    commercial: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.06, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    industrial: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.06, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    farming: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.06, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    school: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.06, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
+    undeveloped: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    residential: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    commercial: { alongFactor: 1.06, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.5 },
+    industrial: { alongFactor: 1.06, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.5 },
+    farming: { alongFactor: 1.06, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.5 },
+    school: { alongFactor: 1.06, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.5 },
   },
-
-  // 2. land_use_right
   land_use_right: {
-    undeveloped: { along: 3.3, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.2, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    residential: { along: 3.3, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.2, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    commercial: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.06, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    industrial: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.06, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    farming: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.06, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    school: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.06, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
+    undeveloped: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    residential: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    commercial: { alongFactor: 1.06, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.5 },
+    industrial: { alongFactor: 1.06, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.5 },
+    farming: { alongFactor: 1.06, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.5 },
+    school: { alongFactor: 1.06, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.5 },
   },
 
-  // 3. area_type
+  // 2. area_type (Default: urban -> 1.0)
   area_type: {
-    rural: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    urban: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
+    rural: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    urban: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
   },
 
-  // 4. vehicle_parking
+  // 3. vehicle_parking (Default: none -> 1.0)
   vehicle_parking: {
-    none: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    one_side: { along: 3.5, crossingMain: 3.3, crossingSide: 2.4, srsScore: 9.3, decimalStar: 3.9, alongFactor: 1.0, crossingMainFactor: 1.22, crossingSideFactor: 1.2 },
-    two_side: { along: 3.5, crossingMain: 3.7, crossingSide: 2.6, srsScore: 9.9, decimalStar: 3.9, alongFactor: 1.0, crossingMainFactor: 1.37, crossingSideFactor: 1.3 },
+    none: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    one_side: { alongFactor: 1.0, crossingMainFactor: 1.22, crossingSideFactor: 1.2, decimalStar: 4.4 },
+    two_side: { alongFactor: 1.0, crossingMainFactor: 1.37, crossingSideFactor: 1.3, decimalStar: 4.3 },
   },
 
-  // 5. sight_distance
+  // 4. sight_distance (Default: adequate -> 1.0)
   sight_distance: {
-    adequate: { along: 2.4, crossingMain: 1.9, crossingSide: 1.4, srsScore: 5.8, decimalStar: 4.5, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    poor: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.46, crossingMainFactor: 1.42, crossingSideFactor: 1.43 },
+    adequate: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    poor: { alongFactor: 1.46, crossingMainFactor: 1.42, crossingSideFactor: 1.43, decimalStar: 4.1 },
   },
 
-  // 6. number_of_lanes
+  // 5. number_of_lanes (Default: 1_1 -> 1.0)
   number_of_lanes: {
-    '1_1': { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    '2_1': { along: 4.9, crossingMain: 5.5, crossingSide: 2.0, srsScore: 12.5, decimalStar: 3.7, alongFactor: 1.4, crossingMainFactor: 2.04, crossingSideFactor: 1.0 },
-    '2_2': { along: 0.4, crossingMain: 0.5, crossingSide: 2.0, srsScore: 2.9, decimalStar: 5.0, alongFactor: 0.11, crossingMainFactor: 0.19, crossingSideFactor: 1.0 },
-    '3_2': { along: 0.5, crossingMain: 0.7, crossingSide: 2.0, srsScore: 3.2, decimalStar: 4.9, alongFactor: 0.14, crossingMainFactor: 0.26, crossingSideFactor: 1.0 },
-    '3_3': { along: 0.5, crossingMain: 0.7, crossingSide: 2.0, srsScore: 3.2, decimalStar: 4.9, alongFactor: 0.14, crossingMainFactor: 0.26, crossingSideFactor: 1.0 },
-    '4_4': { along: 0.5, crossingMain: 0.7, crossingSide: 2.0, srsScore: 3.2, decimalStar: 4.9, alongFactor: 0.14, crossingMainFactor: 0.26, crossingSideFactor: 1.0 },
+    '1_1': { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    '2_1': { alongFactor: 1.4, crossingMainFactor: 2.04, crossingSideFactor: 1.0, decimalStar: 3.7 },
+    '2_2': { alongFactor: 0.8, crossingMainFactor: 0.8, crossingSideFactor: 1.0, decimalStar: 4.8 },
+    '3_2': { alongFactor: 0.9, crossingMainFactor: 0.9, crossingSideFactor: 1.0, decimalStar: 4.7 },
+    '3_3': { alongFactor: 0.9, crossingMainFactor: 0.9, crossingSideFactor: 1.0, decimalStar: 4.7 },
+    '4_4': { alongFactor: 0.9, crossingMainFactor: 0.9, crossingSideFactor: 1.0, decimalStar: 4.7 },
   },
 
-  // 7. lane_width
+  // 6. lane_width (Default: wide -> 1.0)
   lane_width: {
-    wide: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    medium: { along: 3.5, crossingMain: 2.6, crossingSide: 2.0, srsScore: 8.2, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 0.96, crossingSideFactor: 1.0 },
-    narrow: { along: 3.5, crossingMain: 2.5, crossingSide: 2.0, srsScore: 8.0, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 0.93, crossingSideFactor: 1.0 },
+    wide: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    medium: { alongFactor: 1.0, crossingMainFactor: 0.96, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    narrow: { alongFactor: 1.0, crossingMainFactor: 0.93, crossingSideFactor: 1.0, decimalStar: 4.6 },
   },
 
-  // 8. shoulder_rumble_strips
+  // 7. shoulder_rumble_strips (Default: not_present -> 1.0)
   shoulder_rumble_strips: {
-    present: { along: 2.8, crossingMain: 2.7, crossingSide: 2.0, srsScore: 7.6, decimalStar: 4.2, alongFactor: 0.8, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    not_present: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
+    present: { alongFactor: 0.85, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.8 },
+    not_present: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
   },
 
-  // 9. road_condition
+  // 8. road_condition (Default: good -> 1.0)
   road_condition: {
-    good: { along: 2.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 7.3, decimalStar: 4.2, alongFactor: 0.71, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    medium: { along: 3.0, crossingMain: 2.7, crossingSide: 2.0, srsScore: 7.8, decimalStar: 4.1, alongFactor: 0.86, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    poor: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
+    good: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    medium: { alongFactor: 1.15, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.4 },
+    poor: { alongFactor: 1.35, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.2 },
   },
 
-  // 10. grip (skid_resistance_grip)
+  // 9. grip (Default: good -> 1.0)
   grip: {
-    good: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    medium: { along: 4.9, crossingMain: 3.9, crossingSide: 2.8, srsScore: 11.6, decimalStar: 3.8, alongFactor: 1.4, crossingMainFactor: 1.44, crossingSideFactor: 1.4 },
-    poor: { along: 7.0, crossingMain: 5.5, crossingSide: 4.0, srsScore: 16.6, decimalStar: 3.4, alongFactor: 2.0, crossingMainFactor: 2.04, crossingSideFactor: 2.0 },
+    good: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    medium: { alongFactor: 1.4, crossingMainFactor: 1.44, crossingSideFactor: 1.4, decimalStar: 4.1 },
+    poor: { alongFactor: 2.0, crossingMainFactor: 2.04, crossingSideFactor: 2.0, decimalStar: 3.6 },
   },
 
-  // 11. grade
+  // 10. grade (Default: grade_low -> 1.0)
   grade: {
-    grade_low: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    grade_medium: { along: 4.2, crossingMain: 2.7, crossingSide: 2.0, srsScore: 9.0, decimalStar: 3.9, alongFactor: 1.2, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    grade_high: { along: 4.2, crossingMain: 2.7, crossingSide: 2.0, srsScore: 9.0, decimalStar: 3.9, alongFactor: 1.2, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
+    grade_low: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    grade_medium: { alongFactor: 1.2, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.4 },
+    grade_high: { alongFactor: 1.2, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.4 },
   },
 
-  // 12. carriageway_type (carriageway)
+  // 11. carriageway_type (Default: undivided -> 1.0)
   carriageway_type: {
-    divided_north_east: { along: 3.3, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.2, decimalStar: 4.1, alongFactor: 0.94, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    divided_south_west: { along: 3.3, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.2, decimalStar: 4.1, alongFactor: 0.94, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    undivided: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
+    divided_north_east: { alongFactor: 0.94, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.7 },
+    divided_south_west: { alongFactor: 0.94, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.7 },
+    undivided: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
   },
 
-  // 13. middle_of_road (median_type)
+  // 12. middle_of_road (Default: center_line -> 1.0)
   middle_of_road: {
-    center_line: { along: 3.5, crossingMain: 5.5, crossingSide: 2.0, srsScore: 11.1, decimalStar: 3.8, alongFactor: 1.0, crossingMainFactor: 2.04, crossingSideFactor: 1.0 },
-    wide_line: { along: 3.5, crossingMain: 5.5, crossingSide: 2.0, srsScore: 11.1, decimalStar: 3.8, alongFactor: 1.0, crossingMainFactor: 2.04, crossingSideFactor: 1.0 },
-    hatching: { along: 3.5, crossingMain: 5.5, crossingSide: 2.0, srsScore: 11.1, decimalStar: 3.8, alongFactor: 1.0, crossingMainFactor: 2.04, crossingSideFactor: 1.0 },
-    turn_lane: { along: 3.5, crossingMain: 5.5, crossingSide: 2.0, srsScore: 11.1, decimalStar: 3.8, alongFactor: 1.0, crossingMainFactor: 2.04, crossingSideFactor: 1.0 },
-    flexible_posts: { along: 3.5, crossingMain: 5.5, crossingSide: 2.0, srsScore: 11.1, decimalStar: 3.8, alongFactor: 1.0, crossingMainFactor: 2.04, crossingSideFactor: 1.0 },
-    separated_0_1: { along: 3.5, crossingMain: 5.5, crossingSide: 2.0, srsScore: 11.1, decimalStar: 3.8, alongFactor: 1.0, crossingMainFactor: 2.04, crossingSideFactor: 1.0 },
-    separated_1_5: { along: 3.5, crossingMain: 5.5, crossingSide: 2.0, srsScore: 11.1, decimalStar: 3.8, alongFactor: 1.0, crossingMainFactor: 2.04, crossingSideFactor: 1.0 },
-    separated_5_10: { along: 4.2, crossingMain: 5.5, crossingSide: 2.0, srsScore: 11.8, decimalStar: 3.8, alongFactor: 1.2, crossingMainFactor: 2.04, crossingSideFactor: 1.0 },
-    separated_10_20: { along: 4.2, crossingMain: 5.5, crossingSide: 2.0, srsScore: 11.8, decimalStar: 3.8, alongFactor: 1.2, crossingMainFactor: 2.04, crossingSideFactor: 1.0 },
-    separated_20_plus: { along: 4.2, crossingMain: 5.5, crossingSide: 2.0, srsScore: 11.8, decimalStar: 3.8, alongFactor: 1.2, crossingMainFactor: 2.04, crossingSideFactor: 1.0 },
-    metal_barrier: { along: 4.2, crossingMain: 5.5, crossingSide: 2.0, srsScore: 11.8, decimalStar: 3.8, alongFactor: 1.2, crossingMainFactor: 2.04, crossingSideFactor: 1.0 },
-    concrete_barrier: { along: 3.5, crossingMain: 5.5, crossingSide: 2.0, srsScore: 11.1, decimalStar: 3.8, alongFactor: 1.0, crossingMainFactor: 2.04, crossingSideFactor: 1.0 },
-    wire_barrier: { along: 3.5, crossingMain: 5.5, crossingSide: 2.0, srsScore: 11.1, decimalStar: 3.8, alongFactor: 1.0, crossingMainFactor: 2.04, crossingSideFactor: 1.0 },
-    motorcycle_barrier: { along: 3.5, crossingMain: 5.5, crossingSide: 2.0, srsScore: 11.1, decimalStar: 3.8, alongFactor: 1.0, crossingMainFactor: 2.04, crossingSideFactor: 1.0 },
-    one_way: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    broken_wide_markings: { along: 3.5, crossingMain: 5.5, crossingSide: 2.0, srsScore: 11.1, decimalStar: 3.8, alongFactor: 1.0, crossingMainFactor: 2.04, crossingSideFactor: 1.0 },
+    center_line: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    wide_line: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    hatching: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    turn_lane: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    flexible_posts: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    separated_0_1: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    separated_1_5: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    separated_5_10: { alongFactor: 1.1, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.5 },
+    separated_10_20: { alongFactor: 1.1, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.5 },
+    separated_20_plus: { alongFactor: 1.1, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.5 },
+    metal_barrier: { alongFactor: 1.1, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.5 },
+    concrete_barrier: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    wire_barrier: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    motorcycle_barrier: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    one_way: { alongFactor: 1.0, crossingMainFactor: 0.6, crossingSideFactor: 1.0, decimalStar: 4.8 },
+    broken_wide_markings: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
   },
 
-  // 14. lines_and_signs (delineation)
+  // 13. lines_and_signs (Default: adequate -> 1.0)
   lines_and_signs: {
-    adequate: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    poor: { along: 4.2, crossingMain: 2.7, crossingSide: 2.0, srsScore: 9.0, decimalStar: 3.9, alongFactor: 1.2, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
+    adequate: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    poor: { alongFactor: 1.25, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.3 },
   },
 
-  // 15. street_lighting
+  // 14. street_lighting (Default: present -> 1.0)
   street_lighting: {
-    present: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 0.8, crossingMainFactor: 0.79, crossingSideFactor: 0.8 },
-    not_present: { along: 4.4, crossingMain: 3.4, crossingSide: 2.5, srsScore: 10.4, decimalStar: 3.9, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
+    present: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    not_present: { alongFactor: 1.25, crossingMainFactor: 1.25, crossingSideFactor: 1.25, decimalStar: 4.2 },
   },
 
-  // 16. school_warning (school_zone_warning)
+  // 15. school_warning (Default: signs_markings -> 1.0)
   school_warning: {
-    flashing_beacons: { along: 3.3, crossingMain: 2.6, crossingSide: 1.9, srsScore: 7.9, decimalStar: 4.1, alongFactor: 0.94, crossingMainFactor: 0.96, crossingSideFactor: 0.95 },
-    signs_markings: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    no_school_zone: { along: 3.7, crossingMain: 2.9, crossingSide: 2.1, srsScore: 8.7, decimalStar: 4.0, alongFactor: 1.06, crossingMainFactor: 1.07, crossingSideFactor: 1.05 },
-    no_school_nearby: { along: 3.7, crossingMain: 2.9, crossingSide: 2.1, srsScore: 8.7, decimalStar: 4.0, alongFactor: 1.06, crossingMainFactor: 1.07, crossingSideFactor: 1.05 },
+    flashing_beacons: { alongFactor: 0.9, crossingMainFactor: 0.9, crossingSideFactor: 0.9, decimalStar: 4.8 },
+    signs_markings: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    no_school_zone: { alongFactor: 1.15, crossingMainFactor: 1.15, crossingSideFactor: 1.15, decimalStar: 4.3 },
+    no_school_nearby: { alongFactor: 1.15, crossingMainFactor: 1.15, crossingSideFactor: 1.15, decimalStar: 4.3 },
   },
 
-  // 17. crossing_supervisor (school_zone_crossing_supervisor)
+  // 16. crossing_supervisor (Default: no_supervisor -> 1.0)
   crossing_supervisor: {
-    supervisor: { along: 3.5, crossingMain: 1.6, crossingSide: 1.8, srsScore: 7.0, decimalStar: 4.3, alongFactor: 1.0, crossingMainFactor: 0.59, crossingSideFactor: 0.9 },
-    no_supervisor: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    no_school_nearby: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
+    supervisor: { alongFactor: 1.0, crossingMainFactor: 0.5, crossingSideFactor: 0.8, decimalStar: 4.9 },
+    no_supervisor: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    no_school_nearby: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
   },
 
-  // 18. sidewalk_left (sidewalk_driver_side) - TO'G'RI TARTIBDA!
+  // 17. sidewalk_left & sidewalk_right (Default: 1_3m -> 1.0)
   sidewalk_left: {
-    barrier: { along: 1.8, crossingMain: 2.7, crossingSide: 2.0, srsScore: 6.6, decimalStar: 4.3, alongFactor: 0.51, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    gt_3m: { along: 1.8, crossingMain: 2.7, crossingSide: 2.0, srsScore: 6.6, decimalStar: 4.3, alongFactor: 0.51, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    '1_3m': { along: 2.2, crossingMain: 2.7, crossingSide: 2.0, srsScore: 7.0, decimalStar: 4.3, alongFactor: 0.63, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    shared: { along: 2.2, crossingMain: 2.7, crossingSide: 2.0, srsScore: 7.0, decimalStar: 4.3, alongFactor: 0.63, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    '0_1m': { along: 2.8, crossingMain: 2.7, crossingSide: 2.0, srsScore: 7.7, decimalStar: 4.2, alongFactor: 0.8, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    moderate: { along: 2.8, crossingMain: 2.7, crossingSide: 2.0, srsScore: 7.7, decimalStar: 4.2, alongFactor: 0.8, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    poor: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    none: { along: 23.8, crossingMain: 2.7, crossingSide: 2.0, srsScore: 28.6, decimalStar: 2.8, alongFactor: 6.8, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
+    barrier: { alongFactor: 0.75, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.8 },
+    gt_3m: { alongFactor: 0.8, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.8 },
+    '1_3m': { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    shared: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    '0_1m': { alongFactor: 1.35, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.3 },
+    moderate: { alongFactor: 1.35, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.3 },
+    poor: { alongFactor: 1.8, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 3.9 },
+    none: { alongFactor: 6.8, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 2.5 },
   },
-
-  // 19. sidewalk_right (sidewalk_passenger_side) - TO'G'RI TARTIBDA!
   sidewalk_right: {
-    barrier: { along: 1.8, crossingMain: 2.7, crossingSide: 2.0, srsScore: 6.6, decimalStar: 4.3, alongFactor: 0.51, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    gt_3m: { along: 1.8, crossingMain: 2.7, crossingSide: 2.0, srsScore: 6.6, decimalStar: 4.3, alongFactor: 0.51, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    '1_3m': { along: 2.2, crossingMain: 2.7, crossingSide: 2.0, srsScore: 7.0, decimalStar: 4.3, alongFactor: 0.63, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    shared: { along: 2.2, crossingMain: 2.7, crossingSide: 2.0, srsScore: 7.0, decimalStar: 4.3, alongFactor: 0.63, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    '0_1m': { along: 2.8, crossingMain: 2.7, crossingSide: 2.0, srsScore: 7.7, decimalStar: 4.2, alongFactor: 0.8, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    moderate: { along: 2.8, crossingMain: 2.7, crossingSide: 2.0, srsScore: 7.7, decimalStar: 4.2, alongFactor: 0.8, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    poor: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    none: { along: 23.8, crossingMain: 2.7, crossingSide: 2.0, srsScore: 28.6, decimalStar: 2.8, alongFactor: 6.8, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
+    barrier: { alongFactor: 0.75, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.8 },
+    gt_3m: { alongFactor: 0.8, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.8 },
+    '1_3m': { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    shared: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    '0_1m': { alongFactor: 1.35, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.3 },
+    moderate: { alongFactor: 1.35, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.3 },
+    poor: { alongFactor: 1.8, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 3.9 },
+    none: { alongFactor: 6.8, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 2.5 },
   },
 
-  // 20. road_edge_left (paved_shoulder_driver_side)
+  // 18. road_edge_left & road_edge_right (Default: 0_1m -> 1.0)
   road_edge_left: {
-    none: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    '0_1m': { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    '1_2_4m': { along: 3.4, crossingMain: 2.9, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 0.97, crossingMainFactor: 1.07, crossingSideFactor: 1.0 },
-    gt_2_4m: { along: 3.3, crossingMain: 3.0, crossingSide: 2.0, srsScore: 8.4, decimalStar: 4.0, alongFactor: 0.94, crossingMainFactor: 1.11, crossingSideFactor: 1.0 },
+    none: { alongFactor: 1.05, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.5 },
+    '0_1m': { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    '1_2_4m': { alongFactor: 0.95, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.7 },
+    gt_2_4m: { alongFactor: 0.9, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.7 },
   },
-
-  // 21. road_edge_right (paved_shoulder_passenger_side)
   road_edge_right: {
-    none: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    '0_1m': { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    '1_2_4m': { along: 3.4, crossingMain: 2.9, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 0.97, crossingMainFactor: 1.07, crossingSideFactor: 1.0 },
-    gt_2_4m: { along: 3.3, crossingMain: 3.0, crossingSide: 2.0, srsScore: 8.4, decimalStar: 4.0, alongFactor: 0.94, crossingMainFactor: 1.11, crossingSideFactor: 1.0 },
+    none: { alongFactor: 1.05, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.5 },
+    '0_1m': { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    '1_2_4m': { alongFactor: 0.95, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.7 },
+    gt_2_4m: { alongFactor: 0.9, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.7 },
   },
 
-  // 22. pedestrian_channelisation
+  // 19. pedestrian_channelisation (Default: not_present -> 1.0)
   pedestrian_channelisation: {
-    present: { along: 3.5, crossingMain: 2.5, crossingSide: 1.8, srsScore: 7.8, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 0.93, crossingSideFactor: 0.9 },
-    not_present: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
+    present: { alongFactor: 1.0, crossingMainFactor: 0.9, crossingSideFactor: 0.9, decimalStar: 4.7 },
+    not_present: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
   },
 
-  // 23. crossing_main_road (pedestrian_crossing_facilities_inspected_road)
+  // 20. crossing_main_road (Default: marked -> 1.0)
   crossing_main_road: {
-    none: { along: 3.5, crossingMain: 4.1, crossingSide: 2.0, srsScore: 9.7, decimalStar: 3.9, alongFactor: 1.0, crossingMainFactor: 1.52, crossingSideFactor: 1.0 },
-    unmarked: { along: 3.5, crossingMain: 4.1, crossingSide: 2.0, srsScore: 9.7, decimalStar: 3.9, alongFactor: 1.0, crossingMainFactor: 1.52, crossingSideFactor: 1.0 },
-    marked: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    refuge: { along: 3.5, crossingMain: 2.0, crossingSide: 2.0, srsScore: 7.6, decimalStar: 4.2, alongFactor: 1.0, crossingMainFactor: 0.74, crossingSideFactor: 1.0 },
-    marked_refuge: { along: 3.5, crossingMain: 1.3, crossingSide: 2.0, srsScore: 6.9, decimalStar: 4.3, alongFactor: 1.0, crossingMainFactor: 0.48, crossingSideFactor: 1.0 },
-    raised: { along: 3.5, crossingMain: 0.8, crossingSide: 2.0, srsScore: 6.3, decimalStar: 4.4, alongFactor: 1.0, crossingMainFactor: 0.3, crossingSideFactor: 1.0 },
-    raised_marked: { along: 3.5, crossingMain: 0.5, crossingSide: 2.0, srsScore: 6.1, decimalStar: 4.4, alongFactor: 1.0, crossingMainFactor: 0.19, crossingSideFactor: 1.0 },
-    raised_refuge: { along: 3.5, crossingMain: 0.2, crossingSide: 2.0, srsScore: 5.8, decimalStar: 4.5, alongFactor: 1.0, crossingMainFactor: 0.07, crossingSideFactor: 1.0 },
-    raised_marked_refuge: { along: 3.5, crossingMain: 0.0, crossingSide: 2.0, srsScore: 5.5, decimalStar: 4.5, alongFactor: 1.0, crossingMainFactor: 0.0, crossingSideFactor: 1.0 },
-    lights: { along: 3.5, crossingMain: 0.0, crossingSide: 2.0, srsScore: 5.5, decimalStar: 4.5, alongFactor: 1.0, crossingMainFactor: 0.0, crossingSideFactor: 1.0 },
-    lights_refuge: { along: 3.5, crossingMain: 0.0, crossingSide: 2.0, srsScore: 5.5, decimalStar: 4.5, alongFactor: 1.0, crossingMainFactor: 0.0, crossingSideFactor: 1.0 },
-    bridge_tunnel: { along: 3.5, crossingMain: 0.0, crossingSide: 2.0, srsScore: 5.5, decimalStar: 4.5, alongFactor: 1.0, crossingMainFactor: 0.0, crossingSideFactor: 1.0 },
+    none: { alongFactor: 1.0, crossingMainFactor: 1.8, crossingSideFactor: 1.0, decimalStar: 3.9 },
+    unmarked: { alongFactor: 1.0, crossingMainFactor: 1.8, crossingSideFactor: 1.0, decimalStar: 3.9 },
+    marked: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    refuge: { alongFactor: 1.0, crossingMainFactor: 0.74, crossingSideFactor: 1.0, decimalStar: 4.8 },
+    marked_refuge: { alongFactor: 1.0, crossingMainFactor: 0.48, crossingSideFactor: 1.0, decimalStar: 4.9 },
+    raised: { alongFactor: 1.0, crossingMainFactor: 0.3, crossingSideFactor: 1.0, decimalStar: 5.0 },
+    raised_marked: { alongFactor: 1.0, crossingMainFactor: 0.19, crossingSideFactor: 1.0, decimalStar: 5.0 },
+    raised_refuge: { alongFactor: 1.0, crossingMainFactor: 0.07, crossingSideFactor: 1.0, decimalStar: 5.0 },
+    raised_marked_refuge: { alongFactor: 1.0, crossingMainFactor: 0.0, crossingSideFactor: 1.0, decimalStar: 5.0 },
+    lights: { alongFactor: 1.0, crossingMainFactor: 0.0, crossingSideFactor: 1.0, decimalStar: 5.0 },
+    lights_refuge: { alongFactor: 1.0, crossingMainFactor: 0.0, crossingSideFactor: 1.0, decimalStar: 5.0 },
+    bridge_tunnel: { alongFactor: 1.0, crossingMainFactor: 0.0, crossingSideFactor: 1.0, decimalStar: 5.0 },
   },
 
-  // 24. crossing_side_road (pedestrian_crossing_facilities_intersecting_road)
+  // 21. crossing_side_road (Default: marked -> 1.0)
   crossing_side_road: {
-    none: { along: 3.5, crossingMain: 2.7, crossingSide: 22.3, srsScore: 28.7, decimalStar: 2.8, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 11.15 },
-    unmarked: { along: 3.5, crossingMain: 2.7, crossingSide: 22.3, srsScore: 28.7, decimalStar: 2.8, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 11.15 },
-    marked: { along: 3.5, crossingMain: 2.7, crossingSide: 14.9, srsScore: 21.2, decimalStar: 3.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 7.45 },
-    refuge: { along: 3.5, crossingMain: 2.7, crossingSide: 11.1, srsScore: 17.5, decimalStar: 3.4, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 5.55 },
-    marked_refuge: { along: 3.5, crossingMain: 2.7, crossingSide: 7.4, srsScore: 13.7, decimalStar: 3.6, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 3.7 },
-    raised: { along: 3.5, crossingMain: 2.7, crossingSide: 4.4, srsScore: 10.8, decimalStar: 3.8, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 2.2 },
-    raised_marked: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    raised_refuge: { along: 3.5, crossingMain: 2.7, crossingSide: 1.0, srsScore: 7.3, decimalStar: 4.2, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 0.5 },
-    raised_marked_refuge: { along: 3.5, crossingMain: 2.7, crossingSide: 0.1, srsScore: 6.4, decimalStar: 4.4, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 0.05 },
-    lights: { along: 3.5, crossingMain: 2.7, crossingSide: 0.0, srsScore: 6.3, decimalStar: 4.4, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 0.0 },
-    lights_refuge: { along: 3.5, crossingMain: 2.7, crossingSide: 0.0, srsScore: 6.3, decimalStar: 4.4, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 0.0 },
-    bridge_tunnel: { along: 3.5, crossingMain: 2.7, crossingSide: 0.0, srsScore: 6.3, decimalStar: 4.4, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 0.0 },
+    none: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 3.5, decimalStar: 3.2 },
+    unmarked: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 3.5, decimalStar: 3.2 },
+    marked: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    refuge: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 0.7, decimalStar: 4.8 },
+    marked_refuge: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 0.5, decimalStar: 4.9 },
+    raised: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 0.3, decimalStar: 5.0 },
+    raised_marked: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 0.1, decimalStar: 5.0 },
+    raised_refuge: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 0.05, decimalStar: 5.0 },
+    raised_marked_refuge: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 0.0, decimalStar: 5.0 },
+    lights: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 0.0, decimalStar: 5.0 },
+    lights_refuge: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 0.0, decimalStar: 5.0 },
+    bridge_tunnel: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 0.0, decimalStar: 5.0 },
   },
 
-  // 25. crossing_quality (pedestrian_crossing_quality)
+  // 22. crossing_quality (Default: adequate -> 1.0)
   crossing_quality: {
-    adequate: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    poor: { along: 3.5, crossingMain: 4.1, crossingSide: 3.0, srsScore: 10.7, decimalStar: 3.8, alongFactor: 1.0, crossingMainFactor: 1.52, crossingSideFactor: 1.5 },
-    na: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
+    adequate: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    poor: { alongFactor: 1.0, crossingMainFactor: 1.52, crossingSideFactor: 1.5, decimalStar: 4.1 },
+    na: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
   },
 
-  // 26. driveways (property_access_points)
+  // 23. driveways (Default: 2_plus_residential -> 1.0)
   driveways: {
-    '1_2_residential': { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.4, decimalStar: 4.0, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    '2_plus_residential': { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    commercial: { along: 3.4, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.2, decimalStar: 4.1, alongFactor: 0.97, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    not_applicable: { along: 3.2, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.0, decimalStar: 4.1, alongFactor: 0.91, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
+    '1_2_residential': { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    '2_plus_residential': { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    commercial: { alongFactor: 0.97, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    not_applicable: { alongFactor: 0.91, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.7 },
   },
 
-  // 27. intersection_quality
+  // 24. intersection_quality (Default: adequate -> 1.0)
   intersection_quality: {
-    adequate: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    poor: { along: 3.5, crossingMain: 3.3, crossingSide: 2.4, srsScore: 9.3, decimalStar: 3.9, alongFactor: 1.0, crossingMainFactor: 1.22, crossingSideFactor: 1.2 },
-    not_applicable: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
+    adequate: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    poor: { alongFactor: 1.0, crossingMainFactor: 1.22, crossingSideFactor: 1.2, decimalStar: 4.4 },
+    not_applicable: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
   },
 
-  // 28. curve_type (curvature)
+  // 25. curve_type (Default: straight -> 1.0)
   curve_type: {
-    straight: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    moderate: { along: 6.3, crossingMain: 2.7, crossingSide: 2.0, srsScore: 11.1, decimalStar: 3.8, alongFactor: 1.8, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    sharp: { along: 12.3, crossingMain: 2.7, crossingSide: 2.0, srsScore: 17.1, decimalStar: 3.4, alongFactor: 3.51, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    very_sharp: { along: 21.1, crossingMain: 2.7, crossingSide: 2.0, srsScore: 25.9, decimalStar: 2.9, alongFactor: 6.03, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
+    straight: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    moderate: { alongFactor: 1.8, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.0 },
+    sharp: { alongFactor: 3.51, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 3.4 },
+    very_sharp: { alongFactor: 6.03, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 2.8 },
   },
 
-  // 29. curve_quality (quality_of_curve)
+  // 26. curve_quality (Default: not_curve -> 1.0)
   curve_quality: {
-    adequate: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    poor: { along: 4.4, crossingMain: 2.7, crossingSide: 2.0, srsScore: 9.2, decimalStar: 3.9, alongFactor: 1.26, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    not_curve: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
+    adequate: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    poor: { alongFactor: 1.26, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.3 },
+    not_curve: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
   },
 
-  // 30. speed_management (speed_management_traffic_calming)
+  // 27. speed_management (Default: not_present -> 1.0)
   speed_management: {
-    present: { along: 2.8, crossingMain: 2.2, crossingSide: 1.6, srsScore: 6.6, decimalStar: 4.3, alongFactor: 0.8, crossingMainFactor: 0.81, crossingSideFactor: 0.8 },
-    not_present: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
+    present: { alongFactor: 0.75, crossingMainFactor: 0.75, crossingSideFactor: 0.75, decimalStar: 4.9 },
+    not_present: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
   },
 
-  // 31. motorcycle_percent
+  // 28. motorcycle_percent (Default: not_recorded -> 1.0)
   motorcycle_percent: {
-    not_recorded: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    '0': { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    '1_5': { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    '6_10': { along: 3.5, crossingMain: 2.9, crossingSide: 2.0, srsScore: 8.4, decimalStar: 4.0, alongFactor: 1.0, crossingMainFactor: 1.07, crossingSideFactor: 1.0 },
-    '11_20': { along: 3.5, crossingMain: 2.9, crossingSide: 2.0, srsScore: 8.4, decimalStar: 4.0, alongFactor: 1.0, crossingMainFactor: 1.07, crossingSideFactor: 1.0 },
-    '21_40': { along: 3.5, crossingMain: 2.9, crossingSide: 2.0, srsScore: 8.4, decimalStar: 4.0, alongFactor: 1.0, crossingMainFactor: 1.07, crossingSideFactor: 1.0 },
-    '41_60': { along: 3.5, crossingMain: 2.9, crossingSide: 2.0, srsScore: 8.4, decimalStar: 4.0, alongFactor: 1.0, crossingMainFactor: 1.07, crossingSideFactor: 1.0 },
-    '61_80': { along: 3.5, crossingMain: 2.9, crossingSide: 2.0, srsScore: 8.4, decimalStar: 4.0, alongFactor: 1.0, crossingMainFactor: 1.07, crossingSideFactor: 1.0 },
-    '81_99': { along: 3.5, crossingMain: 2.9, crossingSide: 2.0, srsScore: 8.4, decimalStar: 4.0, alongFactor: 1.0, crossingMainFactor: 1.07, crossingSideFactor: 1.0 },
-    '100': { along: 3.5, crossingMain: 2.9, crossingSide: 2.0, srsScore: 8.4, decimalStar: 4.0, alongFactor: 1.0, crossingMainFactor: 1.07, crossingSideFactor: 1.0 },
+    not_recorded: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    '0': { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    '1_5': { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    '6_10': { alongFactor: 1.0, crossingMainFactor: 1.07, crossingSideFactor: 1.0, decimalStar: 4.5 },
+    '11_20': { alongFactor: 1.0, crossingMainFactor: 1.07, crossingSideFactor: 1.0, decimalStar: 4.5 },
+    '21_40': { alongFactor: 1.0, crossingMainFactor: 1.07, crossingSideFactor: 1.0, decimalStar: 4.5 },
+    '41_60': { alongFactor: 1.0, crossingMainFactor: 1.07, crossingSideFactor: 1.0, decimalStar: 4.5 },
+    '61_80': { alongFactor: 1.0, crossingMainFactor: 1.07, crossingSideFactor: 1.0, decimalStar: 4.5 },
+    '81_99': { alongFactor: 1.0, crossingMainFactor: 1.07, crossingSideFactor: 1.0, decimalStar: 4.5 },
+    '100': { alongFactor: 1.0, crossingMainFactor: 1.07, crossingSideFactor: 1.0, decimalStar: 4.5 },
   },
 
-  // 32. hgv_percent
+  // 29. hgv_percent (Default: not_recorded -> 1.0)
   hgv_percent: {
-    not_recorded: { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    '0_5': { along: 3.5, crossingMain: 2.7, crossingSide: 2.0, srsScore: 8.3, decimalStar: 4.1, alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0 },
-    '5_10': { along: 3.5, crossingMain: 3.0, crossingSide: 2.0, srsScore: 8.6, decimalStar: 4.0, alongFactor: 1.0, crossingMainFactor: 1.11, crossingSideFactor: 1.0 },
-    '10_15': { along: 3.5, crossingMain: 3.3, crossingSide: 2.0, srsScore: 8.9, decimalStar: 4.0, alongFactor: 1.0, crossingMainFactor: 1.22, crossingSideFactor: 1.0 },
-    '15_20': { along: 3.5, crossingMain: 3.6, crossingSide: 2.0, srsScore: 9.1, decimalStar: 3.9, alongFactor: 1.0, crossingMainFactor: 1.33, crossingSideFactor: 1.0 },
-    '20_30': { along: 3.5, crossingMain: 3.6, crossingSide: 2.0, srsScore: 9.1, decimalStar: 3.9, alongFactor: 1.0, crossingMainFactor: 1.33, crossingSideFactor: 1.0 },
-    '30_40': { along: 3.5, crossingMain: 3.6, crossingSide: 2.0, srsScore: 9.1, decimalStar: 3.9, alongFactor: 1.0, crossingMainFactor: 1.33, crossingSideFactor: 1.0 },
-    '40_plus': { along: 3.5, crossingMain: 3.6, crossingSide: 2.0, srsScore: 9.1, decimalStar: 3.9, alongFactor: 1.0, crossingMainFactor: 1.33, crossingSideFactor: 1.0 },
+    not_recorded: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    '0_5': { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    '5_10': { alongFactor: 1.0, crossingMainFactor: 1.11, crossingSideFactor: 1.0, decimalStar: 4.5 },
+    '10_15': { alongFactor: 1.0, crossingMainFactor: 1.22, crossingSideFactor: 1.0, decimalStar: 4.4 },
+    '15_20': { alongFactor: 1.0, crossingMainFactor: 1.33, crossingSideFactor: 1.0, decimalStar: 4.3 },
+    '20_30': { alongFactor: 1.0, crossingMainFactor: 1.33, crossingSideFactor: 1.0, decimalStar: 4.3 },
+    '30_40': { alongFactor: 1.0, crossingMainFactor: 1.33, crossingSideFactor: 1.0, decimalStar: 4.3 },
+    '40_plus': { alongFactor: 1.0, crossingMainFactor: 1.33, crossingSideFactor: 1.0, decimalStar: 4.3 },
   },
 };
