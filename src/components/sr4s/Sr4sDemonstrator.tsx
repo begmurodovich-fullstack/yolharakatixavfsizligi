@@ -17,9 +17,8 @@ import {
   OFFICIAL_SR4S_STAR_LEVELS,
   Sr4sStarLevel,
   IrapCalculationResult,
-  ATTR_KEY_ALIASES,
 } from '@/lib/sr4sCalculation';
-import { SR4S_OFFICIAL_FACTORS } from '@/data/sr4sOfficialFactors';
+import { SR4S_DIRECT_OPTION_FACTORS } from '@/data/sr4sDirectOptionFactors';
 import {
   Star,
   RotateCcw,
@@ -1051,11 +1050,10 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
             ) : (
               /* Mode 3: Option Cards */
               <div className="flex flex-row items-end justify-center gap-3 sm:gap-6 flex-wrap">
-                {activeModalAttr.options.map((option, optIdx) => {
+                {activeModalAttr.options.map((option) => {
                   const isSelected = option.id === activeModalAttr.currentValueId;
-                  const factorKey = ATTR_KEY_ALIASES[activeModalAttr.id] || activeModalAttr.id;
-                  const factorGroup = SR4S_OFFICIAL_FACTORS[factorKey];
-                  const factor = factorGroup ? (factorGroup[option.id] || factorGroup[String(optIdx + 1)]) : null;
+                  const factorGroup = SR4S_DIRECT_OPTION_FACTORS[activeModalAttr.id];
+                  const factor = factorGroup ? factorGroup[option.id] : null;
                   const optStar = factor?.decimalStar || option.scoreWeight;
 
                   return (

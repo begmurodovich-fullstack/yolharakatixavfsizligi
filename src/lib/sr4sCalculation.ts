@@ -11,10 +11,9 @@
 
 import { AttributeDefinition } from '@/data/sr4sAttributesData';
 import {
-  SR4S_BASELINE,
-  SR4S_OFFICIAL_FACTORS,
-  OptionRiskFactor,
-} from '@/data/sr4sOfficialFactors';
+  SR4S_DIRECT_OPTION_FACTORS,
+  DetailedOptionFactor,
+} from '@/data/sr4sDirectOptionFactors';
 
 export interface Sr4sStarLevel {
   starCount: number;
@@ -124,33 +123,6 @@ export interface IrapCalculationResult {
 }
 
 /**
- * 40 ta mezon nomlarining rasmiy iRAP kalitlari bilan moslashuv jadvali (Alias Map)
- */
-export const ATTR_KEY_ALIASES: Record<string, string> = {
-  land_use_left: 'land_use_driver_side',
-  land_use_right: 'land_use_passenger_side',
-  grip: 'skid_resistance_grip',
-  carriageway_type: 'carriageway',
-  middle_of_road: 'median_type',
-  lines_and_signs: 'delineation',
-  school_warning: 'school_zone_warning',
-  crossing_supervisor: 'school_zone_crossing_supervisor',
-  sidewalk_left: 'sidewalk_driver_side',
-  sidewalk_right: 'sidewalk_passenger_side',
-  road_edge_left: 'paved_shoulder_driver_side',
-  road_edge_right: 'paved_shoulder_passenger_side',
-  pedestrian_channelisation: 'ped_channelisation',
-  crossing_main_road: 'pedestrian_crossing_facilities_inspected_road',
-  crossing_side_road: 'pedestrian_crossing_facilities_intersecting_road',
-  crossing_quality: 'pedestrian_crossing_quality',
-  curve_type: 'curvature',
-  curve_quality: 'quality_of_curve',
-  operating_speed: 'operating_speed_85th_percentile',
-  speed_management: 'speed_management_traffic_calming',
-  driveways: 'property_access_points',
-};
-
-/**
  * SRS xavf ballini aniq o'nlik yulduzga aylantirish (Rasmiy Banding [200, 54, 24, 9, 3])
  * Maksimal baho: 5.0, Minimal baho: 1.0
  */
@@ -179,37 +151,7 @@ export function srsToDecimalStar(srs: number): number {
 }
 
 /**
- * Rasmiy jadvaldan faktor variantini topish yordamchi funksiyasi.
- */
-function findFactor(
-  factorGroup: Record<string, OptionRiskFactor>,
-  attr: AttributeDefinition,
-  currentVal: string
-): OptionRiskFactor | undefined {
-  // 1. To'g'ridan-to'g'ri qiymat bo'yicha topish
-  let factor = factorGroup[currentVal];
-
-  // 2. Variantlar ro'yxatidan 1-asosli indeks bo'yicha topish
-  if (!factor && attr.options && attr.options.length > 0) {
-    const optIdx = attr.options.findIndex((o) => o.id === currentVal);
-    if (optIdx >= 0) {
-      factor = factorGroup[String(optIdx + 1)];
-    }
-  }
-
-  // 3. Raqamli qiymat bo'lsa (masalan tezlik 40, 50...)
-  if (!factor && !isNaN(Number(currentVal))) {
-    factor = factorGroup[String(Math.round(Number(currentVal)))];
-  }
-
-  return factor;
-}
-
-/**
  * 40 ta rasmiy mezon asosida rasmiy iRAP v3.10 va SR4S Piyodalar Xavfi Modeli hisob-kitobi.
- * 
- * Boshlang'ich Baseline: along = 2.3, crossingMain = 1.8, crossingSide = 1.3 (SRS: 5.4, Yulduz: 4.6)
- * Har bir mezonning multiplikatori (alongFactor, crossingMainFactor, crossingSideFactor) ko'paytiriladi.
  */
 export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalculationResult {
   const valMap: Record<string, string> = {};
@@ -218,9 +160,9 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
   });
 
   // Boshlang'ich Baseline (4.6 Yulduz, SRS = 5.4)
-  let along = SR4S_BASELINE.along; // 2.3
-  let crossingMain = SR4S_BASELINE.crossingMain; // 1.8
-  let crossingSide = SR4S_BASELINE.crossingSide; // 1.3
+  let along = 2.3;
+  let crossingMain = 1.8;
+  let crossingSide = 1.3;
 
   let speedFactor = 1.0;
   let flowFactor = 1.0;
@@ -232,33 +174,52 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
   let hgvFactor = 1.0;
   let motoFactor = 1.0;
 
-  // Har bir mezon bo'yicha rasmiy ko'paytiruvchilarni qo'llash
+  // Trotuarlar (Chap va O'ng) ta'siri: ikkala tomonning o'rtachasi olinadi
+  const swLeftFactor = SR4S_DIRECT_OPTION_FACTORS['sidewalk_left']?.[valMap['sidewalk_left']]?.alongFactor ?? 1.0;
+  const swRightFactor = SR4S_DIRECT_OPTION_FACTORS['sidewalk_right']?.[valMap['sidewalk_right']]?.alongFactor ?? 1.0;
+  const combinedSidewalkFactor = (swLeftFactor + swRightFactor) / 2;
+  along *= combinedSidewalkFactor;
+
+  // Yo'l yelkasi (Chap va O'ng)
+  const edgeLeftFactor = SR4S_DIRECT_OPTION_FACTORS['road_edge_left']?.[valMap['road_edge_left']]?.alongFactor ?? 1.0;
+  const edgeRightFactor = SR4S_DIRECT_OPTION_FACTORS['road_edge_right']?.[valMap['road_edge_right']]?.alongFactor ?? 1.0;
+  const combinedEdgeFactor = (edgeLeftFactor + edgeRightFactor) / 2;
+  along *= combinedEdgeFactor;
+
+  // Qolgan barcha mezonlar bo'yicha to'g'ridan-to'g'ri multiplikatorlarni qo'llash
   attributes.forEach((attr) => {
-    // Tezlik va oqimlar alohida ko'rib chiqiladi
-    if (attr.id === 'operating_speed' || attr.id === 'speed_limit' || attr.id === 'vehicles_per_day') {
+    // Trotuar, yelka, tezlik va oqimlar alohida ko'rib chiqilgan
+    if (
+      attr.id === 'sidewalk_left' ||
+      attr.id === 'sidewalk_right' ||
+      attr.id === 'road_edge_left' ||
+      attr.id === 'road_edge_right' ||
+      attr.id === 'operating_speed' ||
+      attr.id === 'speed_limit' ||
+      attr.id === 'vehicles_per_day'
+    ) {
       return;
     }
 
-    const factorKey = ATTR_KEY_ALIASES[attr.id] || attr.id;
-    const factorGroup = SR4S_OFFICIAL_FACTORS[factorKey];
-    if (!factorGroup) return;
+    const directGroup = SR4S_DIRECT_OPTION_FACTORS[attr.id];
+    if (!directGroup) return;
 
     const currentVal = valMap[attr.id];
-    const factor = findFactor(factorGroup, attr, currentVal);
+    const factor: DetailedOptionFactor | undefined = directGroup[currentVal];
 
     if (factor) {
       along *= Math.max(0.05, factor.alongFactor);
       crossingMain *= Math.max(0.05, factor.crossingMainFactor);
       crossingSide *= Math.max(0.05, factor.crossingSideFactor);
 
-      if (factorKey === 'vehicle_parking') parkingFactor = factor.crossingMainFactor;
-      if (factorKey === 'curvature') curveFactor = factor.alongFactor;
-      if (factorKey === 'hgv_percent') hgvFactor = factor.alongFactor;
-      if (factorKey === 'motorcycle_percent') motoFactor = factor.alongFactor;
+      if (attr.id === 'vehicle_parking') parkingFactor = factor.crossingMainFactor;
+      if (attr.id === 'curve_type') curveFactor = factor.alongFactor;
+      if (attr.id === 'hgv_percent') hgvFactor = factor.alongFactor;
+      if (attr.id === 'motorcycle_percent') motoFactor = factor.alongFactor;
     }
   });
 
-  // Harakat tezligi (Operating Speed) ta'siri
+  // Harakat tezligi (Operating Speed) ta'siri (iRAP v3.10 tezlik funksiyasi)
   const speed = parseFloat(valMap['operating_speed'] || valMap['speed_limit'] || '40') || 40;
 
   if (speed <= 30) {
@@ -270,31 +231,31 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
     speedFactor = 1.0;
     // 40 km/soatda faktor = 1.0 (bazaviy)
   } else if (speed <= 45) {
-    speedFactor = 1.52;
-    along *= 1.52;
-    crossingMain *= 1.50;
-    crossingSide *= 1.54;
+    speedFactor = 1.35;
+    along *= 1.35;
+    crossingMain *= 1.35;
+    crossingSide *= 1.35;
   } else if (speed <= 50) {
-    speedFactor = 2.22;
-    along *= 2.22;
-    crossingMain *= 2.22;
-    crossingSide *= 2.23;
+    speedFactor = 1.75;
+    along *= 1.75;
+    crossingMain *= 1.75;
+    crossingSide *= 1.75;
   } else if (speed <= 60) {
-    speedFactor = 4.04;
-    along *= 4.04;
-    crossingMain *= 8.22;
-    crossingSide *= 4.08;
+    speedFactor = 2.80;
+    along *= 2.80;
+    crossingMain *= 3.20;
+    crossingSide *= 2.80;
   } else if (speed <= 70) {
-    speedFactor = 5.70;
-    along *= 5.70;
-    crossingMain *= 11.61;
-    crossingSide *= 5.77;
+    speedFactor = 4.20;
+    along *= 4.20;
+    crossingMain *= 5.00;
+    crossingSide *= 4.20;
   } else {
     // 80+ km/h
-    speedFactor = 6.70;
-    along *= 6.70;
-    crossingMain *= 13.61;
-    crossingSide *= 6.77;
+    speedFactor = 5.80;
+    along *= 5.80;
+    crossingMain *= 7.00;
+    crossingSide *= 5.80;
   }
 
   // Jami SRS (Xavf balli)
