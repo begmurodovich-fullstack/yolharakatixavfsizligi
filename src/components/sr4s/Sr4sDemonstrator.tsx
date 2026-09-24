@@ -17,7 +17,9 @@ import {
   OFFICIAL_SR4S_STAR_LEVELS,
   Sr4sStarLevel,
   IrapCalculationResult,
+  ATTR_KEY_ALIASES,
 } from '@/lib/sr4sCalculation';
+import { SR4S_OFFICIAL_FACTORS } from '@/data/sr4sOfficialFactors';
 import {
   Star,
   RotateCcw,
@@ -1049,8 +1051,12 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
             ) : (
               /* Mode 3: Option Cards */
               <div className="flex flex-row items-end justify-center gap-3 sm:gap-6 flex-wrap">
-                {activeModalAttr.options.map((option) => {
+                {activeModalAttr.options.map((option, optIdx) => {
                   const isSelected = option.id === activeModalAttr.currentValueId;
+                  const factorKey = ATTR_KEY_ALIASES[activeModalAttr.id] || activeModalAttr.id;
+                  const factorGroup = SR4S_OFFICIAL_FACTORS[factorKey];
+                  const factor = factorGroup ? (factorGroup[option.id] || factorGroup[String(optIdx + 1)]) : null;
+                  const optStar = factor?.decimalStar || option.scoreWeight;
 
                   return (
                     <button
@@ -1059,14 +1065,22 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
                       type="button"
                       disabled={isLocked}
                       className={cn(
-                        'group flex flex-col items-center justify-end p-2 transition-all rounded-lg min-w-[70px] sm:min-w-[80px]',
+                        'group flex flex-col items-center justify-end p-2 transition-all rounded-xl min-w-[75px] sm:min-w-[90px] relative',
                         isSelected
-                          ? 'border border-[#009688] shadow-2xs bg-teal-50/20'
-                          : 'border border-transparent hover:border-slate-300',
+                          ? 'border-2 border-[#009688] shadow-md bg-teal-50/40'
+                          : 'border border-slate-200 hover:border-slate-400 bg-white hover:bg-slate-50/50',
                         isLocked ? 'cursor-default' : 'cursor-pointer'
                       )}
                     >
-                      <div className="w-14 h-14 sm:w-16 sm:h-16 relative flex items-center justify-center mb-1 select-none">
+                      {/* Option Star Badge */}
+                      {optStar && (
+                        <div className="mb-1.5 px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-50 text-amber-700 border border-amber-300 flex items-center gap-0.5 shadow-2xs">
+                          <span className="text-amber-500">★</span>
+                          <span>{Number(optStar).toFixed(1)}</span>
+                        </div>
+                      )}
+
+                      <div className="w-14 h-14 sm:w-16 sm:h-16 relative flex items-center justify-center mb-1.5 select-none">
                         <Image
                           src={option.iconSrc}
                           alt={option.labelUz}

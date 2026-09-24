@@ -2,17 +2,16 @@
  * Rasmiy iRAP (International Road Assessment Programme) v3.10 va SR4S (Star Rating for Schools)
  * Xalqaro Piyodalar Xavfi Modeli (Pedestrian Risk Model) hisoblash mexanizmi.
  * 
- * MODEL: Aditiv Delta yondashuvi.
- *   - Baza: 40 ta mezonning DEFAULT qiymatlari = SRS 8.3 (along=3.5, crossingMain=2.7, crossingSide=2.0)
- *   - Har bir mezon o'zgarganda: delta = (atribut_qiymat - baza_qiymat) qo'shiladi.
- *   - SRS = along + crossingMain + crossingSide
- *   - Banding: [200, 54, 24, 9, 3]
+ * Boshlang'ich (Baseline) mezonlar bo'yicha baho: Aniq 4.6 Yulduz (SRS: 5.4).
+ * Standart 40 ta mezon default holatida: 4.1 Yulduz (SRS: 8.3).
+ * Rasmiy Banding Shkalasi: [200, 54, 24, 9, 3]
  * 
- * Manba: results.starratingforschools.org — rasmiy ko'paytiruvchi jadvallar.
+ * Manba: results.starratingforschools.org/demonstrator
  */
 
 import { AttributeDefinition } from '@/data/sr4sAttributesData';
 import {
+  SR4S_BASELINE,
   SR4S_OFFICIAL_FACTORS,
   OptionRiskFactor,
 } from '@/data/sr4sOfficialFactors';
@@ -37,9 +36,9 @@ export interface Sr4sStarLevel {
 export const OFFICIAL_SR4S_STAR_LEVELS: Sr4sStarLevel[] = [
   {
     starCount: 5,
-    title: "5 Yulduz — To\u2018liq Jihozlangan Xavfsiz Maktab",
+    title: '5 Yulduz — To‘liq Jihozlangan Xavfsiz Maktab',
     colorName: 'Yashil',
-    description: "Eng yuqori xavfsizlik darajasi: transport tezligi past (<=30 km/soat), trotuarlar ajratilgan, xavfsiz va nazoratli o\u2018tish joyi mavjud.",
+    description: 'Eng yuqori xavfsizlik darajasi: transport tezligi past (<=30 km/soat), trotuarlar ajratilgan, xavfsiz va nazoratli o‘tish joyi mavjud.',
     starFillClass: 'fill-emerald-500 text-emerald-500 drop-shadow-[0_0_12px_rgba(16,185,129,0.7)]',
     starTextClass: 'text-emerald-400',
     badgeClass: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
@@ -50,9 +49,9 @@ export const OFFICIAL_SR4S_STAR_LEVELS: Sr4sStarLevel[] = [
   },
   {
     starCount: 4,
-    title: '4 Yulduz \u2014 Qulay va Xavfsiz Maktab',
+    title: '4 Yulduz — Qulay va Xavfsiz Maktab',
     colorName: 'Sabzirang / Oltin',
-    description: "Yaxshi daraja: piyodalar uchun xavfsiz sharoitlar yaratilgan, kichik xavf elementlari mavjud (masalan, zebra yoki orolcha bor, tezlik <=40 km/soat).",
+    description: 'Yaxshi daraja: piyodalar uchun xavfsiz sharoitlar yaratilgan, kichik xavf elementlari mavjud (masalan, zebra yoki orolcha bor, tezlik <=40 km/soat).',
     starFillClass: 'fill-amber-500 text-amber-500 drop-shadow-[0_0_12px_rgba(245,158,11,0.8)]',
     starTextClass: 'text-amber-400',
     badgeClass: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
@@ -63,7 +62,7 @@ export const OFFICIAL_SR4S_STAR_LEVELS: Sr4sStarLevel[] = [
   },
   {
     starCount: 3,
-    title: '3 Yulduz \u2014 Qoniqarli (BMT Xalqaro Maqsadi)',
+    title: '3 Yulduz — Qoniqarli (BMT Xalqaro Maqsadi)',
     colorName: 'Sariq',
     description: 'Qoniqarli xavfsizlik darajasi: BMT va JSST tomonidan barcha maktablar uchun belgilangan eng kam maqbul xalqaro standart.',
     starFillClass: 'fill-yellow-400 text-yellow-400 drop-shadow-[0_0_12px_rgba(250,204,21,0.8)]',
@@ -76,9 +75,9 @@ export const OFFICIAL_SR4S_STAR_LEVELS: Sr4sStarLevel[] = [
   },
   {
     starCount: 2,
-    title: '2 Yulduz \u2014 Yuqori Xavfli Hudud',
+    title: '2 Yulduz — Yuqori Xavfli Hudud',
     colorName: 'Qizil',
-    description: "Yuqori xavfli daraja: infratuzilma kamchiliklari mavjud (trotuar yetarli emas, xavfsizlik orolchasi yo\u2018q, tezlik 50-60 km/soat).",
+    description: 'Yuqori xavfli daraja: infratuzilma kamchiliklari mavjud (trotuar yetarli emas, xavfsizlik orolchasi yo‘q, tezlik 50-60 km/soat).',
     starFillClass: 'fill-red-500 text-red-500 drop-shadow-[0_0_12px_rgba(239,68,68,0.7)]',
     starTextClass: 'text-red-400',
     badgeClass: 'bg-red-500/10 text-red-400 border-red-500/30',
@@ -89,9 +88,9 @@ export const OFFICIAL_SR4S_STAR_LEVELS: Sr4sStarLevel[] = [
   },
   {
     starCount: 1,
-    title: "1 Yulduz \u2014 O\u2018ta Yuqori Xavfli Hudud",
-    colorName: "To\u2018q Qizil / Qora",
-    description: "O\u2018ta yuqori xavf: transport tezligi yuqori, trotuarlar yo\u2018q, piyodalar o\u2018tish joyi jihozlanmagan. Shoshilinch muhandislik choralarini talab qiladi.",
+    title: '1 Yulduz — O‘ta Yuqori Xavfli Hudud',
+    colorName: 'To‘q Qizil / Qora',
+    description: 'O‘ta yuqori xavf: transport tezligi yuqori, trotuarlar yo‘q, piyodalar o‘tish joyi jihozlanmagan. Shoshilinch muhandislik choralarini talab qiladi.',
     starFillClass: 'fill-slate-950 text-slate-900 stroke-slate-400 drop-shadow-md',
     starTextClass: 'text-slate-300',
     badgeClass: 'bg-slate-950 text-slate-200 border-slate-700',
@@ -127,7 +126,7 @@ export interface IrapCalculationResult {
 /**
  * 40 ta mezon nomlarining rasmiy iRAP kalitlari bilan moslashuv jadvali (Alias Map)
  */
-const ATTR_KEY_ALIASES: Record<string, string> = {
+export const ATTR_KEY_ALIASES: Record<string, string> = {
   land_use_left: 'land_use_driver_side',
   land_use_right: 'land_use_passenger_side',
   grip: 'skid_resistance_grip',
@@ -152,20 +151,7 @@ const ATTR_KEY_ALIASES: Record<string, string> = {
 };
 
 /**
- * Rasmiy 40 ta mezonning DEFAULT qiymatlarining OPERATSION bazasi.
- * Bu sr4s_official_scores.json dagi baseline qiymatiga mos keladi.
- * Barcha mezonlar default holatida: SRS = 8.3, along=3.5, crossingMain=2.7, crossingSide=2.0
- */
-const OPERATIONAL_BASELINE = {
-  along: 3.5,
-  crossingMain: 2.7,
-  crossingSide: 2.0,
-  srsScore: 8.3,
-};
-
-/**
- * SRS xavf ballini aniq o'nlik yulduzga aylantirish (Banding [200, 54, 24, 9, 3])
- * Rasmiy sayt bilan to'liq mos.
+ * SRS xavf ballini aniq o'nlik yulduzga aylantirish (Rasmiy Banding [200, 54, 24, 9, 3])
  * Maksimal baho: 5.0, Minimal baho: 1.0
  */
 export function srsToDecimalStar(srs: number): number {
@@ -174,21 +160,21 @@ export function srsToDecimalStar(srs: number): number {
   }
   if (srs <= 9.0) {
     // 4 Yulduz bandi (3.0 dan 9.0 gacha) -> 5.0 dan 4.0 gacha
-    const ratio = (srs - 3.0) / 6.0;
+    const ratio = (srs - 3.0) / (9.0 - 3.0);
     return Math.min(5.0, Math.max(4.0, +(5.0 - ratio * 1.0).toFixed(1)));
   }
   if (srs <= 24.0) {
     // 3 Yulduz bandi (9.0 dan 24.0 gacha) -> 4.0 dan 3.0 gacha
-    const ratio = (srs - 9.0) / 15.0;
+    const ratio = (srs - 9.0) / (24.0 - 9.0);
     return Math.min(4.0, Math.max(3.0, +(4.0 - ratio * 1.0).toFixed(1)));
   }
   if (srs <= 54.0) {
     // 2 Yulduz bandi (24.0 dan 54.0 gacha) -> 3.0 dan 2.0 gacha
-    const ratio = (srs - 24.0) / 30.0;
+    const ratio = (srs - 24.0) / (54.0 - 24.0);
     return Math.min(3.0, Math.max(2.0, +(3.0 - ratio * 1.0).toFixed(1)));
   }
-  // 1 Yulduz bandi (54.0 dan yuqori) -> 1.0 gacha tushadi
-  const ratio = Math.min(1.0, (srs - 54.0) / 6.0);
+  // 1 Yulduz bandi (54.0 dan 200.0 gacha) -> 2.0 dan 1.0 gacha
+  const ratio = Math.min(1.0, Math.max(0.0, (srs - 54.0) / (200.0 - 54.0)));
   return Math.min(2.0, Math.max(1.0, +(2.0 - ratio * 1.0).toFixed(1)));
 }
 
@@ -222,11 +208,8 @@ function findFactor(
 /**
  * 40 ta rasmiy mezon asosida rasmiy iRAP v3.10 va SR4S Piyodalar Xavfi Modeli hisob-kitobi.
  * 
- * YANGI MODEL: Aditiv Delta yondashuvi.
- * Har bir mezon uchun rasmiy jadvaldan to'g'ridan-to'g'ri along, crossingMain, crossingSide
- * qiymatlari olinadi. Operatsion bazadan farq (delta) hisoblanadi va jamlanadi.
- * 
- * Formula: Yakuniy = Baza + Σ(Atribut_qiymat - Baza)
+ * Boshlang'ich Baseline: along = 2.3, crossingMain = 1.8, crossingSide = 1.3 (SRS: 5.4, Yulduz: 4.6)
+ * Har bir mezonning multiplikatori (alongFactor, crossingMainFactor, crossingSideFactor) ko'paytiriladi.
  */
 export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalculationResult {
   const valMap: Record<string, string> = {};
@@ -234,10 +217,10 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
     valMap[attr.id] = attr.customValue || attr.currentValueId || '';
   });
 
-  // Operatsion baza (40 ta mezonning DEFAULT natijasi = SRS 8.3)
-  let along = OPERATIONAL_BASELINE.along;       // 3.5
-  let crossingMain = OPERATIONAL_BASELINE.crossingMain; // 2.7
-  let crossingSide = OPERATIONAL_BASELINE.crossingSide; // 2.0
+  // Boshlang'ich Baseline (4.6 Yulduz, SRS = 5.4)
+  let along = SR4S_BASELINE.along; // 2.3
+  let crossingMain = SR4S_BASELINE.crossingMain; // 1.8
+  let crossingSide = SR4S_BASELINE.crossingSide; // 1.3
 
   let speedFactor = 1.0;
   let flowFactor = 1.0;
@@ -249,8 +232,13 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
   let hgvFactor = 1.0;
   let motoFactor = 1.0;
 
-  // Har bir mezon bo'yicha ADITIV DELTA hisoblash
+  // Har bir mezon bo'yicha rasmiy ko'paytiruvchilarni qo'llash
   attributes.forEach((attr) => {
+    // Tezlik va oqimlar alohida ko'rib chiqiladi
+    if (attr.id === 'operating_speed' || attr.id === 'speed_limit' || attr.id === 'vehicles_per_day') {
+      return;
+    }
+
     const factorKey = ATTR_KEY_ALIASES[attr.id] || attr.id;
     const factorGroup = SR4S_OFFICIAL_FACTORS[factorKey];
     if (!factorGroup) return;
@@ -259,15 +247,10 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
     const factor = findFactor(factorGroup, attr, currentVal);
 
     if (factor) {
-      // Aditiv delta: har bir mezon bazadan qancha farq qilsa, shuni qo'shamiz
-      // factor.along — bu shu mezon o'zgargandagi to'liq along qiymati (rasmiy jadvaldan)
-      // OPERATIONAL_BASELINE.along — baza (default holat)
-      // delta = factor.along - OPERATIONAL_BASELINE.along
-      along += (factor.along - OPERATIONAL_BASELINE.along);
-      crossingMain += (factor.crossingMain - OPERATIONAL_BASELINE.crossingMain);
-      crossingSide += (factor.crossingSide - OPERATIONAL_BASELINE.crossingSide);
+      along *= Math.max(0.05, factor.alongFactor);
+      crossingMain *= Math.max(0.05, factor.crossingMainFactor);
+      crossingSide *= Math.max(0.05, factor.crossingSideFactor);
 
-      // Qo'shimcha ma'lumotlar uchun faktorlarni saqlash
       if (factorKey === 'vehicle_parking') parkingFactor = factor.crossingMainFactor;
       if (factorKey === 'curvature') curveFactor = factor.alongFactor;
       if (factorKey === 'hgv_percent') hgvFactor = factor.alongFactor;
@@ -275,15 +258,44 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
     }
   });
 
-  // Manfiy qiymatlardan himoya
-  along = Math.max(0, along);
-  crossingMain = Math.max(0, crossingMain);
-  crossingSide = Math.max(0, crossingSide);
+  // Harakat tezligi (Operating Speed) ta'siri
+  const speed = parseFloat(valMap['operating_speed'] || valMap['speed_limit'] || '40') || 40;
 
-  // Harakat tezligi (Operating speed) — jadvaldan olish orqali allaqachon delta hisobiga kiritilgan,
-  // Shuning uchun ALOHIDA tezlik formulasi kerak EMAS.
-  const speed =
-    parseFloat(valMap['operating_speed'] || valMap['speed_limit'] || '40') || 40;
+  if (speed <= 30) {
+    speedFactor = 0.5;
+    along *= 0.5;
+    crossingMain *= 0.5;
+    crossingSide *= 0.5;
+  } else if (speed <= 40) {
+    speedFactor = 1.0;
+    // 40 km/soatda faktor = 1.0 (bazaviy)
+  } else if (speed <= 45) {
+    speedFactor = 1.52;
+    along *= 1.52;
+    crossingMain *= 1.50;
+    crossingSide *= 1.54;
+  } else if (speed <= 50) {
+    speedFactor = 2.22;
+    along *= 2.22;
+    crossingMain *= 2.22;
+    crossingSide *= 2.23;
+  } else if (speed <= 60) {
+    speedFactor = 4.04;
+    along *= 4.04;
+    crossingMain *= 8.22;
+    crossingSide *= 4.08;
+  } else if (speed <= 70) {
+    speedFactor = 5.70;
+    along *= 5.70;
+    crossingMain *= 11.61;
+    crossingSide *= 5.77;
+  } else {
+    // 80+ km/h
+    speedFactor = 6.70;
+    along *= 6.70;
+    crossingMain *= 13.61;
+    crossingSide *= 6.77;
+  }
 
   // Jami SRS (Xavf balli)
   const srsScore = +(along + crossingMain + crossingSide).toFixed(1);
