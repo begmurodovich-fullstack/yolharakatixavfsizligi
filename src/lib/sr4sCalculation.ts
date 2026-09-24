@@ -136,23 +136,27 @@ export function srsToDecimalStar(srs: number): number {
     return 5.0;
   }
   if (srs <= 9.0) {
-    // 4 Yulduz bandi (3.0 dan 9.0 gacha) -> 5.0 dan 4.0 gacha
+    // 4 Yulduz bandi (3.0 dan 9.0 gacha) -> 4.9 dan 4.0 gacha
     const ratio = (srs - 3.0) / (9.0 - 3.0);
-    return Math.min(5.0, Math.max(4.0, +(5.0 - ratio * 1.0).toFixed(1)));
+    const score = 4.9 - ratio * 0.9;
+    return Math.min(4.9, Math.max(4.0, +score.toFixed(1)));
   }
   if (srs <= 24.0) {
-    // 3 Yulduz bandi (9.0 dan 24.0 gacha) -> 4.0 dan 3.0 gacha
+    // 3 Yulduz bandi (9.0 dan 24.0 gacha) -> 3.9 dan 3.0 gacha
     const ratio = (srs - 9.0) / (24.0 - 9.0);
-    return Math.min(4.0, Math.max(3.0, +(4.0 - ratio * 1.0).toFixed(1)));
+    const score = 3.9 - ratio * 0.9;
+    return Math.min(3.9, Math.max(3.0, +score.toFixed(1)));
   }
   if (srs <= 54.0) {
-    // 2 Yulduz bandi (24.0 dan 54.0 gacha) -> 3.0 dan 2.0 gacha
+    // 2 Yulduz bandi (24.0 dan 54.0 gacha) -> 2.9 dan 2.0 gacha
     const ratio = (srs - 24.0) / (54.0 - 24.0);
-    return Math.min(3.0, Math.max(2.0, +(3.0 - ratio * 1.0).toFixed(1)));
+    const score = 2.9 - ratio * 0.9;
+    return Math.min(2.9, Math.max(2.0, +score.toFixed(1)));
   }
-  // 1 Yulduz bandi (54.0 dan 200.0 gacha) -> 2.0 dan 1.0 gacha
+  // 1 Yulduz bandi (54.0 dan 200.0 gacha) -> 1.9 dan 1.0 gacha
   const ratio = Math.min(1.0, Math.max(0.0, (srs - 54.0) / (200.0 - 54.0)));
-  return Math.min(2.0, Math.max(1.0, +(2.0 - ratio * 1.0).toFixed(1)));
+  const score = 1.9 - ratio * 0.9;
+  return Math.min(1.9, Math.max(1.0, +score.toFixed(1)));
 }
 
 /**
@@ -270,19 +274,8 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
   const calculatedStar = srsToDecimalStar(srsScore);
   const decimalScore = calculatedStar.toFixed(1);
 
-  // Butun yulduz (starCount)
-  let starCount = 5;
-  if (srsScore >= 54.0) {
-    starCount = 1;
-  } else if (srsScore >= 24.0) {
-    starCount = 2;
-  } else if (srsScore >= 9.0) {
-    starCount = 3;
-  } else if (srsScore >= 3.0) {
-    starCount = 4;
-  } else {
-    starCount = 5;
-  }
+  // Butun yulduz (starCount): Raqam bilan 100% mutanosib
+  const starCount = Math.min(5, Math.max(1, Math.floor(calculatedStar)));
 
   // Yulduz darajasi obyekti
   const starLevel =
