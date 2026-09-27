@@ -48,17 +48,17 @@ const WORKFLOW_STEPS = [
   },
   {
     step: '04',
-    title: 'YHXX Inspektori moderatsiyasi va Star Rating',
-    desc: 'Tuman va viloyat YHXX inspektorlari taqdim etilgan ma’lumotlarni tekshirib, xalqaro iRAP matematik modeli asosida 1.0 dan 5.0 yulduzgacha reyting belgilaydi.',
+    title: 'Tekshirish va verifikatsiya',
+    desc: 'Adminlar yoki tuman/viloyat YHXX inspektori baholash to‘g‘ri bajarilganligini ko‘rib chiqishi (verifikatsiya) va xalqaro formula asosida Star Rating hisoblanadi.',
     icon: LineChart,
-    badge: '4-bosqich: YHXX Ekspertizasi',
+    badge: '4-bosqich: Tekshirish & Verifikatsiya',
   },
   {
     step: '05',
-    title: 'Interaktiv Xarita, Reyting va Investitsiya',
-    desc: 'Xavfli (1-2 yulduz) maktablar xaritada qizil rangda ajratilib, hokimiyat va yo‘l xizmatlari tomonidan sun’iy notekislik, svetofor va yo‘lak qurish dasturiga kiritiladi.',
+    title: 'Xavfli maktablar va tezkor chora-tadbirlar',
+    desc: 'Xaritadagi xavfli (qora va qizil rangdagi) umumta’lim muassasalarini ajratib olib, hokimliklar va yo‘l korxonalariga ma’lumotlarni yetkazish hamda tezkor chora-tadbirlar ko‘rish.',
     icon: Trophy,
-    badge: '5-bosqich: Amaliy Chora-tadbirlar',
+    badge: '5-bosqich: Tezkor Chora-tadbirlar',
   },
 ];
 
@@ -119,13 +119,13 @@ export default function PlatformPage() {
           </div>
 
           <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-950 max-w-3xl leading-tight">
-            O‘zbekiston Maktablari Yo‘l Xavfsizligi Platformasi
+            «Maktabga Xavfsiz Qadam» Monitoring Platformasi
           </h1>
 
           <p className="text-sm sm:text-base text-slate-600 max-w-3xl leading-relaxed">
-            Ushbu platforma BMT va iRAP (International Road Assessment Programme) xalqaro metodologiyasi asosida
+            Ushbu platforma BMT va iRAP (International Road Assessment Programme) xalqaro metodikasi asosida
             O‘zbekiston Respublikasidagi barcha umumta’lim maktablari atrofidagi yo‘l infratuzilmasini kompleks monitoring qilish,
-            xavflarni baholash va bolalar uchun 5 yulduzli xavfsiz muhit yaratish maqsadida ishlab chiqilgan.
+            xavflarni baholash va bolalar uchun xavfsiz muhit yaratish maqsadida ishlab chiqilgan.
           </p>
 
           {/* Test Notice */}
@@ -287,7 +287,7 @@ export default function PlatformPage() {
             <div className="p-6 rounded-2xl border border-teal-200 bg-teal-50/50 space-y-3">
               <div className="flex items-center gap-2 text-teal-800 font-bold text-base">
                 <CheckCircle2 className="w-5 h-5 text-teal-600" />
-                <span>Yangi Milliy SR4S Platformasi</span>
+                <span>Yangi «Maktabga Xavfsiz Qadam» Platformasi</span>
               </div>
               <ul className="space-y-2 text-xs sm:text-sm text-slate-700">
                 <li className="flex items-start gap-2">

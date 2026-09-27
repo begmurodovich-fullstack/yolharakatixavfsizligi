@@ -94,7 +94,7 @@ export function AdminSidebar({ onCloseMobile }: AdminSidebarProps) {
                 ADMIN PORTAL
               </div>
               <div className="text-sm font-extrabold text-white tracking-tight leading-tight">
-                Maktab Yo‘l Xavfsizligi
+                Maktabga Xavfsiz Qadam
               </div>
             </div>
           </Link>

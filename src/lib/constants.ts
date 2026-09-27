@@ -1,9 +1,9 @@
 import { UserRole, DemoAccount } from '@/types';
 
 export const APP_CONFIG = {
-  name: "O'zbekiston Maktab Yo'l Xavfsizligi Monitoring Tizimi",
-  shortName: 'Maktab Yo\'l Xavfsizligi',
-  nameEn: 'Uzbekistan School Road Safety Platform',
+  name: "O'zbekiston «Maktabga Xavfsiz Qadam» Monitoring Tizimi",
+  shortName: 'Maktabga Xavfsiz Qadam',
+  nameEn: 'Uzbekistan Safe Steps to School Platform',
   version: '1.0.0-pilot',
   academicYear: '2025-2026',
   supportEmail: 'azizbekofficialaccaunt@gmail.com',
@@ -52,7 +52,7 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
     description: 'Tuman va viloyat darajasidagi monitoring va tekshiruv administratori',
   },
   {
-    label: 'Bosh Administrator (IIV YHXX)',
+    label: 'Bosh Administrator',
     email: 'superadmin@yhxx.uz',
     passwordHint: 'Super@1234',
     role: UserRole.SUPER_ADMIN,

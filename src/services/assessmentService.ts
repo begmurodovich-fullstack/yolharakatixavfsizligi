@@ -82,7 +82,7 @@ export class AssessmentService {
       schoolId,
       questionId,
       imageUrl,
-      caption: caption || 'Maktab yo‘l xavfsizligi foto-dalili',
+      caption: caption || '«Maktabga Xavfsiz Qadam» foto-dalili',
       status: EvidenceStatus.PENDING,
       uploadedBy: user?.id || 'usr-school-24',
     });

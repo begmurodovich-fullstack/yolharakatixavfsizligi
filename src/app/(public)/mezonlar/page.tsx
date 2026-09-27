@@ -47,12 +47,12 @@ export default function MezonlarPage() {
           </div>
 
           <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-950 leading-tight">
-            Maktab Yo‘l Xavfsizligining 40 ta Rasmiy Mezoni
+            SR4S / iRAP ning 40 ta Rasmiy Mezoni
           </h1>
 
           <p className="text-sm sm:text-base text-slate-600 max-w-3xl leading-relaxed">
             O‘zbekiston Respublikasi umumta’lim maktablari atrofidagi yo‘l infratuzilmasi xavfsizligini
-            baholash uchun mo‘ljallangan 40 ta rasmiy xalqaro iRAP SR4S ko‘rsatkichlari katalogi.
+            baholash uchun mo‘ljallangan 40 ta rasmiy xalqaro iRAP SR4S metodikasi ko‘rsatkichlari katalogi.
           </p>
 
           {/* Quick Summary Strip */}

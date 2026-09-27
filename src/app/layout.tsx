@@ -6,9 +6,9 @@ import { ToastProvider } from '@/components/ui/toast';
 import { APP_CONFIG } from '@/lib/constants';
 
 export const metadata: Metadata = {
-  title: `${APP_CONFIG.shortName} — O‘zbekiston Maktab Yo‘l Xavfsizligi Platformasi`,
+  title: `${APP_CONFIG.shortName} — O‘zbekiston «Maktabga Xavfsiz Qadam» Monitoring Platformasi`,
   description:
-    'O‘zbekiston maktablari atrofidagi yo‘l harakati xavfsizligi holatini monitoring qilish, baholash va nazorat qilish milliy platformasi.',
+    'O‘zbekiston maktablari atrofidagi yo‘l harakati xavfsizligi holatini monitoring qilish, baholash va nazorat qilish xalqaro SR4S metodikasi platformasi.',
   icons: {
     icon: [
       { url: '/favicon.png', type: 'image/png' },

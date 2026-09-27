@@ -74,7 +74,7 @@ export function ContactSection() {
             Savol va takliflar uchun
           </h2>
           <p className="mt-3 text-sm sm:text-base text-slate-600">
-            Platformadan foydalanish, metodologiya yoki texnik masalalar bo‘yicha mas’ul mutaxassislar bilan bog‘laning.
+            Platformadan foydalanish, monitoring metodikasi yoki texnik masalalar bo‘yicha mas’ul shaxslar bilan bog‘laning.
           </p>
         </div>
 

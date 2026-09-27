@@ -102,10 +102,10 @@ export function QuickActions({ onOpenPassport }: QuickActionsProps) {
               Rasmiy Hujjat • PDF Pasport
             </div>
             <div className="text-sm font-extrabold text-slate-900">
-              Maktab Yo‘l Xavfsizligi Pasporti (Chop etish / PDF Yuklab olish)
+              «Maktabga Xavfsiz Qadam» Pasporti (Chop etish / PDF Yuklab olish)
             </div>
             <p className="text-xs text-slate-600">
-              SR4S xavfsizlik xulosalari, QR-kodli haqiqiylik muhri va rasmiy YHXX blankasi
+              SR4S xavfsizlik xulosalari, QR-kodli haqiqiylik muhri va rasmiy monitoring blankasi
             </p>
           </div>
 

@@ -15,10 +15,10 @@ export function CriteriaSection() {
             <span>XALQARO iRAP SR4S STANDARTLARI</span>
           </div>
           <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-950">
-            Maktab yo‘l xavfsizligining 40 ta rasmiy mezoni
+            SR4S / iRAP ning 40 ta rasmiy mezoni
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            BMT va iRAP xalqaro metodologiyasi asosida maktab atrofidagi barcha yo‘l infratuzilmasi 40 ta rasmiy mezon va foto-dalillar asosida to‘liq baholanadi.
+            BMT va iRAP xalqaro metodikasi asosida maktab atrofidagi barcha yo‘l infratuzilmasi 40 ta rasmiy mezon va foto-dalillar asosida to‘liq baholanadi.
           </p>
         </div>
 

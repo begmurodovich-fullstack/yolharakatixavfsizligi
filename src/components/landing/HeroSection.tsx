@@ -22,7 +22,7 @@ export function HeroSection() {
             {/* Eyebrow badge */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-slate-900 text-teal-400 border border-slate-800 shadow-xs">
               <Shield className="w-3.5 h-3.5 text-teal-400" />
-              <span>MAKTABLAR YO‘L XAVFSIZLIGI MONITORINGI</span>
+              <span>MAKTABGA XAVFSIZ QADAM MONITORINGI</span>
             </div>
 
             {/* Main Headline */}
@@ -36,7 +36,7 @@ export function HeroSection() {
             {/* Supporting paragraph */}
             <p className="text-base sm:text-lg text-slate-600 max-w-2xl leading-relaxed">
               O‘zbekiston Respublikasi umumta’lim maktablari atrofidagi yo‘l infratuzilmasi,
-              piyodalar o‘tish joylari va harakat xavfsizligi holatini yagona milliy standart
+              piyodalar o‘tish joylari va harakat xavfsizligi holatini xalqaro SR4S metodikasi
               asosida monitoring qilish, baholash va yaxshilash platformasi.
             </p>
 

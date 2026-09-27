@@ -28,7 +28,7 @@ export default function DemonstratorPage() {
 
             {/* FIA Foundation partner indicator */}
             <div className="hidden md:flex items-center gap-2 text-[11px] text-slate-500 font-medium pl-4 border-l border-slate-200">
-              <span>Rasmiy metodologiya:</span>
+              <span>Rasmiy metodika:</span>
               <span className="font-bold text-slate-700">iRAP / FIA FOUNDATION</span>
             </div>
           </div>

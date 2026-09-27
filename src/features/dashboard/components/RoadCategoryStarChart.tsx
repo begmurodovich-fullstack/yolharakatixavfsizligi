@@ -314,7 +314,7 @@ export function RoadCategoryStarChart({ schools = [] }: RoadCategoryStarChartPro
       <div className="pt-2 border-t border-slate-100 flex items-start gap-2 text-[11px] text-slate-500 leading-relaxed">
         <Info className="w-3.5 h-3.5 text-teal-600 shrink-0 mt-0.5" />
         <span>
-          Ushbu xavfsizlik darajalari BMT va xalqaro <strong>SR4S (Star Rating for Schools)</strong> metodologiyasi bo‘yicha 1 dan 5 yulduzgacha hisoblanadi.
+          Ushbu xavfsizlik darajalari BMT va xalqaro <strong>SR4S (Star Rating for Schools)</strong> metodikasi bo‘yicha 1 dan 5 yulduzgacha hisoblanadi.
         </span>
       </div>
     </div>

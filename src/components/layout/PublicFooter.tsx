@@ -17,7 +17,7 @@ export function PublicFooter() {
             </div>
             <p className="text-slate-400 text-xs leading-relaxed max-w-md">
               O‘zbekiston Respublikasi maktablari atrofidagi yo‘l harakati xavfsizligini ta’minlash,
-              bolalar hayoti va salomatligini asrash bo‘yicha milliy yagona monitoring va baholash tizimi.
+              bolalar hayoti va salomatligini asrash bo‘yicha xalqaro SR4S metodikasi asosidagi yagona monitoring va baholash tizimi.
             </p>
             <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400">
               <span className="inline-flex items-center gap-1.5">
@@ -96,7 +96,7 @@ export function PublicFooter() {
         <div className="mt-8 border-t border-slate-800/80 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
           <p>© {new Date().getFullYear()} {APP_CONFIG.shortName}. Barcha huquqlar himoyalangan.</p>
           <div className="flex flex-wrap items-center gap-4 text-[11px]">
-            <span>Platforma konsepsiyasi: Akademik va jamoat xavfsizligi tashabbusi</span>
+            <span>SR4S & iRAP xalqaro metodikasi</span>
             <span>•</span>
             <span>Versiya: {APP_CONFIG.version}</span>
           </div>

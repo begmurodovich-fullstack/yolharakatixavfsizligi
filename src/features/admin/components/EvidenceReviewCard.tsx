@@ -46,7 +46,7 @@ export function EvidenceReviewCard({
         </div>
 
         <div className="absolute bottom-3 left-3 right-3 z-10 p-2.5 rounded-xl bg-slate-900/80 backdrop-blur-xs text-[11px] text-white border border-slate-700 truncate">
-          {evidence.caption || 'Maktab yo‘l xavfsizligi foto-dalili'}
+          {evidence.caption || '«Maktabga Xavfsiz Qadam» foto-dalili'}
         </div>
       </div>
 

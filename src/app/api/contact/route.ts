@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     const categoryText = categoryLabels[category] || category || 'Umumiy';
     const dateStr = new Date().toLocaleString('uz-UZ', { timeZone: 'Asia/Tashkent' });
 
-    const telegramMessage = `🔔 <b>YANGI MUROJAAT (Maktab Yo‘l Xavfsizligi)</b>\n` +
+    const telegramMessage = `🔔 <b>YANGI MUROJAAT («Maktabga Xavfsiz Qadam»)</b>\n` +
       `━━━━━━━━━━━━━━━━━━━━\n` +
       `👤 <b>F.I.SH:</b> ${escapeHtml(name)}\n` +
       `📞 <b>Telefon:</b> ${escapeHtml(phone)}\n` +

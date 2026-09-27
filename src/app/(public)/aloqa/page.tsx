@@ -77,8 +77,8 @@ export default function AloqaPage() {
           </h1>
 
           <p className="text-sm sm:text-base text-slate-600 max-w-3xl leading-relaxed">
-            Platformadan foydalanish, yo‘l xavfsizligi monitoringi metodologiyasi yoki texnik masalalar bo‘yicha 
-            mas’ul davlat organlari va texnik guruh bilan bevosita bog‘laning.
+            Platformadan foydalanish, yo‘l xavfsizligi monitoring metodikasi yoki texnik masalalar bo‘yicha 
+            mas’ul shaxslar va texnik guruh bilan bevosita bog‘laning.
           </p>
         </div>
       </section>
@@ -168,7 +168,7 @@ export default function AloqaPage() {
                   </span>
                   <div>
                     <CardTitle className="text-base font-bold text-slate-900">
-                      Metodologiya va SR4S Standartlari
+                      SR4S Metodikasi va Standartlari
                     </CardTitle>
                     <p className="text-xs text-slate-500">
                       40 ta rasmiy mezon, iRAP formulalari va ball hisoblash tizimi
@@ -197,10 +197,10 @@ export default function AloqaPage() {
                   </span>
                   <div>
                     <CardTitle className="text-base font-bold text-slate-900">
-                      Idoralararo Hamkorlik (YHXX & MMTV)
+                      Idoralararo Hamkorlik va Murojaatlar
                     </CardTitle>
                     <p className="text-xs text-slate-500">
-                      Hududiy YHXX bo‘linmalari va tuman xalq ta’limi boshqarmalari
+                      Hududiy mas’ul bo‘linmalar va ta’lim boshqarmalari
                     </p>
                   </div>
                 </div>

@@ -23,7 +23,7 @@ const STEPS = [
   {
     step: '02',
     title: '40 ta SR4S parametri bo‘yicha baholash',
-    description: 'Xalqaro iRAP Star Rating for Schools (v1.7) standarti asosida 40 ta muhim yo‘l infratuzilmasi parametri baholanadi.',
+    description: 'Xalqaro iRAP Star Rating for Schools metodikasi asosida 40 ta muhim yo‘l infratuzilmasi parametri baholanadi.',
     icon: ClipboardCheck,
     badge: '40 ta SR4S parametri',
   },
@@ -36,17 +36,17 @@ const STEPS = [
   },
   {
     step: '04',
-    title: 'Yulduzli reyting (Star Rating) tahlili',
-    description: 'Avtomatlashtirilgan tizim xavfsizlik darajasini 1.0 dan 5.0 yulduzgacha (Qora, Qizil, Sariq, Sabzirang, Yashil) hisoblab chiqadi.',
+    title: 'Tekshirish va verifikatsiya',
+    description: 'Adminlar yoki tuman/viloyat YHXX inspektori baholash to‘g‘ri bajarilganligini ko‘rib chiqishi (verifikatsiya) va Star Rating aniqlanadi.',
     icon: LineChart,
-    badge: '1 — 5 Yulduz shkalasi',
+    badge: 'Verifikatsiya & Reyting',
   },
   {
     step: '05',
-    title: 'Reyting va manzilli xavfsizlik choralari',
-    description: 'Respublika bo‘yicha shaffof monitoring yuritilib, maktab zonalari kamida 3 yulduzli xavfsizlik standartiga yetkaziladi.',
+    title: 'Tezkor chora-tadbirlar ko‘rish',
+    description: 'Xaritadagi xavfli (qora va qizil rangdagi) umumta’lim muassasalarini ajratib olib, hokimliklar va yo‘l korxonalariga yetkazish hamda tezkor chora-tadbirlar ko‘rish.',
     icon: Trophy,
-    badge: 'Maqsad: ≥3 Yulduz',
+    badge: 'Tezkor choralar',
   },
 ];
 
