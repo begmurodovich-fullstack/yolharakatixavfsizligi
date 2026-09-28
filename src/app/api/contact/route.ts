@@ -56,13 +56,16 @@ export async function POST(request: NextRequest) {
         const sendData = await sendRes.json();
         if (sendData.ok) sentCount = 1;
       } catch (sendErr) {
-        console.error(`Failed to send to adminChatId ${adminChatId}:`, sendErr);
+        if (process.env.NODE_ENV !== 'production') {
+          console.error(`Failed to send to adminChatId ${adminChatId}:`, sendErr);
+        }
       }
     } else {
-      console.warn('[Contact API] telegramAdminChatId is not set. Message saved locally.');
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn('[Contact API] telegramAdminChatId is not set. Message saved locally.');
+      }
     }
 
-    console.log(`[Contact API] Form submitted from ${name} (${phone}), sent to admin.`);
 
     return NextResponse.json({
       success: true,

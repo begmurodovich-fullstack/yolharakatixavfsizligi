@@ -22,9 +22,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Local environment files (Secrets)
+# Local environment files (Secrets) — never commit!
 .env*.local
 .env
+.env.production
 
 # Vercel
 .vercel
@@ -35,6 +36,18 @@ next-env.d.ts
 
 # Temporary / Docs
 *.docx
+*.xls
+*.xlsx
+*.sql
 *.mjs
 
+# Large data files
+schools.json
+seed_data.sql
+sr4s_official_scores.json
+
+# OS
+Thumbs.db
+
 Mezon-namuna/
+icons/

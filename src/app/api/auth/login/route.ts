@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     const trimmedEmail = email.trim().toLowerCase();
     const trimmedPassword = password.trim();
 
-    console.log('LOGIN ATTEMPT:', { trimmedEmail, trimmedPassword });
+
 
     // 1. Direct email lookup or flexible school/district search
     let users = await query(
