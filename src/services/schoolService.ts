@@ -46,7 +46,13 @@ export class SchoolService {
     try {
       const regions = await apiClient<Region[]>('/regions');
       if (Array.isArray(regions)) {
-        return regions;
+        const seen = new Set<string>();
+        return regions.filter((r) => {
+          const key = (r.name || '').trim().toLowerCase().replace(/['`ʻ’‘]/g, "'");
+          if (seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        });
       }
       return [];
     } catch {
@@ -60,7 +66,13 @@ export class SchoolService {
         params: regionId ? { regionId } : {},
       });
       if (Array.isArray(districts)) {
-        return districts;
+        const seen = new Set<string>();
+        return districts.filter((d) => {
+          const key = (d.name || '').trim().toLowerCase().replace(/['`ʻ’‘]/g, "'");
+          if (seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        });
       }
       return [];
     } catch {
