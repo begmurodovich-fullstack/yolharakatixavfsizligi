@@ -305,7 +305,7 @@ export function UzbekistanRegionalHeatmap({ onSelectRegion, selectedRegionId }: 
             {/* Status assurance badge */}
             <div className="p-3 rounded-xl bg-teal-950/50 border border-teal-800/60 text-[11px] text-teal-300 flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0" />
-              <span>YHXB va Maktabgacha va maktab ta’limi vazirligi nazoratida</span>
+              <span>Yo‘l harakati xavfsizligi va Maktabgacha va maktab ta’limi mas’ullari nazoratida</span>
             </div>
           </div>
         )}

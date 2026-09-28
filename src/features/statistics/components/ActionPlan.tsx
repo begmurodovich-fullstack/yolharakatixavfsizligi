@@ -16,7 +16,7 @@ export function ActionPlan({ criterionScores }: ActionPlanProps) {
   const planItems = focusCriteria.map((item) => {
     let priority: 'HIGH' | 'MEDIUM' | 'LOW' = 'MEDIUM';
     let problem = `${item.criterion.title} bo‘yicha talablar ${item.percentage}% bajarilgan.`;
-    let recommendation = `Hududiy YHXX va tuman obodonlashtirish bo‘limi bilan birgalikda standart talablariga moslashtirish lozim.`;
+    let recommendation = `Hududiy mas’ul inspeksiya va tuman obodonlashtirish bo‘limi bilan birgalikda standart talablariga moslashtirish lozim.`;
 
     if (item.percentage < 60) {
       priority = 'HIGH';

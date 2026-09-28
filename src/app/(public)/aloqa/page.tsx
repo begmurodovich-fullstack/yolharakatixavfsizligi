@@ -290,7 +290,7 @@ export default function AloqaPage() {
                           required
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
-                          placeholder="+998 (33) 585-13-03"
+                          placeholder="+998 (97) 851-80-78"
                           className="bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 text-xs sm:text-sm rounded-xl"
                         />
                       </div>
@@ -305,7 +305,7 @@ export default function AloqaPage() {
                           type="email"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          placeholder="azizbekofficialaccaunt@gmail.com"
+                          placeholder="dinarasayfiyeva@gmail.com"
                           className="bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 text-xs sm:text-sm rounded-xl"
                         />
                       </div>

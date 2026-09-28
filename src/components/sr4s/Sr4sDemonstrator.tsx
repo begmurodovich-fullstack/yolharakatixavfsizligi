@@ -497,7 +497,7 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
       }
 
       success(
-        `Baholash muvaffaqiyatli saqlandi va IIV YHXX tasdiqlashiga yuborildi! Yulduzli reyting: ${decimalScore} (SRS: ${srsScore})`,
+        `Baholash muvaffaqiyatli saqlandi va tasdiqlashga yuborildi! Yulduzli reyting: ${decimalScore} (SRS: ${srsScore})`,
         'Muvaffaqiyatli'
       );
     } catch (err: any) {
@@ -580,7 +580,7 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
               </span>
             </div>
             <p className="mt-1 text-xs text-amber-800 leading-relaxed">
-              Ushbu maktab uchun 40 ta mezonli baholash topshirilgan. Nizomga muvofiq, ma’lumotlarni o‘zgartirish yoki qayta baholash uchun IIV YHXX yoki tuman mas’uli tomonidan admin paneldan <strong>«Qayta baholashga ruxsat berish»</strong> huquqi berilishi kerak.
+              Ushbu maktab uchun 40 ta mezonli baholash topshirilgan. Nizomga muvofiq, ma’lumotlarni o‘zgartirish yoki qayta baholash uchun hududiy mas’ul administrator tomonidan admin paneldan <strong>«Qayta baholashga ruxsat berish»</strong> huquqi berilishi kerak.
             </p>
           </div>
         </div>
@@ -636,7 +636,7 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
               <span className="text-xs font-bold text-slate-700">Maktabga Xavfsiz Qadam</span>
             </div>
             <span className="text-[10px] text-slate-400 font-medium">
-              O‘zbekiston Respublikasi IIV YHXX & BMT Standarti
+              O‘zbekiston Respublikasi & BMT SR4S Standarti
             </span>
           </div>
 

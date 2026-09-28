@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
           {
             message:
-              'Ushbu maktab allaqachon yo‘l xavfsizligi monitoringi bo‘yicha baholashdan o‘tgan! Qayta baholash uchun hududiy IIV YHXX administratori ruxsati talab qilinadi.',
+              'Ushbu maktab allaqachon yo‘l xavfsizligi monitoringi bo‘yicha baholashdan o‘tgan! Qayta baholash uchun hududiy monitoring administratori ruxsati talab qilinadi.',
             isLocked: true,
           },
           { status: 403 }
@@ -248,7 +248,7 @@ export async function PATCH(request: NextRequest) {
          VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())`,
         [
           `log-retake-${Date.now()}`,
-          adminName || 'YHXX Administratori',
+          adminName || 'Monitoring Administratori',
           'ADMIN',
           'ALLOW_REASSESSMENT',
           'School Assessment',

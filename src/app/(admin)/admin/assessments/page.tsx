@@ -99,7 +99,7 @@ export default function AdminAssessmentsPage() {
           id: assessmentId,
           action: 'ALLOW_RETAKE',
           reason,
-          adminName: user?.name || 'IIV YHXX Administratori',
+          adminName: user?.name || 'Monitoring Administratori',
         }),
       });
       const data = await res.json();

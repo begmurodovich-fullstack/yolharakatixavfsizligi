@@ -218,7 +218,7 @@ export default function AdminReportsPage() {
             }`}
           >
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-900">3. 8 Mezon Bo‘yicha Xulosa</span>
+              <span className="text-xs font-bold text-slate-900">3. 7 Mezon Bo‘yicha Xulosa</span>
               {reportType === 'CRITERIA_SUMMARY' && <CheckCircle2 className="w-4 h-4 text-teal-600" />}
             </div>
             <p className="text-[11px] text-slate-500">

@@ -55,7 +55,7 @@ export function AssessmentSuccessState({
           {school.name} baholash anketasi qabul qilindi!
         </h1>
         <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
-          Siz kiritgan 8 ta xavfsizlik mezoni ko‘rsatkichlari va tasdiqlovchi foto-dalillar
+          Siz kiritgan barcha xavfsizlik mezonlari ko‘rsatkichlari va ma’lumotlar
           mas’ul ekspertlar tekshiruviga yuborildi.
         </p>
       </div>

@@ -90,7 +90,7 @@ export function CreateAdminModal({
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="masalan: inspector.bukhara@yhxx.uz"
+              placeholder="masalan: inspector.bukhara@monitoring.uz"
               className="text-xs h-10 rounded-xl"
               required
             />

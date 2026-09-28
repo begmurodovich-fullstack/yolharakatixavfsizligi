@@ -89,14 +89,14 @@ export default function AdminDashboardPage() {
             <ShieldCheck className="w-4 h-4 text-teal-600" />
             <span className="font-bold text-slate-800">O‘zbekiston Respublikasi</span>
             <span>•</span>
-            <span>Ichki Ishlar Vazirligi JXD YHXX</span>
+            <span>Respublika Monitoring Komissiyasi</span>
           </div>
 
           <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
             Maktablar Yo‘l Xavfsizligi Boshqaruv Markazi
           </h1>
           <p className="text-xs text-slate-500 max-w-2xl leading-relaxed">
-            Respublika bo‘yicha maktablar xavfsizlik monitoringi, geolokatsiya tasdiqlash va foto-dalillar ekspertizasi.
+            Respublika bo‘yicha maktablar xavfsizlik monitoringi, geolokatsiya tasdiqlash va baholashlar ekspertizasi.
           </p>
         </div>
 

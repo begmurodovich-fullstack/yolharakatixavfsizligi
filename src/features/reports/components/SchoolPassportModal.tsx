@@ -240,7 +240,7 @@ export function SchoolPassportModal({
 
             <div className="space-y-6">
               <div className="text-[11px] font-bold text-slate-800">
-                Hududiy YHXB Mas’ul Inspektori:
+                Hududiy Mas’ul Inspektor:
               </div>
               <div className="border-b border-slate-400 pb-1 text-xs text-slate-600">
                 Imzo: _____________________
@@ -251,7 +251,7 @@ export function SchoolPassportModal({
             <div className="flex flex-col items-center justify-center p-3 rounded-xl border border-slate-300 bg-white">
               <QrCode className="w-14 h-14 text-slate-900" />
               <div className="text-[9px] font-mono text-slate-500 mt-1 text-center font-bold">
-                YHX-QR VERIFICATION ID<br />
+                SR4S-QR VERIFICATION ID<br />
                 {school.id.toUpperCase()}
               </div>
             </div>

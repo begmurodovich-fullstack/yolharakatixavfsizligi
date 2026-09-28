@@ -30,7 +30,7 @@ export function AdminHeader({ onOpenMobileMenu }: AdminHeaderProps) {
         <div className="hidden sm:flex items-center gap-2">
           <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-500 ring-4 ring-emerald-500/20" />
           <span className="text-xs font-bold text-slate-700">
-            Respublika YHXX Monitoring Markazi
+            Maktablar Yo‘l Xavfsizligi Monitoring Markazi
           </span>
         </div>
       </div>

@@ -42,14 +42,14 @@ const WORKFLOW_STEPS = [
   {
     step: '03',
     title: 'Foto-dalillar va daliliy ekspertiza',
-    desc: 'Har bir tanlangan parametr uchun maktab mas’uli real fotosuratlarni yuklaydi. Barcha fotosuratlar geolokatsiya va sana bilan biriktiriladi.',
+    desc: 'Har bir tanlangan parametr bo‘yicha maktab mas’uli ma’lumotlarni kiritadi va asoslaydi.',
     icon: Camera,
-    badge: '3-bosqich: Haqiqiy Fotosuratlar',
+    badge: '3-bosqich: Ko‘rsatkichlarni Kiritish',
   },
   {
     step: '04',
     title: 'Tekshirish va verifikatsiya',
-    desc: 'Adminlar yoki tuman/viloyat YHXX inspektori baholash to‘g‘ri bajarilganligini ko‘rib chiqishi (verifikatsiya) va xalqaro formula asosida Star Rating hisoblanadi.',
+    desc: 'Adminlar yoki tuman/viloyat mas’ul mutaxassislari baholash to‘g‘ri bajarilganligini ko‘rib chiqishi (verifikatsiya) va xalqaro formula asosida Star Rating hisoblanadi.',
     icon: LineChart,
     badge: '4-bosqich: Tekshirish & Verifikatsiya',
   },
@@ -74,13 +74,13 @@ const STAKEHOLDERS = [
     ],
   },
   {
-    role: 'YHXX (Davlat Yo‘l Harakati Xavfsizligi Xizmati)',
+    role: 'Mas’ul Inspeksiya va Monitoring Organlari',
     icon: Shield,
     color: 'bg-sky-50 text-sky-700 border-sky-200',
     points: [
       '10 000+ ta maktab holatini yagona raqamli markazdan nazorat qilish',
-      'Foto-dalillar orqali joyiga chiqmasdan dastlabki ekspertiza qilish',
-      'Bolalar ishtirokidagi YTHlar profilaktikasini 100% raqamlashtirish',
+      'Baholash ma’lumotlari orqali dastlabki ekspertiza qilish',
+      'Bolalar ishtirokidagi yo‘l hodisalari profilaktikasini 100% raqamlashtirish',
     ],
   },
   {

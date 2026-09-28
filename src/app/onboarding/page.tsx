@@ -401,7 +401,7 @@ export default function OnboardingPage() {
 
       {/* Footer */}
       <div className="relative z-10 text-center text-xs text-slate-600">
-        © 2026 O‘zbekiston Respublikasi IIV JXD YHXX Maktablar Yo‘l Xavfsizligi Boshqaruvi
+        © 2026 Maktabga Xavfsiz Qadam — Maktablar Yo‘l Xavfsizligi Monitoring Tizimi
       </div>
     </div>
   );

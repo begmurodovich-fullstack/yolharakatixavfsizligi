@@ -39,8 +39,8 @@ export const MOCK_USERS: User[] = [
   },
   {
     id: 'usr-super-admin',
-    email: 'superadmin@yhxx.uz',
-    name: 'Bosh Administrator (IIV YHXX)',
+    email: 'superadmin@monitoring.uz',
+    name: 'Bosh Administrator',
     role: UserRole.SUPER_ADMIN,
     isActive: true,
     avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80',
@@ -49,7 +49,7 @@ export const MOCK_USERS: User[] = [
   },
   {
     id: 'usr-inspector-admin',
-    email: 'admin@yhxx.uz',
+    email: 'admin@monitoring.uz',
     name: 'Hududiy Inspektor (Admin)',
     role: UserRole.ADMIN,
     regionId: 'reg-bukhara',

@@ -337,7 +337,7 @@ export default function PublicMapPage() {
                     Hozircha Tasdiqlangan Maktablar Mavjud Emas
                   </h4>
                   <p className="text-xs text-slate-300 leading-relaxed">
-                    Xarita faqat YHXB inspektori tomonidan geolokatsiyasi rasman tekshirilib tasdiqlangan maktablarni aks ettiradi. Maktablar birinchi marta login qilib joylashuvini yuborgach, xaritada paydo bo‘ladi.
+                    Xarita faqat mas’ul mutaxassislar tomonidan geolokatsiyasi rasman tekshirilib tasdiqlangan maktablarni aks ettiradi. Maktablar birinchi marta login qilib joylashuvini yuborgach, xaritada paydo bo‘ladi.
                   </p>
                 </div>
                 <button
