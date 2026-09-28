@@ -169,7 +169,7 @@ export default function PlatformPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {WORKFLOW_STEPS.map((item) => {
               const Icon = item.icon;
               return (

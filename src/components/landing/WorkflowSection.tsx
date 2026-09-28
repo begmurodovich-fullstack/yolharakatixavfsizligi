@@ -70,7 +70,7 @@ export function WorkflowSection() {
         </div>
 
         {/* Workflow Steps */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 relative">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 relative">
           {STEPS.map((item, idx) => {
             const Icon = item.icon;
             return (
@@ -101,7 +101,7 @@ export function WorkflowSection() {
 
                 {/* Connecting arrow indicator between steps on desktop */}
                 {idx < STEPS.length - 1 && (
-                  <div className="hidden md:flex absolute -right-3.5 top-1/2 -translate-y-1/2 z-20 text-slate-400">
+                  <div className="hidden lg:flex absolute -right-3.5 top-1/2 -translate-y-1/2 z-20 text-slate-400">
                     <ArrowRight className="w-5 h-5 text-slate-300" />
                   </div>
                 )}
