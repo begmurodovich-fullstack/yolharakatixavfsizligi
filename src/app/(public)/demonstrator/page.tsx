@@ -26,10 +26,10 @@ export default function DemonstratorPage() {
               </div>
             </Link>
 
-            {/* FIA Foundation partner indicator */}
+            {/* iRAP / SR4S methodology indicator */}
             <div className="hidden md:flex items-center gap-2 text-[11px] text-slate-500 font-medium pl-4 border-l border-slate-200">
               <span>Rasmiy metodika:</span>
-              <span className="font-bold text-slate-700">iRAP / FIA FOUNDATION</span>
+              <span className="font-bold text-slate-700">iRAP / SR4S</span>
             </div>
           </div>
 

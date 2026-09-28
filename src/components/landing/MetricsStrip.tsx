@@ -133,7 +133,7 @@ export function MetricsStrip() {
                 <ShieldAlert className="h-5 w-5" />
               </div>
               <span className="text-[10px] font-mono font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-200">
-                iRAP & FIA
+                iRAP / SR4S
               </span>
             </div>
             <div className="text-3xl font-black text-slate-950 font-mono tracking-tight">
