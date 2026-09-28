@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
@@ -136,7 +136,7 @@ export default function ReytingPage() {
               <div className="text-2xl sm:text-3xl font-black text-rose-700">
                 {isLoading ? '...' : `${rankings.filter((r) => (r.score || 0) < 60).length} ta`}
               </div>
-              <p className="text-xs text-slate-500 mt-1">Yo'l infratuzilmasini yaxshilash bo'yicha qarshi chora-tadbirlar talab etiladi</p>
+              <p className="text-xs text-slate-500 mt-1">Yo‘l infratuzilmasini yaxshilash bo‘yicha qarshi chora-tadbirlar talab etiladi</p>
             </CardContent>
           </Card>
         </div>
