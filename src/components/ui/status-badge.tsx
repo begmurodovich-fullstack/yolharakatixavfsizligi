@@ -16,11 +16,13 @@ export function getStarRating(score: number): {
   badgeClass: string;
   starIcons: string;
   description: string;
+  shortLabel: string;
 } {
   if (!score || score <= 0) {
     return {
       stars: 0,
       label: 'Baholanmagan',
+      shortLabel: 'Baholanmagan',
       badgeClass: 'bg-slate-100 text-slate-700 border-slate-300',
       starIcons: '⚪️',
       description: 'Baholash hali o‘tkazilmagan',
@@ -30,7 +32,8 @@ export function getStarRating(score: number): {
     return {
       stars: 5,
       label: '5 Yulduz (Namunali)',
-      badgeClass: 'bg-emerald-50 text-emerald-800 border-emerald-300',
+      shortLabel: '5★ Namunali',
+      badgeClass: 'bg-emerald-50 text-emerald-800 border-emerald-300 shadow-2xs',
       starIcons: '⭐️⭐️⭐️⭐️⭐️',
       description: 'Eng yuqori xavfsizlik darajasi',
     };
@@ -39,7 +42,8 @@ export function getStarRating(score: number): {
     return {
       stars: 4,
       label: '4 Yulduz (Yaxshi)',
-      badgeClass: 'bg-amber-50 text-amber-900 border-amber-300',
+      shortLabel: '4★ Yaxshi',
+      badgeClass: 'bg-amber-50 text-amber-900 border-amber-300 shadow-2xs',
       starIcons: '⭐️⭐️⭐️⭐️',
       description: 'Yaxshi xavfsizlik darajasi',
     };
@@ -48,7 +52,8 @@ export function getStarRating(score: number): {
     return {
       stars: 3,
       label: '3 Yulduz (O‘rtacha)',
-      badgeClass: 'bg-yellow-50 text-yellow-900 border-yellow-300',
+      shortLabel: '3★ O‘rtacha',
+      badgeClass: 'bg-yellow-50 text-yellow-900 border-yellow-300 shadow-2xs',
       starIcons: '⭐️⭐️⭐️',
       description: 'BMT minimal talabiga mos',
     };
@@ -57,7 +62,8 @@ export function getStarRating(score: number): {
     return {
       stars: 2,
       label: '2 Yulduz (Xavfli)',
-      badgeClass: 'bg-rose-50 text-rose-800 border-rose-300',
+      shortLabel: '2★ Xavfli',
+      badgeClass: 'bg-rose-50 text-rose-800 border-rose-300 shadow-2xs',
       starIcons: '⭐️⭐️',
       description: 'Chora ko‘rish talab etiladi',
     };
@@ -65,7 +71,8 @@ export function getStarRating(score: number): {
   return {
     stars: 1,
     label: '1 Yulduz (O‘ta Xavfli)',
-    badgeClass: 'bg-slate-900 text-amber-300 border-slate-800',
+    shortLabel: '1★ O‘ta Xavfli',
+    badgeClass: 'bg-slate-900 text-amber-300 border-slate-800 shadow-2xs',
     starIcons: '⭐️',
     description: 'Shoshilinch chora zarur',
   };
@@ -88,12 +95,11 @@ export function StarRatingBadge({
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border',
+        'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border whitespace-nowrap select-none shrink-0',
         info.badgeClass,
         className
       )}
     >
-      {showIcons && <Sr4sGoldStars stars={info.stars} size={14} className="shrink-0" />}
       <span>{info.label}</span>
     </span>
   );
@@ -118,12 +124,11 @@ export function ScoreStatusBadge({
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold border',
+        'inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border whitespace-nowrap select-none shrink-0',
         info.badgeClass,
         className
       )}
     >
-      <span className="text-[11px]">{info.starIcons}</span>
       <span>{info.label}</span>
     </span>
   );

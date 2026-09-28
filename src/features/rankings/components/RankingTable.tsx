@@ -63,11 +63,11 @@ export function RankingTable({ entries, currentSchoolId, scope }: RankingTablePr
         <table className="w-full text-left text-xs border-collapse">
           <thead>
             <tr className="border-b border-slate-200 bg-slate-50/90 text-slate-700 font-bold uppercase tracking-wider text-[11px]">
-              <th className="py-4 px-5 w-24 text-center">O‘rin</th>
+              <th className="py-4 px-5 w-20 text-center">O‘rin</th>
               <th className="py-4 px-5">Maktab nomi</th>
               <th className="py-4 px-5">Hudud</th>
-              <th className="py-4 px-5 text-center">Yulduz Reytingi</th>
-              <th className="py-4 px-5 text-center w-40">Xavfsizlik Toifasi</th>
+              <th className="py-4 px-5 text-center w-36">Yulduz Reytingi</th>
+              <th className="py-4 px-5 text-center w-48">Xavfsizlik Toifasi</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
