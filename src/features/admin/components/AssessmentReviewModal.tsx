@@ -122,10 +122,10 @@ export function AssessmentReviewModal({
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-black text-slate-900 leading-snug">
-                {school?.name || 'Maktab'} Baholash Natijalari
+                {school?.name || assessment.schoolName || (assessment.schoolNumber ? `${assessment.schoolNumber}-maktab` : 'Maktab')} Baholash Natijalari
               </h2>
               <p className="text-xs text-slate-500">
-                {school?.districtName}, {school?.regionName}
+                {[school?.districtName || assessment.districtName, school?.regionName || assessment.regionName].filter(Boolean).join(', ') || 'Hudud ko‘rsatilmagan'}
               </p>
             </div>
           </div>

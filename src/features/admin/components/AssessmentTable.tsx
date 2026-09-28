@@ -95,6 +95,11 @@ export function AssessmentTable({
           <tbody className="divide-y divide-slate-100">
             {assessments.map((ass) => {
               const school = schools.find((s) => s.id === ass.schoolId);
+              const displayName = school?.name || ass.schoolName || (ass.schoolNumber ? `${ass.schoolNumber}-maktab` : 'Maktab');
+              const displayDistrict = school?.districtName || ass.districtName || '';
+              const displayRegion = school?.regionName || ass.regionName || '';
+              const locationStr = [displayDistrict, displayRegion].filter(Boolean).join(', ') || 'Hudud ko‘rsatilmagan';
+
               const starVal = getStarVal(ass);
               const lvl = getStarLevel(starVal);
               const filledStars = Math.min(5, Math.max(1, Math.floor(starVal)));
@@ -109,7 +114,7 @@ export function AssessmentTable({
                       </div>
                       <div>
                         <span className="font-bold text-slate-900 block">
-                          {school?.name || 'Maktab'}
+                          {displayName}
                         </span>
                         <span className="text-[11px] text-slate-400 font-mono">
                           {Object.keys(ass.answers || {}).length} ta parametr baholandi
@@ -122,9 +127,7 @@ export function AssessmentTable({
                   <td className="py-4 px-5 text-slate-600">
                     <div className="flex items-center gap-1.5">
                       <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                      <span>
-                        {school?.districtName}, {school?.regionName}
-                      </span>
+                      <span>{locationStr}</span>
                     </div>
                   </td>
 

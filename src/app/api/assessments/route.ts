@@ -10,10 +10,13 @@ export async function GET(request: NextRequest) {
     const periodId = searchParams.get('periodId');
 
     let sql = `
-      SELECT a.*, s.name as school_name, s.region_id, s.district_id, s.current_score as school_current_score,
-             s.can_reassess, s.reassess_reason
+      SELECT a.*, s.name as school_name, s.school_number, s.region_id, s.district_id, s.current_score as school_current_score,
+             s.can_reassess, s.reassess_reason,
+             r.name as region_name, d.name as district_name
       FROM assessments a
       JOIN schools s ON a.school_id = s.id
+      LEFT JOIN regions r ON s.region_id = r.id
+      LEFT JOIN districts d ON s.district_id = d.id
       WHERE 1=1
     `;
     const params: any[] = [];
@@ -36,7 +39,10 @@ export async function GET(request: NextRequest) {
     const formatted = rows.map((a) => ({
       id: a.id,
       schoolId: a.school_id,
-      schoolName: a.school_name,
+      schoolName: a.school_name || (a.school_number ? `${a.school_number}-maktab` : 'Maktab'),
+      schoolNumber: a.school_number,
+      regionName: a.region_name || '',
+      districtName: a.district_name || '',
       periodId: a.period_id,
       status: a.status,
       canReassess: Boolean(a.can_reassess),

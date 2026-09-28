@@ -98,6 +98,10 @@ export interface Assessment {
   verifiedAt?: string;
   verifiedBy?: string;
   reviewerNotes?: string;
+  schoolName?: string;
+  schoolNumber?: string;
+  regionName?: string;
+  districtName?: string;
   createdAt: string;
   updatedAt: string;
 }
