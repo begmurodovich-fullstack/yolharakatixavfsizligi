@@ -5,7 +5,7 @@ import { AdminDashboardSummary } from '@/services/adminService';
 import {
   School,
   MapPin,
-  Camera,
+  ClipboardCheck,
   Trophy,
   ShieldCheck,
   TrendingUp,
@@ -89,24 +89,24 @@ export function AdminStatGrid({ summary }: AdminStatGridProps) {
         </div>
       </Link>
 
-      {/* 3. Pending Evidence Queue */}
-      <Link href="/admin/evidence" className="block group">
+      {/* 3. Pending Assessments */}
+      <Link href="/admin/assessments" className="block group">
         <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-xs hover:border-teal-500 hover:shadow-xs transition-all flex flex-col justify-between h-full space-y-4">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-              Kutilayotgan Foto-Dalillar
+              Baholash Monitoringi
             </span>
-            <div className="p-2.5 rounded-xl bg-amber-50 text-amber-700 group-hover:bg-amber-700 group-hover:text-white transition-colors">
-              <Camera className="w-5 h-5" />
+            <div className="p-2.5 rounded-xl bg-teal-50 text-teal-700 group-hover:bg-teal-700 group-hover:text-white transition-colors">
+              <ClipboardCheck className="w-5 h-5" />
             </div>
           </div>
           <div>
             <div className="text-3xl sm:text-4xl font-black text-slate-900 font-mono tracking-tight">
-              {summary.pendingEvidenceCount}
+              {summary.pendingAssessmentsCount}
             </div>
-            <div className="flex items-center gap-1 mt-1.5 text-xs text-amber-700 font-semibold">
+            <div className="flex items-center gap-1 mt-1.5 text-xs text-teal-700 font-semibold">
               <Clock className="w-3.5 h-3.5" />
-              <span>Ekspert tekshiruvini kutmoqda</span>
+              <span>Tekshiruv kutilayotgan anketalar</span>
             </div>
           </div>
         </div>

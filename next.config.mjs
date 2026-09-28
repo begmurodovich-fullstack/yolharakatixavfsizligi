@@ -59,6 +59,7 @@ const nextConfig = {
       { source: '/dashboard', destination: '/login', permanent: false },
       { source: '/profile', destination: '/school/profile', permanent: false },
       { source: '/assessment', destination: '/school/assessment', permanent: false },
+      { source: '/admin/evidence', destination: '/admin/assessments', permanent: false },
     ];
   },
 

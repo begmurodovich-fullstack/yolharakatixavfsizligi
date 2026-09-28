@@ -7,8 +7,6 @@ export * from './RecentAuditLogsCard';
 export * from './SchoolFilterBar';
 export * from './SchoolAdminTable';
 export * from './SchoolDetailModal';
-export * from './EvidenceReviewCard';
-export * from './EvidenceRejectModal';
 export * from './CoordinateVerificationCard';
 export * from './AssessmentTable';
 export * from './AssessmentReviewModal';

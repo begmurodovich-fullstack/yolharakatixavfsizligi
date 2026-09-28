@@ -2,29 +2,20 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Camera, MapPin, ClipboardCheck, ArrowRight, Clock, AlertCircle } from 'lucide-react';
+import { MapPin, ClipboardCheck, ArrowRight, Clock, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface PendingQueueCardProps {
-  pendingEvidenceCount: number;
+  pendingEvidenceCount?: number;
   pendingCoordinatesCount: number;
   pendingAssessmentsCount: number;
 }
 
 export function PendingQueueCard({
-  pendingEvidenceCount,
   pendingCoordinatesCount,
   pendingAssessmentsCount,
 }: PendingQueueCardProps) {
   const queueItems = [
-    {
-      title: 'Foto-dalillarni tekshirish',
-      description: 'Maktablar tomonidan yuklangan infra-tuzilma fotosuratlari',
-      count: pendingEvidenceCount,
-      href: '/admin/evidence',
-      icon: Camera,
-      badgeColor: 'bg-amber-50 text-amber-900 border-amber-200',
-    },
     {
       title: 'Geolokatsiya koordinatalari',
       description: 'Ommaviy xaritaga kiritilishi kutilayotgan maktab GPS nuqtalari',
@@ -34,8 +25,8 @@ export function PendingQueueCard({
       badgeColor: 'bg-blue-50 text-blue-900 border-blue-200',
     },
     {
-      title: 'Maktab o‘z-o‘zini baholashlari',
-      description: 'Yakunlangan va inspektor tasdig‘ini kutayotgan anketalar',
+      title: 'Maktab baholash anketalari',
+      description: 'Yakunlangan va administrator tekshiruvini kutayotgan anketalar',
       count: pendingAssessmentsCount,
       href: '/admin/assessments',
       icon: ClipboardCheck,

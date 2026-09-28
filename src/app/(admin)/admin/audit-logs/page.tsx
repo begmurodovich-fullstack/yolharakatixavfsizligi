@@ -99,7 +99,6 @@ export default function AdminAuditLogsPage() {
             className="h-10 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-medium text-slate-800 focus:outline-none"
           >
             <option value="ALL">Barcha amallar</option>
-            <option value="REVIEW_EVIDENCE">Foto-dalilni tekshirish</option>
             <option value="VERIFY_COORDINATES">Geolokatsiyani tasdiqlash</option>
             <option value="VERIFY_ASSESSMENT">Baholashni tasdiqlash</option>
             <option value="RESET_SCHOOL_PASSWORD">Parolni tiklash</option>

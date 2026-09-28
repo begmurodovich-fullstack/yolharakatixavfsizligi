@@ -9,7 +9,6 @@ import { cn } from '@/lib/cn';
 import {
   LayoutDashboard,
   School,
-  Camera,
   MapPin,
   ClipboardCheck,
   FileSpreadsheet,
@@ -43,11 +42,6 @@ export function AdminSidebar({ onCloseMobile }: AdminSidebarProps) {
       href: '/admin/schools',
       label: 'Maktablar Reyestri',
       icon: School,
-    },
-    {
-      href: '/admin/evidence',
-      label: 'Foto-dalillarni Tekshirish',
-      icon: Camera,
     },
     {
       href: '/admin/coordinates',
