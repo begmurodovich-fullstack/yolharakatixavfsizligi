@@ -39,6 +39,16 @@ export function SchoolFilterBar({
   onReset,
   totalResults,
 }: SchoolFilterBarProps) {
+  const uniqueRegions = React.useMemo(() => {
+    const seen = new Set<string>();
+    return regions.filter((r) => {
+      const key = (r.name || '').trim().toLowerCase().replace(/['`ʻ’‘]/g, "'");
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }, [regions]);
+
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-xs space-y-4">
       {/* Search and Reset Bar */}
@@ -87,7 +97,7 @@ export function SchoolFilterBar({
             className="w-full h-10 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900"
           >
             <option value="ALL">Barcha viloyatlar</option>
-            {regions.map((r) => (
+            {uniqueRegions.map((r) => (
               <option key={r.id} value={r.id}>
                 {r.name}
               </option>

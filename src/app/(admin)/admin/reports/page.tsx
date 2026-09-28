@@ -53,6 +53,17 @@ export default function AdminReportsPage() {
     loadData();
   }, [loadData]);
 
+  // Guaranteed unique regions deduplicated by normalized name
+  const uniqueRegions = useMemo(() => {
+    const seen = new Set<string>();
+    return regions.filter((r) => {
+      const key = (r.name || '').trim().toLowerCase().replace(/['`ʻ’‘]/g, "'");
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }, [regions]);
+
   // Export to CSV simulation
   const handleExportCSV = () => {
     let headers: string[] = [];
@@ -76,7 +87,7 @@ export default function AdminReportsPage() {
         ]);
     } else if (reportType === 'REGIONAL_INDEX') {
       headers = ['Viloyat', 'Maktablar soni', 'Ortacha ball', 'Yashil maktablar', 'Sariq maktablar', 'Qizil maktablar'];
-      rows = regions.map((r) => {
+      rows = uniqueRegions.map((r) => {
         const regSchools = schools.filter((s) => s.regionId === r.id);
         const avg = regSchools.length > 0 ? Math.round(regSchools.reduce((a, b) => a + b.currentScore, 0) / regSchools.length) : 0;
         const green = regSchools.filter((s) => s.currentScore >= 80).length;
@@ -236,7 +247,7 @@ export default function AdminReportsPage() {
               className="h-9 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-medium text-slate-800 focus:outline-none"
             >
               <option value="ALL">Barcha viloyatlar</option>
-              {regions.map((r) => (
+              {uniqueRegions.map((r) => (
                 <option key={r.id} value={r.id}>
                   {r.name}
                 </option>
@@ -259,7 +270,7 @@ export default function AdminReportsPage() {
             {reportType === 'FULL_SCHOOLS'
               ? `${displayedSchools.length} ta maktab`
               : reportType === 'REGIONAL_INDEX'
-              ? `${regions.length} ta hudud`
+              ? `${uniqueRegions.length} ta hudud`
               : `${criteria.length} ta mezon`}
           </span>
         </div>
@@ -309,7 +320,7 @@ export default function AdminReportsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {regions.map((r) => {
+                {uniqueRegions.map((r) => {
                   const regSchools = schools.filter((s) => s.regionId === r.id);
                   const avg = regSchools.length > 0 ? Math.round(regSchools.reduce((a, b) => a + b.currentScore, 0) / regSchools.length) : 0;
                   const green = regSchools.filter((s) => s.currentScore >= 80).length;

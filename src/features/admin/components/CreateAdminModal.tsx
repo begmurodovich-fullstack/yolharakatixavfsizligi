@@ -28,6 +28,16 @@ export function CreateAdminModal({
   const [regionId, setRegionId] = useState('ALL');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const uniqueRegions = React.useMemo(() => {
+    const seen = new Set<string>();
+    return regions.filter((r) => {
+      const key = (r.name || '').trim().toLowerCase().replace(/['`ʻ’‘]/g, "'");
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }, [regions]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -121,7 +131,7 @@ export function CreateAdminModal({
                 className="w-full h-10 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-medium text-slate-800 focus:outline-none"
               >
                 <option value="ALL">Respublika (Barcha viloyatlar)</option>
-                {regions.map((r) => (
+                {uniqueRegions.map((r) => (
                   <option key={r.id} value={r.id}>
                     {r.name}
                   </option>
