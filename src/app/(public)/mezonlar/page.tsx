@@ -9,7 +9,6 @@ import {
   Search,
   Sparkles,
   ArrowRight,
-  Camera,
   ClipboardCheck,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -20,11 +19,9 @@ import { MOCK_QUESTIONS } from '@/data/mock/criteria';
 export default function MezonlarPage() {
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterEvidenceOnly, setFilterEvidenceOnly] = useState(false);
 
   const filteredQuestions = useMemo(() => {
     return MOCK_QUESTIONS.filter((q) => {
-      if (filterEvidenceOnly && !q.requiresEvidence) return false;
       if (!searchQuery.trim()) return true;
       const term = searchQuery.toLowerCase().trim();
       return (
@@ -34,7 +31,7 @@ export default function MezonlarPage() {
         q.options.some((opt) => opt.label.toLowerCase().includes(term))
       );
     });
-  }, [searchQuery, filterEvidenceOnly]);
+  }, [searchQuery]);
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
@@ -56,14 +53,10 @@ export default function MezonlarPage() {
           </p>
 
           {/* Quick Summary Strip */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 max-w-4xl">
+          <div className="grid grid-cols-3 gap-3 pt-3 max-w-3xl">
             <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
               <span className="text-[11px] font-semibold text-slate-500 block">Jami Mezonlar</span>
               <span className="text-xl font-black text-slate-900 font-mono">40 ta Savol</span>
-            </div>
-            <div className="p-3.5 rounded-xl bg-teal-50/50 border border-teal-200">
-              <span className="text-[11px] font-semibold text-teal-700 block">Foto Dalil Talab</span>
-              <span className="text-xl font-black text-teal-900 font-mono">28 ta mezon</span>
             </div>
             <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
               <span className="text-[11px] font-semibold text-slate-500 block">Reyting Tizimi</span>
@@ -91,22 +84,9 @@ export default function MezonlarPage() {
             />
           </div>
 
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setFilterEvidenceOnly(!filterEvidenceOnly)}
-              className={'px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all flex items-center gap-1.5 ' + (
-                filterEvidenceOnly
-                  ? 'bg-teal-700 text-white border-teal-700 font-bold shadow-xs'
-                  : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
-              )}
-            >
-              <Camera className="w-3.5 h-3.5" />
-              <span>Faqat foto-dalilli mezonlar</span>
-            </button>
-            <span className="text-xs text-slate-500 font-mono pl-2">
-              Natija: <strong>{filteredQuestions.length}</strong> ta mezon
-            </span>
-          </div>
+          <span className="text-xs text-slate-500 font-mono">
+            Natija: <strong>{filteredQuestions.length}</strong> ta mezon
+          </span>
         </div>
 
         {/* 40 Questions List */}
@@ -123,12 +103,6 @@ export default function MezonlarPage() {
                     <span className="px-2.5 py-1 rounded-lg bg-slate-900 text-teal-300 font-mono font-bold text-xs">
                       {q.code || ('SR4S-' + String(index + 1).padStart(2, '0'))}
                     </span>
-                    {q.requiresEvidence && (
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-sky-50 text-sky-800 border border-sky-200">
-                        <Camera className="w-3 h-3" />
-                        <span>Foto dalil talab etiladi</span>
-                      </span>
-                    )}
                     {q.subType && (
                       <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-900 border border-amber-200">
                         {q.subType === 'LEFT' ? '👈 Chap tomon' : '👉 O‘ng tomon'}
