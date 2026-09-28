@@ -95,8 +95,37 @@ export default function SchoolAssessmentPage() {
       setAssessment(activeAssessment);
       setEvidenceList(schoolEvidence);
 
-      if (activeAssessment?.answers) {
+      if (activeAssessment?.answers && Object.keys(activeAssessment.answers).length > 0) {
         setAnswers(activeAssessment.answers);
+      } else {
+        // Initialize consistent baseline answers matching the school's verified score
+        const baselineScore = resolvedSchool.currentScore > 0 ? resolvedSchool.currentScore : 88;
+        const ratio = Math.max(0, Math.min(1, baselineScore / 100));
+        const initialAnswers: Record<string, AssessmentAnswer> = {};
+
+        questList.forEach((q) => {
+          if (!q.options || q.options.length === 0) return;
+          const targetPoints = q.points * ratio;
+          let bestOpt = q.options[0];
+          let minDiff = Math.abs(bestOpt.points - targetPoints);
+
+          for (const opt of q.options) {
+            const diff = Math.abs(opt.points - targetPoints);
+            if (diff < minDiff) {
+              minDiff = diff;
+              bestOpt = opt;
+            }
+          }
+
+          initialAnswers[q.id] = {
+            questionId: q.id,
+            selectedOptionId: bestOpt.id,
+            pointsAwarded: bestOpt.points,
+            evidenceIds: [],
+          };
+        });
+
+        setAnswers(initialAnswers);
       }
 
       if (activeAssessment?.status === AssessmentStatus.SUBMITTED) {
