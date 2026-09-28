@@ -158,6 +158,10 @@ export function RealLeafletMap({
       const isSelected = selectedSchool?.id === sch.id;
       const isAssessed = score > 0;
 
+      // Extract school number cleanly (e.g. "35" from "35-maktab" or sch.schoolNumber)
+      const rawNum = sch.schoolNumber || sch.name.match(/\d+/)?.[0] || '★';
+      const starRating = isAssessed ? ((score / 100) * 4 + 1).toFixed(1) : '-';
+
       const pinColor = !isAssessed
         ? '#0d9488' // Teal brand color for verified schools
         : score >= 80
@@ -173,7 +177,7 @@ export function RealLeafletMap({
         customIcon = L.divIcon({
           className: 'custom-leaflet-pin selected-pin',
           html: `
-            <div style="position: relative; width: 160px; margin-left: -80px; margin-top: -65px; display: flex; flex-direction: column; align-items: center; pointer-events: none;">
+            <div style="position: relative; width: 190px; margin-left: -95px; margin-top: -68px; display: flex; flex-direction: column; align-items: center; pointer-events: none;">
               <!-- Floating Title Banner -->
               <div style="
                 background: #0f172a;
@@ -184,21 +188,21 @@ export function RealLeafletMap({
                 font-weight: 800;
                 white-space: nowrap;
                 box-shadow: 0 4px 14px rgba(0,0,0,0.6);
-                border: 1px solid #14b8a6;
+                border: 1.5px solid #14b8a6;
                 margin-bottom: 4px;
                 display: flex;
                 align-items: center;
                 gap: 5px;
               ">
-                <span style="color: ${pinColor}; font-size: 13px;">●</span>
-                <span>${sch.name}</span>
-                <span style="color: #94a3b8; font-size: 10px;">(${isAssessed ? `${score}b` : '✓'})</span>
+                <span style="color: ${pinColor}; font-size: 12px;">●</span>
+                <span>${sch.name.length > 20 ? `${rawNum}-maktab` : sch.name}</span>
+                <span style="color: #38bdf8; font-size: 10px; font-weight: 700;">★${starRating} (${score}b)</span>
               </div>
 
-              <!-- Main Pin Body -->
+              <!-- Main Pin Body with School Number -->
               <div style="
-                width: 36px;
-                height: 36px;
+                width: 38px;
+                height: 38px;
                 background-color: ${pinColor};
                 border: 3px solid #ffffff;
                 border-radius: 50% 50% 50% 0;
@@ -211,10 +215,10 @@ export function RealLeafletMap({
                 <span style="
                   transform: rotate(45deg);
                   color: #ffffff;
-                  font-size: 11px;
+                  font-size: 12px;
                   font-weight: 900;
-                  font-family: sans-serif;
-                ">${isAssessed ? score : '✓'}</span>
+                  font-family: monospace, sans-serif;
+                ">${rawNum}</span>
               </div>
             </div>
           `,
@@ -223,13 +227,13 @@ export function RealLeafletMap({
           popupAnchor: [0, -60],
         });
       } else {
-        // Normal Crisp Pin
+        // Normal Crisp Pin with School Number
         customIcon = L.divIcon({
           className: 'custom-leaflet-pin',
           html: `
             <div style="
-              width: 28px;
-              height: 28px;
+              width: 30px;
+              height: 30px;
               background-color: ${pinColor};
               border: 2px solid #ffffff;
               border-radius: 50% 50% 50% 0;
@@ -243,15 +247,15 @@ export function RealLeafletMap({
               <span style="
                 transform: rotate(45deg);
                 color: #ffffff;
-                font-size: 9px;
-                font-weight: 800;
-                font-family: sans-serif;
-              ">${isAssessed ? score : '✓'}</span>
+                font-size: 10px;
+                font-weight: 900;
+                font-family: monospace, sans-serif;
+              ">${rawNum}</span>
             </div>
           `,
-          iconSize: [28, 28],
-          iconAnchor: [14, 28],
-          popupAnchor: [0, -28],
+          iconSize: [30, 30],
+          iconAnchor: [15, 30],
+          popupAnchor: [0, -30],
         });
       }
 
