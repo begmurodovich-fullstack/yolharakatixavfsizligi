@@ -79,7 +79,7 @@ export default function ReytingPage() {
           </div>
 
           <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-950 leading-tight">
-            Maktablar Xavfsizlik Reytingi (SR4S 5 Yulduz)
+            Maktablar Xavfsizlik Reytingi (SR4S)
           </h1>
 
           <p className="text-sm sm:text-base text-slate-600 max-w-3xl leading-relaxed">
