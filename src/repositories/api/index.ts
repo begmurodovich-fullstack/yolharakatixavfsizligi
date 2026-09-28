@@ -196,7 +196,7 @@ export class ApiRankingRepository implements IRankingRepository {
   }
 
   async getRepublicRankings(periodId: string): Promise<RankingEntry[]> {
-    const schools = await apiClient<School[]>('/schools', { params: { limit: 100 } });
+    const schools = await apiClient<School[]>('/schools', { params: { assessedOnly: 'true', limit: 200 } });
     return schools.map((s, index) => ({
       rank: index + 1,
       previousRank: index + 1,
@@ -218,7 +218,7 @@ export class ApiRankingRepository implements IRankingRepository {
 
   async getRegionRankings(periodId: string, regionId?: string): Promise<RankingEntry[]> {
     const schools = await apiClient<School[]>('/schools', {
-      params: { regionId: regionId || 'ALL', limit: 100 },
+      params: { regionId: regionId || 'ALL', assessedOnly: 'true', limit: 200 },
     });
     return schools.map((s, index) => ({
       rank: index + 1,
@@ -241,7 +241,7 @@ export class ApiRankingRepository implements IRankingRepository {
 
   async getDistrictRankings(periodId: string, districtId?: string): Promise<RankingEntry[]> {
     const schools = await apiClient<School[]>('/schools', {
-      params: { districtId: districtId || 'ALL', limit: 100 },
+      params: { districtId: districtId || 'ALL', assessedOnly: 'true', limit: 200 },
     });
     return schools.map((s, index) => ({
       rank: index + 1,
