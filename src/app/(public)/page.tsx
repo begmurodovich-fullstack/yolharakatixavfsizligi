@@ -10,46 +10,39 @@ import {
   RankingPreviewSection,
   StatisticsPreviewSection,
   WhyPlatformSection,
-  ResultsImpactSection,
   CtaSection,
-  ContactSection,
 } from '@/components/landing';
 
 export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen">
-      {/* 1. Hero Section */}
+      {/* 1. Hero Section: Asosiy Ta’rif va Real Xarita */}
       <HeroSection />
 
-      {/* 2. Platform Key Metrics */}
+      {/* 2. Executive KPI Metrics: 10 110+ Maktab, 2.4M O‘quvchi, SR4S Standarti */}
       <MetricsStrip />
 
-      {/* 3. Workflow Explanation: Platforma qanday ishlaydi? */}
+      {/* 3. Workflow: 5 Bosqichli Baholash Jarayoni */}
       <WorkflowSection />
 
-      {/* 4. 8 Core Safety Criteria */}
+      {/* 4. 8 ta Asosiy Xavfsizlik Mezonlari */}
       <CriteriaSection />
 
-      {/* 5. Interactive Verified Map Preview */}
+      {/* 5. Hududiy Xavfsizlik Indeksi (Heatmap) & Sputnik Xaritasi */}
       <MapPreviewSection />
 
-      {/* 6. Republic Leaderboard / Ranking Preview */}
+      {/* 6. Respublika Yetakchi Maktablar Reytingi */}
       <RankingPreviewSection />
 
-      {/* 7. Safety Statistics & Category Analytics */}
+      {/* 7. Respublika Analitikasi va Xavfsizlik Diagrammalari */}
       <StatisticsPreviewSection />
 
-      {/* 8. Institutional Value: Nima uchun bu platforma kerak? */}
+      {/* 8. Milliy Qimmat: Nima uchun bu platforma zarur? */}
       <WhyPlatformSection />
 
-      {/* 9. Lifecycle: Natijalar qanday qo‘llaniladi? */}
-      <ResultsImpactSection />
-
-      {/* 10. Call To Action */}
+      {/* 9. Yakuniy Chaqiruv (CTA) */}
       <CtaSection />
-
-      {/* 11. Contact & Support */}
-      <ContactSection />
     </div>
   );
 }
+
