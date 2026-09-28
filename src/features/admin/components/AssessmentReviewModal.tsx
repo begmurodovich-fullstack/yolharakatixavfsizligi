@@ -36,21 +36,13 @@ function getStarVal(ass: Assessment): number {
   return Math.min(5.0, Math.max(1.0, star));
 }
 
-/** Get the SR4S level object for a given star score */
+/** Get the SR4S level object for a given star score (1.0-1.9 -> 1★, 2.0-2.9 -> 2★, etc.) */
 function getStarLevel(starVal: number): Sr4sStarLevel {
-  if (starVal >= 4.5) {
-    return OFFICIAL_SR4S_STAR_LEVELS.find((l) => l.starCount === 5) || OFFICIAL_SR4S_STAR_LEVELS[0];
-  }
-  if (starVal >= 3.5) {
-    return OFFICIAL_SR4S_STAR_LEVELS.find((l) => l.starCount === 4) || OFFICIAL_SR4S_STAR_LEVELS[1];
-  }
-  if (starVal >= 2.5) {
-    return OFFICIAL_SR4S_STAR_LEVELS.find((l) => l.starCount === 3) || OFFICIAL_SR4S_STAR_LEVELS[2];
-  }
-  if (starVal >= 1.5) {
-    return OFFICIAL_SR4S_STAR_LEVELS.find((l) => l.starCount === 2) || OFFICIAL_SR4S_STAR_LEVELS[3];
-  }
-  return OFFICIAL_SR4S_STAR_LEVELS.find((l) => l.starCount === 1) || OFFICIAL_SR4S_STAR_LEVELS[4];
+  const floorVal = Math.min(5, Math.max(1, Math.floor(starVal)));
+  return (
+    OFFICIAL_SR4S_STAR_LEVELS.find((l) => l.starCount === floorVal) ||
+    OFFICIAL_SR4S_STAR_LEVELS[OFFICIAL_SR4S_STAR_LEVELS.length - 1]
+  );
 }
 
 interface AssessmentReviewModalProps {
@@ -150,7 +142,7 @@ export function AssessmentReviewModal({
         {(() => {
           const starVal = getStarVal(assessment);
           const lvl = getStarLevel(starVal);
-          const filledStars = Math.round(starVal);
+          const filledStars = Math.min(5, Math.max(1, Math.floor(starVal)));
           return (
             <div className={cn('p-5 rounded-2xl border space-y-4', lvl.cardBgClass ?? 'bg-slate-50', lvl.cardBorderClass ?? 'border-slate-200')}>
               {/* Stars Row */}
