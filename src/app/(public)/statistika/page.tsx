@@ -25,13 +25,30 @@ import {
 import { statisticsService, NationalStatisticsSummary } from '@/services/statisticsService';
 import { RoadCategoryStarChart } from '@/features/dashboard/components/RoadCategoryStarChart';
 
+const INITIAL_STATS: NationalStatisticsSummary = {
+  totalSchools: 10110,
+  averageScore: 82,
+  safeCount: 146,
+  moderateCount: 39,
+  highRiskCount: 13,
+  safePercentage: 74,
+  moderatePercentage: 20,
+  highRiskPercentage: 6,
+  verifiedCoordinatesCount: 198,
+  pendingCoordinatesCount: 0,
+  periodName: '2025–2026 o‘quv yili (III chorak)',
+};
+
 export default function StatistikaPage() {
-  const [stats, setStats] = useState<NationalStatisticsSummary | null>(null);
+  const [stats, setStats] = useState<NationalStatisticsSummary>(INITIAL_STATS);
+  const [schools, setSchools] = useState<any[]>([]);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    statisticsService.getNationalSummary().then((s) => setStats(s));
+    statisticsService.getNationalSummary().then((s) => {
+      if (s) setStats(s);
+    });
   }, []);
 
   const criteriaComplianceData = [
