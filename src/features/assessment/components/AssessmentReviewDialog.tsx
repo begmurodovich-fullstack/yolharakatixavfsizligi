@@ -44,7 +44,7 @@ export function AssessmentReviewDialog({
 }: AssessmentReviewDialogProps) {
   const isAllAnswered = answeredCount >= totalQuestions;
   const isAllEvidenceUploaded = uploadedEvidenceCount >= requiredEvidenceCount;
-  const canSubmit = isAllAnswered && isAllEvidenceUploaded;
+  const canSubmit = isAllAnswered;
 
   return (
     <Dialog

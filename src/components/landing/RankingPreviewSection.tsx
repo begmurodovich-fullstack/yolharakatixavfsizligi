@@ -56,8 +56,8 @@ export function RankingPreviewSection() {
                   <Sparkles className="w-4 h-4" />
                 </div>
                 <div>
-                  <strong className="font-semibold text-slate-900">Foto-tasdiq talabi:</strong> Ballar faqat
-                  haqiqiy ekspertiza xulosasidan so‘ng hisoblanadi.
+                  <strong className="font-semibold text-slate-900">Xolis monitoring:</strong> Ballar faqat
+                  xalqaro SR4S metodikasi asosidagi tekshiruvdan so‘ng hisoblanadi.
                 </div>
               </div>
             </div>

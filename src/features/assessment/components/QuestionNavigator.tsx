@@ -57,13 +57,8 @@ export function QuestionNavigator({
           let statusIcon = null;
 
           if (isAnswered) {
-            if (isMissingEvidence) {
-              stateClasses = 'border-amber-400 bg-amber-50 text-amber-900 font-bold';
-              statusIcon = <AlertTriangle className="w-2.5 h-2.5 text-amber-600 absolute -top-1 -right-1" />;
-            } else {
-              stateClasses = 'border-emerald-500 bg-emerald-50 text-emerald-900 font-bold';
-              statusIcon = <Check className="w-2.5 h-2.5 text-emerald-700 absolute -top-1 -right-1" />;
-            }
+            stateClasses = 'border-emerald-500 bg-emerald-50 text-emerald-900 font-bold';
+            statusIcon = <Check className="w-2.5 h-2.5 text-emerald-700 absolute -top-1 -right-1" />;
           }
 
           if (isCurrent) {

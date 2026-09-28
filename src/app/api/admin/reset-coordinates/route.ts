@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
   // Simple secret check so random visitors can't trigger it
   const secret = request.nextUrl.searchParams.get('secret');
-  if (secret !== 'yhxx-reset-2026') {
+  if (secret !== 'admin-reset-2026') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

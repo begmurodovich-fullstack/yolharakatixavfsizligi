@@ -208,7 +208,7 @@ export default function ReytingPage() {
         </div>
 
         {/* Rankings Table */}
-        <div className="rounded-2xl border border-slate-200 bg-white shadow-xs overflow-hidden">
+        <div className="rounded-2xl border border-slate-200 bg-white shadow-xs overflow-x-auto">
           <Table>
             <TableHeader className="bg-slate-50">
               <TableRow className="border-b border-slate-200">

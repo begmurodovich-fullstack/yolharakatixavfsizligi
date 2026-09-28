@@ -49,7 +49,7 @@ export function HeroSection() {
               </div>
               <div className="flex items-center gap-2.5 p-2 rounded-xl bg-white/80 border border-slate-200/80 shadow-2xs">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>Foto-dalillar asosida shaffof audit</span>
+                <span>Shaffof va xolis raqamli audit</span>
               </div>
               <div className="flex items-center gap-2.5 p-2 rounded-xl bg-white/80 border border-slate-200/80 shadow-2xs">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />

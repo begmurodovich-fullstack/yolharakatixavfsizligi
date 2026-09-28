@@ -25,7 +25,7 @@ export default function HomePage() {
       {/* 3. Workflow: 5 Bosqichli Baholash Jarayoni */}
       <WorkflowSection />
 
-      {/* 4. 8 ta Asosiy Xavfsizlik Mezonlari */}
+      {/* 4. 40 ta Xalqaro SR4S Xavfsizlik Mezonlari */}
       <CriteriaSection />
 
       {/* 5. Hududiy Xavfsizlik Indeksi (Heatmap) & Sputnik Xaritasi */}

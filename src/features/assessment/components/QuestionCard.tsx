@@ -108,9 +108,9 @@ export function QuestionCard({
         )}
 
         {question.requiresEvidence && (
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 text-teal-800 border border-teal-200 text-xs font-semibold">
-            <Camera className="w-3.5 h-3.5 text-teal-600" />
-            <span>Ushbu savol bo‘yicha foto-dalil talab qilinadi</span>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-xs font-medium">
+            <Camera className="w-3.5 h-3.5 text-slate-500" />
+            <span>Foto-dalil biriktirish (ixtiyoriy)</span>
           </div>
         )}
       </div>

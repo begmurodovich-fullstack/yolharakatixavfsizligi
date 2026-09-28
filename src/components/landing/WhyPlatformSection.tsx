@@ -20,8 +20,8 @@ const BENEFITS = [
     icon: DatabaseZap,
   },
   {
-    title: 'Foto-dalillarga asoslangan shaffof baholash',
-    description: 'Har bir ijobiy javob hududdan olingan haqiqiy fotosurat va geolokatsiya bilan tasdiqlanadi. Soxtalashtirishga yo‘l qo‘yilmaydi.',
+    title: 'Xalqaro mezonlarga asoslangan shaffof baholash',
+    description: 'Har bir parametr xalqaro iRAP v3.10 va SR4S standarti talablari asosida tahlil qilinadi va xolis baholanadi.',
     icon: FileCheck2,
   },
   {

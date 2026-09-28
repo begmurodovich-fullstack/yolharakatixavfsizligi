@@ -28,6 +28,61 @@ export function getStarRating(score: number): {
       description: 'Baholash hali o‘tkazilmagan',
     };
   }
+
+  // Handle decimal star scores (e.g. 1.0 - 5.0)
+  if (score <= 5.0) {
+    const starFloor = Math.min(5, Math.max(1, Math.floor(score)));
+    if (starFloor === 5) {
+      return {
+        stars: 5,
+        label: '5 Yulduz (Namunali)',
+        shortLabel: '5★ Namunali',
+        badgeClass: 'bg-emerald-50 text-emerald-800 border-emerald-300 shadow-2xs',
+        starIcons: '⭐️⭐️⭐️⭐️⭐️',
+        description: 'Eng yuqori xavfsizlik darajasi',
+      };
+    }
+    if (starFloor === 4) {
+      return {
+        stars: 4,
+        label: '4 Yulduz (Yaxshi)',
+        shortLabel: '4★ Yaxshi',
+        badgeClass: 'bg-amber-50 text-amber-900 border-amber-300 shadow-2xs',
+        starIcons: '⭐️⭐️⭐️⭐️',
+        description: 'Yaxshi xavfsizlik darajasi',
+      };
+    }
+    if (starFloor === 3) {
+      return {
+        stars: 3,
+        label: '3 Yulduz (O‘rtacha)',
+        shortLabel: '3★ O‘rtacha',
+        badgeClass: 'bg-yellow-50 text-yellow-900 border-yellow-300 shadow-2xs',
+        starIcons: '⭐️⭐️⭐️',
+        description: 'BMT minimal talabiga mos',
+      };
+    }
+    if (starFloor === 2) {
+      return {
+        stars: 2,
+        label: '2 Yulduz (Xavfli)',
+        shortLabel: '2★ Xavfli',
+        badgeClass: 'bg-rose-50 text-rose-800 border-rose-300 shadow-2xs',
+        starIcons: '⭐️⭐️',
+        description: 'Chora ko‘rish talab etiladi',
+      };
+    }
+    return {
+      stars: 1,
+      label: '1 Yulduz (O‘ta Xavfli)',
+      shortLabel: '1★ O‘ta Xavfli',
+      badgeClass: 'bg-slate-900 text-amber-300 border-slate-800 shadow-2xs',
+      starIcons: '⭐️',
+      description: 'Shoshilinch chora zarur',
+    };
+  }
+
+  // Handle 0-100 percentage scores
   if (score >= 90) {
     return {
       stars: 5,

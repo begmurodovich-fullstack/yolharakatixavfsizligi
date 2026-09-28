@@ -142,12 +142,6 @@ export function CriterionDetailCard({
                     </div>
 
                     <div className="flex items-center gap-2 shrink-0 self-end sm:self-start">
-                      {q.requiresEvidence && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-bold bg-amber-50 text-amber-900 border border-amber-200">
-                          <Camera className="w-3 h-3 text-amber-600" />
-                          <span>Foto talab qilinadi</span>
-                        </span>
-                      )}
                       <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-slate-100 text-slate-800 border border-slate-200">
                         <Award className="w-3 h-3 text-slate-500" />
                         <span>Maks: {q.points} ball</span>

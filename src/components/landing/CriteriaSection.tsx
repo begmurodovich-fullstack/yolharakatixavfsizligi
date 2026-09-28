@@ -18,7 +18,7 @@ export function CriteriaSection() {
             SR4S / iRAP ning 40 ta rasmiy mezoni
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            BMT va iRAP xalqaro metodikasi asosida maktab atrofidagi barcha yo‘l infratuzilmasi 40 ta rasmiy mezon va foto-dalillar asosida to‘liq baholanadi.
+            BMT va iRAP xalqaro metodikasi asosida maktab atrofidagi barcha yo‘l infratuzilmasi 40 ta rasmiy mezon asosida to‘liq baholanadi.
           </p>
         </div>
 
