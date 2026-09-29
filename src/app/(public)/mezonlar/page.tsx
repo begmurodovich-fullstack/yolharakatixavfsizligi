@@ -180,7 +180,7 @@ export default function MezonlarPage() {
           </h2>
           <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto leading-relaxed">
             Maktab mas’ul xodimlari o‘z login va parollari bilan kabinetga kirib, barcha 40 ta savolga
-            haqiqiy foto-dalillar bilan javob berishlari mumkin.
+            haqqoniy ko‘rsatkichlar bilan javob berishlari mumkin.
           </p>
           <div className="pt-2">
             <Link href={user ? '/school/criteria' : '/login'}>

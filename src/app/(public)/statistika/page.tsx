@@ -24,9 +24,10 @@ import {
 } from 'recharts';
 import { statisticsService, NationalStatisticsSummary } from '@/services/statisticsService';
 import { RoadCategoryStarChart } from '@/features/dashboard/components/RoadCategoryStarChart';
+import { CountermeasuresMatrixCard } from '@/features/statistics/components';
 
 const INITIAL_STATS: NationalStatisticsSummary = {
-  totalSchools: 10110,
+  totalSchools: 10193,
   averageScore: 82,
   safeCount: 146,
   moderateCount: 39,
@@ -82,7 +83,7 @@ export default function StatistikaPage() {
     { star: '4 Yulduz (Yaxshi)',   count: fourStar,  percentage: pct(fourStar),  color: '#f59e0b', barColor: 'bg-amber-500' },
     { star: '3 Yulduz (O‘rtacha)', count: threeStar, percentage: pct(threeStar), color: '#eab308', barColor: 'bg-yellow-500' },
     { star: '2 Yulduz (Xavfli)',   count: twoStar,   percentage: pct(twoStar),   color: '#ef4444', barColor: 'bg-rose-500' },
-    { star: '1 Yulduz (O‘ta Xavfli)', count: oneStar, percentage: pct(oneStar), color: '#991b1b', barColor: 'bg-red-800' },
+    { star: '1 Yulduz (O‘ta Xavfli)', count: oneStar, percentage: pct(oneStar), color: '#000000', barColor: 'bg-black' },
     ...(unassessedCount > 0 ? [
       { star: 'Baholanmagan (Jarayonda)', count: unassessedCount, percentage: pct(unassessedCount), color: '#94a3b8', barColor: 'bg-slate-400' }
     ] : []),
@@ -257,6 +258,9 @@ export default function StatistikaPage() {
             </CardContent>
           </Card>
         </div>
+
+        {/* SR4S Countermeasures Matrix */}
+        <CountermeasuresMatrixCard defaultOpenAll={true} className="mt-2" />
 
         {/* CTA to Map */}
         <div className="p-8 rounded-2xl bg-white border border-slate-200 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-6">

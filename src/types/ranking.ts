@@ -32,6 +32,7 @@ export interface RankingEntry {
   previousRank?: number;
   entityId: string;
   entityName: string;
+  schoolNumber?: string;
   scope: RankingScope;
   regionId?: string;
   regionName?: string;

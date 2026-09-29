@@ -20,6 +20,7 @@ import { StarRatingBadge, getStarRating } from '@/components/ui/status-badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { CountermeasuresMatrixCard } from '@/features/statistics/components';
 import {
   Table,
   TableHeader,
@@ -83,7 +84,7 @@ export default function ReytingPage() {
           </h1>
 
           <p className="text-sm sm:text-base text-slate-600 max-w-3xl leading-relaxed">
-            Respublika bo‘yicha 10 110 ta umumta’lim maktabining 40 ta xalqaro SR4S parametri asosida
+            Respublika bo‘yicha 10 193 ta umumta’lim maktabining 40 ta xalqaro SR4S parametri asosida
             hisoblangan 5 yulduzli xavfsizlik reytingi va milliy yetakchilik jadvali.
           </p>
         </div>
@@ -266,6 +267,11 @@ export default function ReytingPage() {
                       <TableCell className="font-semibold text-slate-900">
                         <div className="flex items-center gap-2">
                           <span>{entry.entityName}</span>
+                          {entry.schoolNumber && (
+                            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 text-slate-700 border border-slate-200">
+                              № {entry.schoolNumber}
+                            </span>
+                          )}
                           {rank <= 3 && (
                             <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
                               Top {rank}
@@ -295,6 +301,9 @@ export default function ReytingPage() {
             </TableBody>
           </Table>
         </div>
+
+        {/* SR4S Countermeasures Matrix */}
+        <CountermeasuresMatrixCard defaultOpenAll={true} className="mt-8" />
       </div>
     </div>
   );

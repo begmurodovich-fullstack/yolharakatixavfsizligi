@@ -5,3 +5,4 @@ export * from './BenchmarkBarChart';
 export * from './HistoricalTrendChart';
 export * from './CriteriaPerformanceGrid';
 export * from './ActionPlan';
+export * from './CountermeasuresMatrixCard';

@@ -9,13 +9,67 @@ import { Criterion, Question } from '@/types';
 
 export const MOCK_CRITERIA: Criterion[] = [
   {
-    id: 'crit-all-40',
-    title: '40 ta Rasmiy Xalqaro SR4S Mezonlari',
-    description: 'Maktab atrofidagi yo‘l infratuzilmasi, piyodalar xavfsizligi, tezlik, chorrahalar va yoritish bo‘yicha 40 ta standart ko‘rsatkich',
-    icon: 'ShieldCheck',
-    questionCount: 40,
-    maxScore: 100,
+    id: 'crit-road-geometry',
+    title: '1. Yo‘l parametrlari va geometriyasi',
+    description: 'Tasmalar soni, yo‘l nishabligi, yo‘lning o‘rta qismi va chetki tasmalar holati',
+    icon: 'Gauge',
+    questionCount: 4,
+    maxScore: 15,
     order: 1,
+  },
+  {
+    id: 'crit-school-signs',
+    title: '2. Maktab ogohlantirishi va patrul xizmati',
+    description: 'Maktab ogohlantirish belgilari, tezlik cheklovlari va piyodalar patruli nazorati',
+    icon: 'ShieldAlert',
+    questionCount: 3,
+    maxScore: 15,
+    order: 2,
+  },
+  {
+    id: 'crit-pedestrian-sidewalks',
+    title: '3. Piyodalar yo‘lagi (Trotuarlar)',
+    description: 'Chap va o‘ng tomondagi piyodalar yo‘lagi, to‘siqlar va chetki tasma kengligi',
+    icon: 'Footprints',
+    questionCount: 3,
+    maxScore: 15,
+    order: 3,
+  },
+  {
+    id: 'crit-crossings-flow',
+    title: '4. Piyodalar o‘tish joyi va oqimlar',
+    description: 'O‘tish joyi turi, o‘tish joyi sifati, piyodalar va bolalar o‘tish oqimi',
+    icon: 'Route',
+    questionCount: 4,
+    maxScore: 15,
+    order: 4,
+  },
+  {
+    id: 'crit-intersections-access',
+    title: '5. Chorraha va hovli kirish joylari',
+    description: 'Chorraha turi va sifati, burilish bo‘laklari, hovli va tijorat kirish joylari',
+    icon: 'GitFork',
+    questionCount: 4,
+    maxScore: 15,
+    order: 5,
+  },
+  {
+    id: 'crit-speeds-traffic',
+    title: '6. Tezlik va transport oqimi',
+    description: 'Belgilangan va haqiqiy tezlik, kunlik avtomobillar, motosikl va yuk mashinalari ulushi',
+    icon: 'Zap',
+    questionCount: 4,
+    maxScore: 15,
+    order: 6,
+  },
+  {
+    id: 'crit-land-environment',
+    title: '7. Hudud turi va atrof-muhit',
+    description: 'Hudud toifasi (shahar/qishloq), yerda foydalanish va ko‘rinish masofasi',
+    icon: 'Building2',
+    questionCount: 18,
+    maxScore: 10,
+    order: 7,
   },
 ];
 
@@ -23,7 +77,7 @@ export const MOCK_QUESTIONS: Question[] = [
   // 1. Yo'l parametrlari va tasmalar
   {
     id: 'q-01-lane-count',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-road-geometry',
     code: 'SR4S-01',
     text: 'Tasmalar soni (Qatnov qismidagi harakat bo‘laklari soni):',
     description: 'Yo‘lning maktab oldidagi qismida jami harakatlanish tasmalarining soni.',
@@ -40,7 +94,7 @@ export const MOCK_QUESTIONS: Question[] = [
   },
   {
     id: 'q-02-road-gradient',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-road-geometry',
     code: 'SR4S-02',
     text: 'Yo‘l nishabligi (Gradient / Qiyalik darajasi):',
     description: 'Yo‘l uchastkasining qiyalik darajasi tormoz yo‘liga ta’sir qiladi.',
@@ -55,7 +109,7 @@ export const MOCK_QUESTIONS: Question[] = [
   },
   {
     id: 'q-03-median-type',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-road-geometry',
     code: 'SR4S-03',
     text: 'Yo‘lning o‘rta qismi (Median / Ajratuvchi polosa):',
     description: 'Qarama-qarshi harakat oqimlarini ajratuvchi konstruksiya.',
@@ -72,7 +126,7 @@ export const MOCK_QUESTIONS: Question[] = [
   },
   {
     id: 'q-04-shoulder-width',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-road-geometry',
     code: 'SR4S-04',
     text: 'Chetki tasma kengligi (Shoulder Width):',
     description: 'Qatnov qismining chetidagi asfaltlangan xavfsiz chet qismi.',
@@ -90,7 +144,7 @@ export const MOCK_QUESTIONS: Question[] = [
   // 2. Maktab ogohlantirishi va patrul
   {
     id: 'q-05-school-warning-signs',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-school-signs',
     code: 'SR4S-05',
     text: 'Maktab ogohlantirish belgilari (Maktab zonasi):',
     description: 'Haydovchilarni maktab hududiga yaqinlashayotgani haqida ogohlantiruvchi vositalar.',
@@ -106,7 +160,7 @@ export const MOCK_QUESTIONS: Question[] = [
   },
   {
     id: 'q-06-crossing-patrol',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-school-signs',
     code: 'SR4S-06',
     text: 'Piyodalar patruli (Maktab navbatchisi / YPX xodimi):',
     description: 'Dars paytida bolalarning yo‘ldan o‘tishini tartibga soluvchi xodimlar.',
@@ -121,7 +175,7 @@ export const MOCK_QUESTIONS: Question[] = [
   },
   {
     id: 'q-07-speed-limit',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-school-signs',
     code: 'SR4S-07',
     text: 'Belgilangan tezlik cheklovi (Maktab oldida):',
     description: 'Maktab zonasi uchun o‘rnatilgan rasmiy tezlik cheklovi (3.24 belgisi).',
@@ -140,7 +194,7 @@ export const MOCK_QUESTIONS: Question[] = [
   // 3. Trotuarlar va piyodalar yo'lakchasi
   {
     id: 'q-08-sidewalk-left',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-pedestrian-sidewalks',
     code: 'SR4S-08',
     subType: 'LEFT',
     text: 'Piyodalar yo‘lagi — Chap tomon (Sidewalk Left):',
@@ -157,7 +211,7 @@ export const MOCK_QUESTIONS: Question[] = [
   },
   {
     id: 'q-09-sidewalk-right',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-pedestrian-sidewalks',
     code: 'SR4S-09',
     subType: 'RIGHT',
     text: 'Piyodalar yo‘lagi — O‘ng tomon (Sidewalk Right):',
@@ -174,7 +228,7 @@ export const MOCK_QUESTIONS: Question[] = [
   },
   {
     id: 'q-10-pedestrian-fencing',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-pedestrian-sidewalks',
     code: 'SR4S-10',
     text: 'Piyodalar himoya to‘siqlari (Panjaralar):',
     description: 'O‘quvchilarning qatnov qismiga tasodifan chiqib ketishining oldini oluvchi panjaralar.',
@@ -190,7 +244,7 @@ export const MOCK_QUESTIONS: Question[] = [
   // 4. Piyodalar o'tish joyi va oqimlar
   {
     id: 'q-11-crossing-type',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-crossings-flow',
     code: 'SR4S-11',
     text: 'Asosiy piyodalar o‘tish joyi turi:',
     description: 'Maktabga kirishdagi asosiy piyodalar o‘tish yo‘lagining turi.',
@@ -207,7 +261,7 @@ export const MOCK_QUESTIONS: Question[] = [
   },
   {
     id: 'q-12-crossing-quality',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-crossings-flow',
     code: 'SR4S-12',
     text: 'O‘tish joyining sifati va holati:',
     description: 'Chiziqlarning ko‘rinishi, yo‘l belgilari va yoritilganlik holati.',
@@ -223,7 +277,7 @@ export const MOCK_QUESTIONS: Question[] = [
   },
   {
     id: 'q-13-pedestrian-flow',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-crossings-flow',
     code: 'SR4S-13',
     text: 'Piyodalar o‘tish oqimi (Tig‘iz paytdagi harakatlanish soni):',
     description: 'Eng tig‘iz soatda maktab oldidan o‘tuvchi o‘quvchilar va piyodalar soni.',
@@ -241,7 +295,7 @@ export const MOCK_QUESTIONS: Question[] = [
   // 5. Chorraha va hovli kirish joylari
   {
     id: 'q-14-intersection-type',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-intersections-access',
     code: 'SR4S-14',
     text: 'Chorraha (Kesishuv) turi:',
     description: 'Maktabga yaqin joylashgan yo‘l kesishuvi / chorraha konfiguratsiyasi.',
@@ -258,7 +312,7 @@ export const MOCK_QUESTIONS: Question[] = [
   },
   {
     id: 'q-15-commercial-access',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-intersections-access',
     code: 'SR4S-15',
     text: 'Hovli va tijorat kirish-chiqish joylari (Property Access):',
     description: 'Maktab atrofidagi do‘konlar, bozorlar yoki hovlilarga kirish yo‘llari soni.',
@@ -274,7 +328,7 @@ export const MOCK_QUESTIONS: Question[] = [
   },
   {
     id: 'q-16-intersection-quality',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-intersections-access',
     code: 'SR4S-16',
     text: 'Chorraha sifati va ko‘rinish masofasi:',
     description: 'Chorrahada transport vositalari va piyodalarning ko‘rinish darajasi.',
@@ -290,7 +344,7 @@ export const MOCK_QUESTIONS: Question[] = [
   },
   {
     id: 'q-17-turning-lanes',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-intersections-access',
     code: 'SR4S-17',
     text: 'Burilish bo‘lagi (Cho‘ntaklar va burilish tasmasi):',
     description: 'Chapga yoki o‘ngga xavfsiz burilish uchun alohida tasma mavjudligi.',
@@ -307,7 +361,7 @@ export const MOCK_QUESTIONS: Question[] = [
   // 6. Tezlik va transport oqimi
   {
     id: 'q-18-operating-speed',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-speeds-traffic',
     code: 'SR4S-18',
     text: 'Haqiqiy (ishchi) harakat tezligi (Operating Speed):',
     description: 'Avtomobillarning maktab oldida amalda harakatlanish tezligi.',
@@ -323,7 +377,7 @@ export const MOCK_QUESTIONS: Question[] = [
   },
   {
     id: 'q-19-daily-traffic-volume',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-speeds-traffic',
     code: 'SR4S-19',
     text: 'Kunlik avtomobillar oqimi (AADT - Traffic Volume):',
     description: 'Maktab oldidagi yo‘ldan bir sutkada o‘tuvchi jami transport vositalari soni.',
@@ -339,7 +393,7 @@ export const MOCK_QUESTIONS: Question[] = [
   },
   {
     id: 'q-20-truck-percentage',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-speeds-traffic',
     code: 'SR4S-20',
     text: 'Yuk mashinalari va og‘ir transport ulushi (%):',
     description: 'Harakatdagi yuk mashinalari va og‘ir texnikalarning ulushi.',
@@ -355,7 +409,7 @@ export const MOCK_QUESTIONS: Question[] = [
   },
   {
     id: 'q-21-motorcycle-percentage',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-speeds-traffic',
     code: 'SR4S-21',
     text: 'Motosikl, moped va skuterlar ulushi (%):',
     description: 'Yo‘ldagi 2 g‘ildirakli motorli transport vositalarining ulushi.',
@@ -372,7 +426,7 @@ export const MOCK_QUESTIONS: Question[] = [
   // 7. Hudud va ko'rinish
   {
     id: 'q-22-area-environment',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-land-environment',
     code: 'SR4S-22',
     text: 'Hudud toifasi (Maktab joylashgan atrof-muhit):',
     description: 'Maktab joylashgan geografik va infratuzilma zonasi.',
@@ -386,7 +440,7 @@ export const MOCK_QUESTIONS: Question[] = [
   },
   {
     id: 'q-23-sight-distance',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-land-environment',
     code: 'SR4S-23',
     text: 'Haydovchilar uchun ko‘rinish masofasi (Sight Distance):',
     description: 'Haydovchining maktab va piyodalar o‘tish joyini uzoqdan ko‘ra olish masofasi.',
@@ -402,7 +456,7 @@ export const MOCK_QUESTIONS: Question[] = [
   // 8. Tezlik pasaytirgichlar va sun'iy notekisliklar
   {
     id: 'q-24-traffic-calming-presence',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-land-environment',
     code: 'SR4S-24',
     text: 'Sun’iy notekislik (Tezlik pasaytirgich / Speed Hump):',
     description: 'Maktab oldida majburiy tezlikni tushiruvchi sun’iy notekislik mavjudligi.',
@@ -417,7 +471,7 @@ export const MOCK_QUESTIONS: Question[] = [
   },
   {
     id: 'q-25-traffic-calming-condition',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-land-environment',
     code: 'SR4S-25',
     text: 'Sun’iy notekislikning texnik holati va belgilari:',
     description: 'Notekislik oldida 1.17 va 3.24 belgilari hamda sariq-oq chiziqlar mavjudligi.',
@@ -434,7 +488,7 @@ export const MOCK_QUESTIONS: Question[] = [
   // 9. Ko'cha yoritilishi va tungi xavfsizlik
   {
     id: 'q-26-street-lighting',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-land-environment',
     code: 'SR4S-26',
     text: 'Tungi ko‘cha yoritish tizimi (Street Lighting):',
     description: 'Kechki va erta tonggi paytlarda maktab oldining yoritilganlik darajasi.',
@@ -448,7 +502,7 @@ export const MOCK_QUESTIONS: Question[] = [
   },
   {
     id: 'q-27-crossing-lighting',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-land-environment',
     code: 'SR4S-27',
     text: 'Piyodalar o‘tish joyining maxsus projektorli yoritilishi:',
     description: 'Zebra ustiga to‘g‘ridan-to‘g‘ri yo‘naltirilgan qo‘shimcha projektor mavjudligi.',
@@ -464,7 +518,7 @@ export const MOCK_QUESTIONS: Question[] = [
   // 10. Maktab darvozasi va kirish xavfsizligi
   {
     id: 'q-28-gate-location',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-land-environment',
     code: 'SR4S-28',
     text: 'Maktab asosiy darvozasining yo‘lga chiqish holati:',
     description: 'Darvozadan chiqqan o‘quvchining to‘g‘ridan-to‘g‘ri qatnov qismiga tushib qolmasligi.',
@@ -478,7 +532,7 @@ export const MOCK_QUESTIONS: Question[] = [
   },
   {
     id: 'q-29-parent-dropoff-zone',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-land-environment',
     code: 'SR4S-29',
     text: 'Ota-onalar avtoturargohi va bolalarni tushirish (Drop-off) zonasi:',
     description: 'Avtomobillarning tartibli to‘xtab bolalarni tushirishi uchun maxsus cho‘ntak.',
@@ -494,7 +548,7 @@ export const MOCK_QUESTIONS: Question[] = [
   // 11. Jamoat transporti va bekatlar
   {
     id: 'q-30-bus-stop-presence',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-land-environment',
     code: 'SR4S-30',
     text: 'Jamoat transporti bekati (Avtobus / Marshrutka bekati):',
     description: 'Maktab oldidagi jamoat transporti to‘xtash joyi infratuzilmasi.',
@@ -509,7 +563,7 @@ export const MOCK_QUESTIONS: Question[] = [
   },
   {
     id: 'q-31-bus-stop-safety',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-land-environment',
     code: 'SR4S-31',
     text: 'Bekatdan maktabga o‘tish xavfsizligi:',
     description: 'Bekatda tushgan o‘quvchilarning maktabga xavfsiz o‘tish sharoiti.',
@@ -526,7 +580,7 @@ export const MOCK_QUESTIONS: Question[] = [
   // 12. Velosiped va mikro-mobillik
   {
     id: 'q-32-bicycle-facility',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-land-environment',
     code: 'SR4S-32',
     text: 'Velosiped va samokat yo‘laklari (Bicycle Facilities):',
     description: 'O‘quvchilarning velosiped yoki samokatda xavfsiz harakatlanish imkoniyati.',
@@ -540,7 +594,7 @@ export const MOCK_QUESTIONS: Question[] = [
   },
   {
     id: 'q-33-bicycle-parking',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-land-environment',
     code: 'SR4S-33',
     text: 'Maktab hududida xavfsiz velosiped turargohi:',
     description: 'Maktab hovlisida velosiped va samokatlar uchun maxsus to‘xtash joyi.',
@@ -556,7 +610,7 @@ export const MOCK_QUESTIONS: Question[] = [
   // 13. Yo'l qoplamasi va sifati
   {
     id: 'q-34-pavement-condition',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-land-environment',
     code: 'SR4S-34',
     text: 'Yo‘l qoplamasi holati (Pavement Quality):',
     description: 'Qatnov qismining tekisligi, chuqurliklar va yoriqlar mavjudligi.',
@@ -570,7 +624,7 @@ export const MOCK_QUESTIONS: Question[] = [
   },
   {
     id: 'q-35-road-markings-quality',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-land-environment',
     code: 'SR4S-35',
     text: 'Yo‘l chiziqlari va markirovkalarining ko‘rinishi:',
     description: 'Bo‘ylama va ko‘ndalang yo‘l chiziqlarining yorug‘lik qaytarish sifati.',
@@ -586,7 +640,7 @@ export const MOCK_QUESTIONS: Question[] = [
   // 14. Ko'rish to'siqlari va xavfsizlik orolchalari
   {
     id: 'q-36-visual-obstructions',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-land-environment',
     code: 'SR4S-36',
     text: 'Ko‘rishni to‘suvchi to‘siqlar (Daraxtlar, do‘konlar, reklama):',
     description: 'Piyodalar o‘tish joyida bolalarni ko‘rishga xalaqit beruvchi ob’ektlar.',
@@ -600,7 +654,7 @@ export const MOCK_QUESTIONS: Question[] = [
   },
   {
     id: 'q-37-pedestrian-refuge-island',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-land-environment',
     code: 'SR4S-37',
     text: 'Piyodalar xavfsizlik orolchasi (Refuge Island):',
     description: 'Ko‘p polosali yo‘l o‘rtasida bolalar xavfsiz to‘xtab kutishi mumkin bo‘lgan orolcha.',
@@ -617,7 +671,7 @@ export const MOCK_QUESTIONS: Question[] = [
   // 15. Maktab xavfsizlik tadbirlari va axborot
   {
     id: 'q-38-traffic-education-corner',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-land-environment',
     code: 'SR4S-38',
     text: 'Yo‘l harakati xavfsizligi burchagi / Sinf xonasi:',
     description: 'Maktabda bolalarga yo‘l qoidalarini amaliy o‘rgatish maydonchasi yoki burchagi.',
@@ -631,7 +685,7 @@ export const MOCK_QUESTIONS: Question[] = [
   },
   {
     id: 'q-39-safe-route-map',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-land-environment',
     code: 'SR4S-39',
     text: '«Mening xavfsiz yo‘lim» maktab marshrut xaritasi:',
     description: 'O‘quvchilar va ota-onalar uchun maktabga kelishning eng xavfsiz xaritasi ishlab chiqilganligi.',
@@ -645,7 +699,7 @@ export const MOCK_QUESTIONS: Question[] = [
   },
   {
     id: 'q-40-disabled-accessibility',
-    criterionId: 'crit-all-40',
+    criterionId: 'crit-land-environment',
     code: 'SR4S-40',
     text: 'Imkoniyati cheklangan bolalar uchun qulaylik (Panduslar va taktil plitkalar):',
     description: 'Piyodalar yo‘lkasi va o‘tish joylarida pandus va qulay tushish joylari mavjudligi.',

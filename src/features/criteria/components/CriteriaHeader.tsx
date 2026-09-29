@@ -38,7 +38,7 @@ export function CriteriaHeader({
           </h1>
           <p className="text-xs text-slate-500 max-w-2xl leading-relaxed">
             BMT va iRAP (Star Rating for Schools v1.7) standarti asosida maktab atrofi infratuzilmasini
-            40 ta xalqaro parametr va foto-dalillar bo‘yicha kompleks baholash rubrikasi.
+            7 ta asosiy mezon va 40 ta xalqaro parametr bo‘yicha kompleks baholash rubrikasi.
           </p>
         </div>
 
@@ -60,21 +60,21 @@ export function CriteriaHeader({
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
         <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center gap-2.5">
           <div className="p-2 rounded-lg bg-teal-50 text-teal-700 font-bold font-mono">
-            40
+            {totalCriteria || 7}
           </div>
           <div>
-            <div className="font-bold text-slate-900">40 ta Parametr</div>
-            <div className="text-[11px] text-slate-500">SR4S mezonlari</div>
+            <div className="font-bold text-slate-900">7 ta Mezon</div>
+            <div className="text-[11px] text-slate-500">Asosiy yo‘nalishlar</div>
           </div>
         </div>
 
         <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center gap-2.5">
           <div className="p-2 rounded-lg bg-blue-50 text-blue-700 font-bold font-mono">
-            📸
+            {totalQuestions || 40}
           </div>
           <div>
-            <div className="font-bold text-slate-900">Foto Dalillar</div>
-            <div className="text-[11px] text-slate-500">Joyida tasdiqlash</div>
+            <div className="font-bold text-slate-900">40 ta Parametr</div>
+            <div className="text-[11px] text-slate-500">SR4S ko‘rsatkichlari</div>
           </div>
         </div>
 

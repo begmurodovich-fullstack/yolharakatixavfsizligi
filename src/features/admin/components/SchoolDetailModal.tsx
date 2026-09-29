@@ -15,6 +15,8 @@ import {
   CheckCircle2,
   Calendar,
 } from 'lucide-react';
+import { getCountermeasureByScore } from '@/data/sr4sCountermeasures';
+import { cn } from '@/lib/cn';
 
 interface SchoolDetailModalProps {
   school: School | null;
@@ -149,6 +151,29 @@ export function SchoolDetailModal({
             </div>
           </div>
         </div>
+
+        {/* SR4S Countermeasure Proposal */}
+        {school.currentScore !== undefined && (
+          (() => {
+            const cm = getCountermeasureByScore(school.currentScore);
+            return (
+              <div className={cn('p-4 rounded-xl border text-xs space-y-2', cm.bgClass, cm.borderClass)}>
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-slate-900 flex items-center gap-1.5">
+                    <span className="font-mono text-sm">{cm.starIcon}</span>
+                    <span>SR4S {cm.title} ({cm.riskLevel})</span>
+                  </span>
+                  <span className="font-mono font-bold text-teal-800 bg-white/80 px-2 py-0.5 rounded border border-slate-200">
+                    {school.currentScore} ball
+                  </span>
+                </div>
+                <p className="text-slate-700 leading-relaxed text-[11px] font-medium">
+                  {cm.proposalText}
+                </p>
+              </div>
+            );
+          })()
+        )}
 
         {/* Modal Actions */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 border-t border-slate-100">

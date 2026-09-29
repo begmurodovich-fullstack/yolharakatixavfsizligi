@@ -41,7 +41,7 @@ export function CriteriaPerformanceGrid({ criterionScores }: CriteriaPerformance
           </div>
           <div>
             <h3 className="text-base font-bold text-slate-900">
-              {criterionScores.length > 0 ? `${criterionScores.length} Mezon` : 'Mezonlar'} Bo‘yicha Natijalar Tahlili
+              {criterionScores.length > 0 ? `${criterionScores.length} ta Asosiy Mezon` : '7 ta Asosiy Mezon'} Bo‘yicha Natijalar Tahlili
             </h3>
             <p className="text-xs text-slate-500">
               Har bir xavfsizlik parametri bo‘yicha to‘plangan ballar va bajarilish foizi
@@ -50,7 +50,7 @@ export function CriteriaPerformanceGrid({ criterionScores }: CriteriaPerformance
         </div>
 
         <span className="text-xs font-mono font-bold text-teal-800 bg-teal-50 px-2.5 py-1 rounded-md border border-teal-200">
-          {criterionScores.length} ta mezon
+          {criterionScores.length > 0 ? `${criterionScores.length} ta mezon` : '7 ta mezon'}
         </span>
       </div>
 

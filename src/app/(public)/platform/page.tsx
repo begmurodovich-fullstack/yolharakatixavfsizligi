@@ -41,7 +41,7 @@ const WORKFLOW_STEPS = [
   },
   {
     step: '03',
-    title: 'Foto-dalillar va daliliy ekspertiza',
+    title: 'Ko‘rsatkichlar va amaliy monitoring',
     desc: 'Har bir tanlangan parametr bo‘yicha maktab mas’uli ma’lumotlarni kiritadi va asoslaydi.',
     icon: Camera,
     badge: '3-bosqich: Ko‘rsatkichlarni Kiritish',

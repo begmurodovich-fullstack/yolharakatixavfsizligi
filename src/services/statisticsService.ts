@@ -46,7 +46,7 @@ export class StatisticsService {
     }
 
     return {
-      totalSchools: 10110,
+      totalSchools: 10193,
       averageScore: 82,
       safeCount: 146,
       moderateCount: 39,
@@ -107,9 +107,9 @@ export class StatisticsService {
 
     return [
       {
-        periodId: currentPeriod?.id || 'period-2025-q1',
+        periodId: currentPeriod?.id || 'period-2026-q1',
         periodName: currentPeriod?.name || '2025-2026 Bahorgi monitoring',
-        shortName: '2025 Bahor (Joriy)',
+        shortName: '2026 Bahor (Joriy)',
         score: currentScore,
         isCurrent: true,
         status: evaluateScore(currentScore).status,

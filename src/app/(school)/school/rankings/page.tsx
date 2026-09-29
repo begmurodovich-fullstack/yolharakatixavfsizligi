@@ -20,6 +20,7 @@ import {
   RankingFilters,
   RankingTable,
 } from '@/features/rankings/components';
+import { CountermeasuresMatrixCard } from '@/features/statistics/components';
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { ErrorState } from '@/components/ui/error-state';
@@ -202,6 +203,9 @@ export default function SchoolRankingsPage() {
         currentSchoolId={school.id}
         scope={scope}
       />
+
+      {/* 6. SR4S Countermeasures Matrix */}
+      <CountermeasuresMatrixCard schoolScore={school.currentScore} className="mt-4" />
     </div>
   );
 }

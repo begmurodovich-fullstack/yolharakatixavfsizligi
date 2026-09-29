@@ -19,6 +19,8 @@ import {
 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/useAuth';
+import { getStarRating } from '@/components/ui/status-badge';
+import { getCountermeasureByScore } from '@/data/sr4sCountermeasures';
 
 // Dynamically load Leaflet Map without SSR
 const RealLeafletMap = dynamic(
@@ -289,8 +291,13 @@ export default function PublicMapPage() {
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <div className="text-xs font-bold text-white line-clamp-1">
-                          {sch.name}
+                        <div className="flex items-center gap-1.5 text-xs font-bold text-white line-clamp-1">
+                          <span>{sch.name}</span>
+                          {sch.schoolNumber && (
+                            <span className="px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-slate-800 text-teal-400 border border-slate-700">
+                              № {sch.schoolNumber}
+                            </span>
+                          )}
                         </div>
                         <div className="text-[11px] text-slate-400 mt-0.5">
                           {sch.districtName}, {sch.regionName}
@@ -372,9 +379,16 @@ export default function PublicMapPage() {
                     <span className="text-[10px] font-mono uppercase font-bold text-teal-400">
                       Tanlangan Maktab
                     </span>
-                    <h3 className="text-sm font-black text-white line-clamp-1">
-                      {selectedSchool.name}
-                    </h3>
+                    <div className="flex items-center gap-1.5">
+                      <h3 className="text-sm font-black text-white line-clamp-1">
+                        {selectedSchool.name}
+                      </h3>
+                      {selectedSchool.schoolNumber && (
+                        <span className="px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-slate-800 text-teal-300 border border-slate-700">
+                          № {selectedSchool.schoolNumber}
+                        </span>
+                      )}
+                    </div>
                     <p className="text-xs text-slate-400">
                       {selectedSchool.districtName}, {selectedSchool.regionName}
                     </p>
@@ -394,11 +408,31 @@ export default function PublicMapPage() {
                     }`}
                   >
                     {selectedSchool.currentScore > 0
-                      ? `${((selectedSchool.currentScore / 100) * 4 + 1).toFixed(1)} ★ (5 yulduzli)`
+                      ? `${getStarRating(selectedSchool.currentScore).stars} ★ (${getStarRating(selectedSchool.currentScore).shortLabel})`
                       : 'Baholanmagan'}
                   </span>
                 </div>
               </div>
+
+              {selectedSchool.currentScore > 0 && selectedSchool.currentScore < 60 && (
+                (() => {
+                  const cm = getCountermeasureByScore(selectedSchool.currentScore);
+                  return (
+                    <div className="p-3 rounded-2xl bg-rose-950/60 border border-rose-800/80 text-xs space-y-1">
+                      <div className="flex items-center justify-between text-rose-300 font-bold text-[11px]">
+                        <span className="flex items-center gap-1">
+                          <span>{cm.starIcon}</span>
+                          <span>SR4S {cm.title} ({cm.riskLevel})</span>
+                        </span>
+                        <span>{selectedSchool.currentScore} ball</span>
+                      </div>
+                      <p className="text-[10px] text-slate-300 leading-snug">
+                        {cm.proposalText}
+                      </p>
+                    </div>
+                  );
+                })()
+              )}
 
               <div className="flex items-center justify-between text-xs font-mono text-slate-300 pt-2 border-t border-slate-800">
                 <span className="text-[11px] text-slate-400">

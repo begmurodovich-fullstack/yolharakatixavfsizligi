@@ -17,6 +17,7 @@ import {
   Users,
   Compass,
 } from 'lucide-react';
+import { getCountermeasureByScore } from '@/data/sr4sCountermeasures';
 
 interface SchoolPassportModalProps {
   school: School;
@@ -164,10 +165,10 @@ export function SchoolPassportModal({
             </div>
           </div>
 
-          {/* 4. 8 Criteria Compliance Table */}
+          {/* 4. 7 Criteria Compliance Table */}
           <div className="space-y-3">
             <div className="text-xs font-black uppercase tracking-wider text-slate-900">
-              1. Standart Xavfsizlik Mezonlari Bo‘yicha Ko‘rsatkichlar:
+              1. 7 ta Asosiy Xavfsizlik Mezonlari Bo‘yicha Ko‘rsatkichlar:
             </div>
 
             <div className="border border-slate-300 rounded-xl overflow-hidden">
@@ -215,16 +216,40 @@ export function SchoolPassportModal({
           </div>
 
           {/* 5. Recommendations and Mandatory Corrective Actions */}
-          <div className="space-y-2 p-4 rounded-xl border border-slate-300 bg-slate-50 print:bg-white">
-            <div className="text-xs font-black uppercase text-slate-900">
-              2. Majburiy Chora-tadbirlar va Xulosa:
-            </div>
-            <ul className="text-xs space-y-1 text-slate-700 list-disc list-inside">
-              <li>Maktab darvozasi oldidagi piyodalar o‘tish joyi (zebra) chiziqlari muntazam yangilansin.</li>
-              <li>Dars boshlanishi va tugash vaqtida ota-onalar va o‘qituvchilar navbatchilik patruli faollashtirilsin.</li>
-              <li>&quot;Uy–Maktab–Uy&quot; xavfsiz harakatlanish sxemasi barcha boshlang‘ich sinf kundaliklariga yopishtirilsin.</li>
-            </ul>
-          </div>
+          {(() => {
+            const cm = getCountermeasureByScore(totalScore);
+            return (
+              <div className="space-y-3 p-5 rounded-xl border border-slate-300 bg-slate-50 print:bg-white">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                  <div className="text-xs font-black uppercase text-slate-900 tracking-wider">
+                    2. SR4S Qarshi Chora-Tadbirlar Rejasi va Ekspert Xulosasi:
+                  </div>
+                  <span className="text-xs font-bold text-slate-800 font-mono">
+                    {cm.title} ({cm.riskLevel}) {cm.starIcon}
+                  </span>
+                </div>
+
+                <p className="text-xs text-slate-800 font-semibold italic leading-relaxed">
+                  &quot;{cm.planText}&quot;
+                </p>
+
+                <ol className="text-xs space-y-1.5 text-slate-800 list-decimal list-inside font-medium leading-relaxed">
+                  {cm.actionItems.map((item, idx) => (
+                    <li key={idx}>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ol>
+
+                {cm.riskFactors.length > 0 && totalScore < 75 && (
+                  <div className="pt-2 border-t border-slate-200 text-[11px] text-slate-600">
+                    <span className="font-bold text-slate-700">Aniqlangan asosiy risk omillari: </span>
+                    <span>{cm.riskFactors.join('; ')}</span>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
 
           {/* 6. Signatures and Verification Seal */}
           <div className="grid grid-cols-3 gap-6 pt-6 border-t-2 border-slate-900 items-end">

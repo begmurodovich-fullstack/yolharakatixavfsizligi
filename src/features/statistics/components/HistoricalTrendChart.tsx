@@ -41,9 +41,16 @@ export function HistoricalTrendChart({ trendData }: HistoricalTrendChartProps) {
           </div>
         </div>
 
-        <span className="text-[11px] font-mono text-teal-800 bg-teal-50 px-2.5 py-1 rounded-md border border-teal-200 w-fit">
-          +19 ball umumiy o‘sish
-        </span>
+        {trendData.length > 1 ? (
+          <span className="text-[11px] font-mono text-teal-800 bg-teal-50 px-2.5 py-1 rounded-md border border-teal-200 w-fit">
+            {trendData[trendData.length - 1].score - trendData[0].score >= 0 ? '+' : ''}
+            {trendData[trendData.length - 1].score - trendData[0].score} ball umumiy o‘sish
+          </span>
+        ) : trendData.length === 1 ? (
+          <span className="text-[11px] font-mono text-teal-800 bg-teal-50 px-2.5 py-1 rounded-md border border-teal-200 w-fit">
+            Joriy ko‘rsatkich: {trendData[0].score} ball
+          </span>
+        ) : null}
       </div>
 
       {mounted && (

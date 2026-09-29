@@ -1,17 +1,19 @@
-'use client';
-
 import React from 'react';
 import { CriterionScoreInfo } from './CriteriaOverview';
-import { Lightbulb, AlertCircle, CheckCircle2, ShieldAlert, ArrowUpRight } from 'lucide-react';
+import { Lightbulb, AlertCircle, CheckCircle2, ShieldAlert, ArrowUpRight, Wrench } from 'lucide-react';
 import Link from 'next/link';
+import { cn } from '@/lib/cn';
+import { getCountermeasureByScore } from '@/data/sr4sCountermeasures';
 
 interface RecommendationCardProps {
   criterionScores: CriterionScoreInfo[];
+  schoolScore?: number;
   hasMissingEvidence?: boolean;
 }
 
-export function RecommendationCard({ criterionScores, hasMissingEvidence }: RecommendationCardProps) {
+export function RecommendationCard({ criterionScores, schoolScore, hasMissingEvidence }: RecommendationCardProps) {
   const hasAnyAssessed = criterionScores.some((c) => c.earnedScore > 0);
+  const cm = schoolScore !== undefined ? getCountermeasureByScore(schoolScore) : null;
 
   const recommendations: Array<{
     id: string;
@@ -25,23 +27,13 @@ export function RecommendationCard({ criterionScores, hasMissingEvidence }: Reco
     recommendations.push({
       id: 'rec-start',
       title: 'Maktab yo‘l harakati xavfsizligi monitoringini boshlang',
-      description: 'Maktab atrofidagi piyodalar o‘tish joyi, yo‘l belgilari va trotuarlar holati bo‘yicha mezonlarga javob bering va foto-dalillarni yuklang.',
+      description: 'Maktab atrofidagi piyodalar o‘tish joyi, yo‘l belgilari va trotuarlar holati bo‘yicha 7 ta asosiy mezon parametrlariga javob bering.',
       severity: 'LOW',
       actionText: 'Baholashni boshlash',
     });
   } else {
     // Generate recommendations dynamically from weakest criteria
     const sortedAsc = [...criterionScores].sort((a, b) => a.percentage - b.percentage);
-
-    if (hasMissingEvidence) {
-      recommendations.push({
-        id: 'rec-evidence',
-        title: 'Majburiy foto-dalillarni to‘ldiring',
-        description: 'Ekspert tasdiqlashi uchun maktab darvozasi va piyodalar o‘tish joyining yangi fotosuratlarini yuklang.',
-        severity: 'HIGH',
-        actionText: 'Foto yuklash',
-      });
-    }
 
     // Iterate over weak criteria to generate recommendations
     sortedAsc.slice(0, 3).forEach((item) => {
@@ -92,6 +84,50 @@ export function RecommendationCard({ criterionScores, hasMissingEvidence }: Reco
           </div>
         </div>
       </div>
+
+      {/* Primary SR4S Countermeasure Proposal */}
+      {cm && (
+        <div className={cn('p-5 rounded-2xl border space-y-3.5', cm.borderClass, cm.bgClass)}>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-slate-200/70 pb-3">
+            <div className="flex items-center gap-2.5">
+              <span className="text-xl">{cm.starIcon}</span>
+              <div>
+                <h3 className="text-xs sm:text-sm font-extrabold text-slate-900">
+                  {cm.title}: {cm.riskLevel}
+                </h3>
+                <span className="text-[11px] text-slate-500">
+                  SR4S Metodologiyasi bo‘yicha majburiy qarshi chora-tadbirlar rejasi
+                </span>
+              </div>
+            </div>
+            <span className={cn('px-2.5 py-0.5 rounded-full text-[10px] font-bold border self-start sm:self-center', cm.badgeClass)}>
+              {cm.badgeLabel}
+            </span>
+          </div>
+
+          <p className="text-xs font-semibold text-slate-900 italic leading-relaxed">
+            &quot;{cm.planText}&quot;
+          </p>
+
+          <ol className="space-y-1.5 text-xs text-slate-800 font-medium">
+            {cm.actionItems.map((item, idx) => (
+              <li key={idx} className="flex items-start gap-2 leading-relaxed">
+                <span className="font-mono font-bold text-teal-800 bg-white px-1.5 py-0.2 rounded border border-slate-200 shrink-0 text-[11px]">
+                  {idx + 1}
+                </span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ol>
+
+          {cm.riskFactors.length > 0 && (schoolScore ?? 0) < 75 && (
+            <div className="pt-2 border-t border-slate-200/70 text-[11px] text-slate-700">
+              <span className="font-bold text-slate-900">Aniqlangan Infratuzilma Holati (Risk Omillari): </span>
+              <span>{cm.riskFactors.join(' ')}</span>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="space-y-3.5">
         {recommendations.map((rec) => {

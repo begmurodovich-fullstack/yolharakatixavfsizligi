@@ -22,7 +22,7 @@ export async function GET() {
     const rows = await query(sql);
     const row = rows[0] || {};
 
-    const totalSchools = Number(row.total_schools) || 10110;
+    const totalSchools = Number(row.total_schools) || 10193;
     const assessedCount = Number(row.assessed_count) || 0;
     const averageScore = Number(row.average_score) || 82;
     const safeCount = Number(row.safe_count) || 0;
@@ -50,7 +50,7 @@ export async function GET() {
     console.error('Statistics Summary API error:', error);
     // Fallback instant summary
     return NextResponse.json({
-      totalSchools: 10110,
+      totalSchools: 10193,
       averageScore: 82,
       safeCount: 146,
       moderateCount: 39,

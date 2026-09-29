@@ -245,6 +245,7 @@ export default function SchoolDashboardPage() {
       {/* 5. Recommendations Card */}
       <RecommendationCard
         criterionScores={criterionScores}
+        schoolScore={school.currentScore}
         hasMissingEvidence={hasMissingEvidence}
       />
 

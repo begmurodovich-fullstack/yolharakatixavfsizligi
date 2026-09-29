@@ -84,10 +84,10 @@ const STAR_COLORS: Record<number, { name: string; color: string; bg: string; tex
     label: 'Yuqori xavf (2★)',
   },
   1: {
-    name: '1 Yulduz (To‘q qizil)',
-    color: '#991b1b',
-    bg: 'bg-red-100 border-red-300',
-    text: 'text-red-900',
+    name: '1 Yulduz (Qora)',
+    color: '#000000',
+    bg: 'bg-zinc-100 border-zinc-400',
+    text: 'text-zinc-950',
     label: 'O‘ta xavfli (1★)',
   },
   0: {
@@ -261,7 +261,7 @@ export function RoadCategoryStarChart({ schools = [] }: RoadCategoryStarChartPro
               className={cn(
                 'p-3 sm:p-3.5 rounded-xl border transition-all flex items-center justify-between gap-3',
                 item.star === 1
-                  ? 'bg-red-50/80 border-red-200 text-red-950'
+                  ? 'bg-zinc-100/90 border-zinc-400 text-zinc-950'
                   : item.star === 0
                   ? 'bg-slate-50 border-slate-200 text-slate-800'
                   : 'bg-slate-50/70 border-slate-200'
@@ -284,7 +284,7 @@ export function RoadCategoryStarChart({ schools = [] }: RoadCategoryStarChartPro
                           item.star === 4 && 'text-orange-500',
                           item.star === 3 && 'text-amber-500',
                           item.star === 2 && 'text-red-500',
-                          item.star === 1 && 'text-red-700'
+                          item.star === 1 && 'text-zinc-950'
                         )}
                       />
                     ))
@@ -296,7 +296,7 @@ export function RoadCategoryStarChart({ schools = [] }: RoadCategoryStarChartPro
                 <span
                   className={cn(
                     'text-xs font-semibold truncate',
-                    item.star === 1 ? 'text-red-900' : 'text-slate-800'
+                    item.star === 1 ? 'text-zinc-950 font-bold' : 'text-slate-800'
                   )}
                 >
                   {item.label}
@@ -307,7 +307,7 @@ export function RoadCategoryStarChart({ schools = [] }: RoadCategoryStarChartPro
                 <span
                   className={cn(
                     'text-xs font-mono font-bold',
-                    item.star === 1 ? 'text-red-950' : 'text-slate-900'
+                    item.star === 1 ? 'text-zinc-950' : 'text-slate-900'
                   )}
                 >
                   {item.count} ta
@@ -316,7 +316,7 @@ export function RoadCategoryStarChart({ schools = [] }: RoadCategoryStarChartPro
                   className={cn(
                     'text-xs font-mono font-semibold px-2 py-0.5 rounded-md border',
                     item.star === 1
-                      ? 'bg-red-100 text-red-800 border-red-200'
+                      ? 'bg-black text-white border-black font-bold'
                       : item.star === 0
                       ? 'bg-slate-100 text-slate-600 border-slate-200'
                       : 'bg-white text-slate-700 border-slate-200'

@@ -151,14 +151,14 @@ export default function AdminSchoolsPage() {
             <SchoolIcon className="w-4 h-4 text-teal-600" />
             <span className="font-bold text-slate-800">Milliy Reyestr</span>
             <span>•</span>
-            <span>10 110 ta umumiy ta’lim muassasasi</span>
+            <span>10 193 ta umumiy ta’lim muassasasi</span>
           </div>
 
           <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
             Respublika Maktablar Reyestri
           </h1>
           <p className="text-xs text-slate-500 max-w-2xl leading-relaxed">
-            O‘zbekistondagi barcha 10 110 ta maktabning yo‘l xavfsizligi holati, hisoblar xavfsizligi va geolokatsiya statuslarini markazlashtirilgan boshqarish.
+            O‘zbekistondagi barcha 10 193 ta maktabning yo‘l xavfsizligi holati, hisoblar xavfsizligi va geolokatsiya statuslarini markazlashtirilgan boshqarish.
           </p>
         </div>
       </div>

@@ -40,7 +40,7 @@ export function CriteriaRadarChart({ criterionScores }: CriteriaRadarChartProps)
           </div>
           <div>
             <h3 className="text-sm font-bold text-slate-900">
-              {criterionScores.length > 0 ? `${criterionScores.length} Mezon` : 'Mezonlar'} Bo‘yicha Ko‘p Qirrali Profil (Radar)
+              {criterionScores.length > 0 ? `${criterionScores.length} ta Asosiy Mezon` : '7 ta Asosiy Mezon'} Bo‘yicha Ko‘p Qirrali Profil (Radar)
             </h3>
             <p className="text-[11px] text-slate-500">
               Maktab natijasi va davlat standarti (&ge;80%) taqqoslanishi

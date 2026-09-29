@@ -134,7 +134,7 @@ export default function AloqaPage() {
                       Texnik Qo‘llab-quvvatlash
                     </CardTitle>
                     <p className="text-xs text-slate-500">
-                      Tizimga kirish, parollar va foto-dalillarni yuklash
+                      Tizimga kirish, parollar va platforma monitoringi
                     </p>
                   </div>
                 </div>

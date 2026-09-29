@@ -294,7 +294,7 @@ export function MapPreviewSection() {
 
           <Link href="/map">
             <Button size="lg" className="bg-teal-600 hover:bg-teal-500 text-white font-bold gap-2 text-xs rounded-2xl h-12 px-7 shadow-lg shadow-teal-900/30">
-              <span>Barcha 10 110 ta maktabni to‘liq xaritada ochish</span>
+              <span>Barcha 10 193 ta maktabni to‘liq xaritada ochish</span>
               <ArrowRight className="w-4 h-4 text-teal-200" />
             </Button>
           </Link>

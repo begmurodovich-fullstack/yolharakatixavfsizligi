@@ -76,7 +76,7 @@ export function getStarRating(score: number): {
       stars: 1,
       label: '1 Yulduz (O‘ta Xavfli)',
       shortLabel: '1★ O‘ta Xavfli',
-      badgeClass: 'bg-slate-900 text-amber-300 border-slate-800 shadow-2xs',
+      badgeClass: 'bg-black text-amber-300 border-zinc-900 shadow-2xs',
       starIcons: '⭐️',
       description: 'Shoshilinch chora zarur',
     };
@@ -127,7 +127,7 @@ export function getStarRating(score: number): {
     stars: 1,
     label: '1 Yulduz (O‘ta Xavfli)',
     shortLabel: '1★ O‘ta Xavfli',
-    badgeClass: 'bg-slate-900 text-amber-300 border-slate-800 shadow-2xs',
+    badgeClass: 'bg-black text-amber-300 border-zinc-900 shadow-2xs',
     starIcons: '⭐️',
     description: 'Shoshilinch chora zarur',
   };

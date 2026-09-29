@@ -64,6 +64,26 @@ export default function AdminReportsPage() {
     });
   }, [regions]);
 
+  const selectedRegion = useMemo(
+    () => uniqueRegions.find((r) => r.id === selectedRegionId),
+    [uniqueRegions, selectedRegionId]
+  );
+  const selectedRegionNormName = useMemo(
+    () => (selectedRegion?.name || '').trim().toLowerCase().replace(/['`ʻ’‘]/g, "'"),
+    [selectedRegion]
+  );
+
+  const displayedSchools = useMemo(() => {
+    if (selectedRegionId === 'ALL') return schools;
+    return schools.filter((s) => {
+      if (s.regionId === selectedRegionId) return true;
+      if (selectedRegionNormName && s.regionName) {
+        return (s.regionName || '').trim().toLowerCase().replace(/['`ʻ’‘]/g, "'") === selectedRegionNormName;
+      }
+      return false;
+    });
+  }, [schools, selectedRegionId, selectedRegionNormName]);
+
   // Export to CSV simulation
   const handleExportCSV = () => {
     let headers: string[] = [];
@@ -71,11 +91,11 @@ export default function AdminReportsPage() {
     let filename = `maktablar-xavfsizlik-hisoboti-${new Date().toISOString().slice(0, 10)}.csv`;
 
     if (reportType === 'FULL_SCHOOLS') {
-      headers = ['ID', 'Maktab nomi', 'Viloyat', 'Tuman', 'Direktor', 'Oquvchilar', 'Ball', 'Holat', 'Geolokatsiya'];
-      rows = schools
-        .filter((s) => selectedRegionId === 'ALL' || s.regionId === selectedRegionId)
+      headers = ['ID', 'Maktab raqami', 'Maktab nomi', 'Viloyat', 'Tuman', 'Direktor', 'Oquvchilar', 'Ball', 'Holat', 'Geolokatsiya'];
+      rows = displayedSchools
         .map((s) => [
           s.id,
+          `"${s.schoolNumber || ''}"`,
           `"${s.name}"`,
           `"${s.regionName}"`,
           `"${s.districtName}"`,
@@ -88,7 +108,11 @@ export default function AdminReportsPage() {
     } else if (reportType === 'REGIONAL_INDEX') {
       headers = ['Viloyat', 'Maktablar soni', 'Ortacha ball', 'Yashil maktablar', 'Sariq maktablar', 'Qizil maktablar'];
       rows = uniqueRegions.map((r) => {
-        const regSchools = schools.filter((s) => s.regionId === r.id);
+        const normName = (r.name || '').trim().toLowerCase().replace(/['`ʻ’‘]/g, "'");
+        const regSchools = schools.filter((s) => 
+          s.regionId === r.id || 
+          (s.regionName && (s.regionName || '').trim().toLowerCase().replace(/['`ʻ’‘]/g, "'") === normName)
+        );
         const avg = regSchools.length > 0 ? Math.round(regSchools.reduce((a, b) => a + b.currentScore, 0) / regSchools.length) : 0;
         const green = regSchools.filter((s) => s.currentScore >= 80).length;
         const yellow = regSchools.filter((s) => s.currentScore >= 50 && s.currentScore < 80).length;
@@ -99,7 +123,7 @@ export default function AdminReportsPage() {
     } else {
       headers = ['Mezon ID', 'Mezon nomi', 'Savollar soni', 'Maksimal ball', 'Respublika ortacha bajarilishi'];
       rows = criteria.map((c) => [c.id, `"${c.title}"`, '2-3', '10-15 ball', '76%']);
-      filename = `mezonlar-xulosasi-${new Date().toISOString().slice(0, 10)}.csv`;
+      filename = `7-mezon-xulosasi-${new Date().toISOString().slice(0, 10)}.csv`;
     }
 
     const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map((e) => e.join(','))].join('\n');
@@ -127,10 +151,6 @@ export default function AdminReportsPage() {
       </div>
     );
   }
-
-  const displayedSchools = schools.filter(
-    (s) => selectedRegionId === 'ALL' || s.regionId === selectedRegionId
-  );
 
   return (
     <div className="space-y-6 pb-16">
@@ -229,11 +249,11 @@ export default function AdminReportsPage() {
             }`}
           >
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-900">3. SR4S Mezonlari Bo‘yicha Xulosa</span>
+              <span className="text-xs font-bold text-slate-900">3. 7 Mezon Bo‘yicha Xulosa</span>
               {reportType === 'CRITERIA_SUMMARY' && <CheckCircle2 className="w-4 h-4 text-teal-600" />}
             </div>
             <p className="text-[11px] text-slate-500">
-              Piyodalar yo‘li, yo‘l belgilari, tezlik cheklovlari tahlili
+              7 ta yo‘l xavfsizligi yo‘nalishi bo‘yicha davlat standartlari tahlili
             </p>
           </button>
         </div>
@@ -291,7 +311,16 @@ export default function AdminReportsPage() {
               <tbody className="divide-y divide-slate-100">
                 {displayedSchools.slice(0, 15).map((s) => (
                   <tr key={s.id} className="hover:bg-slate-50/70">
-                    <td className="py-3 px-5 font-bold text-slate-900">{s.name}</td>
+                    <td className="py-3 px-5 font-bold text-slate-900">
+                      <div className="flex items-center gap-1.5">
+                        <span>{s.name}</span>
+                        {s.schoolNumber && (
+                          <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 text-slate-700 border border-slate-200">
+                            № {s.schoolNumber}
+                          </span>
+                        )}
+                      </div>
+                    </td>
                     <td className="py-3 px-5 text-slate-600">{s.districtName}, {s.regionName}</td>
                     <td className="py-3 px-5 text-slate-700">{s.directorName}</td>
                     <td className="py-3 px-5 text-right font-mono font-black">{s.currentScore}</td>
@@ -321,7 +350,11 @@ export default function AdminReportsPage() {
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {uniqueRegions.map((r) => {
-                  const regSchools = schools.filter((s) => s.regionId === r.id);
+                  const normName = (r.name || '').trim().toLowerCase().replace(/['`ʻ’‘]/g, "'");
+                  const regSchools = schools.filter((s) => 
+                    s.regionId === r.id || 
+                    (s.regionName && (s.regionName || '').trim().toLowerCase().replace(/['`ʻ’‘]/g, "'") === normName)
+                  );
                   const avg = regSchools.length > 0 ? Math.round(regSchools.reduce((a, b) => a + b.currentScore, 0) / regSchools.length) : 0;
                   const green = regSchools.filter((s) => s.currentScore >= 80).length;
                   const yellow = regSchools.filter((s) => s.currentScore >= 50 && s.currentScore < 80).length;

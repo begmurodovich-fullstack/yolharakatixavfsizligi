@@ -26,6 +26,7 @@ import {
   HistoricalTrendChart,
   CriteriaPerformanceGrid,
   ActionPlan,
+  CountermeasuresMatrixCard,
 } from '@/features/statistics/components';
 
 import { StrongWeakCriteria, CriterionScoreInfo } from '@/features/dashboard/components';
@@ -246,8 +247,13 @@ export default function SchoolStatisticsPage() {
       {/* 7. Strong and Focus Criteria Cards */}
       <StrongWeakCriteria criterionScores={criterionScores} />
 
-      {/* 8. Action Plan */}
-      <ActionPlan criterionScores={criterionScores} />
+      {/* 8. Countermeasures Matrix & Action Plan */}
+      <CountermeasuresMatrixCard schoolScore={school.currentScore} />
+
+      <ActionPlan
+        criterionScores={criterionScores}
+        schoolScore={school.currentScore}
+      />
     </div>
   );
 }

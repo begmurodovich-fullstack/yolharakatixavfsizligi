@@ -19,7 +19,7 @@ export default function HomePage() {
       {/* 1. Hero Section: Asosiy Ta’rif va Real Xarita */}
       <HeroSection />
 
-      {/* 2. Executive KPI Metrics: 10 110+ Maktab, 2.4M O‘quvchi, SR4S Standarti */}
+      {/* 2. Executive KPI Metrics: 10 193+ Maktab, 6.8M O‘quvchi, SR4S Standarti */}
       <MetricsStrip />
 
       {/* 3. Workflow: 5 Bosqichli Baholash Jarayoni */}

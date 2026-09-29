@@ -42,14 +42,14 @@ export function MetricsStrip() {
   useEffect(() => {
     statisticsService.getNationalSummary().then((s) => setStats(s)).catch(() => {});
     schoolService.getRegions().then((r) => setRegionCount(r.length)).catch(() => {});
-    schoolService.getDistricts().then((d) => setDistrictCount(d.length)).catch(() => {});
+    schoolService.getDistricts().then((d) => setDistrictCount(d.length > 0 ? d.length : 208)).catch(() => {});
   }, []);
 
-  const totalSchools = stats?.totalSchools || 10110;
+  const totalSchools = stats?.totalSchools && stats.totalSchools >= 10000 ? stats.totalSchools : 10193;
   const animatedSchools = useCountUp(totalSchools, 1600);
-  const animatedDistricts = useCountUp(districtCount, 1200);
-  const animatedRegions = useCountUp(regionCount, 1000);
-  const animatedStudents = useCountUp(2400, 1800); // 2.4 million in thousands
+  const animatedDistricts = useCountUp(districtCount > 0 ? districtCount : 208, 1200);
+  const animatedRegions = useCountUp(regionCount > 0 ? regionCount : 14, 1000);
+  const animatedStudents = useCountUp(6776, 1800); // 6.78 million (Statistika agentligi rasmiy: 6 776.3 ming nafar)
 
   return (
     <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 -mt-6 mb-16 relative z-10">
@@ -122,7 +122,7 @@ export function MetricsStrip() {
               O‘quvchi xavfsizligi nazorati
             </div>
             <div className="text-[11px] text-slate-500 mt-0.5">
-              Maktabga borish-kelish yo‘nalishlarida
+              Maktabga borish-kelish yo‘nalishlarida (6.8 mln o‘quvchi)
             </div>
           </div>
 
@@ -164,7 +164,7 @@ export function MetricsStrip() {
               Tuman va shaharlar
             </div>
             <div className="text-[11px] text-slate-500 mt-0.5">
-              To‘liq integratsiyalangan boshqaruv
+              To‘liq integratsiyalangan boshqaruv (208 ta hudud)
             </div>
           </div>
         </div>
@@ -187,15 +187,15 @@ export function MetricsStrip() {
             </div>
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#fff200]/20 border border-[#f39c12]/40 text-[#9a6300] font-bold">
               <span>3★</span>
-              <span className="text-[11px] font-medium">O‘rtacha (50-74)</span>
+              <span className="text-[11px] font-medium">O‘rtacha (60-74)</span>
             </div>
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#f15a24]/10 border border-[#f15a24]/30 text-[#c0392b] font-bold">
               <span>2★</span>
-              <span className="text-[11px] font-medium">Xavfli (25-49)</span>
+              <span className="text-[11px] font-medium">Xavfli (35-59)</span>
             </div>
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#231f20]/10 border border-[#231f20]/30 text-[#231f20] font-bold col-span-2 sm:col-span-1">
               <span>1★</span>
-              <span className="text-[11px] font-medium">O‘ta Xavfli (0-24)</span>
+              <span className="text-[11px] font-medium">O‘ta Xavfli (0-34)</span>
             </div>
           </div>
         </div>
