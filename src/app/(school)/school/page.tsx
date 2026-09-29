@@ -103,6 +103,11 @@ export default function SchoolDashboardPage() {
         : null;
       setAssessment(activeAssessment);
 
+      if (activeAssessment && activeAssessment.score !== undefined && activeAssessment.score > 0) {
+        resolvedSchool.currentScore = activeAssessment.score;
+        setSchool({ ...resolvedSchool });
+      }
+
       // 5. Load ranking overview for active period
       const rankOverview = await rankingService.getSchoolRankingOverview(
         resolvedSchool.id,
@@ -224,7 +229,7 @@ export default function SchoolDashboardPage() {
         <div className="lg:col-span-5 flex flex-col">
           <AssessmentProgressCard
             assessment={assessment}
-            totalQuestions={questions.length}
+            totalQuestions={40}
           />
         </div>
       </div>

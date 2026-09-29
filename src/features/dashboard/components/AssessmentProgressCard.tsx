@@ -18,11 +18,12 @@ interface AssessmentProgressCardProps {
   totalQuestions: number;
 }
 
-export function AssessmentProgressCard({ assessment, totalQuestions }: AssessmentProgressCardProps) {
-  const questionsCount = totalQuestions > 0 ? totalQuestions : 40;
-  const answersCount = assessment ? Object.keys(assessment.answers || {}).length : 0;
-  const unansweredCount = Math.max(0, questionsCount - answersCount);
-  const completionPercentage = questionsCount > 0 ? Math.round((answersCount / questionsCount) * 100) : 0;
+export function AssessmentProgressCard({ assessment }: AssessmentProgressCardProps) {
+  const totalParams = 40;
+  const rawAnswersCount = assessment ? Object.keys(assessment.answers || {}).length : 0;
+  const answersCount = Math.min(totalParams, rawAnswersCount);
+  const unansweredCount = Math.max(0, totalParams - answersCount);
+  const completionPercentage = Math.min(100, Math.round((answersCount / totalParams) * 100));
 
   const isVerified = assessment?.status === AssessmentStatus.VERIFIED;
 
