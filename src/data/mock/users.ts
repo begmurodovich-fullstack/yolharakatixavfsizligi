@@ -38,6 +38,16 @@ export const MOCK_USERS: User[] = [
     updatedAt: '2026-01-20T11:30:00Z',
   },
   {
+    id: 'usr-admin-yhxx',
+    email: 'admin@yhxx.uz',
+    name: 'YHXX Administratori',
+    role: UserRole.ADMIN,
+    isActive: true,
+    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
+    createdAt: '2025-01-01T09:00:00Z',
+    updatedAt: '2026-03-01T11:30:00Z',
+  },
+  {
     id: 'usr-super-admin',
     email: 'superadmin@monitoring.uz',
     name: 'Bosh Administrator',

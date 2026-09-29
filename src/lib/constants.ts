@@ -45,6 +45,13 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
     },
   },
   {
+    label: 'YHXX Administratori',
+    email: 'admin@yhxx.uz',
+    passwordHint: 'Admin@1234',
+    role: UserRole.ADMIN,
+    description: 'Yo‘l harakati xavfsizligi xizmati respublika administratori',
+  },
+  {
     label: 'Hududiy Inspektor (Admin)',
     email: 'admin@monitoring.uz',
     passwordHint: 'Admin@1234',
