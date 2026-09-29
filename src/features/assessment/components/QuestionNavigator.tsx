@@ -1,14 +1,13 @@
 'use client';
 
 import React from 'react';
-import { Question, AssessmentAnswer, Evidence, EvidenceStatus } from '@/types';
-import { Check, AlertTriangle, HelpCircle } from 'lucide-react';
+import { Question, AssessmentAnswer } from '@/types';
+import { Check } from 'lucide-react';
 import { cn } from '@/lib/cn';
 
 interface QuestionNavigatorProps {
   questions: Question[];
   answers: Record<string, AssessmentAnswer>;
-  evidenceList: Evidence[];
   currentIndex: number;
   onSelectQuestion: (index: number) => void;
 }
@@ -16,20 +15,16 @@ interface QuestionNavigatorProps {
 export function QuestionNavigator({
   questions,
   answers,
-  evidenceList,
   currentIndex,
   onSelectQuestion,
 }: QuestionNavigatorProps) {
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs">
       <div className="flex items-center justify-between text-xs font-semibold text-slate-700 mb-2.5 px-1">
-        <span>Savollar ro‘yxati ({questions.length} ta)</span>
+        <span>Savollar ro&apos;yxati ({questions.length} ta)</span>
         <div className="flex items-center gap-3 text-[11px] font-normal text-slate-500 hidden sm:flex">
           <span className="flex items-center gap-1">
-            <span className="h-2 w-2 rounded-full bg-emerald-500" /> To‘ldirilgan
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="h-2 w-2 rounded-full bg-amber-500" /> Foto kerak
+            <span className="h-2 w-2 rounded-full bg-emerald-500" /> To&apos;ldirilgan
           </span>
           <span className="flex items-center gap-1">
             <span className="h-2 w-2 rounded-full bg-slate-300" /> Javobsiz
@@ -43,15 +38,6 @@ export function QuestionNavigator({
           const isCurrent = idx === currentIndex;
           const ans = answers[q.id];
           const isAnswered = !!ans?.selectedOptionId;
-
-          // Check evidence for this question
-          const qEvidence = evidenceList.filter((e) => e.questionId === q.id);
-          const hasRejected = qEvidence.some((e) => e.status === EvidenceStatus.REJECTED);
-          const hasValidEvidence = qEvidence.some(
-            (e) => e.status === EvidenceStatus.APPROVED || e.status === EvidenceStatus.PENDING
-          );
-
-          const isMissingEvidence = q.requiresEvidence && (!hasValidEvidence || hasRejected);
 
           let stateClasses = 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300';
           let statusIcon = null;

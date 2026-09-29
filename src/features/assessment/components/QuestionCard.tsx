@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Question, Criterion, AssessmentAnswer, QuestionOption } from '@/types';
-import { Camera, Check, Award } from 'lucide-react';
+import { Check, Award } from 'lucide-react';
 import { cn } from '@/lib/cn';
 
 interface QuestionCardProps {
@@ -104,13 +104,6 @@ export function QuestionCard({
                 )}
               </div>
             )}
-          </div>
-        )}
-
-        {question.requiresEvidence && (
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-xs font-medium">
-            <Camera className="w-3.5 h-3.5 text-slate-500" />
-            <span>Foto-dalil biriktirish (ixtiyoriy)</span>
           </div>
         )}
       </div>

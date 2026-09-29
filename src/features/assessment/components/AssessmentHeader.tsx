@@ -8,10 +8,8 @@ import { ScoreStatusBadge } from '@/components/ui/status-badge';
 import {
   ClipboardCheck,
   Calendar,
-  Camera,
   School as SchoolIcon,
   ChevronLeft,
-  ShieldCheck,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -20,8 +18,6 @@ interface AssessmentHeaderProps {
   currentPeriod: AssessmentPeriod | null;
   answeredCount: number;
   totalQuestions: number;
-  uploadedEvidenceCount: number;
-  requiredEvidenceCount: number;
   currentScore: number;
 }
 
@@ -30,8 +26,6 @@ export function AssessmentHeader({
   currentPeriod,
   answeredCount,
   totalQuestions,
-  uploadedEvidenceCount,
-  requiredEvidenceCount,
   currentScore,
 }: AssessmentHeaderProps) {
   const percentage = totalQuestions > 0 ? Math.round((answeredCount / totalQuestions) * 100) : 0;
@@ -99,16 +93,6 @@ export function AssessmentHeader({
                 {answeredCount} / {totalQuestions}
               </div>
               <div className="text-[10px] text-slate-400">Javoblangan</div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Camera className="w-4 h-4 text-teal-600 shrink-0" />
-            <div>
-              <div className="font-bold text-slate-900 font-mono">
-                {uploadedEvidenceCount} / {requiredEvidenceCount}
-              </div>
-              <div className="text-[10px] text-slate-400">Foto-dalillar</div>
             </div>
           </div>
         </div>

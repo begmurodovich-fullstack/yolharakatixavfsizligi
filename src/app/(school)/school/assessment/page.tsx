@@ -285,6 +285,7 @@ export default function SchoolAssessmentPage() {
     try {
       const submitted = await assessmentService.submitAssessment(school.id, answers, user);
       setAssessment(submitted);
+      setSchool(prev => prev ? { ...prev, currentScore: submitted.score } : prev);
       setIsReviewOpen(false);
       setIsSubmittedSuccess(true);
       success('Monitoring baholashi muvaffaqiyatli topshirildi!', 'Qabul qilindi');
@@ -357,8 +358,6 @@ export default function SchoolAssessmentPage() {
         currentPeriod={currentPeriod}
         answeredCount={answeredCount}
         totalQuestions={questions.length}
-        uploadedEvidenceCount={uploadedEvidenceCount}
-        requiredEvidenceCount={requiredEvidenceCount}
         currentScore={calculatedScore}
       />
 
@@ -366,7 +365,6 @@ export default function SchoolAssessmentPage() {
       <QuestionNavigator
         questions={questions}
         answers={answers}
-        evidenceList={evidenceList}
         currentIndex={currentIndex}
         onSelectQuestion={(idx) => setCurrentIndex(idx)}
       />
@@ -382,15 +380,6 @@ export default function SchoolAssessmentPage() {
           totalQuestions={questions.length}
           currentAnswer={answers[currentQuestion.id]}
           onSelectOption={handleSelectOption}
-        />
-      )}
-
-      {/* 4. Evidence Upload Section if required */}
-      {currentQuestion?.requiresEvidence && (
-        <EvidenceUploader
-          questionId={currentQuestion.id}
-          evidenceList={evidenceList}
-          onUploadEvidence={handleUploadEvidence}
         />
       )}
 
@@ -411,10 +400,7 @@ export default function SchoolAssessmentPage() {
         isSubmitting={isSubmitting}
         totalQuestions={questions.length}
         answeredCount={answeredCount}
-        requiredEvidenceCount={requiredEvidenceCount}
-        uploadedEvidenceCount={uploadedEvidenceCount}
         calculatedScore={calculatedScore}
-        missingEvidenceQuestions={missingEvidenceQuestions}
         unansweredQuestions={unansweredQuestions}
       />
     </div>

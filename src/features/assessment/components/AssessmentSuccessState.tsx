@@ -8,10 +8,8 @@ import { Button } from '@/components/ui/button';
 import {
   CheckCircle2,
   Calendar,
-  Camera,
   ShieldCheck,
   LayoutDashboard,
-  RotateCcw,
   FileCheck2,
 } from 'lucide-react';
 
@@ -87,13 +85,6 @@ export function AssessmentSuccessState({
           </div>
         </div>
 
-        <div className="space-y-1">
-          <span className="text-slate-500">Yuklangan foto-dalillar:</span>
-          <div className="font-bold text-slate-900 flex items-center gap-1.5">
-            <Camera className="w-3.5 h-3.5 text-teal-600" />
-            <span>{assessment.evidence?.length || 4} ta rasm tasdiqlash uchun tayyor</span>
-          </div>
-        </div>
       </div>
 
       {/* Actions */}

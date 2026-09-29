@@ -7,7 +7,6 @@ import { ScoreStatusBadge } from '@/components/ui/status-badge';
 import { Progress } from '@/components/ui/progress';
 import {
   ClipboardCheck,
-  Camera,
   AlertTriangle,
   CheckCircle2,
   Send,
@@ -22,10 +21,7 @@ interface AssessmentReviewDialogProps {
   isSubmitting: boolean;
   totalQuestions: number;
   answeredCount: number;
-  requiredEvidenceCount: number;
-  uploadedEvidenceCount: number;
   calculatedScore: number;
-  missingEvidenceQuestions: number[];
   unansweredQuestions: number[];
 }
 
@@ -36,14 +32,10 @@ export function AssessmentReviewDialog({
   isSubmitting,
   totalQuestions,
   answeredCount,
-  requiredEvidenceCount,
-  uploadedEvidenceCount,
   calculatedScore,
-  missingEvidenceQuestions,
   unansweredQuestions,
 }: AssessmentReviewDialogProps) {
   const isAllAnswered = answeredCount >= totalQuestions;
-  const isAllEvidenceUploaded = uploadedEvidenceCount >= requiredEvidenceCount;
   const canSubmit = isAllAnswered;
 
   return (
@@ -73,7 +65,7 @@ export function AssessmentReviewDialog({
         </div>
 
         {/* Readiness Checklist */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+        <div className="grid grid-cols-1 gap-3 text-xs">
           {/* Questions Check */}
           <div
             className={`p-3.5 rounded-xl border flex items-center justify-between ${
@@ -94,27 +86,6 @@ export function AssessmentReviewDialog({
               {answeredCount} / {totalQuestions}
             </span>
           </div>
-
-          {/* Evidence Check */}
-          <div
-            className={`p-3.5 rounded-xl border flex items-center justify-between ${
-              isAllEvidenceUploaded
-                ? 'border-emerald-200 bg-emerald-50 text-emerald-950'
-                : 'border-amber-200 bg-amber-50 text-amber-950'
-            }`}
-          >
-            <div className="flex items-center gap-2">
-              {isAllEvidenceUploaded ? (
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              ) : (
-                <Camera className="w-4 h-4 text-amber-600 shrink-0" />
-              )}
-              <span className="font-semibold">Foto-dalillar:</span>
-            </div>
-            <span className="font-mono font-bold">
-              {uploadedEvidenceCount} / {requiredEvidenceCount}
-            </span>
-          </div>
         </div>
 
         {/* Incomplete Warning Message if any */}
@@ -129,11 +100,6 @@ export function AssessmentReviewDialog({
               {!isAllAnswered && (
                 <li>
                   {totalQuestions - answeredCount} ta savol javobsiz qolgan (Savollar: #{unansweredQuestions.slice(0, 5).join(', ')})
-                </li>
-              )}
-              {!isAllEvidenceUploaded && (
-                <li>
-                  {requiredEvidenceCount - uploadedEvidenceCount} ta majburiy foto-dalil yuklanmagan (Savollar: #{missingEvidenceQuestions.slice(0, 5).join(', ')})
                 </li>
               )}
             </ul>
