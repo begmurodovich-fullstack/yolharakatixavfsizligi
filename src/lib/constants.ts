@@ -7,7 +7,7 @@ export const APP_CONFIG = {
   version: '1.0.0-pilot',
   academicYear: '2025-2026',
   supportEmail: 'dinarasayfiyeva@gmail.com',
-  supportPhone: '+998 97 851 80 78',
+  supportPhone: '+998 70 518 70 88',
   telegramBotUsername: process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME || 'yolharakatixavfsizligi_bot',
   telegramBotToken: process.env.TELEGRAM_BOT_TOKEN || '8674118429:AAGnRU8AArMUsZYYQIOMx3eF8GUkxhSmpkk',
   telegramAdminChatId: process.env.TELEGRAM_ADMIN_CHAT_ID || '-1004479328930',

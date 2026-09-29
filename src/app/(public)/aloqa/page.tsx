@@ -290,7 +290,7 @@ export default function AloqaPage() {
                           required
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
-                          placeholder="+998 (97) 851-80-78"
+                          placeholder="+998 70 518 70 88"
                           className="bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 text-xs sm:text-sm rounded-xl"
                         />
                       </div>
