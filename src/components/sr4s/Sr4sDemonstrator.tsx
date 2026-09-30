@@ -183,7 +183,7 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
     return calculateIrapSr4s(attributes);
   }, [attributes]);
 
-  const { decimalScore, starLevel, srsScore, ctsAlong, ctsCrossing, starCount } = irapResult;
+  const { decimalScore, starLevel, srsScore, ctsAlong, ctsCrossing, starCount, crossingMain, crossingSide } = irapResult;
 
   const handleSelectOption = (attrId: string, optionId: string) => {
     if (isLocked) {
@@ -691,24 +691,31 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
               </span>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 text-[11px]">
-              <div className="p-2 rounded-lg bg-slate-50 border border-slate-100">
-                <div className="text-slate-500 flex items-center gap-1">
-                  <ArrowRightLeft className="w-3 h-3 text-slate-400" />
-                  <span>Bo‘ylama (Along)</span>
+            <div className="grid grid-cols-3 gap-1.5 text-[10px]">
+              <div className="p-1.5 rounded-lg bg-slate-50 border border-slate-100 flex flex-col justify-between">
+                <div className="text-slate-500 font-medium truncate" title="Along (Bo‘ylama harakat)">
+                  Bo‘ylama (Along)
                 </div>
                 <div className="font-bold text-slate-800 mt-0.5 font-mono text-xs">
-                  CTS: {ctsAlong}
+                  {ctsAlong}
                 </div>
               </div>
 
-              <div className="p-2 rounded-lg bg-slate-50 border border-slate-100">
-                <div className="text-slate-500 flex items-center gap-1">
-                  <ArrowRightLeft className="w-3 h-3 text-slate-400 rotate-90" />
-                  <span>Kesib o‘tish (Crossing)</span>
+              <div className="p-1.5 rounded-lg bg-slate-50 border border-slate-100 flex flex-col justify-between">
+                <div className="text-slate-500 font-medium truncate" title="Crossing Main Road (Asosiy yo‘lni kesish)">
+                  Asosiy yo‘l (Main)
                 </div>
                 <div className="font-bold text-slate-800 mt-0.5 font-mono text-xs">
-                  CTS: {ctsCrossing}
+                  {crossingMain ?? +(ctsCrossing - (crossingSide || 0)).toFixed(1)}
+                </div>
+              </div>
+
+              <div className="p-1.5 rounded-lg bg-slate-50 border border-slate-100 flex flex-col justify-between">
+                <div className="text-slate-500 font-medium truncate" title="Crossing Side Road (Yon yo‘lni kesish)">
+                  Yon yo‘l (Side)
+                </div>
+                <div className="font-bold text-slate-800 mt-0.5 font-mono text-xs">
+                  {crossingSide ?? 0.0}
                 </div>
               </div>
             </div>

@@ -183,6 +183,20 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
   let hgvFactor = 1.0;
   let motoFactor = 1.0;
 
+  // Side Road tekshiruvi: Agar chorraha bo'lmasa yoki yon yo'l mavjud bo'lmasa, Crossing Side Road = 0.0
+  const hasNoSideRoad =
+    valMap['intersection_type'] === 'no_intersection' ||
+    valMap['intersection_type'] === '8' ||
+    valMap['intersection_type'] === 'none' ||
+    valMap['intersection_type'] === 'not_applicable' ||
+    valMap['crossing_side_road'] === 'none' ||
+    valMap['crossing_side_road'] === 'not_present' ||
+    valMap['intersection_side_flow'] === '0';
+
+  if (hasNoSideRoad) {
+    crossingSide = 0.0;
+  }
+
   // Trotuarlar (Chap va O'ng) ta'siri: ikkala tomonning o'rtachasi olinadi
   const swLeftFactor = SR4S_DIRECT_OPTION_FACTORS['sidewalk_left']?.[valMap['sidewalk_left']]?.alongFactor ?? 1.0;
   const swRightFactor = SR4S_DIRECT_OPTION_FACTORS['sidewalk_right']?.[valMap['sidewalk_right']]?.alongFactor ?? 1.0;
@@ -219,7 +233,9 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
     if (factor) {
       along *= Math.max(0.05, factor.alongFactor);
       crossingMain *= Math.max(0.05, factor.crossingMainFactor);
-      crossingSide *= Math.max(0.05, factor.crossingSideFactor);
+      if (!hasNoSideRoad) {
+        crossingSide *= Math.max(0.05, factor.crossingSideFactor);
+      }
 
       if (attr.id === 'vehicle_parking') parkingFactor = factor.crossingMainFactor;
       if (attr.id === 'curve_type') curveFactor = factor.alongFactor;
@@ -228,14 +244,14 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
     }
   });
 
-  // Harakat tezligi (Operating Speed) ta'siri
+  // Harakat tezligi (Operating Speed) ta'siri - Rasmiy iRAP v3.10 kalibrovkasi
   const speed = parseFloat(valMap['operating_speed'] || valMap['speed_limit'] || '40') || 40;
 
   if (speed <= 30) {
     speedFactor = 0.6;
     along *= 0.6;
     crossingMain *= 0.6;
-    crossingSide *= 0.6;
+    if (!hasNoSideRoad) crossingSide *= 0.6;
   } else if (speed <= 40) {
     speedFactor = 1.0;
     // 40 km/soatda faktor = 1.0
@@ -243,32 +259,32 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
     speedFactor = 1.25;
     along *= 1.25;
     crossingMain *= 1.25;
-    crossingSide *= 1.25;
+    if (!hasNoSideRoad) crossingSide *= 1.25;
   } else if (speed <= 50) {
     speedFactor = 1.60;
-    along *= 1.60;
-    crossingMain *= 1.60;
-    crossingSide *= 1.60;
+    along *= 1.40;
+    crossingMain *= 1.80;
+    if (!hasNoSideRoad) crossingSide *= 1.60;
   } else if (speed <= 60) {
     speedFactor = 2.50;
     along *= 2.50;
     crossingMain *= 2.80;
-    crossingSide *= 2.50;
+    if (!hasNoSideRoad) crossingSide *= 2.50;
   } else if (speed <= 70) {
     speedFactor = 3.80;
     along *= 3.80;
     crossingMain *= 4.50;
-    crossingSide *= 3.80;
+    if (!hasNoSideRoad) crossingSide *= 3.80;
   } else {
     // 80+ km/h
     speedFactor = 5.20;
     along *= 5.20;
     crossingMain *= 6.20;
-    crossingSide *= 5.20;
+    if (!hasNoSideRoad) crossingSide *= 5.20;
   }
 
   // Jami SRS (Xavf balli)
-  const srsScore = +(along + crossingMain + crossingSide).toFixed(1);
+  const srsScore = +(along + crossingMain + (hasNoSideRoad ? 0 : crossingSide)).toFixed(1);
 
   // Yulduz reytingini hisoblash (1.0 dan 5.0 gacha)
   const calculatedStar = srsToDecimalStar(srsScore);
