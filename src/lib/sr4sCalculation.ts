@@ -314,33 +314,29 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
     along *= 0.6;
     crossingMain *= 0.6;
     if (!hasNoSideRoad) crossingSide *= 0.6;
-  } else if (speed <= 40) {
-    speedFactor = 1.0;
   } else if (speed <= 45) {
-    speedFactor = 1.25;
-    along *= 1.25;
-    crossingMain *= 1.25;
-    if (!hasNoSideRoad) crossingSide *= 1.25;
+    // 45 km/soat — Rasmiy iRAP / SR4S standart boshlang'ich tezligi (Baseline factor = 1.0)
+    speedFactor = 1.0;
   } else if (speed <= 50) {
-    speedFactor = 1.6;
-    along *= 1.4;
-    crossingMain *= 1.8;
-    if (!hasNoSideRoad) crossingSide *= 1.6;
+    speedFactor = 1.4;
+    along *= 1.3;
+    crossingMain *= 1.5;
+    if (!hasNoSideRoad) crossingSide *= 1.35;
   } else if (speed <= 60) {
-    speedFactor = 2.5;
-    along *= 2.5;
-    crossingMain *= 2.8;
-    if (!hasNoSideRoad) crossingSide *= 2.5;
+    speedFactor = 2.4;
+    along *= 2.2;
+    crossingMain *= 2.6;
+    if (!hasNoSideRoad) crossingSide *= 2.3;
   } else if (speed <= 70) {
-    speedFactor = 3.8;
-    along *= 3.8;
-    crossingMain *= 4.5;
-    if (!hasNoSideRoad) crossingSide *= 3.8;
+    speedFactor = 3.6;
+    along *= 3.4;
+    crossingMain *= 4.0;
+    if (!hasNoSideRoad) crossingSide *= 3.5;
   } else {
-    speedFactor = 5.2;
-    along *= 5.2;
-    crossingMain *= 6.2;
-    if (!hasNoSideRoad) crossingSide *= 5.2;
+    speedFactor = 5.0;
+    along *= 4.8;
+    crossingMain *= 5.5;
+    if (!hasNoSideRoad) crossingSide *= 4.8;
   }
 
   // Jami SRS (Xavf balli)
