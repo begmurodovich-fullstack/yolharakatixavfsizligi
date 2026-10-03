@@ -318,10 +318,10 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
     // 45 km/soat — Rasmiy iRAP / SR4S standart boshlang'ich tezligi (Baseline factor = 1.0)
     speedFactor = 1.0;
   } else if (speed <= 50) {
-    speedFactor = 1.4;
-    along *= 1.3;
-    crossingMain *= 1.5;
-    if (!hasNoSideRoad) crossingSide *= 1.35;
+    speedFactor = 1.6;
+    along *= 1.40;
+    crossingMain *= 2.20;
+    if (!hasNoSideRoad) crossingSide *= 1.50;
   } else if (speed <= 60) {
     speedFactor = 2.4;
     along *= 2.2;

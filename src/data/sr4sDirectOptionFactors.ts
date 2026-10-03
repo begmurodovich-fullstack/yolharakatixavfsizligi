@@ -53,11 +53,11 @@ export const SR4S_DIRECT_OPTION_FACTORS: Record<string, Record<string, DetailedO
   // 5. number_of_lanes (Default: 1_1 -> 1.0)
   number_of_lanes: {
     '1_1': { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
-    '2_1': { alongFactor: 1.4, crossingMainFactor: 2.04, crossingSideFactor: 1.0, decimalStar: 3.7 },
-    '2_2': { alongFactor: 0.8, crossingMainFactor: 0.8, crossingSideFactor: 1.0, decimalStar: 4.8 },
-    '3_2': { alongFactor: 0.9, crossingMainFactor: 0.9, crossingSideFactor: 1.0, decimalStar: 4.7 },
-    '3_3': { alongFactor: 0.9, crossingMainFactor: 0.9, crossingSideFactor: 1.0, decimalStar: 4.7 },
-    '4_4': { alongFactor: 0.9, crossingMainFactor: 0.9, crossingSideFactor: 1.0, decimalStar: 4.7 },
+    '2_1': { alongFactor: 1.15, crossingMainFactor: 1.45, crossingSideFactor: 1.0, decimalStar: 4.2 },
+    '2_2': { alongFactor: 1.15, crossingMainFactor: 1.76, crossingSideFactor: 1.0, decimalStar: 4.0 },
+    '3_2': { alongFactor: 1.25, crossingMainFactor: 2.10, crossingSideFactor: 1.0, decimalStar: 3.7 },
+    '3_3': { alongFactor: 1.35, crossingMainFactor: 2.45, crossingSideFactor: 1.0, decimalStar: 3.5 },
+    '4_4': { alongFactor: 1.45, crossingMainFactor: 2.85, crossingSideFactor: 1.0, decimalStar: 3.3 },
   },
 
   // 6. lane_width (Default: wide -> 1.0)
