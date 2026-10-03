@@ -1077,13 +1077,6 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
                         isLocked ? 'cursor-default' : 'cursor-pointer'
                       )}
                     >
-                      {/* Option Star Badge */}
-                      {optStar && (
-                        <div className="mb-1.5 px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-50 text-amber-700 border border-amber-300 flex items-center gap-0.5 shadow-2xs">
-                          <span className="text-amber-500">★</span>
-                          <span>{Number(optStar).toFixed(1)}</span>
-                        </div>
-                      )}
 
                       <div className="w-14 h-14 sm:w-16 sm:h-16 relative flex items-center justify-center mb-1.5 select-none">
                         <Image

@@ -33,15 +33,15 @@ export const SR4S_DIRECT_OPTION_FACTORS: Record<string, Record<string, DetailedO
 
   // 2. area_type (Default: urban -> 1.0)
   area_type: {
-    rural: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
+    rural: { alongFactor: 1.15, crossingMainFactor: 1.15, crossingSideFactor: 1.15, decimalStar: 4.4 },
     urban: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
   },
 
   // 3. vehicle_parking (Default: none -> 1.0)
   vehicle_parking: {
     none: { alongFactor: 1.0, crossingMainFactor: 1.0, crossingSideFactor: 1.0, decimalStar: 4.6 },
-    one_side: { alongFactor: 1.0, crossingMainFactor: 1.22, crossingSideFactor: 1.2, decimalStar: 4.4 },
-    two_side: { alongFactor: 1.0, crossingMainFactor: 1.37, crossingSideFactor: 1.3, decimalStar: 4.3 },
+    one_side: { alongFactor: 1.0, crossingMainFactor: 1.15, crossingSideFactor: 1.12, decimalStar: 4.5 },
+    two_side: { alongFactor: 1.0, crossingMainFactor: 1.37, crossingSideFactor: 1.30, decimalStar: 4.4 },
   },
 
   // 4. sight_distance (Default: adequate -> 1.0)
