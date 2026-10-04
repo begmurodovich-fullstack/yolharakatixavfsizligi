@@ -198,37 +198,70 @@ function getFlowFactors(aadt: number) {
   return { alongF: 1.0, mainF: 1.0, sideF: 1.0 };
 }
 
-// Rasmiy tezlik multiplikatorlari
-const OFFICIAL_SPEED_BRACKETS = [
-  { speed: 20, alongF: 1.0, mainF: 1.0, sideF: 1.0 },
-  { speed: 30, alongF: 1.0, mainF: 1.0, sideF: 1.0 },
-  { speed: 40, alongF: 1.0, mainF: 1.0, sideF: 1.0 },
-  { speed: 45, alongF: 1.0, mainF: 1.0, sideF: 1.0 },
-  { speed: 50, alongF: 2.5 / 1.7, mainF: 2.8 / 1.9, sideF: 2.0 / 1.4 },
-  { speed: 60, alongF: 4.6 / 1.7, mainF: 5.2 / 1.9, sideF: 3.7 / 1.4 },
-  { speed: 70, alongF: 6.6 / 1.7, mainF: 7.3 / 1.9, sideF: 5.3 / 1.4 },
-  { speed: 80, alongF: 7.7 / 1.7, mainF: 8.6 / 1.9, sideF: 6.2 / 1.4 },
+// Rasmiy operating_speed_85th_percentile kalibratsiya jadvali (asl saytdan olingan)
+// Baseline: operating_speed=45 → along=1.7, main=1.9, side=1.4 (DSR=4.6★)
+const OFFICIAL_OP_SPEED_BRACKETS = [
+  { speed: 20,  along: 1.1, main: 1.2,  side: 0.9 },
+  { speed: 30,  along: 1.1, main: 1.2,  side: 0.9 },
+  { speed: 40,  along: 1.1, main: 1.2,  side: 0.9 },
+  { speed: 45,  along: 1.7, main: 1.9,  side: 1.4 },
+  { speed: 50,  along: 2.5, main: 2.8,  side: 2.0 },
+  { speed: 60,  along: 4.6, main: 10.4, side: 3.7 },
+  { speed: 70,  along: 6.6, main: 14.7, side: 5.3 },
+  { speed: 80,  along: 7.7, main: 17.3, side: 6.2 },
 ];
 
-function getSpeedFactors(speed: number) {
-  if (speed <= 45) return { alongF: 1.0, mainF: 1.0, sideF: 1.0 };
-  if (speed >= 80) {
-    const last = OFFICIAL_SPEED_BRACKETS[OFFICIAL_SPEED_BRACKETS.length - 1];
-    return { alongF: last.alongF, mainF: last.mainF, sideF: last.sideF };
+// Rasmiy speed_limit kalibratsiya jadvali (asl saytdan olingan)
+// Baseline: speed_limit=40 → along=1.7, main=1.9, side=1.4 (DSR=4.6★)
+const OFFICIAL_LIMIT_SPEED_BRACKETS = [
+  { speed: 20, along: 1.7, main: 1.9, side: 1.4 },
+  { speed: 30, along: 1.7, main: 1.9, side: 1.4 },
+  { speed: 40, along: 1.7, main: 1.9, side: 1.4 },
+  { speed: 50, along: 2.5, main: 2.8, side: 2.0 },
+  { speed: 60, along: 4.6, main: 5.2, side: 3.7 },
+  { speed: 70, along: 6.6, main: 7.3, side: 5.3 },
+  { speed: 80, along: 7.7, main: 8.6, side: 6.2 },
+];
+
+function interpolateSpeedBrackets(
+  brackets: { speed: number; along: number; main: number; side: number }[],
+  speed: number
+) {
+  const BASE_ALONG = 1.7;
+  const BASE_MAIN = 1.9;
+  const BASE_SIDE = 1.4;
+
+  const first = brackets[0];
+  const last = brackets[brackets.length - 1];
+
+  if (speed <= first.speed) {
+    return { alongF: first.along / BASE_ALONG, mainF: first.main / BASE_MAIN, sideF: first.side / BASE_SIDE };
   }
-  for (let i = 0; i < OFFICIAL_SPEED_BRACKETS.length - 1; i++) {
-    const s1 = OFFICIAL_SPEED_BRACKETS[i];
-    const s2 = OFFICIAL_SPEED_BRACKETS[i + 1];
-    if (speed >= s1.speed && speed <= s2.speed) {
-      const t = (speed - s1.speed) / (s2.speed - s1.speed);
-      return {
-        alongF: s1.alongF + t * (s2.alongF - s1.alongF),
-        mainF: s1.mainF + t * (s2.mainF - s1.mainF),
-        sideF: s1.sideF + t * (s2.sideF - s1.sideF),
-      };
+  if (speed >= last.speed) {
+    return { alongF: last.along / BASE_ALONG, mainF: last.main / BASE_MAIN, sideF: last.side / BASE_SIDE };
+  }
+  for (let i = 0; i < brackets.length - 1; i++) {
+    const b1 = brackets[i];
+    const b2 = brackets[i + 1];
+    if (speed >= b1.speed && speed <= b2.speed) {
+      const t = (speed - b1.speed) / (b2.speed - b1.speed);
+      const along = b1.along + t * (b2.along - b1.along);
+      const main = b1.main + t * (b2.main - b1.main);
+      const side = b1.side + t * (b2.side - b1.side);
+      return { alongF: along / BASE_ALONG, mainF: main / BASE_MAIN, sideF: side / BASE_SIDE };
     }
   }
   return { alongF: 1.0, mainF: 1.0, sideF: 1.0 };
+}
+
+/** operating_speed_85th_percentile faktorini hisoblash */
+function getOpSpeedFactors(speed: number) {
+  return interpolateSpeedBrackets(OFFICIAL_OP_SPEED_BRACKETS, speed);
+}
+
+/** speed_limit faktorini hisoblash */
+function getLimitSpeedFactors(speed: number) {
+  return interpolateSpeedBrackets(OFFICIAL_LIMIT_SPEED_BRACKETS, speed);
 }
 
 /**
@@ -326,25 +359,28 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
     }
   });
 
-  // 6. Harakat tezligi (Operating Speed va Speed Limit)
-  const opSpeed = parseFloat(valMap['operating_speed'] || '40') || 40;
+  // 6. Harakat tezligi: operating_speed va speed_limit mustaqil kalibratsiya jadvallari orqali
+  const opSpeed = parseFloat(valMap['operating_speed'] || '45') || 45;
   const limSpeed = parseFloat(valMap['speed_limit'] || '40') || 40;
-  const speed = Math.max(opSpeed, limSpeed);
 
-  const speedFactors = getSpeedFactors(speed);
-  speedFactor = speedFactors.mainF;
-  along *= speedFactors.alongF;
-  crossingMain *= speedFactors.mainF;
+  // operating_speed_85th_percentile faktori (asl sayt kalibratsiyasi)
+  const opSpeedFactors = getOpSpeedFactors(opSpeed);
+  speedFactor = opSpeedFactors.mainF;
+  along *= opSpeedFactors.alongF;
+  crossingMain *= opSpeedFactors.mainF;
   if (!hasNoSideRoad) {
-    crossingSide *= speedFactors.sideF;
+    crossingSide *= opSpeedFactors.sideF;
   }
 
-  // Tezlik cheklovi buzilgan holatda jarima koeffitsiyenti
-  if (opSpeed > limSpeed) {
-    const diffRatio = opSpeed / limSpeed;
-    crossingMain *= Math.pow(diffRatio, 1.1);
-    along *= Math.pow(diffRatio, 0.2);
+  // speed_limit faktori (asl sayt kalibratsiyasi) — mustaqil qo'llanadi
+  const limSpeedFactors = getLimitSpeedFactors(limSpeed);
+  along *= limSpeedFactors.alongF;
+  crossingMain *= limSpeedFactors.mainF;
+  if (!hasNoSideRoad) {
+    crossingSide *= limSpeedFactors.sideF;
   }
+
+  // Qo'shimcha jarima koeffitsiyenti QOLLANMAYDI — rasmiy model mustaqil omillardan foydalanadi
 
   if (hasNoSideRoad) {
     crossingSide = 0.0;
@@ -357,13 +393,8 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
   const srsScore = +(roundedAlong + roundedMain + roundedSide).toFixed(1);
 
   // Yulduz reytingini hisoblash (1.0 dan 5.0 gacha)
-  let decimalScore: string;
-  // Rasmiy Demonstratordagi oqim 7500 maxsus nuqtasi
-  if (aadt === 7500 && Math.abs(roundedAlong - 4.3) < 0.1 && Math.abs(roundedMain - 4.8) < 0.1 && roundedSide === 1.4) {
-    decimalScore = '3.8';
-  } else {
-    decimalScore = srsToDecimalStar(srsScore).toFixed(1);
-  }
+  const decimalScore = srsToDecimalStar(srsScore).toFixed(1);
+
 
   const calculatedStar = parseFloat(decimalScore);
 
@@ -385,7 +416,7 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
     decimalScore,
     percentFill,
     starLevel,
-    operatingSpeed: speed,
+    operatingSpeed: opSpeed,
     speedFactor: +speedFactor.toFixed(2),
     flowFactor: +flowFactor.toFixed(2),
     severityFactor,

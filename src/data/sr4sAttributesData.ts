@@ -1562,8 +1562,8 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-37",
     "nameUz": "Haqiqiy harakat tezligi (Operating Speed)",
     "nameEn": "Operating Speed",
-    "currentValueId": "40",
-    "customValue": "40",
+    "currentValueId": "45",
+    "customValue": "45",
     "isSlider": true,
     "min": 1,
     "max": 150,
@@ -1571,12 +1571,12 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "inputUnit": "km/h",
     "options": [
       {
-        "id": "40",
-        "labelUz": "40 km/h",
-        "labelEn": "40 km/h",
+        "id": "45",
+        "labelUz": "45 km/h",
+        "labelEn": "45 km/h",
         "iconSrc": "/sr4s_icons/operating-speed.png",
         "scoreWeight": 4,
-        "badgeText": "40 km/h"
+        "badgeText": "45 km/h"
       }
     ]
   },
