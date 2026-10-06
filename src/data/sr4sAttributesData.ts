@@ -458,7 +458,7 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-13",
     "nameUz": "Yo‘l o‘rtasi ajratgichi",
     "nameEn": "Middle of Road",
-    "currentValueId": "center_line",
+    "currentValueId": "one_way",
     "options": [
       {
         "id": "center_line",
@@ -700,7 +700,7 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-18",
     "nameUz": "Trotuar chap tomonda",
     "nameEn": "Sidewalk Left",
-    "currentValueId": "1_3m",
+    "currentValueId": "0_1m",
     "options": [
       {
         "id": "none",
@@ -765,7 +765,7 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-19",
     "nameUz": "Trotuar o‘ng tomonda",
     "nameEn": "Sidewalk Right",
-    "currentValueId": "1_3m",
+    "currentValueId": "0_1m",
     "options": [
       {
         "id": "none",
@@ -904,7 +904,7 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-22",
     "nameUz": "Piyodalarni yo‘naltiruvchi panjara",
     "nameEn": "Pedestrian Channelisation",
-    "currentValueId": "not_present",
+    "currentValueId": "present",
     "options": [
       {
         "id": "present",
@@ -1024,7 +1024,7 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-24",
     "nameUz": "Yon yo‘l piyodalar o‘tish joyi",
     "nameEn": "Crossing Side Road",
-    "currentValueId": "marked",
+    "currentValueId": "lights",
     "options": [
       {
         "id": "none",

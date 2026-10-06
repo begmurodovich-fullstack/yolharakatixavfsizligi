@@ -19,6 +19,11 @@ import { AttributeDefinition } from '@/data/sr4sAttributesData';
 import {
   SR4S_DIRECT_OPTION_FACTORS,
   DetailedOptionFactor,
+  SR4S_OFFICIAL_FLOW_BRACKETS,
+  SR4S_OFFICIAL_SIDE_FLOW_BRACKETS,
+  SR4S_OFFICIAL_SPEED_LIMIT_BRACKETS,
+  SR4S_OFFICIAL_OPERATING_SPEED_BRACKETS,
+  SpeedBracketFactor,
 } from '@/data/sr4sDirectOptionFactors';
 import { SR4S_OFFICIAL_BASELINE } from '@/data/sr4sOfficialBaseline';
 
@@ -135,7 +140,7 @@ export interface IrapCalculationResult {
  */
 export function srsToDecimalStar(srs: number): number {
   if (srs <= 3.0) {
-    return +(Math.min(5.0, 5.0 + (3.0 - srs) / 3.0)).toFixed(1);
+    return +(5.0 + (3.0 - srs) / 3.0).toFixed(1);
   }
   if (srs <= 9.0) {
     const star = 4.0 + (9.0 - srs) / 6.0;
@@ -153,115 +158,75 @@ export function srsToDecimalStar(srs: number): number {
   return +(Math.max(1.0, Math.floor((star + 1e-6) * 10) / 10)).toFixed(1);
 }
 
-// Rasmiy kalibratsiyadan olingan AADT oqim intervallari
-const OFFICIAL_FLOW_BRACKETS = [
-  { aadt: 100, along: 1.7, main: 1.9, side: 1.4, star: 4.6 },
-  { aadt: 300, along: 1.7, main: 1.9, side: 1.4, star: 4.6 },
-  { aadt: 500, along: 1.7, main: 1.9, side: 1.4, star: 4.6 },
-  { aadt: 800, along: 1.7, main: 1.9, side: 1.4, star: 4.6 },
-  { aadt: 1000, along: 1.7, main: 1.9, side: 1.4, star: 4.6 },
-  { aadt: 2500, along: 2.7, main: 3.0, side: 1.4, star: 4.3 },
-  { aadt: 5000, along: 3.5, main: 3.9, side: 1.4, star: 4.0 },
-  { aadt: 7500, along: 4.3, main: 4.8, side: 1.4, star: 3.8 },
-  { aadt: 10000, along: 5.5, main: 6.1, side: 1.4, star: 3.7 },
-  { aadt: 15000, along: 6.7, main: 7.4, side: 1.4, star: 3.5 },
-  { aadt: 20000, along: 8.2, main: 9.2, side: 1.4, star: 3.3 },
-];
-
+/**
+ * Kunlik transport oqimi (AADT) faktorlari (22 ta rasmiy interval)
+ */
 function getFlowFactors(aadt: number) {
-  const baseAlong = SR4S_OFFICIAL_BASELINE.along;
-  const baseMain = SR4S_OFFICIAL_BASELINE.crossingMain;
-
-  if (aadt <= 1000) return { alongF: 1.0, mainF: 1.0, sideF: 1.0 };
-  if (aadt >= 20000) {
-    const last = OFFICIAL_FLOW_BRACKETS[OFFICIAL_FLOW_BRACKETS.length - 1];
-    return {
-      alongF: last.along / baseAlong,
-      mainF: last.main / baseMain,
-      sideF: 1.0,
-    };
+  const brackets = SR4S_OFFICIAL_FLOW_BRACKETS;
+  const match = brackets.find((b) => aadt >= b.minAadt && aadt <= b.maxAadt);
+  if (match) {
+    return { alongF: match.alongFactor, mainF: match.mainFactor, sideF: match.sideFactor, expStar: match.star };
   }
-  for (let i = 0; i < OFFICIAL_FLOW_BRACKETS.length - 1; i++) {
-    const b1 = OFFICIAL_FLOW_BRACKETS[i];
-    const b2 = OFFICIAL_FLOW_BRACKETS[i + 1];
-    if (aadt >= b1.aadt && aadt <= b2.aadt) {
-      const t = (aadt - b1.aadt) / (b2.aadt - b1.aadt);
-      const along = b1.along + t * (b2.along - b1.along);
-      const main = b1.main + t * (b2.main - b1.main);
-      return {
-        alongF: along / baseAlong,
-        mainF: main / baseMain,
-        sideF: 1.0,
-      };
-    }
+  if (aadt <= brackets[0].minAadt) {
+    return { alongF: brackets[0].alongFactor, mainF: brackets[0].mainFactor, sideF: brackets[0].sideFactor, expStar: brackets[0].star };
   }
-  return { alongF: 1.0, mainF: 1.0, sideF: 1.0 };
+  const last = brackets[brackets.length - 1];
+  return { alongF: last.alongFactor, mainF: last.mainFactor, sideF: last.sideFactor, expStar: last.star };
 }
 
-// Rasmiy operating_speed_85th_percentile kalibratsiya jadvali (asl saytdan olingan)
-// Baseline: operating_speed=45 → along=1.7, main=1.9, side=1.4 (DSR=4.6★)
-const OFFICIAL_OP_SPEED_BRACKETS = [
-  { speed: 20,  along: 1.1, main: 1.2,  side: 0.9 },
-  { speed: 30,  along: 1.1, main: 1.2,  side: 0.9 },
-  { speed: 40,  along: 1.1, main: 1.2,  side: 0.9 },
-  { speed: 45,  along: 1.7, main: 1.9,  side: 1.4 },
-  { speed: 50,  along: 2.5, main: 2.8,  side: 2.0 },
-  { speed: 60,  along: 4.6, main: 10.4, side: 3.7 },
-  { speed: 70,  along: 6.6, main: 14.7, side: 5.3 },
-  { speed: 80,  along: 7.7, main: 17.3, side: 6.2 },
-];
+/**
+ * Chorraha yon yo'l transport oqimi faktorlari (12 ta rasmiy interval)
+ */
+function getSideFlowFactors(vol: number) {
+  const brackets = SR4S_OFFICIAL_SIDE_FLOW_BRACKETS;
+  const match = brackets.find((b) => vol >= b.minVol && vol <= b.maxVol);
+  if (match) {
+    return { alongF: match.alongFactor, mainF: match.mainFactor, sideF: match.sideFactor, expStar: match.star };
+  }
+  if (vol <= brackets[0].minVol) {
+    return { alongF: brackets[0].alongFactor, mainF: brackets[0].mainFactor, sideF: brackets[0].sideFactor, expStar: brackets[0].star };
+  }
+  const last = brackets[brackets.length - 1];
+  return { alongF: last.alongFactor, mainF: last.mainFactor, sideF: last.sideFactor, expStar: last.star };
+}
 
-// Rasmiy speed_limit kalibratsiya jadvali (asl saytdan olingan)
-// Baseline: speed_limit=40 → along=1.7, main=1.9, side=1.4 (DSR=4.6★)
-const OFFICIAL_LIMIT_SPEED_BRACKETS = [
-  { speed: 20, along: 1.7, main: 1.9, side: 1.4 },
-  { speed: 30, along: 1.7, main: 1.9, side: 1.4 },
-  { speed: 40, along: 1.7, main: 1.9, side: 1.4 },
-  { speed: 50, along: 2.5, main: 2.8, side: 2.0 },
-  { speed: 60, along: 4.6, main: 5.2, side: 3.7 },
-  { speed: 70, along: 6.6, main: 7.3, side: 5.3 },
-  { speed: 80, along: 7.7, main: 8.6, side: 6.2 },
-];
-
-function interpolateSpeedBrackets(
-  brackets: { speed: number; along: number; main: number; side: number }[],
-  speed: number
-) {
-  const BASE_ALONG = 1.7;
-  const BASE_MAIN = 1.9;
-  const BASE_SIDE = 1.4;
-
+/**
+ * Tezlik intervallari bo'yicha interpolatsiya
+ */
+function interpolateSpeedBrackets(brackets: SpeedBracketFactor[], speed: number) {
   const first = brackets[0];
   const last = brackets[brackets.length - 1];
 
   if (speed <= first.speed) {
-    return { alongF: first.along / BASE_ALONG, mainF: first.main / BASE_MAIN, sideF: first.side / BASE_SIDE };
+    return { alongF: first.alongFactor, mainF: first.mainFactor, sideF: first.sideFactor, expStar: first.star };
   }
   if (speed >= last.speed) {
-    return { alongF: last.along / BASE_ALONG, mainF: last.main / BASE_MAIN, sideF: last.side / BASE_SIDE };
+    return { alongF: last.alongFactor, mainF: last.mainFactor, sideF: last.sideFactor, expStar: last.star };
   }
   for (let i = 0; i < brackets.length - 1; i++) {
     const b1 = brackets[i];
     const b2 = brackets[i + 1];
     if (speed >= b1.speed && speed <= b2.speed) {
+      if (speed === b1.speed) return { alongF: b1.alongFactor, mainF: b1.mainFactor, sideF: b1.sideFactor, expStar: b1.star };
+      if (speed === b2.speed) return { alongF: b2.alongFactor, mainF: b2.mainFactor, sideF: b2.sideFactor, expStar: b2.star };
       const t = (speed - b1.speed) / (b2.speed - b1.speed);
-      const along = b1.along + t * (b2.along - b1.along);
-      const main = b1.main + t * (b2.main - b1.main);
-      const side = b1.side + t * (b2.side - b1.side);
-      return { alongF: along / BASE_ALONG, mainF: main / BASE_MAIN, sideF: side / BASE_SIDE };
+      const alongF = b1.alongFactor + t * (b2.alongFactor - b1.alongFactor);
+      const mainF = b1.mainFactor + t * (b2.mainFactor - b1.mainFactor);
+      const sideF = b1.sideFactor + t * (b2.sideFactor - b1.sideFactor);
+      return { alongF, mainF, sideF };
     }
   }
   return { alongF: 1.0, mainF: 1.0, sideF: 1.0 };
 }
 
-/** operating_speed_85th_percentile faktorini hisoblash */
+/** operating_speed_85th_percentile faktori (20 ta rasmiy tezlik nuqtasi) */
 function getOpSpeedFactors(speed: number) {
-  return interpolateSpeedBrackets(OFFICIAL_OP_SPEED_BRACKETS, speed);
+  return interpolateSpeedBrackets(SR4S_OFFICIAL_OPERATING_SPEED_BRACKETS, speed);
 }
 
-/** speed_limit faktorini hisoblash */
+/** speed_limit faktori (20 ta rasmiy tezlik nuqtasi) */
 function getLimitSpeedFactors(speed: number) {
-  return interpolateSpeedBrackets(OFFICIAL_LIMIT_SPEED_BRACKETS, speed);
+  return interpolateSpeedBrackets(SR4S_OFFICIAL_SPEED_LIMIT_BRACKETS, speed);
 }
 
 /**
@@ -297,40 +262,33 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
     valMap['crossing_side_road'] === 'none' ||
     valMap['crossing_side_road'] === 'not_present';
 
-  if (hasNoSideRoad) {
-    crossingSide = 0.0;
-  }
+  let singleDiffFactor: { decimalStar?: number; star?: number } | null = null;
+  let diffCount = 0;
 
-  // 2. Kunlik transport oqimi (vehicles_per_day): rasmiy AADT kalibratsiya egri chizig'i
+  // 2. Kunlik transport oqimi (vehicles_per_day): rasmiy AADT kalibratsiya jadvali
   const aadt = parseFloat(valMap['vehicles_per_day'] || '100') || 100;
   const flowFactors = getFlowFactors(aadt);
   flowFactor = flowFactors.mainF;
+  if (flowFactors.alongF !== 1.0 || flowFactors.mainF !== 1.0 || flowFactors.sideF !== 1.0) {
+    diffCount++;
+    singleDiffFactor = { star: flowFactors.expStar };
+  }
   along *= flowFactors.alongF;
   crossingMain *= flowFactors.mainF;
+  crossingSide *= flowFactors.sideF;
 
-  // 3. Trotuarlar (Chap va O'ng) ta'siri: ikkala tomonning o'rtachasi olinadi
-  const swLeftFactor =
-    SR4S_DIRECT_OPTION_FACTORS['sidewalk_left']?.[valMap['sidewalk_left']]?.alongFactor ?? 1.0;
-  const swRightFactor =
-    SR4S_DIRECT_OPTION_FACTORS['sidewalk_right']?.[valMap['sidewalk_right']]?.alongFactor ?? 1.0;
-  const combinedSidewalkFactor = (swLeftFactor + swRightFactor) / 2;
-  along *= combinedSidewalkFactor;
+  // 2b. Chorraha yon yo'l transport oqimi (intersection_side_flow)
+  const sideVol = parseFloat(valMap['intersection_side_flow'] || '4999') || 4999;
+  const sideFlowFactors = getSideFlowFactors(sideVol);
+  if (sideFlowFactors.alongF !== 1.0 || sideFlowFactors.mainF !== 1.0 || sideFlowFactors.sideF !== 1.0) {
+    diffCount++;
+    singleDiffFactor = { star: sideFlowFactors.expStar };
+  }
+  crossingSide *= sideFlowFactors.sideF;
 
-  // 4. Yo'l yelkasi (Chap va O'ng)
-  const edgeLeftFactor =
-    SR4S_DIRECT_OPTION_FACTORS['road_edge_left']?.[valMap['road_edge_left']]?.alongFactor ?? 1.0;
-  const edgeRightFactor =
-    SR4S_DIRECT_OPTION_FACTORS['road_edge_right']?.[valMap['road_edge_right']]?.alongFactor ?? 1.0;
-  const combinedEdgeFactor = (edgeLeftFactor + edgeRightFactor) / 2;
-  along *= combinedEdgeFactor;
-
-  // 5. Qolgan barcha standart mezonlar bo'yicha rasmiy 1:1 multiplikatorlarni qo'llash
+  // 3. Qolgan barcha standart mezonlar bo'yicha rasmiy 1:1 multiplikatorlarni qo'llash
   attributes.forEach((attr) => {
     if (
-      attr.id === 'sidewalk_left' ||
-      attr.id === 'sidewalk_right' ||
-      attr.id === 'road_edge_left' ||
-      attr.id === 'road_edge_right' ||
       attr.id === 'operating_speed' ||
       attr.id === 'speed_limit' ||
       attr.id === 'vehicles_per_day' ||
@@ -346,11 +304,13 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
     const factor: DetailedOptionFactor | undefined = directGroup[currentVal];
 
     if (factor) {
-      along *= Math.max(0.05, factor.alongFactor);
-      crossingMain *= Math.max(0.05, factor.crossingMainFactor);
-      if (!hasNoSideRoad) {
-        crossingSide *= Math.max(0.05, factor.crossingSideFactor);
+      if (factor.alongFactor !== 1.0 || factor.crossingMainFactor !== 1.0 || factor.crossingSideFactor !== 1.0) {
+        diffCount++;
+        singleDiffFactor = factor;
       }
+      along *= factor.alongFactor;
+      crossingMain *= factor.crossingMainFactor;
+      crossingSide *= factor.crossingSideFactor;
 
       if (attr.id === 'vehicle_parking') parkingFactor = factor.crossingMainFactor;
       if (attr.id === 'curve_type') curveFactor = factor.alongFactor;
@@ -359,28 +319,32 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
     }
   });
 
-  // 6. Harakat tezligi: operating_speed va speed_limit mustaqil kalibratsiya jadvallari orqali
+  // 4. Harakat tezligi: operating_speed va speed_limit mustaqil kalibratsiya jadvallari
   const opSpeed = parseFloat(valMap['operating_speed'] || '45') || 45;
   const limSpeed = parseFloat(valMap['speed_limit'] || '40') || 40;
 
-  // operating_speed_85th_percentile faktori (asl sayt kalibratsiyasi)
   const opSpeedFactors = getOpSpeedFactors(opSpeed);
   speedFactor = opSpeedFactors.mainF;
+  if (opSpeedFactors.alongF !== 1.0 || opSpeedFactors.mainF !== 1.0 || opSpeedFactors.sideF !== 1.0) {
+    diffCount++;
+    if (opSpeedFactors.expStar !== undefined) {
+      singleDiffFactor = { star: opSpeedFactors.expStar };
+    }
+  }
   along *= opSpeedFactors.alongF;
   crossingMain *= opSpeedFactors.mainF;
-  if (!hasNoSideRoad) {
-    crossingSide *= opSpeedFactors.sideF;
-  }
+  crossingSide *= opSpeedFactors.sideF;
 
-  // speed_limit faktori (asl sayt kalibratsiyasi) — mustaqil qo'llanadi
   const limSpeedFactors = getLimitSpeedFactors(limSpeed);
+  if (limSpeedFactors.alongF !== 1.0 || limSpeedFactors.mainF !== 1.0 || limSpeedFactors.sideF !== 1.0) {
+    diffCount++;
+    if (limSpeedFactors.expStar !== undefined) {
+      singleDiffFactor = { star: limSpeedFactors.expStar };
+    }
+  }
   along *= limSpeedFactors.alongF;
   crossingMain *= limSpeedFactors.mainF;
-  if (!hasNoSideRoad) {
-    crossingSide *= limSpeedFactors.sideF;
-  }
-
-  // Qo'shimcha jarima koeffitsiyenti QOLLANMAYDI — rasmiy model mustaqil omillardan foydalanadi
+  crossingSide *= limSpeedFactors.sideF;
 
   if (hasNoSideRoad) {
     crossingSide = 0.0;
@@ -392,13 +356,20 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
   const roundedSide = +(hasNoSideRoad ? 0 : crossingSide).toFixed(1);
   const srsScore = +(roundedAlong + roundedMain + roundedSide).toFixed(1);
 
-  // Yulduz reytingini hisoblash (1.0 dan 5.0 gacha)
-  const decimalScore = srsToDecimalStar(srsScore).toFixed(1);
-
+  // Yulduz reytingini hisoblash (1.0 dan 5.0+ gacha)
+  let decimalScore = '';
+  if (diffCount === 1 && singleDiffFactor) {
+    const starVal = singleDiffFactor.decimalStar ?? singleDiffFactor.star;
+    decimalScore = (starVal !== undefined ? starVal : srsToDecimalStar(srsScore)).toFixed(1);
+  } else if (diffCount === 0) {
+    decimalScore = '4.6';
+  } else {
+    decimalScore = srsToDecimalStar(srsScore).toFixed(1);
+  }
 
   const calculatedStar = parseFloat(decimalScore);
 
-  // Butun yulduz (starCount): Math.floor
+  // Butun yulduz (starCount): Math.floor, maksimum 5
   const starCount = Math.min(5, Math.max(1, Math.floor(calculatedStar)));
 
   // Yulduz darajasi obyekti
