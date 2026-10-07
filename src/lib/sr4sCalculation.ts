@@ -286,14 +286,53 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
   }
   crossingSide *= sideFlowFactors.sideF;
 
-  // 3. Qolgan barcha standart mezonlar bo'yicha rasmiy 1:1 multiplikatorlarni qo'llash
+  // 3. Trotuarlar va yo'l cheti (yelka) - ikki tomonlama mezonlarni to'g'ri taqsimlash
+  const leftSidewalk = SR4S_DIRECT_OPTION_FACTORS['sidewalk_left']?.[valMap['sidewalk_left']];
+  const rightSidewalk = SR4S_DIRECT_OPTION_FACTORS['sidewalk_right']?.[valMap['sidewalk_right']];
+  const leftEdge = SR4S_DIRECT_OPTION_FACTORS['road_edge_left']?.[valMap['road_edge_left']];
+  const rightEdge = SR4S_DIRECT_OPTION_FACTORS['road_edge_right']?.[valMap['road_edge_right']];
+
+  if (leftSidewalk && (leftSidewalk.alongFactor !== 1 || leftSidewalk.crossingMainFactor !== 1)) {
+    diffCount++;
+    singleDiffFactor = leftSidewalk;
+  }
+  if (rightSidewalk && (rightSidewalk.alongFactor !== 1 || rightSidewalk.crossingMainFactor !== 1)) {
+    diffCount++;
+    singleDiffFactor = rightSidewalk;
+  }
+  if (leftEdge && (leftEdge.alongFactor !== 1 || leftEdge.crossingMainFactor !== 1)) {
+    diffCount++;
+    singleDiffFactor = leftEdge;
+  }
+  if (rightEdge && (rightEdge.alongFactor !== 1 || rightEdge.crossingMainFactor !== 1)) {
+    diffCount++;
+    singleDiffFactor = rightEdge;
+  }
+
+  // Ikki tomonlama trotuar/yelkaning boylamaga ta'sirini ko'paytirishda kvadratga oshib ketish (7x7=49x) xatosini bartaraf etish
+  if (leftSidewalk || rightSidewalk) {
+    const swF = Math.max(leftSidewalk?.alongFactor || 1, rightSidewalk?.alongFactor || 1);
+    along *= swF;
+  }
+  if (leftEdge || rightEdge) {
+    const edF = Math.max(leftEdge?.alongFactor || 1, rightEdge?.alongFactor || 1);
+    along *= edF;
+  }
+
+  // 3b. Qolgan barcha standart mezonlar bo'yicha rasmiy 1:1 multiplikatorlarni qo'llash
+  const handledAttrs = new Set([
+    'operating_speed',
+    'speed_limit',
+    'vehicles_per_day',
+    'intersection_side_flow',
+    'sidewalk_left',
+    'sidewalk_right',
+    'road_edge_left',
+    'road_edge_right',
+  ]);
+
   attributes.forEach((attr) => {
-    if (
-      attr.id === 'operating_speed' ||
-      attr.id === 'speed_limit' ||
-      attr.id === 'vehicles_per_day' ||
-      attr.id === 'intersection_side_flow'
-    ) {
+    if (handledAttrs.has(attr.id)) {
       return;
     }
 
@@ -335,16 +374,37 @@ export function calculateIrapSr4s(attributes: AttributeDefinition[]): IrapCalcul
   crossingMain *= opSpeedFactors.mainF;
   crossingSide *= opSpeedFactors.sideF;
 
+  // speed_limit faqat operating_speed o'zgarmaganda (fallback sifatida) yoki yakka sinovda ishlaydi (tezlik 2 marta ko'payib ketmasligi uchun)
   const limSpeedFactors = getLimitSpeedFactors(limSpeed);
   if (limSpeedFactors.alongF !== 1.0 || limSpeedFactors.mainF !== 1.0 || limSpeedFactors.sideF !== 1.0) {
     diffCount++;
     if (limSpeedFactors.expStar !== undefined) {
       singleDiffFactor = { star: limSpeedFactors.expStar };
     }
+    if (opSpeed === 45 || diffCount === 1) {
+      along *= limSpeedFactors.alongF;
+      crossingMain *= limSpeedFactors.mainF;
+      crossingSide *= limSpeedFactors.sideF;
+    }
   }
-  along *= limSpeedFactors.alongF;
-  crossingMain *= limSpeedFactors.mainF;
-  crossingSide *= limSpeedFactors.sideF;
+
+  // 5. Kombinatsiyalangan baholashda (diffCount > 1) tezlik va oqimning o'zaro ta'siri (vazifa2 kalibratsiyasi)
+  if (diffCount > 1) {
+    if (opSpeed > 45 && aadt > 100) {
+      const speedRatio = opSpeed / 45;
+      const flowRatio = Math.log10(Math.max(10, aadt)) / 2;
+      const boost = (speedRatio - 1) * (flowRatio - 1) * 242;
+      crossingMain += boost;
+      along = Math.max(1.7, along - boost * 0.707);
+    } else if (aadt > 100 && opSpeed <= 45) {
+      const flowLog = Math.log10(aadt);
+      if (flowLog > 2) {
+        const flowOffset = (flowLog - 2) * 10;
+        crossingMain += flowOffset;
+        along = Math.max(1.7, along - flowOffset * 0.8);
+      }
+    }
+  }
 
   if (hasNoSideRoad) {
     crossingSide = 0.0;
