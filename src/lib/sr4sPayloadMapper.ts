@@ -52,171 +52,112 @@ export const ATTR_ID_TO_OFFICIAL_PARAM: Record<string, string> = {
  */
 export const ATTR_OPTION_TO_OFFICIAL_CODE: Record<string, Record<string, string>> = {
   land_use_left: {
-    undeveloped: '1', residential: '2', commercial: '3', industrial: '4', farming: '5', school: '6',
+    'undeveloped': '1', 'residential': '3', 'commercial': '4', 'industrial': '7', 'farming': '2', 'school': '6',
   },
   land_use_right: {
-    undeveloped: '1', residential: '2', commercial: '3', industrial: '4', farming: '5', school: '6',
+    'undeveloped': '1', 'residential': '3', 'commercial': '4', 'industrial': '7', 'farming': '2', 'school': '6',
   },
   area_type: {
-    rural: '1', urban: '2',
+    'rural': '1', 'urban': '2',
   },
   vehicle_parking: {
-    none: '1', one_side: '2', two_side: '3',
+    'none': '1', 'one_side': '2', 'two_side': '3',
   },
   sight_distance: {
-    adequate: '1', poor: '2',
+    'adequate': '1', 'poor': '2',
   },
   number_of_lanes: {
-    '1_1': '1', '2_1': '2', '2_2': '2', '3_2': '2', '3_3': '2', '4_4': '2',
+    '1_1': '1', '2_1': '5', '2_2': '2', '3_2': '6', '3_3': '3', '4_4': '4',
   },
   lane_width: {
-    wide: '1', medium: '2', narrow: '3',
+    'wide': '1', 'medium': '2', 'narrow': '3',
   },
   shoulder_rumble_strips: {
-    not_present: '1', present: '2',
+    'present': '2', 'not_present': '1',
   },
   road_condition: {
-    good: '1', medium: '2', poor: '3',
+    'good': '1', 'medium': '2', 'poor': '3',
   },
   grip: {
-    good: '1', medium: '2', poor: '3',
+    'good': '1', 'medium': '2', 'poor': '3',
   },
   grade: {
-    grade_low: '1', grade_medium: '4', grade_high: '4',
+    'grade_low': '1', 'grade_medium': '4', 'grade_high': '5',
   },
   carriageway_type: {
-    divided_north_east: '1', divided_south_west: '2', undivided: '3',
+    'divided_north_east': '1', 'divided_south_west': '2', 'undivided': '3',
   },
   middle_of_road: {
-    center_line: '13',
-    wide_line: '1',
-    hatching: '2',
-    turn_lane: '3',
-    flexible_posts: '4',
-    separated_0_1: '5',
-    separated_1_5: '6',
-    separated_5_10: '7',
-    separated_10_20: '8',
-    separated_20_plus: '9',
-    metal_barrier: '10',
-    concrete_barrier: '11',
-    wire_barrier: '12',
-    motorcycle_barrier: '10',
-    one_way: '13',
-    broken_wide_markings: '1',
+    'center_line': '11', 'wide_line': '14', 'hatching': '10', 'turn_lane': '8', 'flexible_posts': '9', 'separated_0_1': '7', 'separated_1_5': '6', 'separated_5_10': '5', 'separated_10_20': '4', 'separated_20_plus': '3', 'metal_barrier': '1', 'concrete_barrier': '2', 'wire_barrier': '15', 'motorcycle_barrier': '12', 'one_way': '13', 'broken_wide_markings': '16',
   },
   lines_and_signs: {
-    adequate: '1', poor: '2',
+    'adequate': '1', 'poor': '2',
   },
   street_lighting: {
-    present: '2', not_present: '1',
+    'present': '2', 'not_present': '1',
   },
   school_warning: {
-    flashing_beacons: '1', signs_markings: '2', no_school_zone: '3', no_school_nearby: '3',
+    'flashing_beacons': '1', 'signs_markings': '2', 'no_school_zone': '3', 'no_school_nearby': '4',
   },
   crossing_supervisor: {
-    supervisor: '1', no_supervisor: '2', no_school_nearby: '3',
+    'supervisor': '1', 'no_supervisor': '2', 'no_school_nearby': '3',
   },
   sidewalk_left: {
-    none: '5', '0_1m': '3', '1_3m': '4', gt_3m: '2', barrier: '1',
-    poor: '5', moderate: '3', shared: '2',
+    'none': '5', '0_1m': '4', '1_3m': '3', 'gt_3m': '2', 'barrier': '1', 'poor': '7', 'moderate': '6', 'shared': '8',
   },
   sidewalk_right: {
-    none: '5', '0_1m': '3', '1_3m': '4', gt_3m: '2', barrier: '1',
-    poor: '5', moderate: '3', shared: '2',
+    'none': '5', '0_1m': '4', '1_3m': '3', 'gt_3m': '2', 'barrier': '1', 'poor': '7', 'moderate': '6', 'shared': '8',
   },
   road_edge_left: {
-    none: '4', '0_1m': '3', '1_2_4m': '2', gt_2_4m: '1',
+    'none': '4', '0_1m': '3', '1_2_4m': '2', 'gt_2_4m': '1',
   },
   road_edge_right: {
-    none: '4', '0_1m': '3', '1_2_4m': '2', gt_2_4m: '1',
+    'none': '4', '0_1m': '3', '1_2_4m': '2', 'gt_2_4m': '1',
   },
   pedestrian_channelisation: {
-    not_present: '1', present: '2',
+    'present': '2', 'not_present': '1',
   },
   crossing_main_road: {
-    none: '1',
-    lights: '10',
-    raised: '14',
-    bridge_tunnel: '9',
-    marked: '5',
-    unmarked: '7',
-    refuge: '6',
-    lights_refuge: '11',
-    marked_refuge: '8',
-    raised_marked: '12',
-    raised_refuge: '13',
-    raised_marked_refuge: '14',
+    'none': '7', 'lights': '3', 'raised': '17', 'bridge_tunnel': '1', 'marked': '5', 'unmarked': '8', 'refuge': '6', 'lights_refuge': '2', 'marked_refuge': '4', 'raised_marked': '15', 'raised_refuge': '16', 'raised_marked_refuge': '14',
   },
   crossing_side_road: {
-    none: '1',
-    lights: '10',
-    raised: '14',
-    bridge_tunnel: '9',
-    marked: '3',
-    unmarked: '7',
-    refuge: '6',
-    lights_refuge: '11',
-    marked_refuge: '8',
-    raised_marked: '12',
-    raised_refuge: '13',
-    raised_marked_refuge: '14',
+    'none': '7', 'lights': '3', 'raised': '17', 'bridge_tunnel': '1', 'marked': '5', 'unmarked': '8', 'refuge': '6', 'lights_refuge': '2', 'marked_refuge': '4', 'raised_marked': '15', 'raised_refuge': '16', 'raised_marked_refuge': '14',
   },
   crossing_quality: {
-    adequate: '1', poor: '2', na: '3',
+    'adequate': '1', 'poor': '2', 'na': '3',
   },
   crossing_flow: {
-    not_present: '1', present: '2',
+    'not_present': '1', 'present': '2',
   },
   right_side_flow: {
-    not_present: '1', present: '2',
+    'not_present': '1', 'present': '2',
   },
   left_side_flow: {
-    not_present: '1', present: '2',
+    'not_present': '1', 'present': '2',
   },
   intersection_type: {
-    merge_lane: '1',
-    '3_leg': '3',
-    '3_leg_signal': '4',
-    '3_leg_turn_lane': '5',
-    '3_leg_turn_signal': '6',
-    '4_leg': '8',
-    '4_leg_turn_lane': '7',
-    '4_leg_signal': '4',
-    '4_leg_turn_signal': '6',
-    roundabout: '2',
-    mini_roundabout: '2',
-    formal_u_turn: '1',
-    informal_u_turn: '1',
-    active_train: '7',
-    passive_train: '7',
-    no_intersection: 'none',
-    short_merge: '1',
-    diverge_lane: '1',
+    'merge_lane': '1', '3_leg': '4', '3_leg_signal': '6', '3_leg_turn_lane': '3', '3_leg_turn_signal': '5', '4_leg': '8', '4_leg_turn_lane': '7', '4_leg_signal': '10', '4_leg_turn_signal': '9', 'roundabout': '2', 'mini_roundabout': '17', 'formal_u_turn': '16', 'informal_u_turn': '15', 'active_train': '14', 'passive_train': '13', 'no_intersection': '12', 'short_merge': '22', 'diverge_lane': '23',
   },
   driveways: {
-    '1_2_residential': '1',
-    '2_plus_residential': '2',
-    commercial: '3',
-    not_applicable: '4',
+    '1_2_residential': '3', '2_plus_residential': '2', 'commercial': '1', 'not_applicable': '4',
   },
   intersection_quality: {
-    adequate: '1', poor: '2', not_applicable: '3',
+    'adequate': '1', 'poor': '2', 'not_applicable': '3',
   },
   curve_type: {
-    straight: '1', moderate: '2', sharp: '3', very_sharp: '4',
+    'straight': '1', 'moderate': '2', 'sharp': '3', 'very_sharp': '4',
   },
   curve_quality: {
-    adequate: '1', poor: '2', not_curve: '3',
+    'adequate': '1', 'poor': '2', 'not_curve': '3',
   },
   speed_management: {
-    not_present: '1', present: '2',
+    'present': '2', 'not_present': '1',
   },
   motorcycle_percent: {
-    not_recorded: '1', '0': '1', '1_5': '2', '6_10': '2', '11_20': '3', '21_40': '3', '41_60': '4', '61_80': '4', '81_99': '4', '100': '4',
+    '0': '2', '100': '10', 'not_recorded': '1', '1_5': '3', '6_10': '4', '11_20': '5', '21_40': '6', '41_60': '7', '61_80': '8', '81_99': '9',
   },
   hgv_percent: {
-    not_recorded: '1', '0_5': '1', '5_10': '2', '10_15': '3', '15_20': '3', '20_30': '4', '30_40': '4', '40_plus': '5',
+    'not_recorded': '1', '0_5': '2', '5_10': '3', '10_15': '4', '15_20': '5', '20_30': '6', '30_40': '7', '40_plus': '8',
   },
 };
 

@@ -30,7 +30,7 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-01",
     "nameUz": "Yerdan foydalanish chapda",
     "nameEn": "Land use left",
-    "currentValueId": "undeveloped",
+    "currentValueId": "residential",
     "options": [
       {
         "id": "undeveloped",
@@ -81,7 +81,7 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-02",
     "nameUz": "Yerdan foydalanish o‘ngda",
     "nameEn": "Land Use Right",
-    "currentValueId": "commercial",
+    "currentValueId": "residential",
     "options": [
       {
         "id": "undeveloped",
@@ -700,7 +700,7 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-18",
     "nameUz": "Trotuar chap tomonda",
     "nameEn": "Sidewalk Left",
-    "currentValueId": "1_3m",
+    "currentValueId": "0_1m",
     "options": [
       {
         "id": "none",
@@ -765,7 +765,7 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-19",
     "nameUz": "Trotuar o‘ng tomonda",
     "nameEn": "Sidewalk Right",
-    "currentValueId": "1_3m",
+    "currentValueId": "0_1m",
     "options": [
       {
         "id": "none",
@@ -1024,7 +1024,7 @@ export const OFFICIAL_40_ATTRIBUTES_DATA: AttributeDefinition[] = [
     "code": "SR4S-24",
     "nameUz": "Yon yo‘l piyodalar o‘tish joyi",
     "nameEn": "Crossing Side Road",
-    "currentValueId": "marked",
+    "currentValueId": "lights",
     "options": [
       {
         "id": "none",
