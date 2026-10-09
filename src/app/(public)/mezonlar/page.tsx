@@ -9,26 +9,30 @@ import {
   Search,
   Sparkles,
   ArrowRight,
-  ClipboardCheck,
+  Award,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { MOCK_QUESTIONS } from '@/data/mock/criteria';
+import { OFFICIAL_40_ATTRIBUTES_DATA, AttributeDefinition } from '@/data/sr4sAttributesData';
 
 export default function MezonlarPage() {
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredQuestions = useMemo(() => {
-    return MOCK_QUESTIONS.filter((q) => {
+  const filteredAttributes = useMemo(() => {
+    return OFFICIAL_40_ATTRIBUTES_DATA.filter((attr) => {
       if (!searchQuery.trim()) return true;
       const term = searchQuery.toLowerCase().trim();
       return (
-        q.text.toLowerCase().includes(term) ||
-        (q.code && q.code.toLowerCase().includes(term)) ||
-        (q.description && q.description.toLowerCase().includes(term)) ||
-        q.options.some((opt) => opt.label.toLowerCase().includes(term))
+        attr.nameUz.toLowerCase().includes(term) ||
+        attr.nameEn.toLowerCase().includes(term) ||
+        (attr.code && attr.code.toLowerCase().includes(term)) ||
+        attr.options.some(
+          (opt) =>
+            opt.labelUz.toLowerCase().includes(term) ||
+            opt.labelEn.toLowerCase().includes(term)
+        )
       );
     });
   }, [searchQuery]);
@@ -44,19 +48,19 @@ export default function MezonlarPage() {
           </div>
 
           <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-950 leading-tight">
-            SR4S / iRAP ning 40 ta Rasmiy Mezoni
+            SR4S / iRAP ning 40 ta Rasmiy Xavfsizlik Mezoni
           </h1>
 
           <p className="text-sm sm:text-base text-slate-600 max-w-3xl leading-relaxed">
             O‘zbekiston Respublikasi umumta’lim maktablari atrofidagi yo‘l infratuzilmasi xavfsizligini
-            baholash uchun mo‘ljallangan 40 ta rasmiy xalqaro iRAP SR4S metodikasi ko‘rsatkichlari katalogi.
+            baholash uchun mo‘ljallangan 40 ta rasmiy xalqaro iRAP SR4S (Star Rating for Schools) metodikasi ko‘rsatkichlari katalogi.
           </p>
 
           {/* Quick Summary Strip */}
           <div className="grid grid-cols-3 gap-3 pt-3 max-w-3xl">
             <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
               <span className="text-[11px] font-semibold text-slate-500 block">Jami Mezonlar</span>
-              <span className="text-xl font-black text-slate-900 font-mono">40 ta Savol</span>
+              <span className="text-xl font-black text-slate-900 font-mono">40 ta Parametr</span>
             </div>
             <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
               <span className="text-[11px] font-semibold text-slate-500 block">Reyting Tizimi</span>
@@ -64,7 +68,7 @@ export default function MezonlarPage() {
             </div>
             <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
               <span className="text-[11px] font-semibold text-slate-500 block">Standart Versiyasi</span>
-              <span className="text-xl font-black text-emerald-700 font-mono">iRAP SR4S v1.7</span>
+              <span className="text-xl font-black text-teal-700 font-mono">iRAP SR4S v3.1</span>
             </div>
           </div>
         </div>
@@ -79,89 +83,95 @@ export default function MezonlarPage() {
             <Input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Mezon yoki savol bo‘yicha qidirish (masalan: SR4S-01, trotuar, tezlik)..."
+              placeholder="Mezon bo‘yicha qidirish (masalan: SR4S-01, trotuar, tezlik, o‘tish joyi)..."
               className="pl-10 bg-slate-50 border-slate-200 text-slate-900 text-xs sm:text-sm placeholder:text-slate-400 rounded-xl"
             />
           </div>
 
           <span className="text-xs text-slate-500 font-mono">
-            Natija: <strong>{filteredQuestions.length}</strong> ta mezon
+            Natija: <strong>{filteredAttributes.length}</strong> ta mezon
           </span>
         </div>
 
-        {/* 40 Questions List */}
+        {/* 40 Attributes List */}
         <div className="space-y-4">
-          {filteredQuestions.map((q, index) => (
+          {filteredAttributes.map((attr, index) => (
             <Card
-              key={q.id}
+              key={attr.id}
               className="bg-white border-slate-200 overflow-hidden shadow-xs hover:border-teal-500/40 transition-all rounded-2xl"
             >
               <div className="p-5 sm:p-6 space-y-4">
-                {/* Question Header */}
+                {/* Attribute Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
                   <div className="flex items-center gap-2.5 flex-wrap">
                     <span className="px-2.5 py-1 rounded-lg bg-slate-900 text-teal-300 font-mono font-bold text-xs">
-                      {q.code || ('SR4S-' + String(index + 1).padStart(2, '0'))}
+                      {attr.code || `SR4S-${String(index + 1).padStart(2, '0')}`}
                     </span>
-                    {q.subType && (
-                      <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-900 border border-amber-200">
-                        {q.subType === 'LEFT' ? '👈 Chap tomon' : '👉 O‘ng tomon'}
-                      </span>
-                    )}
+                    <span className="text-xs text-slate-400 font-mono">
+                      {attr.nameEn}
+                    </span>
                   </div>
                 </div>
 
-                {/* Question Text & Description */}
-                <div className="space-y-1.5">
+                {/* Attribute Title */}
+                <div className="space-y-1">
                   <h3 className="text-base sm:text-lg font-bold text-slate-900 leading-snug">
-                    {q.text}
+                    {attr.nameUz}
                   </h3>
-                  {q.description && (
-                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                      {q.description}
-                    </p>
-                  )}
                 </div>
 
-                {/* Guide Image & Options Split */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 pt-2 items-start">
-                  {/* Guide Image (if present) */}
-                  {q.guideImage && (
-                    <div className="lg:col-span-4 rounded-xl overflow-hidden border border-slate-200 bg-slate-100 p-1 relative group">
-                      <div className="relative h-44 w-full rounded-lg overflow-hidden bg-slate-200">
-                        <Image
-                          src={q.guideImage}
-                          alt={q.text}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-300"
-                          unoptimized
-                        />
-                      </div>
-                      <div className="p-1.5 text-center">
-                        <span className="text-[10px] font-mono text-slate-500 font-medium">
-                          Xalqaro namuna rasmi
+                {/* Options List */}
+                <div className="space-y-2 pt-1">
+                  <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
+                    Xalqaro baholash variantlari va xavfsizlik vazni:
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                    {attr.options.map((opt) => (
+                      <div
+                        key={opt.id}
+                        className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs flex items-center justify-between gap-3 hover:bg-slate-100/90 transition-colors"
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          {opt.iconSrc ? (
+                            <div className="relative w-8 h-8 rounded-lg overflow-hidden shrink-0 bg-white border border-slate-200 p-0.5">
+                              <Image
+                                src={opt.iconSrc}
+                                alt={opt.labelUz}
+                                fill
+                                className="object-contain"
+                                unoptimized
+                              />
+                            </div>
+                          ) : (
+                            <div className="w-8 h-8 rounded-lg bg-teal-50 text-teal-700 font-bold flex items-center justify-center shrink-0 border border-teal-200 text-xs font-mono">
+                              {opt.scoreWeight || '★'}
+                            </div>
+                          )}
+                          <div className="min-w-0">
+                            <span className="font-semibold text-slate-800 block truncate">
+                              {opt.labelUz}
+                            </span>
+                            <span className="text-[10px] text-slate-400 block truncate">
+                              {opt.labelEn}
+                            </span>
+                          </div>
+                        </div>
+
+                        <span
+                          className={`px-2 py-0.5 rounded-md font-mono font-bold text-[11px] shrink-0 ${
+                            (opt.scoreWeight || 4) >= 5
+                              ? 'bg-emerald-100 text-emerald-800'
+                              : (opt.scoreWeight || 4) >= 4
+                              ? 'bg-teal-100 text-teal-800'
+                              : (opt.scoreWeight || 4) >= 3
+                              ? 'bg-amber-100 text-amber-800'
+                              : 'bg-rose-100 text-rose-800'
+                          }`}
+                        >
+                          {opt.scoreWeight || 4} ball
                         </span>
                       </div>
-                    </div>
-                  )}
-
-                  {/* Options List */}
-                  <div className={q.guideImage ? 'lg:col-span-8 space-y-2' : 'lg:col-span-12 space-y-2'}>
-                    <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-                      Mavjud baholash variantlari:
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {q.options.map((opt) => (
-                        <div
-                          key={opt.id}
-                          className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs flex items-start justify-between gap-2 hover:bg-slate-100/80 transition-colors"
-                        >
-                          <span className="font-medium text-slate-800 leading-relaxed">
-                            {opt.label}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -179,8 +189,8 @@ export default function MezonlarPage() {
             Maktabingiz yo‘l xavfsizligini 40 ta mezon bo‘yicha baholashga tayyormisiz?
           </h2>
           <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto leading-relaxed">
-            Maktab mas’ul xodimlari o‘z login va parollari bilan kabinetga kirib, barcha 40 ta savolga
-            haqqoniy ko‘rsatkichlar bilan javob berishlari mumkin.
+            Maktab mas’ul xodimlari o‘z login va parollari bilan kabinetga kirib, barcha 40 ta mezon bo‘yicha
+            haqqoniy ko‘rsatkichlar bilan o‘z-o‘zini baholashlari mumkin.
           </p>
           <div className="pt-2">
             <Link href={user ? '/school/criteria' : '/login'}>

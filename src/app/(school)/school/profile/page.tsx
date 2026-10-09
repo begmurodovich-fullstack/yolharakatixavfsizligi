@@ -30,7 +30,7 @@ export default function SchoolProfilePage() {
     setHasError(false);
 
     try {
-      const targetSchoolId = user?.schoolId || 'sch-bux-gij-24';
+      const targetSchoolId = user?.schoolId || 'sch-3837';
       const resolvedSchool = await schoolService.getSchoolById(targetSchoolId);
 
       if (!resolvedSchool) {
