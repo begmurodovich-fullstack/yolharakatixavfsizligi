@@ -27,6 +27,14 @@ export async function GET(
     }
 
     const s = rows[0];
+    const score = Number(s.current_score) || 0;
+    let starRating: 1 | 2 | 3 | 4 | 5 = 1;
+    if (score >= 90) starRating = 5;
+    else if (score >= 75) starRating = 4;
+    else if (score >= 50) starRating = 3;
+    else if (score >= 30) starRating = 2;
+    else starRating = 1;
+
     const formattedSchool = {
       id: s.id,
       schoolNumber: s.school_number,
@@ -37,7 +45,8 @@ export async function GET(
       districtName: s.district_name,
       directorName: s.director_name,
       studentCount: s.student_count,
-      currentScore: s.current_score,
+      currentScore: score,
+      starRating,
       coordinateStatus: s.coordinate_status,
       status: s.status,
       canReassess: Boolean(s.can_reassess),

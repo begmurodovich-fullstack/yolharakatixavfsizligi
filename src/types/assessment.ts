@@ -98,6 +98,8 @@ export interface Assessment {
   verifiedAt?: string;
   verifiedBy?: string;
   reviewerNotes?: string;
+  canReassess?: boolean;
+  reassessReason?: string | null;
   schoolName?: string;
   schoolNumber?: string;
   regionName?: string;

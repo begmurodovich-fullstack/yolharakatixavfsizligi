@@ -94,9 +94,16 @@ export function RankingComparison({
                 <span className="text-[11px] text-slate-400 block">{item.sublabel}</span>
               </div>
               <div className="text-right">
-                <span className={`font-extrabold font-mono ${item.isPrimary ? 'text-teal-700 text-base' : 'text-slate-700'}`}>
-                  {item.score > 0 ? `${((item.score / 100) * 4 + 1).toFixed(1)} ★ (Baho)` : 'Baholanmagan'}
-                </span>
+                <div className={`font-extrabold font-mono flex items-baseline justify-end gap-1.5 ${item.isPrimary ? 'text-teal-700 text-base' : 'text-slate-800'}`}>
+                  {item.score > 0 ? (
+                    <>
+                      <span>{item.score} ball</span>
+                      <span className="text-xs font-semibold text-amber-600">({(item.score / 20).toFixed(1)} ★)</span>
+                    </>
+                  ) : (
+                    <span>Baholanmagan</span>
+                  )}
+                </div>
                 <span className="text-[10px] text-slate-400 block">{item.score > 0 ? '5 yulduzli tizim' : 'Kutilmoqda'}</span>
               </div>
             </div>
@@ -114,7 +121,7 @@ export function RankingComparison({
         <span>
           {schoolScore > 0 ? (
             <>
-              Maktabingiz ko‘rsatkichi: <strong>{((schoolScore / 100) * 4 + 1).toFixed(1)} ★</strong>.
+              Maktabingiz ko‘rsatkichi: <strong>{schoolScore} ball ({(schoolScore / 20).toFixed(1)} ★)</strong>.
             </>
           ) : (
             'Maktabingiz hali o‘z-o‘zini baholashdan o‘tkazilmagan (Baholash kutilmoqda).'
