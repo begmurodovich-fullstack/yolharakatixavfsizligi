@@ -241,7 +241,7 @@ export default function SchoolAssessmentPage() {
   ) => {
     if (!school || !user) return;
     try {
-      const newEv = await assessmentService.uploadMockEvidence(
+      const newEv = await assessmentService.uploadEvidence(
         school.id,
         questionId,
         imageUrl,

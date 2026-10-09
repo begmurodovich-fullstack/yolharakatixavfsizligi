@@ -48,7 +48,7 @@ export class AssessmentService {
     return repositories.evidence.getByQuestion(questionId, schoolId);
   }
 
-  async uploadMockEvidence(
+  async uploadEvidence(
     schoolId: string,
     questionId: string,
     imageUrl: string,
@@ -84,7 +84,7 @@ export class AssessmentService {
       imageUrl,
       caption: caption || '«Maktabga Xavfsiz Qadam» foto-dalili',
       status: EvidenceStatus.PENDING,
-      uploadedBy: user?.id || 'usr-school-24',
+      uploadedBy: user?.id || 'usr-system',
     });
 
     if (user) {
@@ -99,6 +99,18 @@ export class AssessmentService {
     }
 
     return newEvidence;
+  }
+
+  // Alias for backward compatibility
+  async uploadMockEvidence(
+    schoolId: string,
+    questionId: string,
+    imageUrl: string,
+    caption?: string,
+    user?: User,
+    rawFile?: File
+  ): Promise<Evidence> {
+    return this.uploadEvidence(schoolId, questionId, imageUrl, caption, user, rawFile);
   }
 
   /**
