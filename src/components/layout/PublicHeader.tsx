@@ -11,11 +11,12 @@ import { cn } from '@/lib/cn';
 
 const NAV_LINKS = [
   { label: 'Bosh sahifa', href: '/' },
-  { label: 'Interaktiv Xarita', href: '/map' },
-  { label: 'Platforma', href: '/platform' },
-  { label: 'Mezonlar', href: '/mezonlar' },
+  { label: 'Xarita', href: '/map' },
   { label: 'Reyting', href: '/reyting' },
   { label: 'Statistika', href: '/statistika' },
+  { label: 'SR4S Demonstrator', href: '/demonstrator' },
+  { label: 'Mezonlar', href: '/mezonlar' },
+  { label: 'Platforma', href: '/platform' },
   { label: 'Aloqa', href: '/aloqa' },
 ];
 
