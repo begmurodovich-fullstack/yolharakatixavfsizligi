@@ -178,12 +178,67 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
     );
   };
 
-  // Rasmiy iRAP Piyodalar Xavfi Modeli hisob-kitobi
+  // Rasmiy iRAP Piyodalar Xavfi Modeli hisob-kitobi (Zaxira / Fallback)
   const irapResult: IrapCalculationResult = useMemo(() => {
     return calculateIrapSr4s(attributes);
   }, [attributes]);
 
-  const { decimalScore, starLevel, srsScore, ctsAlong, ctsCrossing, starCount, crossingMain, crossingSide } = irapResult;
+  // Jonli Rasmiy iRAP / SR4S API (results.starratingforschools.org/model/V31a)
+  const [officialData, setOfficialData] = useState<{
+    starRatingScore: string;
+    banding: number[];
+    starRating: number;
+    decimalStarRating: string;
+    along: string;
+    crossingSide: string;
+    crossingMain: string;
+  } | null>(null);
+  const [isCalculating, setIsCalculating] = useState<boolean>(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    const timeoutId = setTimeout(async () => {
+      setIsCalculating(true);
+      try {
+        const res = await fetch('/api/sr4s/calculate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ attributes }),
+        });
+        if (res.ok) {
+          const json = await res.json();
+          if (json.success && json.data && isMounted) {
+            setOfficialData(json.data);
+          }
+        }
+      } catch (err) {
+        console.warn('Realtime official calculation warning:', err);
+      } finally {
+        if (isMounted) setIsCalculating(false);
+      }
+    }, 150);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timeoutId);
+    };
+  }, [attributes]);
+
+  // Rasmiy natija ustuvor, zaxira sifatida ichki formula ishlaydi
+  const decimalScore = officialData ? officialData.decimalStarRating : irapResult.decimalScore;
+  const starCount = officialData ? officialData.starRating : irapResult.starCount;
+  const srsScore = officialData ? officialData.starRatingScore : String(irapResult.srsScore);
+  const ctsAlong = officialData ? officialData.along : String(irapResult.ctsAlong);
+  const crossingSide = officialData ? officialData.crossingSide : String(irapResult.crossingSide);
+  const crossingMain = officialData ? officialData.crossingMain : String(irapResult.crossingMain);
+  const ctsCrossing = (parseFloat(String(crossingMain)) + parseFloat(String(crossingSide))).toFixed(1);
+
+  const starLevel = useMemo(() => {
+    return (
+      OFFICIAL_SR4S_STAR_LEVELS.find((l) => l.starCount === starCount) ||
+      OFFICIAL_SR4S_STAR_LEVELS[OFFICIAL_SR4S_STAR_LEVELS.length - 1]
+    );
+  }, [starCount]);
 
   const handleSelectOption = (attrId: string, optionId: string) => {
     if (isLocked) {
@@ -441,6 +496,8 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
         starRating: decimalScore,
         ctsAlong,
         ctsCrossing,
+        crossingMain,
+        crossingSide,
         operatingSpeed: irapResult.operatingSpeed,
         speedFactor: irapResult.speedFactor,
         flowFactor: irapResult.flowFactor,
@@ -686,9 +743,16 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
                 <Activity className="w-3.5 h-3.5 text-teal-600" />
                 <span>iRAP Xavf Ko‘rsatkichlari</span>
               </div>
-              <span className="text-[10px] font-mono bg-teal-50 text-teal-700 px-1.5 py-0.5 rounded font-semibold">
-                SRS: {srsScore}
-              </span>
+              <div className="flex items-center gap-1.5">
+                {isCalculating && (
+                  <span className="flex items-center gap-1 text-[9px] text-teal-600">
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                  </span>
+                )}
+                <span className="text-[10px] font-mono bg-teal-50 text-teal-700 px-1.5 py-0.5 rounded font-semibold">
+                  SRS: {srsScore}
+                </span>
+              </div>
             </div>
 
             <div className="grid grid-cols-3 gap-1.5 text-[10px]">
@@ -706,7 +770,7 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
                   Asosiy yo‘l (Main)
                 </div>
                 <div className="font-bold text-slate-800 mt-0.5 font-mono text-xs">
-                  {crossingMain ?? +(ctsCrossing - (crossingSide || 0)).toFixed(1)}
+                  {crossingMain}
                 </div>
               </div>
 
@@ -715,7 +779,7 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
                   Yon yo‘l (Side)
                 </div>
                 <div className="font-bold text-slate-800 mt-0.5 font-mono text-xs">
-                  {crossingSide ?? 0.0}
+                  {crossingSide}
                 </div>
               </div>
             </div>
