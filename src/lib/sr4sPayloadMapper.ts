@@ -1,5 +1,5 @@
-import { AttributeDefinition } from '@/data/sr4sAttributesData';
-import { SR4S_DEFAULT_ATTRIBUTES_MAP } from '@/data/sr4sOfficialBaseline';
+import { AttributeDefinition } from '../data/sr4sAttributesData';
+import { SR4S_DEFAULT_ATTRIBUTES_MAP } from '../data/sr4sOfficialBaseline';
 
 /**
  * UI mezon ID-larining rasmiy iRAP / SR4S parametr kalitlariga moslik jadvali.

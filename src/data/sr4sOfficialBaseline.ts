@@ -17,7 +17,7 @@ export const SR4S_OFFICIAL_BASELINE = {
  * Rasmiy saytning barcha 40 ta mezonining standart (Default) qiymatlar xaritasi.
  */
 export const SR4S_DEFAULT_ATTRIBUTES_MAP: Record<string, string> = {
-  land_use_driver_side: '3',
+  land_use_driver_side: '1',
   land_use_passenger_side: '3',
   area_type: '2',
   vehicle_parking: '1',
