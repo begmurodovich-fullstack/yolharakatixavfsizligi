@@ -17,7 +17,10 @@ import {
   Eye,
   EyeOff,
   Info,
+  ArrowLeft,
+  HelpCircle,
 } from 'lucide-react';
+import Link from 'next/link';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -77,7 +80,18 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="space-y-6 max-w-md mx-auto">
+    <div className="space-y-4 max-w-md mx-auto">
+      {/* Back to Home Link */}
+      <div className="flex items-center justify-between px-1">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-teal-700 transition-colors"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Bosh sahifaga qaytish</span>
+        </Link>
+      </div>
+
       {/* Main Login Card */}
       <Card className="border-slate-200 bg-white shadow-md">
         <CardHeader className="p-6 pb-4 border-b border-slate-100">
@@ -177,11 +191,19 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <div className="mt-6 pt-4 border-t border-slate-100 flex items-start gap-2 text-[11px] text-slate-500 leading-relaxed">
-            <Info className="w-3.5 h-3.5 text-teal-600 shrink-0 mt-0.5" />
-            <span>
-              Har bir maktabga dastlabki kirish uchun maxsus login va boshlang‘ich parol berilgan. Birinchi kirishda yangi shaxsiy parol o‘rnatiladi.
-            </span>
+          <div className="mt-6 pt-4 border-t border-slate-100 space-y-3">
+            <div className="flex items-start gap-2 text-[11px] text-slate-500 leading-relaxed">
+              <Info className="w-3.5 h-3.5 text-teal-600 shrink-0 mt-0.5" />
+              <span>
+                Har bir maktabga dastlabki kirish uchun maxsus login va boshlang‘ich parol berilgan. Birinchi kirishda yangi shaxsiy parol o‘rnatiladi.
+              </span>
+            </div>
+            <div className="flex items-center justify-between pt-2 border-t border-slate-100/80 text-[11px] text-slate-500">
+              <span>Parolni unutdingizmi yoki yordam kerakmi?</span>
+              <Link href="/aloqa" className="text-teal-700 font-semibold hover:underline">
+                Bog‘lanish
+              </Link>
+            </div>
           </div>
         </CardContent>
       </Card>

@@ -19,18 +19,25 @@ export async function POST(request: NextRequest) {
 
 
     // 1. Direct email lookup or flexible school/district search
+    const cleanSearchEmail = trimmedEmail
+      .replace('@maktab.uz', '')
+      .replace('@gijduvon.demo', '')
+      .replace(/_tumani|_shahri|-tumani|-shahri/g, '');
+
     let users = await query(
       `SELECT id, email, password_hash, name, role, school_id, region_id, district_id, is_first_login, is_active, created_at, updated_at
        FROM users 
        WHERE (
          LOWER(email) = $1 
-         OR LOWER(email) LIKE $2
-         OR ($3 != '' AND school_id = $3)
+         OR LOWER(email) = $2
+         OR LOWER(email) LIKE $3
+         OR ($4 != '' AND school_id = $4)
        ) AND is_active = true
        LIMIT 1`,
       [
         trimmedEmail,
-        `%${trimmedEmail.replace('@maktab.uz', '').replace('@gijduvon.demo', '').replace(/[^a-z0-9]/g, '%')}%`,
+        `${cleanSearchEmail}@maktab.uz`,
+        `%${cleanSearchEmail.replace(/[^a-z0-9]/g, '%')}%`,
         trimmedEmail.startsWith('sch-') || trimmedEmail.startsWith('sch_') 
           ? trimmedEmail.replace('_', '-').replace('@maktab.uz', '')
           : '',
