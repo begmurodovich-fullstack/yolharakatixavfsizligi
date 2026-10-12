@@ -1,9 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query } from '@/lib/db';
-import fs from 'fs';
+import { promises as fsPromises } from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 
 export const dynamic = 'force-dynamic';
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+const ALLOWED_EXTENSIONS: Record<string, string> = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'image/webp': 'webp',
+  'image/gif': 'gif',
+};
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,39 +33,47 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // presetUrl faqat data: bilan boshlanmasin
+    if (presetUrl && presetUrl.startsWith('data:')) {
+      return NextResponse.json(
+        { message: "Noto'g'ri rasm manzili: base64 qabul qilinmaydi" },
+        { status: 400 }
+      );
+    }
+
     let finalImageUrl = presetUrl || '';
 
-    // If actual binary file was uploaded
     if (file && file.size > 0) {
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-      if (!allowedTypes.includes(file.type)) {
+      // Fayl turi tekshiruvi
+      if (!ALLOWED_TYPES.includes(file.type)) {
         return NextResponse.json(
-          { message: 'Faqat JPG, PNG yoki WebP rasm fayllari qabul qilinadi' },
+          { message: 'Faqat JPG, PNG, WebP yoki GIF rasm fayllari qabul qilinadi' },
+          { status: 400 }
+        );
+      }
+
+      // Hajm tekshiruvi
+      if (file.size > MAX_FILE_SIZE) {
+        return NextResponse.json(
+          { message: `Rasm hajmi ${MAX_FILE_SIZE / 1024 / 1024} MB dan oshmasligi kerak` },
           { status: 400 }
         );
       }
 
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
+      const ext = ALLOWED_EXTENSIONS[file.type] || 'jpg';
 
-      try {
-        // Ensure directory exists in public/uploads/evidence if local
-        const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'evidence');
-        if (!fs.existsSync(uploadDir)) {
-          fs.mkdirSync(uploadDir, { recursive: true });
-        }
+      // Xavfsiz noyob fayl nomi (crypto bilan)
+      const uniqueId = crypto.randomBytes(16).toString('hex');
+      const filename = `evi_${uniqueId}.${ext}`;
 
-        const ext = file.type === 'image/webp' ? 'webp' : file.type === 'image/png' ? 'png' : 'jpg';
-        const filename = `evi_${schoolId}_${questionId}_${Date.now()}.${ext}`;
-        const filePath = path.join(uploadDir, filename);
+      const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'evidence');
 
-        fs.writeFileSync(filePath, buffer);
-        finalImageUrl = `/uploads/evidence/${filename}`;
-      } catch (fsErr) {
-        // Vercel serverless read-only filesystem fallback: store as base64 Data URL
-        console.warn('Filesystem write not supported on serverless, fallback to base64 Data URL');
-        finalImageUrl = `data:${file.type};base64,${buffer.toString('base64')}`;
-      }
+      // Asinxron fayl yozish
+      await fsPromises.mkdir(uploadDir, { recursive: true });
+      await fsPromises.writeFile(path.join(uploadDir, filename), buffer);
+      finalImageUrl = `/uploads/evidence/${filename}`;
     }
 
     if (!finalImageUrl) {
@@ -65,7 +83,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const evidenceId = `evi-${Date.now()}`;
+    // Bazada saqlash: image_url data: bilan boshlanmasligi shart
+    const evidenceId = `evi-${crypto.randomBytes(8).toString('hex')}`;
 
     const rows = await query(
       `INSERT INTO evidence (id, school_id, question_id, image_url, caption, status, uploaded_by, uploaded_at)

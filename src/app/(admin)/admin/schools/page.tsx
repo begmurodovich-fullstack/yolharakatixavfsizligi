@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { schoolService } from '@/services/schoolService';
 import { adminService } from '@/services/adminService';
@@ -38,6 +38,8 @@ export default function AdminSchoolsPage() {
   const [selectedScoreStatus, setSelectedScoreStatus] = useState<ScoreStatus | 'ALL'>('ALL');
   const [selectedCoordStatus, setSelectedCoordStatus] = useState<CoordinateStatus | 'ALL'>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
+  // Debounced search: 400ms kechikish bilan so'rov yuboriladi
+  const [debouncedSearch, setDebouncedSearch] = useState('');
 
   // Pagination
   const [page, setPage] = useState(1);
@@ -50,7 +52,19 @@ export default function AdminSchoolsPage() {
   const [hasError, setHasError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  // 1. Initial load regions & districts
+  // Eski so'rovni bekor qilish uchun AbortController ref
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  // Qidiruv matnida debounce: 400ms
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+      setPage(1); // Qidiruv o'zgarganda sahifani boshiga qaytarish
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  // 1. Viloyat va tumanlarni bir marta yuklash
   useEffect(() => {
     Promise.all([schoolService.getRegions(), schoolService.getDistricts()])
       .then(([regList, distList]) => {
@@ -60,8 +74,14 @@ export default function AdminSchoolsPage() {
       .catch((err) => console.error('Error loading regions/districts:', err));
   }, []);
 
-  // 2. Fetch schools dynamically from PostgreSQL on filter / search / page change
+  // 2. Maktablarni filtr/qidiruv/sahifa o'zgarganda yangilash
   const fetchSchools = useCallback(async () => {
+    // Eski so'rovni bekor qilish
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    abortControllerRef.current = new AbortController();
+
     setIsLoading(true);
     setHasError(false);
 
@@ -71,15 +91,16 @@ export default function AdminSchoolsPage() {
         districtId: selectedDistrictId !== 'ALL' ? selectedDistrictId : undefined,
         scoreStatus: selectedScoreStatus !== 'ALL' ? selectedScoreStatus : undefined,
         coordinateStatus: selectedCoordStatus !== 'ALL' ? selectedCoordStatus : undefined,
-        searchQuery: searchQuery.trim() || undefined,
+        searchQuery: debouncedSearch.trim() || undefined,
         limit: pageSize,
         offset: (page - 1) * pageSize,
       });
       setSchools(data);
     } catch (err: any) {
+      if (err?.name === 'AbortError') return; // Bekor qilingan so'rov — xato ko'rsatilmaydi
       console.error('Admin schools load error:', err);
       setHasError(true);
-      setErrorMessage(err?.message || 'Maktablar ma’lumotlarini yuklashda xatolik.');
+      setErrorMessage(err?.message || "Maktablar ma'lumotlarini yuklashda xatolik.");
     } finally {
       setIsLoading(false);
     }
@@ -88,7 +109,7 @@ export default function AdminSchoolsPage() {
     selectedDistrictId,
     selectedScoreStatus,
     selectedCoordStatus,
-    searchQuery,
+    debouncedSearch,
     page,
     pageSize,
   ]);
@@ -97,13 +118,13 @@ export default function AdminSchoolsPage() {
     fetchSchools();
   }, [fetchSchools]);
 
-  // Handle cascading districts
+  // Viloyat o'zgarganda tuman filterni ham yangilash
   const filteredDistricts = useMemo(() => {
     if (selectedRegionId === 'ALL') return districts;
     return districts.filter((d) => d.regionId === selectedRegionId);
   }, [districts, selectedRegionId]);
 
-  // Reset Filters
+  // Filtrlarni tiklash
   const handleResetFilters = () => {
     setSelectedRegionId('ALL');
     setSelectedDistrictId('ALL');
@@ -113,13 +134,13 @@ export default function AdminSchoolsPage() {
     setPage(1);
   };
 
-  // Reset Password Action
+  // Parolni tiklash
   const handleResetPassword = async (schoolId: string) => {
     if (!user) return;
     try {
       const defaultPass = await adminService.resetSchoolPassword(schoolId, user);
       info(
-        `Maktab paroli boshlang‘ich holatga tiklandi: ${defaultPass}`,
+        `Maktab paroli boshlang'ich holatga tiklandi: ${defaultPass}`,
         'Parol yangilandi'
       );
     } catch (e: any) {
@@ -127,7 +148,7 @@ export default function AdminSchoolsPage() {
     }
   };
 
-  // Toggle School Active/Inactive
+  // Maktab holatini o'zgartirish
   const handleToggleStatus = async (schoolId: string) => {
     if (!user) return;
     try {
@@ -136,7 +157,7 @@ export default function AdminSchoolsPage() {
       if (selectedSchool?.id === schoolId) {
         setSelectedSchool(updated);
       }
-      success(`Maktab holati o‘zgartirildi: ${updated.status}`, 'Status yangilandi');
+      success(`Maktab holati o'zgartirildi: ${updated.status}`, 'Status yangilandi');
     } catch (e: any) {
       console.error('Status toggle failed:', e);
     }
@@ -163,7 +184,7 @@ export default function AdminSchoolsPage() {
         </div>
       </div>
 
-      {/* 2. Cascading Filter Bar */}
+      {/* 2. Kaskadli Filtr */}
       <SchoolFilterBar
         regions={regions}
         districts={filteredDistricts}
@@ -191,13 +212,13 @@ export default function AdminSchoolsPage() {
         searchQuery={searchQuery}
         onSearchChange={(val) => {
           setSearchQuery(val);
-          setPage(1);
+          // setPage(1) debounce useEffect ichida bajariladi
         }}
         onReset={handleResetFilters}
         totalResults={schools.length}
       />
 
-      {/* 3. Schools Admin Table */}
+      {/* 3. Maktablar Jadvali */}
       {isLoading ? (
         <div className="p-12 text-center space-y-3 bg-white rounded-2xl border border-slate-200">
           <Skeleton className="h-10 w-full" />
@@ -207,8 +228,8 @@ export default function AdminSchoolsPage() {
       ) : hasError ? (
         <div className="py-12 bg-white rounded-2xl border border-slate-200">
           <ErrorState
-            title="Maktablarni yuklab bo‘lmadi"
-            message={errorMessage || 'Ma’lumotlarni olishda xatolik yuz berdi.'}
+            title="Maktablarni yuklab bo'lmadi"
+            message={errorMessage || "Ma'lumotlarni olishda xatolik yuz berdi."}
             onRetry={fetchSchools}
           />
         </div>
@@ -221,7 +242,7 @@ export default function AdminSchoolsPage() {
             onToggleStatus={handleToggleStatus}
           />
 
-          {/* Pagination Controls */}
+          {/* Sahifalash */}
           <div className="flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-200 shadow-2xs text-xs">
             <div className="text-slate-500 font-mono">
               Sahifa: <strong className="text-slate-900">{page}</strong> (Har sahifada {pageSize} ta maktab)
@@ -254,7 +275,7 @@ export default function AdminSchoolsPage() {
         </>
       )}
 
-      {/* 4. Details Modal */}
+      {/* 4. Tafsilotlar modali */}
       {selectedSchool && (
         <SchoolDetailModal
           school={selectedSchool}

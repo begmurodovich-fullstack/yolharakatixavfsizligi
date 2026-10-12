@@ -20,7 +20,6 @@ import { StarRatingBadge, getStarRating } from '@/components/ui/status-badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { CountermeasuresMatrixCard } from '@/features/statistics/components';
 import {
   Table,
   TableHeader,
@@ -301,9 +300,6 @@ export default function ReytingPage() {
             </TableBody>
           </Table>
         </div>
-
-        {/* SR4S Countermeasures Matrix */}
-        <CountermeasuresMatrixCard defaultOpenAll={true} className="mt-8" />
       </div>
     </div>
   );

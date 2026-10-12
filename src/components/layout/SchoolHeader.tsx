@@ -87,6 +87,11 @@ export function SchoolHeader() {
             <div className="hidden sm:flex items-center gap-2 border-r border-slate-200 pr-3">
               <span className="text-xs text-slate-500 font-medium">Joriy Yulduz Reytingi:</span>
               <ScoreStatusBadge score={school.currentScore} />
+              {school.currentScore > 0 && (
+                <span className="text-xs font-mono font-bold text-slate-600 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full">
+                  {(school.currentScore / 20).toFixed(1)} ★ ({school.currentScore}b)
+                </span>
+              )}
             </div>
           )}
 

@@ -27,17 +27,18 @@ import { RoadCategoryStarChart } from '@/features/dashboard/components/RoadCateg
 import { CountermeasuresMatrixCard } from '@/features/statistics/components';
 
 const INITIAL_STATS: NationalStatisticsSummary = {
-  totalSchools: 10193,
-  averageScore: 82,
-  safeCount: 146,
-  moderateCount: 39,
-  highRiskCount: 13,
-  safePercentage: 74,
-  moderatePercentage: 20,
-  highRiskPercentage: 6,
-  verifiedCoordinatesCount: 198,
+  totalSchools: 0,
+  assessedCount: 0,
+  averageScore: null,
+  safeCount: 0,
+  moderateCount: 0,
+  highRiskCount: 0,
+  safePercentage: 0,
+  moderatePercentage: 0,
+  highRiskPercentage: 0,
+  verifiedCoordinatesCount: 0,
   pendingCoordinatesCount: 0,
-  periodName: '2025–2026 o‘quv yili (III chorak)',
+  periodName: "2025\u20132026 o\u2018quv yili (III chorak)",
 };
 
 export default function StatistikaPage() {

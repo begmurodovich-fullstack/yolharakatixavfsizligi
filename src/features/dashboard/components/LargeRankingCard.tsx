@@ -51,7 +51,7 @@ export function LargeRankingCard({ rankingOverview, currentScore }: LargeRanking
           </div>
           <div className="space-y-1">
             <div className="pt-1">
-              <Sr4sStarBadge stars={score > 0 ? (score >= 90 ? 5 : score >= 75 ? 4 : score >= 60 ? 3 : score >= 45 ? 2 : 1) : 0} size="md" />
+              <Sr4sStarBadge stars={score > 0 ? (score >= 90 ? 5 : score >= 75 ? 4 : score >= 50 ? 3 : score >= 30 ? 2 : 1) : 0} size="md" />
             </div>
             <div className="pt-1">
               <ScoreStatusBadge score={score} />

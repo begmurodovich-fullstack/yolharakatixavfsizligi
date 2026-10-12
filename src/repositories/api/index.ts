@@ -121,12 +121,12 @@ export class ApiAssessmentRepository implements IAssessmentRepository {
     return [
       {
         id: 'period-2026-q1',
-        name: '2025–2026 o‘quv yili (III chorak)',
+        name: "2025\u20132026 o\u2018quv yili (III chorak)",
         startDate: '2026-01-10T00:00:00Z',
         endDate: '2026-03-31T23:59:59Z',
         isCurrent: true,
         academicYear: '2025-2026',
-        description: 'Joriy respublika maktablari yo‘l xavfsizligi monitoring davri',
+        description: "Joriy respublika maktablari yo'l xavfsizligi monitoring davri",
       },
     ];
   }
@@ -165,8 +165,30 @@ export class ApiAssessmentRepository implements IAssessmentRepository {
 
 // 4. ApiCriterionRepository
 export class ApiCriterionRepository implements ICriterionRepository {
+  private static cachedPromise: Promise<{ criteria: Criterion[]; questions: Question[] }> | null = null;
+  private static cacheTime = 0;
+  private static CACHE_TTL_MS = 60000; // 1 minutlik xotiradagi kesh
+
+  private async fetchCriteriaData(): Promise<{ criteria: Criterion[]; questions: Question[] }> {
+    const now = Date.now();
+    if (
+      ApiCriterionRepository.cachedPromise &&
+      now - ApiCriterionRepository.cacheTime < ApiCriterionRepository.CACHE_TTL_MS
+    ) {
+      return ApiCriterionRepository.cachedPromise;
+    }
+
+    ApiCriterionRepository.cacheTime = now;
+    ApiCriterionRepository.cachedPromise = apiClient<{ criteria: Criterion[]; questions: Question[] }>('/criteria').catch((err) => {
+      ApiCriterionRepository.cachedPromise = null;
+      throw err;
+    });
+
+    return ApiCriterionRepository.cachedPromise;
+  }
+
   async getAllCriteria(): Promise<Criterion[]> {
-    const res = await apiClient<{ criteria: Criterion[]; questions: Question[] }>('/criteria');
+    const res = await this.fetchCriteriaData();
     return res?.criteria || [];
   }
 
@@ -176,7 +198,7 @@ export class ApiCriterionRepository implements ICriterionRepository {
   }
 
   async getAllQuestions(criterionId?: string): Promise<Question[]> {
-    const res = await apiClient<{ criteria: Criterion[]; questions: Question[] }>('/criteria');
+    const res = await this.fetchCriteriaData();
     const questions = res?.questions || [];
     return criterionId ? questions.filter((q) => q.criterionId === criterionId) : questions;
   }
@@ -187,7 +209,7 @@ export class ApiCriterionRepository implements ICriterionRepository {
   }
 }
 
-// 5. ApiRankingRepository
+// 5. ApiRankingRepository — TUZATILGAN: 200 cheklovni olib tashlash, topilmagan maktabga null qaytarish
 export class ApiRankingRepository implements IRankingRepository {
   private calculateScoreStatus(score: number): ScoreStatus {
     if (score >= 80) return ScoreStatus.GREEN;
@@ -196,8 +218,13 @@ export class ApiRankingRepository implements IRankingRepository {
   }
 
   async getRepublicRankings(periodId: string): Promise<RankingEntry[]> {
-    const schools = await apiClient<School[]>('/schools', { params: { assessedOnly: 'true', limit: 200 } });
-    return schools.map((s, index) => ({
+    // Barcha baholangan maktablarni olish (200 bilan sun'iy cheklanmaydi)
+    const schools = await apiClient<School[]>('/schools', {
+      params: { assessedOnly: 'true', limit: 15000 },
+    });
+    // Ballni kamayish tartibida saralash
+    const sorted = [...schools].sort((a, b) => (b.currentScore || 0) - (a.currentScore || 0));
+    return sorted.map((s, index) => ({
       rank: index + 1,
       previousRank: index + 1,
       entityId: s.id,
@@ -213,15 +240,16 @@ export class ApiRankingRepository implements IRankingRepository {
       percentage: s.currentScore,
       scoreStatus: this.calculateScoreStatus(s.currentScore),
       assessmentPeriodId: periodId,
-      schoolCount: schools.length,
+      schoolCount: sorted.length,
     }));
   }
 
   async getRegionRankings(periodId: string, regionId?: string): Promise<RankingEntry[]> {
     const schools = await apiClient<School[]>('/schools', {
-      params: { regionId: regionId || 'ALL', assessedOnly: 'true', limit: 200 },
+      params: { regionId: regionId || 'ALL', assessedOnly: 'true', limit: 15000 },
     });
-    return schools.map((s, index) => ({
+    const sorted = [...schools].sort((a, b) => (b.currentScore || 0) - (a.currentScore || 0));
+    return sorted.map((s, index) => ({
       rank: index + 1,
       previousRank: index + 1,
       entityId: s.id,
@@ -237,15 +265,16 @@ export class ApiRankingRepository implements IRankingRepository {
       percentage: s.currentScore,
       scoreStatus: this.calculateScoreStatus(s.currentScore),
       assessmentPeriodId: periodId,
-      schoolCount: schools.length,
+      schoolCount: sorted.length,
     }));
   }
 
   async getDistrictRankings(periodId: string, districtId?: string): Promise<RankingEntry[]> {
     const schools = await apiClient<School[]>('/schools', {
-      params: { districtId: districtId || 'ALL', assessedOnly: 'true', limit: 200 },
+      params: { districtId: districtId || 'ALL', assessedOnly: 'true', limit: 15000 },
     });
-    return schools.map((s, index) => ({
+    const sorted = [...schools].sort((a, b) => (b.currentScore || 0) - (a.currentScore || 0));
+    return sorted.map((s, index) => ({
       rank: index + 1,
       previousRank: index + 1,
       entityId: s.id,
@@ -261,7 +290,7 @@ export class ApiRankingRepository implements IRankingRepository {
       percentage: s.currentScore,
       scoreStatus: this.calculateScoreStatus(s.currentScore),
       assessmentPeriodId: periodId,
-      schoolCount: schools.length,
+      schoolCount: sorted.length,
     }));
   }
 
@@ -269,10 +298,13 @@ export class ApiRankingRepository implements IRankingRepository {
     const school = await apiClient<School>(`/schools/${schoolId}`);
     if (!school) return null;
 
-    const districtList = await this.getDistrictRankings(periodId, school.districtId);
-    const regionList = await this.getRegionRankings(periodId, school.regionId);
-    const republicList = await this.getRepublicRankings(periodId);
+    const [districtList, regionList, republicList] = await Promise.all([
+      this.getDistrictRankings(periodId, school.districtId),
+      this.getRegionRankings(periodId, school.regionId),
+      this.getRepublicRankings(periodId),
+    ]);
 
+    // findIndex ishlatish, topilmasa null (1-o'rin emas)
     const distIndex = districtList.findIndex((s) => s.entityId === schoolId);
     const regIndex = regionList.findIndex((s) => s.entityId === schoolId);
     const repIndex = republicList.findIndex((s) => s.entityId === schoolId);
@@ -284,17 +316,18 @@ export class ApiRankingRepository implements IRankingRepository {
       regionName: school.regionName || '',
       districtName: school.districtName || '',
       periodId,
-      periodName: '2025–2026 o‘quv yili (III chorak)',
+      periodName: "2025\u20132026 o\u2018quv yili (III chorak)",
       currentScore: school.currentScore,
       maxScore: 100,
       percentage: school.currentScore,
       scoreStatus: this.calculateScoreStatus(school.currentScore),
-      districtRank: distIndex >= 0 ? distIndex + 1 : 1,
-      totalDistrictSchools: districtList.length || 1,
-      regionRank: regIndex >= 0 ? regIndex + 1 : 1,
-      totalRegionSchools: regionList.length || 1,
-      republicRank: repIndex >= 0 ? repIndex + 1 : 1,
-      totalRepublicSchools: republicList.length || 10110,
+      // Topilmasa null qaytarish — 1-o'rin emas
+      districtRank: distIndex >= 0 ? distIndex + 1 : null,
+      totalDistrictSchools: districtList.length,
+      regionRank: regIndex >= 0 ? regIndex + 1 : null,
+      totalRegionSchools: regionList.length,
+      republicRank: repIndex >= 0 ? repIndex + 1 : null,
+      totalRepublicSchools: republicList.length,
     };
   }
 }

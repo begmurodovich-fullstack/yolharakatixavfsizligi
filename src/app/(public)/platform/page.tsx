@@ -41,15 +41,15 @@ const WORKFLOW_STEPS = [
   },
   {
     step: '03',
-    title: 'Ko‘rsatkichlar va amaliy monitoring',
-    desc: 'Har bir tanlangan parametr bo‘yicha maktab mas’uli ma’lumotlarni kiritadi va asoslaydi.',
+    title: 'Foto dalillar joylashtirish',
+    desc: 'Yo‘l belgilari, chiziqlar, piyodalar trotuarlari va xavfsizlik to‘siqlari holati bo‘yicha foto dalillar tizimga yuklanadi.',
     icon: Camera,
-    badge: '3-bosqich: Ko‘rsatkichlarni Kiritish',
+    badge: '3-bosqich: Foto dalillar',
   },
   {
     step: '04',
     title: 'Tekshirish va verifikatsiya',
-    desc: 'Adminlar yoki tuman/viloyat mas’ul mutaxassislari baholash to‘g‘ri bajarilganligini ko‘rib chiqishi (verifikatsiya) va xalqaro formula asosida Star Rating hisoblanadi.',
+    desc: 'Adminlar yoki tuman/viloyat mas’ul mutaxassislari baholash to‘g‘ri bajarilganligini ko‘rib chiqishi.',
     icon: LineChart,
     badge: '4-bosqich: Tekshirish & Verifikatsiya',
   },
@@ -69,7 +69,7 @@ const STAKEHOLDERS = [
     color: 'bg-emerald-50 text-emerald-700 border-emerald-200',
     points: [
       'Maktab atrofidagi haqiqiy xavfli vaziyatni rasmiy qayd etish',
-      'Yo‘l belgisi, svetofor yoki yo‘lak talab qilish uchun asosli ariza',
+      'Yo‘l belgisi, svetofor yoki trotuar talab qilish uchun asosli ariza',
       'O‘quvchilar va ota-onalar xavfsizligini ta’minlash monitoringi',
     ],
   },
@@ -304,7 +304,7 @@ export default function PlatformPage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-teal-700 font-bold">✓</span>
-                  <span>Qizil zonadagi (1-2 yulduz) maktablarga avtomatik yo‘l ta’mirlash tavsiyalari</span>
+                  <span>Qizil zonadagi (1-2 yulduz) maktablarga avtomatik chora-tadbirlar ko‘rish bo‘yicha tavsiyalar</span>
                 </li>
               </ul>
             </div>

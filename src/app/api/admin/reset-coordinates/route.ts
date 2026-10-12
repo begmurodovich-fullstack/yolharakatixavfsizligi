@@ -1,60 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { query } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
-// One-time cleanup endpoint — call once from browser then it's done
-// GET /api/admin/reset-coordinates
+// Xavfsizlik maqsadida ushbu ommaviy xavfli GET endpoint o'chirilgan (T03 talabi).
+// Baza tozalash ishlari faqat nazoratli server skriptlari orqali amalga oshirilishi lozim.
 export async function GET(request: NextRequest) {
-  // Simple secret check so random visitors can't trigger it
-  const secret = request.nextUrl.searchParams.get('secret');
-  if (secret !== 'admin-reset-2026') {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  return NextResponse.json(
+    {
+      error: 'Ushbu endpoint xavfsizlik maqsadida bekor qilingan. Baza boshqaruvi uchun xizmat skriptlaridan foydalaning.',
+    },
+    { status: 403 }
+  );
+}
 
-  try {
-    // Check current state
-    const before = await query(`
-      SELECT coordinate_status, COUNT(*) as count
-      FROM schools
-      GROUP BY coordinate_status
-      ORDER BY count DESC;
-    `);
-
-    // Set ALL schools to NOT_SUBMITTED and null out any coordinates
-    const updateResult = await query(`
-      UPDATE schools
-      SET coordinate_status = 'NOT_SUBMITTED',
-          latitude = NULL,
-          longitude = NULL,
-          address_notes = NULL,
-          current_score = 0,
-          updated_at = NOW();
-    `);
-
-    // Clear all test data
-    await query('DELETE FROM assessments;');
-    await query('DELETE FROM evidence;');
-    await query('DELETE FROM audit_logs;');
-    await query('DELETE FROM notifications;');
-
-    // Verify after
-    const after = await query(`
-      SELECT coordinate_status, COUNT(*) as count
-      FROM schools
-      GROUP BY coordinate_status
-      ORDER BY count DESC;
-    `);
-
-    return NextResponse.json({
-      success: true,
-      message: 'Neon database 100% tozalandi',
-      before: before,
-      updated_rows: updateResult.length,
-      after: after,
-    });
-  } catch (error: any) {
-    console.error('Reset error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
+export async function POST(request: NextRequest) {
+  return NextResponse.json(
+    {
+      error: 'Ushbu amal taqiqlangan.',
+    },
+    { status: 403 }
+  );
 }

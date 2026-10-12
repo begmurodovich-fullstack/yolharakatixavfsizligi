@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { School } from '@/types';
 import L from 'leaflet';
-import { Layers, Globe, Navigation } from 'lucide-react';
+import { Layers, Globe } from 'lucide-react';
 
 interface RealLeafletMapProps {
   schools: School[];
@@ -13,14 +13,15 @@ interface RealLeafletMapProps {
 
 const TILE_LAYERS = {
   satellite: {
-    name: '🛰️ Sun’iy Yo‘ldosh HD (Sputnik)',
+    name: "🛰️ Sun'iy Yo'ldosh HD (Sputnik)",
     base: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    labels: 'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
-    attribution: '&copy; Esri World Imagery & GIS Community',
+    labels:
+      'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+    attribution: '&copy; Esri World Imagery &amp; GIS Community',
     maxZoom: 19,
   },
   voyager: {
-    name: '🎨 Zamonaviy Ko‘chalar (HD)',
+    name: "🎨 Zamonaviy Ko'chalar (HD)",
     base: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
     labels: null,
     attribution: '&copy; OpenStreetMap contributors',
@@ -35,26 +36,100 @@ const TILE_LAYERS = {
   },
 };
 
-export function RealLeafletMap({
-  schools,
-  selectedSchool,
-  onSelectSchool,
-}: RealLeafletMapProps) {
+function buildMarkerIcon(
+  sch: School,
+  isSelected: boolean
+): L.DivIcon {
+  const score = sch.currentScore || 0;
+  const isAssessed = score > 0;
+  const rawNum = sch.schoolNumber || sch.name.match(/\d+/)?.[0] || '★';
+  const starRating = isAssessed ? (score / 20).toFixed(1) : '-';
+
+  const pinColor = !isAssessed
+    ? '#0d9488'
+    : score >= 80
+    ? '#10b981'
+    : score >= 50
+    ? '#f59e0b'
+    : '#ef4444';
+
+  if (isSelected) {
+    return L.divIcon({
+      className: 'custom-leaflet-pin selected-pin',
+      html: `
+        <div style="position:relative;width:190px;margin-left:-95px;margin-top:-68px;display:flex;flex-direction:column;align-items:center;pointer-events:none;">
+          <div style="background:#0f172a;color:#fff;padding:4px 10px;border-radius:9999px;font-size:11px;font-weight:800;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.6);border:1.5px solid #14b8a6;margin-bottom:4px;display:flex;align-items:center;gap:5px;">
+            <span style="color:${pinColor};font-size:12px;">●</span>
+            <span>${sch.name.length > 20 ? `${rawNum}-maktab` : sch.name}</span>
+            <span style="color:#38bdf8;font-size:10px;font-weight:700;">★${starRating} (${score}b)</span>
+          </div>
+          <div style="width:38px;height:38px;background-color:${pinColor};border:3px solid #fff;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 8px 18px rgba(0,0,0,.5),0 0 16px ${pinColor};display:flex;align-items:center;justify-content:center;">
+            <span style="transform:rotate(45deg);color:#fff;font-size:12px;font-weight:900;font-family:monospace,sans-serif;">${rawNum}</span>
+          </div>
+        </div>
+      `,
+      iconSize: [0, 0],
+      iconAnchor: [0, 0],
+      popupAnchor: [0, -60],
+    });
+  }
+
+  return L.divIcon({
+    className: 'custom-leaflet-pin',
+    html: `
+      <div style="width:30px;height:30px;background-color:${pinColor};border:2px solid #fff;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 3px 8px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;cursor:pointer;">
+        <span style="transform:rotate(45deg);color:#fff;font-size:10px;font-weight:900;font-family:monospace,sans-serif;">${rawNum}</span>
+      </div>
+    `,
+    iconSize: [30, 30],
+    iconAnchor: [15, 30],
+    popupAnchor: [0, -30],
+  });
+}
+
+function buildPopupContent(sch: School): string {
+  const score = sch.currentScore || 0;
+  const isAssessed = score > 0;
+  const lat = sch.coordinates!.latitude;
+  const lng = sch.coordinates!.longitude;
+  const pinColor = !isAssessed
+    ? '#0d9488'
+    : score >= 80
+    ? '#10b981'
+    : score >= 50
+    ? '#f59e0b'
+    : '#ef4444';
+
+  return `
+    <div style="font-family:sans-serif;min-width:210px;padding:4px;">
+      <div style="font-size:10px;font-weight:800;color:#0d9488;text-transform:uppercase;margin-bottom:2px;font-family:monospace;">🛰️ Tasdiqlangan Geolokatsiya</div>
+      <div style="font-size:13px;font-weight:800;color:#0f172a;margin-bottom:3px;">${sch.name}</div>
+      <div style="font-size:11px;color:#64748b;margin-bottom:6px;">${sch.districtName || ''}, ${sch.regionName || ''}</div>
+      <div style="font-size:10px;color:#0f766e;background:#f0fdfa;padding:3px 6px;border-radius:6px;margin-bottom:8px;font-family:monospace;">📍 ${lat.toFixed(6)}, ${lng.toFixed(6)}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding-top:6px;border-top:1px solid #e2e8f0;">
+        <span style="font-size:12px;font-weight:800;color:${pinColor};">${isAssessed ? `${(score / 20).toFixed(1)} ★ / 5.0` : 'Tasdiqlangan'}</span>
+        <span style="font-size:10px;font-weight:700;background:#ecfdf5;color:#065f46;padding:2px 8px;border-radius:9999px;">✓ Real Lokatsiya</span>
+      </div>
+    </div>
+  `;
+}
+
+export function RealLeafletMap({ schools, selectedSchool, onSelectSchool }: RealLeafletMapProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
   const tileLayerRef = useRef<L.TileLayer | null>(null);
   const labelLayerRef = useRef<L.TileLayer | null>(null);
+  // Marker map: schoolId → marker (incremental update uchun)
   const markerMapRef = useRef<Map<string, L.Marker>>(new Map());
 
   const [activeLayer, setActiveLayer] = useState<'satellite' | 'voyager' | 'osm'>('satellite');
   const [showLayerMenu, setShowLayerMenu] = useState(false);
 
-  // 1. Initialize Map with Satellite Layer as default
+  // 1. Xaritani boshlang'ich holatga keltirish
   useEffect(() => {
     if (!mapContainerRef.current || mapInstanceRef.current) return;
 
-    // Center on Uzbekistan: [40.5, 65.5], default zoom: 7
     const map = L.map(mapContainerRef.current, {
       center: [40.5, 65.5],
       zoom: 7,
@@ -63,18 +138,15 @@ export function RealLeafletMap({
       zoomControl: false,
     });
 
-    // Top Right Zoom Controls
     L.control.zoom({ position: 'topright' }).addTo(map);
 
-    // Initial Satellite Tile Layer
     const baseTile = L.tileLayer(TILE_LAYERS.satellite.base, {
       attribution: TILE_LAYERS.satellite.attribution,
       maxZoom: TILE_LAYERS.satellite.maxZoom,
     }).addTo(map);
     tileLayerRef.current = baseTile;
 
-    // Satellite Hybrid Labels Overlay (Streets, districts, landmarks)
-    const labelTile = L.tileLayer(TILE_LAYERS.satellite.labels, {
+    const labelTile = L.tileLayer(TILE_LAYERS.satellite.labels!, {
       maxZoom: TILE_LAYERS.satellite.maxZoom,
     }).addTo(map);
     labelLayerRef.current = labelTile;
@@ -89,46 +161,31 @@ export function RealLeafletMap({
     };
   }, []);
 
-  // 2. Change Tile Layer smoothly
+  // 2. Tile layer almashtiruvi
   const handleLayerChange = (layerKey: 'satellite' | 'voyager' | 'osm') => {
     const map = mapInstanceRef.current;
     if (!map) return;
 
-    if (tileLayerRef.current) {
-      map.removeLayer(tileLayerRef.current);
-      tileLayerRef.current = null;
-    }
-    if (labelLayerRef.current) {
-      map.removeLayer(labelLayerRef.current);
-      labelLayerRef.current = null;
-    }
+    if (tileLayerRef.current) { map.removeLayer(tileLayerRef.current); tileLayerRef.current = null; }
+    if (labelLayerRef.current) { map.removeLayer(labelLayerRef.current); labelLayerRef.current = null; }
 
     const cfg = TILE_LAYERS[layerKey];
-    tileLayerRef.current = L.tileLayer(cfg.base, {
-      attribution: cfg.attribution,
-      maxZoom: cfg.maxZoom,
-    }).addTo(map);
-
+    tileLayerRef.current = L.tileLayer(cfg.base, { attribution: cfg.attribution, maxZoom: cfg.maxZoom }).addTo(map);
     if (cfg.labels) {
-      labelLayerRef.current = L.tileLayer(cfg.labels, {
-        maxZoom: cfg.maxZoom,
-      }).addTo(map);
+      labelLayerRef.current = L.tileLayer(cfg.labels, { maxZoom: cfg.maxZoom }).addTo(map);
     }
 
     setActiveLayer(layerKey);
     setShowLayerMenu(false);
   };
 
-  // 3. Render Markers ONLY for Verified Schools with Valid Coordinates
+  // 3. Markerlarni INCREMENTAL yangilash (clearLayers yo'q)
   useEffect(() => {
     const map = mapInstanceRef.current;
     const markersLayer = markersLayerRef.current;
     if (!map || !markersLayer) return;
 
-    markersLayer.clearLayers();
-    markerMapRef.current.clear();
-
-    // STRICT FILTER: Only show schools that have submitted coordinates and are verified
+    // Faqat tasdiqlangan va koordinatali maktablar
     const verifiedSchools = schools.filter(
       (sch) =>
         (sch.coordinateStatus === 'VERIFIED' || sch.coordinates?.status === 'VERIFIED') &&
@@ -140,166 +197,54 @@ export function RealLeafletMap({
         !isNaN(Number(sch.coordinates.longitude))
     );
 
-    // If a selected school has valid coordinates even if not yet batch verified, allow showing it
-    const displayList = [...verifiedSchools];
+    // Tanlangan maktab koordinatasi bor bo'lsa qo'shish
+    const displayMap = new Map(verifiedSchools.map((s) => [s.id, s]));
     if (
       selectedSchool &&
       selectedSchool.coordinates?.latitude &&
       selectedSchool.coordinates?.longitude &&
-      !displayList.some((s) => s.id === selectedSchool.id)
+      !displayMap.has(selectedSchool.id)
     ) {
-      displayList.push(selectedSchool);
+      displayMap.set(selectedSchool.id, selectedSchool);
     }
 
-    displayList.forEach((sch) => {
-      const lat = sch.coordinates!.latitude;
-      const lng = sch.coordinates!.longitude;
-      const score = sch.currentScore || 0;
-      const isSelected = selectedSchool?.id === sch.id;
-      const isAssessed = score > 0;
+    const displayIds = new Set(displayMap.keys());
+    const existingIds = new Set(markerMapRef.current.keys());
 
-      // Extract school number cleanly (e.g. "35" from "35-maktab" or sch.schoolNumber)
-      const rawNum = sch.schoolNumber || sch.name.match(/\d+/)?.[0] || '★';
-      const starRating = isAssessed ? ((score / 100) * 4 + 1).toFixed(1) : '-';
-
-      const pinColor = !isAssessed
-        ? '#0d9488' // Teal brand color for verified schools
-        : score >= 80
-        ? '#10b981' // Green (4-5 yulduz)
-        : score >= 50
-        ? '#f59e0b' // Yellow (3 yulduz)
-        : '#ef4444'; // Red (1-2 yulduz)
-
-      let customIcon: L.DivIcon;
-
-      if (isSelected) {
-        // High-contrast Selected Pin with Floating Title Tag
-        customIcon = L.divIcon({
-          className: 'custom-leaflet-pin selected-pin',
-          html: `
-            <div style="position: relative; width: 190px; margin-left: -95px; margin-top: -68px; display: flex; flex-direction: column; align-items: center; pointer-events: none;">
-              <!-- Floating Title Banner -->
-              <div style="
-                background: #0f172a;
-                color: #ffffff;
-                padding: 4px 10px;
-                border-radius: 9999px;
-                font-size: 11px;
-                font-weight: 800;
-                white-space: nowrap;
-                box-shadow: 0 4px 14px rgba(0,0,0,0.6);
-                border: 1.5px solid #14b8a6;
-                margin-bottom: 4px;
-                display: flex;
-                align-items: center;
-                gap: 5px;
-              ">
-                <span style="color: ${pinColor}; font-size: 12px;">●</span>
-                <span>${sch.name.length > 20 ? `${rawNum}-maktab` : sch.name}</span>
-                <span style="color: #38bdf8; font-size: 10px; font-weight: 700;">★${starRating} (${score}b)</span>
-              </div>
-
-              <!-- Main Pin Body with School Number -->
-              <div style="
-                width: 38px;
-                height: 38px;
-                background-color: ${pinColor};
-                border: 3px solid #ffffff;
-                border-radius: 50% 50% 50% 0;
-                transform: rotate(-45deg);
-                box-shadow: 0 8px 18px rgba(0,0,0,0.5), 0 0 16px ${pinColor};
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              ">
-                <span style="
-                  transform: rotate(45deg);
-                  color: #ffffff;
-                  font-size: 12px;
-                  font-weight: 900;
-                  font-family: monospace, sans-serif;
-                ">${rawNum}</span>
-              </div>
-            </div>
-          `,
-          iconSize: [0, 0],
-          iconAnchor: [0, 0],
-          popupAnchor: [0, -60],
-        });
-      } else {
-        // Normal Crisp Pin with School Number
-        customIcon = L.divIcon({
-          className: 'custom-leaflet-pin',
-          html: `
-            <div style="
-              width: 30px;
-              height: 30px;
-              background-color: ${pinColor};
-              border: 2px solid #ffffff;
-              border-radius: 50% 50% 50% 0;
-              transform: rotate(-45deg);
-              box-shadow: 0 3px 8px rgba(0,0,0,0.4);
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              cursor: pointer;
-            ">
-              <span style="
-                transform: rotate(45deg);
-                color: #ffffff;
-                font-size: 10px;
-                font-weight: 900;
-                font-family: monospace, sans-serif;
-              ">${rawNum}</span>
-            </div>
-          `,
-          iconSize: [30, 30],
-          iconAnchor: [15, 30],
-          popupAnchor: [0, -30],
-        });
+    // O'chirilgan markerlarni olib tashlash
+    existingIds.forEach((id) => {
+      if (!displayIds.has(id)) {
+        const m = markerMapRef.current.get(id);
+        if (m) markersLayer.removeLayer(m);
+        markerMapRef.current.delete(id);
       }
-
-      const marker = L.marker([lat, lng], {
-        icon: customIcon,
-        zIndexOffset: isSelected ? 2000 : 10,
-      });
-
-      const popupContent = `
-        <div style="font-family: sans-serif; min-width: 210px; padding: 4px;">
-          <div style="font-size: 10px; font-weight: 800; color: #0d9488; text-transform: uppercase; margin-bottom: 2px; font-family: monospace; letter-spacing: 0.5px;">
-            🛰️ Tasdiqlangan Geolokatsiya
-          </div>
-          <div style="font-size: 13px; font-weight: 800; color: #0f172a; margin-bottom: 3px;">
-            ${sch.name}
-          </div>
-          <div style="font-size: 11px; color: #64748b; margin-bottom: 6px;">
-            ${sch.districtName || ''}, ${sch.regionName || ''}
-          </div>
-          <div style="font-size: 10px; color: #0f766e; background: #f0fdfa; padding: 3px 6px; border-radius: 6px; margin-bottom: 8px; font-family: monospace;">
-            📍 ${lat.toFixed(6)}, ${lng.toFixed(6)}
-          </div>
-          <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 6px; border-top: 1px solid #e2e8f0;">
-            <span style="font-size: 12px; font-weight: 800; color: ${pinColor};">
-              ${isAssessed ? `${((score / 100) * 4 + 1).toFixed(1)} ★ / 5.0` : 'Tasdiqlangan'}
-            </span>
-            <span style="font-size: 10px; font-weight: 700; background: #ecfdf5; color: #065f46; padding: 2px 8px; border-radius: 9999px;">
-              ✓ Real Lokatsiya
-            </span>
-          </div>
-        </div>
-      `;
-
-      marker.bindPopup(popupContent, { autoPan: true, closeButton: true });
-
-      marker.on('click', () => {
-        onSelectSchool(sch);
-      });
-
-      markersLayer.addLayer(marker);
-      markerMapRef.current.set(sch.id, marker);
     });
 
-    // Auto fit to verified schools if no specific school is actively selected
+    // Yangi markerlarni qo'shish yoki mavjudlarini yangilash (icon o'zgarsa)
+    displayMap.forEach((sch) => {
+      const isSelected = selectedSchool?.id === sch.id;
+      const lat = sch.coordinates!.latitude;
+      const lng = sch.coordinates!.longitude;
+
+      if (markerMapRef.current.has(sch.id)) {
+        // Mavjud marker — faqat ikonni yangilash (qayta yaratmasdan)
+        const existing = markerMapRef.current.get(sch.id)!;
+        existing.setIcon(buildMarkerIcon(sch, isSelected));
+        existing.setZIndexOffset(isSelected ? 2000 : 10);
+      } else {
+        // Yangi marker qo'shish
+        const icon = buildMarkerIcon(sch, isSelected);
+        const marker = L.marker([lat, lng], { icon, zIndexOffset: isSelected ? 2000 : 10 });
+
+        marker.bindPopup(buildPopupContent(sch), { autoPan: true, closeButton: true });
+        marker.on('click', () => onSelectSchool(sch));
+
+        markersLayer.addLayer(marker);
+        markerMapRef.current.set(sch.id, marker);
+      }
+    });
+
+    // Dastlabki ko'rinish uchun barcha maktablarga moslash
     if (!selectedSchool && verifiedSchools.length > 0) {
       if (verifiedSchools.length === 1) {
         map.setView(
@@ -315,7 +260,7 @@ export function RealLeafletMap({
     }
   }, [schools, selectedSchool, onSelectSchool]);
 
-  // 4. Smooth Close-up Zoom when selecting school
+  // 4. Tanlangan maktabga zoom
   const prevSelectedIdRef = useRef<string | null>(null);
   useEffect(() => {
     const map = mapInstanceRef.current;
@@ -328,26 +273,17 @@ export function RealLeafletMap({
       const lat = selectedSchool.coordinates.latitude;
       const lng = selectedSchool.coordinates.longitude;
 
-      // Smooth satellite zoom (16x) directly to the selected school
-      map.flyTo([lat, lng], 16, {
-        animate: true,
-        duration: 1.2,
-      });
+      map.flyTo([lat, lng], 16, { animate: true, duration: 1.2 });
 
-      // Open popup right after flyTo animation finishes
       const onMoveEnd = () => {
         const activeMarker = markerMapRef.current.get(selectedSchool.id);
-        if (activeMarker) {
-          activeMarker.openPopup();
-        }
+        if (activeMarker) activeMarker.openPopup();
         map.off('moveend', onMoveEnd);
       };
-
       map.on('moveend', onMoveEnd);
     }
   }, [selectedSchool]);
 
-  // Reset to full country view
   const handleResetView = () => {
     const map = mapInstanceRef.current;
     if (!map) return;
@@ -356,7 +292,6 @@ export function RealLeafletMap({
 
   return (
     <div className="relative w-full h-full min-h-[450px]">
-      {/* Global CSS overrides for Leaflet DivIcons to prevent any clipping/borders */}
       <style jsx global>{`
         .leaflet-div-icon {
           background: transparent !important;
@@ -364,10 +299,9 @@ export function RealLeafletMap({
         }
       `}</style>
 
-      {/* Map DOM Container */}
       <div ref={mapContainerRef} className="w-full h-full rounded-2xl overflow-hidden z-0" />
 
-      {/* Map Layer Switcher Control */}
+      {/* Xarita turi tanlash */}
       <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
         <div className="relative">
           <button
@@ -381,49 +315,25 @@ export function RealLeafletMap({
 
           {showLayerMenu && (
             <div className="absolute top-11 left-0 w-60 rounded-2xl border border-slate-700 bg-slate-900/95 backdrop-blur-xl p-2 shadow-2xl space-y-1 z-20 animate-in fade-in zoom-in-95 duration-150">
-              <button
-                type="button"
-                onClick={() => handleLayerChange('satellite')}
-                className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-semibold text-left transition-colors ${
-                  activeLayer === 'satellite'
-                    ? 'bg-teal-700 text-white font-bold'
-                    : 'text-slate-200 hover:bg-slate-800'
-                }`}
-              >
-                <span>🛰️ Sun’iy Yo‘ldosh (Sputnik HD)</span>
-                {activeLayer === 'satellite' && <span>✓</span>}
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleLayerChange('voyager')}
-                className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-semibold text-left transition-colors ${
-                  activeLayer === 'voyager'
-                    ? 'bg-teal-700 text-white font-bold'
-                    : 'text-slate-200 hover:bg-slate-800'
-                }`}
-              >
-                <span>🎨 Zamonaviy Ko‘chalar (HD)</span>
-                {activeLayer === 'voyager' && <span>✓</span>}
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleLayerChange('osm')}
-                className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-semibold text-left transition-colors ${
-                  activeLayer === 'osm'
-                    ? 'bg-teal-700 text-white font-bold'
-                    : 'text-slate-200 hover:bg-slate-800'
-                }`}
-              >
-                <span>🗺️ Standart Topografik</span>
-                {activeLayer === 'osm' && <span>✓</span>}
-              </button>
+              {(['satellite', 'voyager', 'osm'] as const).map((key) => (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => handleLayerChange(key)}
+                  className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-semibold text-left transition-colors ${
+                    activeLayer === key
+                      ? 'bg-teal-700 text-white font-bold'
+                      : 'text-slate-200 hover:bg-slate-800'
+                  }`}
+                >
+                  <span>{TILE_LAYERS[key].name}</span>
+                  {activeLayer === key && <span>✓</span>}
+                </button>
+              ))}
             </div>
           )}
         </div>
 
-        {/* Full Country View Button */}
         <button
           type="button"
           onClick={handleResetView}
@@ -434,7 +344,6 @@ export function RealLeafletMap({
         </button>
       </div>
 
-      {/* Real Satellite HD Indicator in Bottom Left */}
       <div className="absolute bottom-3 left-3 z-10 px-2.5 py-1 rounded-xl bg-slate-950/85 backdrop-blur-xs text-white border border-slate-700/80 text-[11px] font-mono shadow-md flex items-center gap-1.5 pointer-events-none">
         <span className="text-teal-400 font-bold">🛰️ Esri Satellite HD</span>
         <span className="text-slate-400">|</span>

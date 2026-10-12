@@ -74,16 +74,11 @@ export function SchoolDetailModal({
             <div className="text-sm font-black text-slate-900 font-mono">
               {school.currentScore === 0 ? (
                 <span className="text-slate-400 text-xs font-sans font-medium">—</span>
-              ) : school.currentScore >= 90 ? (
-                '⭐️⭐️⭐️⭐️⭐️'
-              ) : school.currentScore >= 75 ? (
-                '⭐️⭐️⭐️⭐️'
-              ) : school.currentScore >= 60 ? (
-                '⭐️⭐️⭐️'
-              ) : school.currentScore >= 45 ? (
-                '⭐️⭐️'
               ) : (
-                '⭐️'
+                <div className="flex items-center gap-1.5">
+                  <span className="text-amber-500 font-black">{(school.currentScore / 20).toFixed(1)} ★</span>
+                  <span className="text-xs text-slate-400 font-normal">({school.currentScore}b)</span>
+                </div>
               )}
             </div>
           </div>

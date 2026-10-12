@@ -5,9 +5,9 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    // Ultra-fast single SQL aggregation query across all 10,110 schools
+    // Bitta SQL so'rovi bilan barcha statistikani olish
     const sql = `
-      SELECT 
+      SELECT
         COUNT(*) as total_schools,
         COUNT(CASE WHEN current_score > 0 THEN 1 END) as assessed_count,
         ROUND(AVG(CASE WHEN current_score > 0 THEN current_score ELSE NULL END)) as average_score,
@@ -22,45 +22,43 @@ export async function GET() {
     const rows = await query(sql);
     const row = rows[0] || {};
 
-    const totalSchools = Number(row.total_schools) || 10193;
+    const totalSchools = Number(row.total_schools) || 0;
     const assessedCount = Number(row.assessed_count) || 0;
-    const averageScore = Number(row.average_score) || 82;
+    // averageScore: agar baholanmagan maktablar yo'q bo'lsa null qaytarish
+    const averageScoreRaw = row.average_score !== null ? Number(row.average_score) : null;
     const safeCount = Number(row.safe_count) || 0;
     const moderateCount = Number(row.moderate_count) || 0;
     const highRiskCount = Number(row.high_risk_count) || 0;
+    const verifiedCoords = Number(row.verified_coords) || 0;
+    const pendingCoords = Number(row.pending_coords) || 0;
 
-    const safePercentage = assessedCount > 0 ? Math.round((safeCount / assessedCount) * 100) : 74;
-    const moderatePercentage = assessedCount > 0 ? Math.round((moderateCount / assessedCount) * 100) : 20;
-    const highRiskPercentage = assessedCount > 0 ? Math.round((highRiskCount / assessedCount) * 100) : 6;
+    const safePercentage =
+      assessedCount > 0 ? Math.round((safeCount / assessedCount) * 100) : 0;
+    const moderatePercentage =
+      assessedCount > 0 ? Math.round((moderateCount / assessedCount) * 100) : 0;
+    const highRiskPercentage =
+      assessedCount > 0 ? Math.round((highRiskCount / assessedCount) * 100) : 0;
 
     return NextResponse.json({
       totalSchools,
-      averageScore: averageScore > 0 ? averageScore : 82,
-      safeCount: safeCount > 0 ? safeCount : 146,
-      moderateCount: moderateCount > 0 ? moderateCount : 39,
-      highRiskCount: highRiskCount > 0 ? highRiskCount : 13,
+      assessedCount,
+      averageScore: averageScoreRaw,          // null = hech kim baholanmagan
+      safeCount,
+      moderateCount,
+      highRiskCount,
       safePercentage,
       moderatePercentage,
       highRiskPercentage,
-      verifiedCoordinatesCount: Number(row.verified_coords) || 198,
-      pendingCoordinatesCount: Number(row.pending_coords) || 0,
-      periodName: '2025–2026 o‘quv yili (III chorak)',
+      verifiedCoordinatesCount: verifiedCoords,
+      pendingCoordinatesCount: pendingCoords,
+      periodName: "2025\u20132026 o\u2018quv yili (III chorak)",
     });
   } catch (error: any) {
     console.error('Statistics Summary API error:', error);
-    // Fallback instant summary
-    return NextResponse.json({
-      totalSchools: 10193,
-      averageScore: 82,
-      safeCount: 146,
-      moderateCount: 39,
-      highRiskCount: 13,
-      safePercentage: 74,
-      moderatePercentage: 20,
-      highRiskPercentage: 6,
-      verifiedCoordinatesCount: 198,
-      pendingCoordinatesCount: 0,
-      periodName: '2025–2026 o‘quv yili (III chorak)',
-    });
+    // Xato bo'lsa, uydirma son emas, xato holatini aniq ko'rsatish
+    return NextResponse.json(
+      { message: 'Statistika ma\'lumotlarini olishda xatolik yuz berdi', error: true },
+      { status: 500 }
+    );
   }
 }

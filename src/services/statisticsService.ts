@@ -1,28 +1,30 @@
 import { repositories } from '@/repositories';
-import { ScoreStatus, CoordinateStatus, AssessmentPeriod } from '@/types';
+import { ScoreStatus } from '@/types';
 import { evaluateScore } from '@/lib/scoreRules';
 import { apiClient } from '@/lib/apiClient';
 
 
 export interface NationalStatisticsSummary {
   totalSchools: number;
-  averageScore: number;
-  safeCount: number; // GREEN
-  moderateCount: number; // YELLOW
-  highRiskCount: number; // RED
+  assessedCount: number;
+  averageScore: number | null;  // null = hech kim baholanmagan
+  safeCount: number;
+  moderateCount: number;
+  highRiskCount: number;
   safePercentage: number;
   moderatePercentage: number;
   highRiskPercentage: number;
   verifiedCoordinatesCount: number;
   pendingCoordinatesCount: number;
   periodName: string;
+  error?: boolean;
 }
 
 export interface ComparativeAverages {
   schoolScore: number;
-  districtAverage: number;
-  regionAverage: number;
-  republicAverage: number;
+  districtAverage: number | null;  // null = baholanmagan
+  regionAverage: number | null;
+  republicAverage: number | null;
 }
 
 export interface HistoricalTrendItem {
@@ -38,30 +40,33 @@ export class StatisticsService {
   async getNationalSummary(): Promise<NationalStatisticsSummary> {
     try {
       const summary = await apiClient<NationalStatisticsSummary>('/statistics/summary');
-      if (summary && summary.totalSchools) {
+      if (summary && !summary.error) {
         return summary;
       }
     } catch (e) {
-      console.warn('Fast summary API failed, falling back to instant defaults:', e);
+      console.warn('Statistics summary API failed:', e);
     }
 
+    // Xato holati — uydirma son emas, aniq xato holati
     return {
-      totalSchools: 10193,
-      averageScore: 82,
-      safeCount: 146,
-      moderateCount: 39,
-      highRiskCount: 13,
-      safePercentage: 74,
-      moderatePercentage: 20,
-      highRiskPercentage: 6,
-      verifiedCoordinatesCount: 198,
+      totalSchools: 0,
+      assessedCount: 0,
+      averageScore: null,
+      safeCount: 0,
+      moderateCount: 0,
+      highRiskCount: 0,
+      safePercentage: 0,
+      moderatePercentage: 0,
+      highRiskPercentage: 0,
+      verifiedCoordinatesCount: 0,
       pendingCoordinatesCount: 0,
-      periodName: '2025–2026 o‘quv yili (III chorak)',
+      periodName: "2025\u20132026 o\u2018quv yili (III chorak)",
+      error: true,
     };
   }
 
   /**
-   * Computes comparative benchmark averages for a given school (Ultra-fast server aggregated)
+   * Maktab uchun taqqoslama benchmark o'rtachalarini hisoblash
    */
   async getComparativeAverages(
     schoolScore: number,
@@ -76,31 +81,28 @@ export class StatisticsService {
           districtId: districtId || '',
         },
       });
-      if (res && typeof res.districtAverage === 'number') {
+      if (res && !('error' in res)) {
         return res;
       }
     } catch (e) {
-      console.warn('Fast benchmark API failed, using instant fallback:', e);
+      console.warn('Benchmarks API failed:', e);
     }
 
     return {
       schoolScore,
-      districtAverage: 78,
-      regionAverage: 80,
-      republicAverage: 82,
+      districtAverage: null,
+      regionAverage: null,
+      republicAverage: null,
     };
   }
 
   /**
-   * Retrieves historical performance trend for a school across periods
-   * CRITICAL RULE: Historical periods are informational only and do not affect current rankings.
+   * Maktabning tarixiy ko'rsatkichlarini olish
    */
   async getHistoricalSchoolTrend(schoolId: string, currentScore: number): Promise<HistoricalTrendItem[]> {
     const periods = await repositories.assessment.getPeriods();
     const currentPeriod = periods.find((p) => p.isCurrent);
 
-    // Only return current period data. Historical data will be added when real
-    // multi-period assessments exist in the database.
     if (!currentScore || currentScore === 0) {
       return [];
     }

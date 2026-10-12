@@ -16,67 +16,57 @@ export async function POST(request: NextRequest) {
     const trimmedEmail = email.trim().toLowerCase();
     const trimmedPassword = password.trim();
 
-
-
-    // 1. Direct email lookup or flexible school/district search
+    // Flexible school/district email search
     const cleanSearchEmail = trimmedEmail
       .replace('@maktab.uz', '')
       .replace('@gijduvon.demo', '')
       .replace(/_tumani|_shahri|-tumani|-shahri/g, '');
 
-    let users = await query(
-      `SELECT id, email, password_hash, name, role, school_id, region_id, district_id, is_first_login, is_active, created_at, updated_at
-       FROM users 
+    // Use parameterized queries to prevent SQL injection
+    // LIKE query uses only safe alphanumeric characters
+    const safeSearch = cleanSearchEmail.replace(/[^a-z0-9]/g, '');
+    const likePattern = safeSearch ? `%${safeSearch}%` : '';
+
+    const schoolIdSearch =
+      trimmedEmail.startsWith('sch-') || trimmedEmail.startsWith('sch_')
+        ? trimmedEmail.replace(/^sch_/, 'sch-').replace(/@maktab\.uz$/, '')
+        : '';
+
+    const users = await query(
+      `SELECT id, email, password_hash, name, role, school_id, region_id, district_id,
+              is_first_login, is_active, created_at, updated_at
+       FROM users
        WHERE (
-         LOWER(email) = $1 
+         LOWER(email) = $1
          OR LOWER(email) = $2
-         OR LOWER(email) LIKE $3
-         OR ($4 != '' AND school_id = $4)
+         OR ($3 <> '' AND LOWER(email) LIKE $3)
+         OR ($4 <> '' AND school_id = $4)
        ) AND is_active = true
        LIMIT 1`,
       [
         trimmedEmail,
         `${cleanSearchEmail}@maktab.uz`,
-        `%${cleanSearchEmail.replace(/[^a-z0-9]/g, '%')}%`,
-        trimmedEmail.startsWith('sch-') || trimmedEmail.startsWith('sch_') 
-          ? trimmedEmail.replace('_', '-').replace('@maktab.uz', '')
-          : '',
+        likePattern,
+        schoolIdSearch,
       ]
     );
 
     if (users.length === 0) {
       return NextResponse.json(
-        { message: 'Login yoki parol noto‘g‘ri' },
+        { message: "Login yoki parol noto'g'ri" },
         { status: 401 }
       );
     }
 
     const dbUser = users[0];
 
-    // Password verification (supports exact hash, Maktab@<raqam>, standard school passwords, or admin passwords)
-    const isAdmin = dbUser.role === 'ADMIN' || dbUser.role === 'SUPER_ADMIN';
-    const isSchool = dbUser.role === 'SCHOOL_USER';
-    
-    const isPasswordMatch =
-      dbUser.password_hash === trimmedPassword ||
-      (isSchool &&
-        (trimmedPassword.toLowerCase().startsWith('maktab@') ||
-          trimmedPassword === 'Maktab@24' ||
-          trimmedPassword === 'dinara2002' ||
-          trimmedPassword === 'Maktab@1' ||
-          trimmedPassword === 'qiziltepa24' ||
-          trimmedPassword === 'Maktab@1234' ||
-          trimmedPassword === 'Demo@1234')) ||
-      (isAdmin &&
-        (trimmedPassword === 'Demo@1234' ||
-          trimmedPassword === 'Admin@1234' ||
-          trimmedPassword === 'Super@1234' ||
-          trimmedPassword === 'admin123' ||
-          trimmedPassword === 'admin'));
+    // Parol tekshiruvi: faqat bazadagi password_hash bilan solishtirish.
+    // Production muhitida bcrypt.compare() ishlatish tavsiya etiladi.
+    const isPasswordMatch = dbUser.password_hash === trimmedPassword;
 
     if (!isPasswordMatch) {
       return NextResponse.json(
-        { message: 'Login yoki parol noto‘g‘ri' },
+        { message: "Login yoki parol noto'g'ri" },
         { status: 401 }
       );
     }
@@ -84,7 +74,7 @@ export async function POST(request: NextRequest) {
     let schoolData = null;
     if (dbUser.school_id) {
       const schools = await query(
-        `SELECT s.*, r.name as region_name, d.name as district_name 
+        `SELECT s.*, r.name as region_name, d.name as district_name
          FROM schools s
          LEFT JOIN regions r ON s.region_id = r.id
          LEFT JOIN districts d ON s.district_id = d.id

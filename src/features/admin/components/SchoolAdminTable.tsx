@@ -92,19 +92,14 @@ export function SchoolAdminTable({
                 </td>
 
                 {/* Star Icons */}
-                <td className="py-4 px-5 text-center font-mono text-sm tracking-wider">
+                <td className="py-4 px-5 text-center font-mono">
                   {school.currentScore === 0 ? (
                     <span className="text-slate-400 text-xs font-sans font-medium">—</span>
-                  ) : school.currentScore >= 90 ? (
-                    '⭐️⭐️⭐️⭐️⭐️'
-                  ) : school.currentScore >= 75 ? (
-                    '⭐️⭐️⭐️⭐️'
-                  ) : school.currentScore >= 60 ? (
-                    '⭐️⭐️⭐️'
-                  ) : school.currentScore >= 45 ? (
-                    '⭐️⭐️'
                   ) : (
-                    '⭐️'
+                    <div className="flex flex-col items-center justify-center">
+                      <span className="text-amber-500 font-bold text-xs">{(school.currentScore / 20).toFixed(1)} ★</span>
+                      <span className="text-[10px] text-slate-400 font-mono">({school.currentScore} ball)</span>
+                    </div>
                   )}
                 </td>
 

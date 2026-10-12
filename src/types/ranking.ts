@@ -58,10 +58,11 @@ export interface SchoolRankingOverview {
   maxScore: number;
   percentage: number;
   scoreStatus: ScoreStatus;
-  republicRank: number;
+  // null = maktab reytingda topilmagan (baholanmagan yoki 200+ dan tashqarida emas — real holat)
+  republicRank: number | null;
   totalRepublicSchools: number;
-  regionRank: number;
+  regionRank: number | null;
   totalRegionSchools: number;
-  districtRank: number;
+  districtRank: number | null;
   totalDistrictSchools: number;
 }

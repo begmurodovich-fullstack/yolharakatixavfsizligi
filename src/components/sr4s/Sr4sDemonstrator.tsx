@@ -197,6 +197,8 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
 
   useEffect(() => {
     let isMounted = true;
+    const abortController = new AbortController();
+
     const timeoutId = setTimeout(async () => {
       setIsCalculating(true);
       try {
@@ -204,23 +206,28 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ attributes }),
+          signal: abortController.signal,
         });
         if (res.ok) {
           const json = await res.json();
+          // Faqat joriy so'rovga tegishli natijani saqlash
           if (json.success && json.data && isMounted) {
             setOfficialData(json.data);
           }
         }
-      } catch (err) {
-        console.warn('Realtime official calculation warning:', err);
+      } catch (err: any) {
+        if (err?.name !== 'AbortError') {
+          console.warn('Realtime official calculation warning:', err);
+        }
       } finally {
         if (isMounted) setIsCalculating(false);
       }
-    }, 150);
+    }, 300);
 
     return () => {
       isMounted = false;
       clearTimeout(timeoutId);
+      abortController.abort(); // Eski so'rovni bekor qilish
     };
   }, [attributes]);
 

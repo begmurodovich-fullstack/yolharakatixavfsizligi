@@ -60,15 +60,28 @@ export function getScoreStatus(score: number, maxScore = 100): ScoreStatus {
 }
 
 /**
- * Return human-readable label in Uzbek / English for ScoreStatus
+ * 0-100 ballik shkalani 1.0 - 5.0 yulduzli o'lchovga standartlashtirilgan o'tkazish.
+ * Masalan: 58 ball = 2.9 ★ (3★ o'rtacha toifa)
  */
-export function getScoreStatusLabel(status: ScoreStatus, locale: 'uz' | 'en' = 'uz'): string {
-  switch (status) {
-    case ScoreStatus.GREEN:
-      return locale === 'uz' ? 'Xavfsiz (Yuqori)' : 'Safe (Good)';
-    case ScoreStatus.YELLOW:
-      return locale === 'uz' ? 'O‘rtacha' : 'Moderate (Average)';
-    case ScoreStatus.RED:
-      return locale === 'uz' ? 'Xavfli (Past)' : 'High Risk (Poor)';
+export function scoreToStarRating(score: number): {
+  starRating: string;
+  starsInt: number;
+} {
+  if (!score || score <= 0) {
+    return { starRating: '0.0', starsInt: 0 };
   }
+  // Standart 100 ballik shkala: 100 ball = 5.0 ★, 58 ball = 2.9 ★
+  const decimalStar = (score / 20).toFixed(1);
+  let starsInt = 1;
+  if (score >= 90) starsInt = 5;
+  else if (score >= 75) starsInt = 4;
+  else if (score >= 50) starsInt = 3;
+  else if (score >= 30) starsInt = 2;
+  else starsInt = 1;
+
+  return {
+    starRating: decimalStar,
+    starsInt,
+  };
 }
+

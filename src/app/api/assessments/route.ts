@@ -91,18 +91,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: 'Maktab ID kiritilishi shart' }, { status: 400 });
     }
 
-    // 1. Check that all 40 criteria have been selected
+    // Qoralama (DRAFT/IN_PROGRESS) va yakuniy topshirish (SUBMITTED) ni ajratish
     const answerKeys = Object.keys(answers || {});
-    if (answerKeys.length < 40) {
+    const isDraft = status === 'IN_PROGRESS' || status === 'DRAFT';
+
+    // Faqat yakuniy topshirishda (SUBMITTED) barcha 40 ta mezon talab qilinadi
+    if (!isDraft && answerKeys.length < 40) {
       return NextResponse.json(
         {
-          message: `Xatolik: Barcha 40 ta mezon to‘liq baholanishi shart! Hozirda 40 tadan faqat ${answerKeys.length} tasi kiritilgan. Iltimos, barcha 40 ta mezonni to‘liq belgilang.`,
+          message: `Xatolik: Barcha 40 ta mezon to'liq baholanishi shart! Hozirda 40 tadan faqat ${answerKeys.length} tasi kiritilgan. Iltimos, barcha 40 ta mezonni to'liq belgilang.`,
         },
         { status: 400 }
       );
     }
 
-    // 2. Check if school already submitted and if re-assessment permission is granted
+    // Maktab qayta baholash huquqini tekshirish
     const schoolRow = await query(
       `SELECT id, can_reassess, reassess_reason FROM schools WHERE id = $1 LIMIT 1`,
       [schoolId]
@@ -114,9 +117,9 @@ export async function POST(request: NextRequest) {
       [schoolId, periodId]
     );
 
-    if (existing.length > 0) {
+    // Topshirilgan yoki tasdiqlangan — faqat yakuniy topshirishda bloklash (qoralama o'tadi)
+    if (existing.length > 0 && !isDraft) {
       const prev = existing[0];
-      // If already submitted or verified and NOT allowed to retake:
       if (
         (prev.status === 'SUBMITTED' || prev.status === 'VERIFIED') &&
         prev.status !== 'RETAKE_ALLOWED' &&
@@ -125,7 +128,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
           {
             message:
-              'Ushbu maktab allaqachon yo‘l xavfsizligi monitoringi bo‘yicha baholashdan o‘tgan! Qayta baholash uchun hududiy monitoring administratori ruxsati talab qilinadi.',
+              "Ushbu maktab allaqachon yo'l xavfsizligi monitoringi bo'yicha baholashdan o'tgan! Qayta baholash uchun hududiy monitoring administratori ruxsati talab qilinadi.",
             isLocked: true,
           },
           { status: 403 }
@@ -133,20 +136,21 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Determine score status
     const numericScore = Number(score) || 0;
     const scoreStatus = numericScore >= 80 ? 'GREEN' : numericScore >= 50 ? 'YELLOW' : 'RED';
     const finalPercentage = percentage || numericScore;
+    const finalStatus = isDraft ? 'IN_PROGRESS' : 'SUBMITTED';
 
-    const targetId = existing.length > 0 ? existing[0].id : (body.id || `ass-${schoolId}-${periodId}`);
+    const targetId =
+      existing.length > 0 ? existing[0].id : body.id || `ass-${schoolId}-${periodId}`;
 
     const rows = await query(
       `INSERT INTO assessments (
         id, school_id, period_id, status, total_score, max_score, percentage,
         answers, criterion_scores, reviewer_notes, score_status, submitted_by, submitted_at, updated_at
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW(), NOW())
-      ON CONFLICT (id) DO UPDATE 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, NOW())
+      ON CONFLICT (id) DO UPDATE
       SET status = EXCLUDED.status,
           total_score = EXCLUDED.total_score,
           max_score = EXCLUDED.max_score,
@@ -156,14 +160,14 @@ export async function POST(request: NextRequest) {
           reviewer_notes = EXCLUDED.reviewer_notes,
           score_status = EXCLUDED.score_status,
           submitted_by = COALESCE(EXCLUDED.submitted_by, assessments.submitted_by),
-          submitted_at = NOW(),
+          submitted_at = CASE WHEN EXCLUDED.status = 'SUBMITTED' THEN NOW() ELSE assessments.submitted_at END,
           updated_at = NOW()
       RETURNING *`,
       [
         targetId,
         schoolId,
         periodId,
-        'SUBMITTED', // Reset to SUBMITTED once retake is submitted
+        finalStatus,
         numericScore,
         maxScore,
         finalPercentage,
@@ -172,19 +176,22 @@ export async function POST(request: NextRequest) {
         reviewerNotes,
         scoreStatus,
         submittedBy || null,
+        finalStatus === 'SUBMITTED' ? new Date().toISOString() : null,
       ]
     );
 
-    // Also update school's current_score in schools table and lock re-assessment until new permission
-    await query(
-      `UPDATE schools 
-       SET current_score = $1, 
-           can_reassess = FALSE, 
-           reassess_reason = NULL, 
-           updated_at = NOW() 
-       WHERE id = $2`,
-      [numericScore, schoolId]
-    );
+    // Faqat yakuniy topshirishda maktab ballini yangilash va qayta baholashni bloklash
+    if (!isDraft) {
+      await query(
+        `UPDATE schools
+         SET current_score = $1,
+             can_reassess = FALSE,
+             reassess_reason = NULL,
+             updated_at = NOW()
+         WHERE id = $2`,
+        [numericScore, schoolId]
+      );
+    }
 
     const a = rows[0];
     return NextResponse.json({
@@ -222,7 +229,7 @@ export async function PATCH(request: NextRequest) {
     // 1. Action: ALLOW_RETAKE (Qayta baholashga ruxsat berish)
     if (action === 'ALLOW_RETAKE') {
       const assRows = await query(
-        `UPDATE assessments 
+        `UPDATE assessments
          SET status = 'RETAKE_ALLOWED',
              reviewer_notes = COALESCE($1, reviewer_notes),
              updated_at = NOW()
@@ -238,17 +245,15 @@ export async function PATCH(request: NextRequest) {
       const a = assRows[0];
       const targetSchoolId = schoolId || a.school_id;
 
-      // Update school table can_reassess to true
       await query(
-        `UPDATE schools 
-         SET can_reassess = TRUE, 
-             reassess_reason = $1, 
-             updated_at = NOW() 
+        `UPDATE schools
+         SET can_reassess = TRUE,
+             reassess_reason = $1,
+             updated_at = NOW()
          WHERE id = $2`,
         [reason || 'Administrator tomonidan qayta baholashga ruxsat berildi', targetSchoolId]
       );
 
-      // Audit Log
       await query(
         `INSERT INTO audit_logs (id, actor_name, actor_role, action, target, target_id, new_value, timestamp)
          VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())`,
@@ -276,7 +281,7 @@ export async function PATCH(request: NextRequest) {
     // 2. Action: REVOKE_RETAKE (Ruxsatni bekor qilish)
     if (action === 'REVOKE_RETAKE') {
       const assRows = await query(
-        `UPDATE assessments 
+        `UPDATE assessments
          SET status = 'SUBMITTED',
              updated_at = NOW()
          WHERE id = $1
@@ -292,10 +297,10 @@ export async function PATCH(request: NextRequest) {
       const targetSchoolId = schoolId || a.school_id;
 
       await query(
-        `UPDATE schools 
-         SET can_reassess = FALSE, 
-             reassess_reason = NULL, 
-             updated_at = NOW() 
+        `UPDATE schools
+         SET can_reassess = FALSE,
+             reassess_reason = NULL,
+             updated_at = NOW()
          WHERE id = $1`,
         [targetSchoolId]
       );
@@ -306,7 +311,7 @@ export async function PATCH(request: NextRequest) {
       });
     }
 
-    // 3. Normal Verification or Rejection
+    // 3. Oddiy tasdiqlash yoki rad etish
     const rows = await query(
       `UPDATE assessments
        SET status = COALESCE($1, status),
@@ -325,7 +330,6 @@ export async function PATCH(request: NextRequest) {
 
     const a = rows[0];
 
-    // If verified, ensure school's current_score is synced
     if (status === 'VERIFIED') {
       await query(`UPDATE schools SET current_score = $1, updated_at = NOW() WHERE id = $2`, [
         a.total_score,
