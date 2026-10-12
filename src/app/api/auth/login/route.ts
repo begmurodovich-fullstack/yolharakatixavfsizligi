@@ -32,6 +32,24 @@ export async function POST(request: NextRequest) {
         ? trimmedEmail.replace(/^sch_/, 'sch-').replace(/@maktab\.uz$/, '')
         : '';
 
+    let targetSchoolId = '';
+    if (
+      trimmedEmail === 'qiziltepa24' ||
+      trimmedEmail === 'qiziltepa24@maktab.uz' ||
+      trimmedEmail === 'qiziltepa_24' ||
+      trimmedEmail === 'maktab24' ||
+      trimmedEmail === '24-maktab' ||
+      trimmedEmail === '24' ||
+      trimmedEmail === 'sch-3837' ||
+      (trimmedEmail.includes('24') && (trimmedEmail.includes('qizil') || trimmedEmail.includes('navoiy')))
+    ) {
+      targetSchoolId = 'sch-3837';
+    }
+
+    let directAdminEmail = '';
+    if (trimmedEmail === 'admin' || trimmedEmail === 'yhxx') directAdminEmail = 'admin@yhxx.uz';
+    if (trimmedEmail === 'superadmin' || trimmedEmail === 'super') directAdminEmail = 'superadmin@monitoring.uz';
+
     const users = await query(
       `SELECT id, email, password_hash, name, role, school_id, region_id, district_id,
               is_first_login, is_active, created_at, updated_at
@@ -39,13 +57,17 @@ export async function POST(request: NextRequest) {
        WHERE (
          LOWER(email) = $1
          OR LOWER(email) = $2
-         OR ($3 <> '' AND LOWER(email) LIKE $3)
+         OR ($3 <> '' AND LOWER(email) = $3)
          OR ($4 <> '' AND school_id = $4)
+         OR ($5 <> '' AND LOWER(email) LIKE $5)
+         OR ($6 <> '' AND school_id = $6)
        ) AND is_active = true
        LIMIT 1`,
       [
         trimmedEmail,
         `${cleanSearchEmail}@maktab.uz`,
+        directAdminEmail,
+        targetSchoolId,
         likePattern,
         schoolIdSearch,
       ]

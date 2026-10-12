@@ -17,6 +17,7 @@ import {
 import { rankingService } from '@/services/rankingService';
 import { RankingEntry } from '@/types';
 import { StarRatingBadge, getStarRating } from '@/components/ui/status-badge';
+import { scoreToStarRating } from '@/lib/scoreRules';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -50,9 +51,9 @@ export default function ReytingPage() {
     } else if (filterType === '4star') {
       list = list.filter((item) => (item.score || 0) >= 75 && (item.score || 0) < 90);
     } else if (filterType === '3star') {
-      list = list.filter((item) => (item.score || 0) >= 60 && (item.score || 0) < 75);
+      list = list.filter((item) => (item.score || 0) >= 50 && (item.score || 0) < 75);
     } else if (filterType === 'risk') {
-      list = list.filter((item) => (item.score || 0) < 60);
+      list = list.filter((item) => (item.score || 0) < 50);
     }
 
     if (searchQuery.trim()) {
@@ -134,9 +135,9 @@ export default function ReytingPage() {
             </CardHeader>
             <CardContent className="p-5 pt-0">
               <div className="text-2xl sm:text-3xl font-black text-rose-700">
-                {isLoading ? '...' : `${rankings.filter((r) => (r.score || 0) < 60).length} ta`}
+                {isLoading ? '...' : `${rankings.filter((r) => (r.score || 0) < 50).length} ta`}
               </div>
-              <p className="text-xs text-slate-500 mt-1">Yo‘l infratuzilmasini yaxshilash bo‘yicha qarshi chora-tadbirlar talab etiladi</p>
+              <p className="text-xs text-slate-500 mt-1">Yo‘l infratuzilmasini yaxshilash bo‘yicha choralar talab etiladi</p>
             </CardContent>
           </Card>
         </div>
@@ -286,8 +287,14 @@ export default function ReytingPage() {
                         </div>
                       </TableCell>
 
-                      <TableCell className="text-center font-mono text-sm tracking-wider">
-                        <span className="text-base">{starInfo.starIcons}</span>
+                      <TableCell className="text-center font-mono">
+                        <div className="flex flex-col items-center justify-center">
+                          <div className="flex items-center gap-1.5 font-bold text-xs">
+                            <span className="text-amber-500 font-extrabold">{scoreToStarRating(score).starRating} ★</span>
+                            <span className="text-base">{starInfo.starIcons}</span>
+                          </div>
+                          <span className="text-[11px] text-slate-400 font-mono">({score} ball)</span>
+                        </div>
                       </TableCell>
 
                       <TableCell className="text-center">

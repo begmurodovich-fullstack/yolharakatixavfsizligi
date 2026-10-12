@@ -53,7 +53,7 @@ export class AuthService {
 
     // Mock fallback for accounts
     const user = await repositories.user.getByEmail(rawEmail.toLowerCase());
-    const validPasswords = ['Demo@1234', 'Super@1234', 'Admin@1234', 'Maktab@24', 'qiziltepa24', 'Maktab@1234'];
+    const validPasswords = ['Demo@1234', 'Super@1234', 'Admin@1234', 'Maktab@24', 'qiziltepa24', 'Maktab@1234', 'dinara2002'];
     const isPasswordValid = validPasswords.includes(rawPassword) || rawPassword === STANDARD_DEMO_PASSWORD;
 
     if (!user || !isPasswordValid) {

@@ -19,8 +19,44 @@ import {
   Info,
   ArrowLeft,
   HelpCircle,
+  School,
+  Crown,
+  Sparkles,
 } from 'lucide-react';
 import Link from 'next/link';
+
+const PRESET_ACCOUNTS = [
+  {
+    role: UserRole.SCHOOL_USER,
+    title: "24-umumta'lim maktabi",
+    badge: 'Maktab Mas’uli',
+    email: 'maktab_24_navoiy_qiziltepa@maktab.uz',
+    shortAlias: 'qiziltepa24',
+    password: 'dinara2002',
+    location: 'Navoiy viloyati, Qiziltepa tumani',
+    icon: School,
+  },
+  {
+    role: UserRole.ADMIN,
+    title: 'YHXX Administratori',
+    badge: 'Admin',
+    email: 'admin@yhxx.uz',
+    shortAlias: 'admin',
+    password: 'Admin@1234',
+    location: 'Yo‘l harakati xavfsizligi xizmati (Respublika)',
+    icon: Shield,
+  },
+  {
+    role: UserRole.SUPER_ADMIN,
+    title: 'Bosh Administrator',
+    badge: 'Super Admin',
+    email: 'superadmin@monitoring.uz',
+    shortAlias: 'superadmin',
+    password: 'Super@1234',
+    location: 'To‘liq boshqaruv va audit',
+    icon: Crown,
+  },
+];
 
 export default function LoginPage() {
   const router = useRouter();
@@ -131,11 +167,11 @@ export default function LoginPage() {
               <div className="relative">
                 <Input
                   id="login-email"
-                  type="email"
+                  type="text"
                   autoComplete="username"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="masalan: maktab_1_navoiy_qiziltepa@maktab.uz"
+                  placeholder="masalan: maktab_24_navoiy_qiziltepa@maktab.uz yoki qiziltepa24"
                   disabled={isLoading}
                   required
                   className="pl-9 text-xs h-10 border-slate-300 focus:border-slate-900 focus:ring-slate-900"
@@ -205,6 +241,89 @@ export default function LoginPage() {
               </Link>
             </div>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Namunaviy hisoblar / 1-klikda to'ldirish */}
+      <Card className="border-teal-200/80 bg-gradient-to-br from-teal-50/50 via-white to-slate-50 shadow-xs">
+        <CardHeader className="p-4 pb-2 border-b border-teal-100/70">
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-teal-600" />
+              <span>Namunaviy hisoblar (1-klikda to‘ldirish)</span>
+            </CardTitle>
+            <span className="text-[10px] font-semibold text-teal-800 bg-teal-100/70 px-2 py-0.5 rounded border border-teal-200">
+              Sinov uchun
+            </span>
+          </div>
+          <CardDescription className="text-[11px] text-slate-500">
+            Tizimga tez kirish uchun quyidagi hisoblardan birini bosing:
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent className="p-3 space-y-2">
+          {PRESET_ACCOUNTS.map((preset) => {
+            const Icon = preset.icon;
+            const isFilled = email === preset.email && password === preset.password;
+
+            return (
+              <button
+                key={preset.email}
+                type="button"
+                onClick={() => {
+                  setEmail(preset.email);
+                  setPassword(preset.password);
+                  setErrorMessage(null);
+                }}
+                className={`w-full flex items-center justify-between p-2.5 rounded-xl border text-left transition-all ${
+                  isFilled
+                    ? 'border-teal-600 bg-teal-50/60 shadow-2xs ring-1 ring-teal-600'
+                    : 'border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-300'
+                }`}
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div
+                    className={`p-2 rounded-lg shrink-0 ${
+                      isFilled
+                        ? 'bg-teal-700 text-white'
+                        : 'bg-slate-100 text-slate-700 border border-slate-200'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs font-bold text-slate-900 truncate">
+                        {preset.title}
+                      </span>
+                      <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-slate-200/80 text-slate-700">
+                        {preset.badge}
+                      </span>
+                    </div>
+                    <div className="text-[11px] text-slate-600 font-mono truncate mt-0.5">
+                      {preset.email}
+                    </div>
+                    <div className="text-[10px] text-teal-800 font-medium">
+                      Parol: <code className="font-mono bg-slate-100 px-1 py-0.2 rounded border border-slate-200 text-slate-800 font-bold">{preset.password}</code>
+                      <span className="text-slate-400 ml-1.5">({preset.location})</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="shrink-0 pl-2">
+                  {isFilled ? (
+                    <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-teal-700 text-white text-xs font-bold">
+                      ✓
+                    </span>
+                  ) : (
+                    <span className="text-[11px] font-semibold text-teal-700 hover:underline">
+                      Tanlash →
+                    </span>
+                  )}
+                </div>
+              </button>
+            );
+          })}
         </CardContent>
       </Card>
     </div>
