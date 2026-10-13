@@ -12,8 +12,8 @@ export async function GET() {
         COUNT(CASE WHEN coordinate_status = 'PENDING' AND latitude IS NOT NULL THEN 1 END) as pending_coords,
         COALESCE(AVG(CASE WHEN current_score > 0 THEN current_score END), 0) as avg_score,
         COUNT(CASE WHEN current_score >= 80 THEN 1 END) as green_count,
-        COUNT(CASE WHEN current_score >= 50 AND current_score < 80 THEN 1 END) as yellow_count,
-        COUNT(CASE WHEN current_score > 0 AND current_score < 50 THEN 1 END) as red_count,
+        COUNT(CASE WHEN current_score >= 60 AND current_score < 80 THEN 1 END) as yellow_count,
+        COUNT(CASE WHEN current_score > 0 AND current_score < 60 THEN 1 END) as red_count,
         COUNT(CASE WHEN current_score IS NULL OR current_score = 0 THEN 1 END) as unassessed_count
       FROM schools
     `);

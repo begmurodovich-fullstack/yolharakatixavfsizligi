@@ -275,7 +275,7 @@ export default function PublicMapPage() {
                   ? 'text-slate-400 bg-slate-800/80 border-slate-700'
                   : score >= 80
                   ? 'text-emerald-400 bg-emerald-950/60 border-emerald-800'
-                  : score >= 50
+                  : score >= 60
                   ? 'text-amber-400 bg-amber-950/60 border-amber-800'
                   : 'text-rose-400 bg-rose-950/60 border-rose-800';
 
@@ -400,7 +400,7 @@ export default function PublicMapPage() {
                     className={`text-xs font-mono font-bold px-2 py-0.5 rounded-full border ${
                       selectedSchool.currentScore >= 80
                         ? 'text-emerald-400 bg-emerald-950/60 border-emerald-800'
-                        : selectedSchool.currentScore >= 50
+                        : selectedSchool.currentScore >= 60
                         ? 'text-amber-400 bg-amber-950/60 border-amber-800'
                         : selectedSchool.currentScore > 0
                         ? 'text-rose-400 bg-rose-950/60 border-rose-800'
@@ -408,7 +408,7 @@ export default function PublicMapPage() {
                     }`}
                   >
                     {selectedSchool.currentScore > 0
-                      ? `${getStarRating(selectedSchool.currentScore).stars} ★ (${getStarRating(selectedSchool.currentScore).shortLabel})`
+                      ? `${(selectedSchool.currentScore / 20).toFixed(1)} ★ (${getStarRating(selectedSchool.currentScore).shortLabel})`
                       : 'Baholanmagan'}
                   </span>
                 </div>

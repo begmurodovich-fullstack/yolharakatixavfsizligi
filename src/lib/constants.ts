@@ -15,8 +15,8 @@ export const APP_CONFIG = {
 
 export const SCORE_THRESHOLDS = {
   GREEN_MIN: 80,  // Good / Safe (>= 80%)
-  YELLOW_MIN: 50, // Average / Needs Attention (50% - 79%)
-  // Below 50% is RED / High Risk
+  YELLOW_MIN: 60, // Average / Needs Attention (60% - 79%)
+  // Below 60% is RED / High Risk (0% - 59%) -> 1-2 stars (0.0 - 2.9 ★)
 };
 
 /**

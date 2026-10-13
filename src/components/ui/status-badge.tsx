@@ -103,7 +103,7 @@ export function getStarRating(score: number): {
       description: 'Yaxshi xavfsizlik darajasi',
     };
   }
-  if (score >= 50) {
+  if (score >= 60) {
     return {
       stars: 3,
       label: '3 Yulduz (O‘rtacha)',
@@ -113,7 +113,7 @@ export function getStarRating(score: number): {
       description: 'BMT minimal talabiga mos',
     };
   }
-  if (score >= 30) {
+  if (score >= 40) {
     return {
       stars: 2,
       label: '2 Yulduz (Xavfli)',

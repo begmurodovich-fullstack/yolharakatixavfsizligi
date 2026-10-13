@@ -213,7 +213,7 @@ export class ApiCriterionRepository implements ICriterionRepository {
 export class ApiRankingRepository implements IRankingRepository {
   private calculateScoreStatus(score: number): ScoreStatus {
     if (score >= 80) return ScoreStatus.GREEN;
-    if (score >= 50) return ScoreStatus.YELLOW;
+    if (score >= 60) return ScoreStatus.YELLOW;
     return ScoreStatus.RED;
   }
 

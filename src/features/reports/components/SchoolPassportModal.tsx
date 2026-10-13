@@ -37,7 +37,7 @@ export function SchoolPassportModal({
   if (!isOpen) return null;
 
   const totalScore = school.currentScore || 0;
-  const scoreStatus = totalScore >= 80 ? 'GREEN' : totalScore >= 50 ? 'YELLOW' : 'RED';
+  const scoreStatus = totalScore >= 80 ? 'GREEN' : totalScore >= 60 ? 'YELLOW' : 'RED';
   const statusLabel =
     scoreStatus === 'GREEN'
       ? 'Yuqori Xavfsizlik Darajasi (Yashil)'

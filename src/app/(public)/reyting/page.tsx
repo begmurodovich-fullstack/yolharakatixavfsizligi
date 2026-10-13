@@ -29,12 +29,14 @@ import {
   TableRow,
   TableCell,
 } from '@/components/ui/table';
+import { RegionSafetyHeatmap } from '@/features/dashboard/components';
 
 export default function ReytingPage() {
   const [rankings, setRankings] = useState<RankingEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState<'all' | '5star' | '4star' | '3star' | 'risk'>('all');
+  const [selectedRegionFilter, setSelectedRegionFilter] = useState<string | null>(null);
 
   useEffect(() => {
     rankingService.getRepublicRankings().then((res) => {
@@ -56,6 +58,20 @@ export default function ReytingPage() {
       list = list.filter((item) => (item.score || 0) < 50);
     }
 
+    if (selectedRegionFilter) {
+      const regNorm = selectedRegionFilter
+        .toLowerCase()
+        .replace(/['`ʻ’‘\s]/g, '')
+        .replace('viloyati', '')
+        .replace('respublikasi', '')
+        .replace('shahar', '');
+      list = list.filter((item) => {
+        if (!item.regionName) return false;
+        const itemNorm = item.regionName.toLowerCase().replace(/['`ʻ’‘\s]/g, '');
+        return itemNorm.includes(regNorm);
+      });
+    }
+
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
       list = list.filter(
@@ -67,7 +83,7 @@ export default function ReytingPage() {
     }
 
     return list;
-  }, [rankings, searchQuery, filterType]);
+  }, [rankings, searchQuery, filterType, selectedRegionFilter]);
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
@@ -92,6 +108,14 @@ export default function ReytingPage() {
 
       {/* Main Content Body */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        {/* O‘zbekiston Hududiy Xavfsizlik Indeksi (Heatmap) */}
+        <RegionSafetyHeatmap
+          onSelectRegion={(reg) => {
+            setSelectedRegionFilter(reg);
+          }}
+          selectedRegionFilter={selectedRegionFilter}
+        />
+
         {/* KPI Strip */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Card className="bg-white border-slate-200 shadow-2xs">
@@ -144,14 +168,31 @@ export default function ReytingPage() {
 
         {/* Filter & Search Bar */}
         <div className="flex flex-col sm:flex-row gap-4 justify-between items-stretch sm:items-center bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <Input
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Maktab, tuman yoki viloyat nomi bo‘yicha qidirish..."
-              className="pl-10 bg-slate-50 border-slate-200 text-slate-900 text-xs sm:text-sm placeholder:text-slate-400 rounded-xl"
-            />
+          <div className="flex items-center gap-2 flex-1 max-w-lg">
+            <div className="relative flex-1">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Maktab, tuman yoki viloyat nomi bo‘yicha qidirish..."
+                className="pl-10 bg-slate-50 border-slate-200 text-slate-900 text-xs sm:text-sm placeholder:text-slate-400 rounded-xl"
+              />
+            </div>
+
+            {selectedRegionFilter && (
+              <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-teal-50 border border-teal-200 text-teal-800 text-xs font-semibold shrink-0 animate-in fade-in">
+                <MapPin className="w-3.5 h-3.5 text-teal-600" />
+                <span className="truncate max-w-[150px]">{selectedRegionFilter}</span>
+                <button
+                  type="button"
+                  onClick={() => setSelectedRegionFilter(null)}
+                  className="ml-1 text-teal-600 hover:text-teal-900 font-bold hover:bg-teal-200/60 rounded-full w-4 h-4 flex items-center justify-center text-[10px]"
+                  title="Filtrni tozalash"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="flex flex-wrap gap-1.5">

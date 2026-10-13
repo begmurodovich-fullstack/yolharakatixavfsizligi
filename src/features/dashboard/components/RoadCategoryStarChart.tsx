@@ -103,8 +103,8 @@ function calculateStarOrUnassessed(score?: number | null): 0 | 1 | 2 | 3 | 4 | 5
   if (score === undefined || score === null || score <= 0) return 0;
   if (score >= 90) return 5;
   if (score >= 75) return 4;
-  if (score >= 50) return 3;
-  if (score >= 30) return 2;
+  if (score >= 60) return 3;
+  if (score >= 40) return 2;
   return 1;
 }
 

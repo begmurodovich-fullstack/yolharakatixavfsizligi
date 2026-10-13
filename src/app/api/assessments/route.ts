@@ -137,7 +137,7 @@ export async function POST(request: NextRequest) {
     }
 
     const numericScore = Number(score) || 0;
-    const scoreStatus = numericScore >= 80 ? 'GREEN' : numericScore >= 50 ? 'YELLOW' : 'RED';
+    const scoreStatus = numericScore >= 80 ? 'GREEN' : numericScore >= 60 ? 'YELLOW' : 'RED';
     const finalPercentage = percentage || numericScore;
     const finalStatus = isDraft ? 'IN_PROGRESS' : 'SUBMITTED';
 

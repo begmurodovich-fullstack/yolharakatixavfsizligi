@@ -49,7 +49,7 @@ function buildMarkerIcon(
     ? '#0d9488'
     : score >= 80
     ? '#10b981'
-    : score >= 50
+    : score >= 60
     ? '#f59e0b'
     : '#ef4444';
 
@@ -96,7 +96,7 @@ function buildPopupContent(sch: School): string {
     ? '#0d9488'
     : score >= 80
     ? '#10b981'
-    : score >= 50
+    : score >= 60
     ? '#f59e0b'
     : '#ef4444';
 

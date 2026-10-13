@@ -61,7 +61,7 @@ export function getScoreStatus(score: number, maxScore = 100): ScoreStatus {
 
 /**
  * 0-100 ballik shkalani 1.0 - 5.0 yulduzli o'lchovga standartlashtirilgan o'tkazish.
- * Masalan: 58 ball = 2.9 ★ (3★ o'rtacha toifa)
+ * Masalan: 58 ball = 2.9 ★ (2★ xavfli toifa)
  */
 export function scoreToStarRating(score: number): {
   starRating: string;
@@ -75,8 +75,8 @@ export function scoreToStarRating(score: number): {
   let starsInt = 1;
   if (score >= 90) starsInt = 5;
   else if (score >= 75) starsInt = 4;
-  else if (score >= 50) starsInt = 3;
-  else if (score >= 30) starsInt = 2;
+  else if (score >= 60) starsInt = 3;
+  else if (score >= 40) starsInt = 2; // 2.0 - 2.9 ★ (40 - 59 ball)
   else starsInt = 1;
 
   return {

@@ -31,8 +31,8 @@ export async function GET(
     let starRating: 1 | 2 | 3 | 4 | 5 = 1;
     if (score >= 90) starRating = 5;
     else if (score >= 75) starRating = 4;
-    else if (score >= 50) starRating = 3;
-    else if (score >= 30) starRating = 2;
+    else if (score >= 60) starRating = 3;
+    else if (score >= 40) starRating = 2; // 2.0 - 2.9 is 40 - 59 ball
     else starRating = 1;
 
     const formattedSchool = {

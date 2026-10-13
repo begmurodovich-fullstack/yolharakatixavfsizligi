@@ -102,7 +102,7 @@ export default function AdminReportsPage() {
           `"${s.directorName || 'Biriktirilmagan'}"`,
           (s.studentCount || 0).toString(),
           s.currentScore.toString(),
-          s.currentScore >= 80 ? 'YASHIL' : s.currentScore >= 50 ? 'SARIQ' : 'QIZIL',
+          s.currentScore >= 80 ? 'YASHIL' : s.currentScore >= 60 ? 'SARIQ' : 'QIZIL',
           s.coordinateStatus,
         ]);
     } else if (reportType === 'REGIONAL_INDEX') {
@@ -115,8 +115,8 @@ export default function AdminReportsPage() {
         );
         const avg = regSchools.length > 0 ? Math.round(regSchools.reduce((a, b) => a + b.currentScore, 0) / regSchools.length) : 0;
         const green = regSchools.filter((s) => s.currentScore >= 80).length;
-        const yellow = regSchools.filter((s) => s.currentScore >= 50 && s.currentScore < 80).length;
-        const red = regSchools.filter((s) => s.currentScore < 50).length;
+        const yellow = regSchools.filter((s) => s.currentScore >= 60 && s.currentScore < 80).length;
+        const red = regSchools.filter((s) => s.currentScore < 60).length;
         return [`"${r.name}"`, regSchools.length.toString(), avg.toString(), green.toString(), yellow.toString(), red.toString()];
       });
       filename = `hududlar-xavfsizlik-indeksi-${new Date().toISOString().slice(0, 10)}.csv`;
@@ -357,8 +357,8 @@ export default function AdminReportsPage() {
                   );
                   const avg = regSchools.length > 0 ? Math.round(regSchools.reduce((a, b) => a + b.currentScore, 0) / regSchools.length) : 0;
                   const green = regSchools.filter((s) => s.currentScore >= 80).length;
-                  const yellow = regSchools.filter((s) => s.currentScore >= 50 && s.currentScore < 80).length;
-                  const red = regSchools.filter((s) => s.currentScore < 50).length;
+                  const yellow = regSchools.filter((s) => s.currentScore >= 60 && s.currentScore < 80).length;
+                  const red = regSchools.filter((s) => s.currentScore < 60).length;
 
                   return (
                     <tr key={r.id} className="hover:bg-slate-50/70">

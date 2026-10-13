@@ -9,3 +9,4 @@ export * from './RankingComparison';
 export * from './NotificationList';
 export * from './QuickActions';
 export * from './RoadCategoryStarChart';
+export * from './RegionSafetyHeatmap';
