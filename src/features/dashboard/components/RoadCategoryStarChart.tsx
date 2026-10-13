@@ -101,10 +101,11 @@ const STAR_COLORS: Record<number, { name: string; color: string; bg: string; tex
 
 function calculateStarOrUnassessed(score?: number | null): 0 | 1 | 2 | 3 | 4 | 5 {
   if (score === undefined || score === null || score <= 0) return 0;
-  if (score >= 90) return 5;
-  if (score >= 75) return 4;
-  if (score >= 60) return 3;
-  if (score >= 40) return 2;
+  const s = score > 5.0 ? score / 20 : score;
+  if (s >= 5.0) return 5;
+  if (s >= 4.0) return 4;
+  if (s >= 3.0) return 3;
+  if (s >= 2.0) return 2;
   return 1;
 }
 

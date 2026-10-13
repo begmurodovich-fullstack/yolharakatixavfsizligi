@@ -49,11 +49,11 @@ export async function GET(request: NextRequest) {
 
     if (scoreStatus && scoreStatus !== 'ALL') {
       if (scoreStatus === 'GREEN') {
-        sql += ` AND s.current_score >= 80`;
+        sql += ` AND s.current_score >= 4.0`;
       } else if (scoreStatus === 'YELLOW') {
-        sql += ` AND s.current_score >= 60 AND s.current_score < 80`;
+        sql += ` AND s.current_score >= 3.0 AND s.current_score < 4.0`;
       } else if (scoreStatus === 'RED') {
-        sql += ` AND s.current_score > 0 AND s.current_score < 60`;
+        sql += ` AND s.current_score > 0 AND s.current_score < 3.0`;
       } else if (scoreStatus === 'UNASSESSED') {
         sql += ` AND (s.current_score IS NULL OR s.current_score = 0)`;
       }
@@ -80,10 +80,10 @@ export async function GET(request: NextRequest) {
     const formattedSchools = rows.map((s) => {
       const score = Number(s.current_score) || 0;
       let starRating: 1 | 2 | 3 | 4 | 5 = 1;
-      if (score >= 90) starRating = 5;
-      else if (score >= 75) starRating = 4;
-      else if (score >= 60) starRating = 3;
-      else if (score >= 40) starRating = 2; // 2.0 - 2.9 is 40 - 59 ball
+      if (score >= 5.0) starRating = 5;
+      else if (score >= 4.0) starRating = 4;
+      else if (score >= 3.0) starRating = 3;
+      else if (score >= 2.0) starRating = 2;
       else starRating = 1;
 
       return {

@@ -13,6 +13,7 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import Link from 'next/link';
+import { getStarRating } from '@/components/ui/status-badge';
 
 interface AdminStatGridProps {
   summary: AdminDashboardSummary;
@@ -124,10 +125,10 @@ export function AdminStatGrid({ summary }: AdminStatGridProps) {
         </div>
         <div>
           <div className="text-2xl sm:text-3xl font-black text-teal-950 font-mono tracking-tight flex items-center gap-2">
-            <span>{summary.republicAverageScore > 0 ? `${summary.republicAverageScore} ball` : '—'}</span>
+            <span>{summary.republicAverageScore > 0 ? `${(summary.republicAverageScore > 5 ? summary.republicAverageScore / 20 : summary.republicAverageScore).toFixed(1)} ball` : '—'}</span>
             {summary.republicAverageScore > 0 && (
               <span className="text-base text-amber-500 font-sans">
-                {summary.republicAverageScore >= 90 ? '⭐️⭐️⭐️⭐️⭐️' : summary.republicAverageScore >= 75 ? '⭐️⭐️⭐️⭐️' : summary.republicAverageScore >= 60 ? '⭐️⭐️⭐️' : summary.republicAverageScore >= 45 ? '⭐️⭐️' : '⭐️'}
+                {getStarRating(summary.republicAverageScore).starIcons}
               </span>
             )}
           </div>

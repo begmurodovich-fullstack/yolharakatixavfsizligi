@@ -11,9 +11,9 @@ export async function GET() {
         COUNT(CASE WHEN coordinate_status = 'VERIFIED' AND latitude IS NOT NULL THEN 1 END) as verified_coords,
         COUNT(CASE WHEN coordinate_status = 'PENDING' AND latitude IS NOT NULL THEN 1 END) as pending_coords,
         COALESCE(AVG(CASE WHEN current_score > 0 THEN current_score END), 0) as avg_score,
-        COUNT(CASE WHEN current_score >= 80 THEN 1 END) as green_count,
-        COUNT(CASE WHEN current_score >= 60 AND current_score < 80 THEN 1 END) as yellow_count,
-        COUNT(CASE WHEN current_score > 0 AND current_score < 60 THEN 1 END) as red_count,
+        COUNT(CASE WHEN current_score >= 4.0 THEN 1 END) as green_count,
+        COUNT(CASE WHEN current_score >= 3.0 AND current_score < 4.0 THEN 1 END) as yellow_count,
+        COUNT(CASE WHEN current_score > 0 AND current_score < 3.0 THEN 1 END) as red_count,
         COUNT(CASE WHEN current_score IS NULL OR current_score = 0 THEN 1 END) as unassessed_count
       FROM schools
     `);
@@ -48,7 +48,7 @@ export async function GET() {
       regionId: row.region_id,
       regionName: row.region_name,
       totalSchools: Number(row.total_schools) || 0,
-      averageScore: Math.round(Number(row.average_score) || 0),
+      averageScore: Number(Number(row.average_score || 0).toFixed(1)),
       verifiedPercent: Number(row.verified_percent) || 0,
     }));
 
@@ -58,7 +58,7 @@ export async function GET() {
       pendingCoordinatesCount: Number(stats.pending_coords) || 0,
       pendingEvidenceCount: Number(evidencePendingRes[0]?.pending_evidence) || 0,
       pendingAssessmentsCount: Number(assessmentPendingRes[0]?.pending_assessments) || 0,
-      republicAverageScore: Math.round(Number(stats.avg_score) || 0),
+      republicAverageScore: Number(Number(stats.avg_score || 0).toFixed(1)),
       greenCount: Number(stats.green_count) || 0,
       yellowCount: Number(stats.yellow_count) || 0,
       redCount: Number(stats.red_count) || 0,

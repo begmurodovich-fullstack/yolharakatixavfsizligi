@@ -79,7 +79,7 @@ export function AssessmentSuccessState({
           <span className="text-slate-500">To‘plangan dastlabki ball:</span>
           <div className="flex items-center gap-2">
             <span className="text-lg font-black text-slate-900 font-mono">
-              {assessment.score} / 100
+              {assessment.score > 5 ? (assessment.score / 20).toFixed(1) : Number(assessment.score).toFixed(1)} ball
             </span>
             <ScoreStatusBadge score={assessment.score} />
           </div>

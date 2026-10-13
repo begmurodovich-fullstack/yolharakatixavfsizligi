@@ -220,9 +220,9 @@ export default function PublicMapPage() {
                 className="w-full text-xs h-9 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 px-2.5 focus:outline-none focus:border-teal-500 font-medium"
               >
                 <option value="ALL">Barcha toifalar</option>
-                <option value="GREEN">🟢 Yashil (&gt;= 80 ball)</option>
-                <option value="YELLOW">🟡 Sariq (50-79 ball)</option>
-                <option value="RED">🔴 Qizil (1-49 ball)</option>
+                <option value="GREEN">🟢 Yashil (4.0 - 5.0 ball)</option>
+                <option value="YELLOW">🟡 Sariq (3.0 - 3.9 ball)</option>
+                <option value="RED">🔴 Qizil (1.0 - 2.9 ball)</option>
                 <option value="UNASSESSED">⚪ Baholanmagan</option>
               </select>
 
@@ -271,11 +271,12 @@ export default function PublicMapPage() {
                 const isSelected = selectedSchool?.id === sch.id;
                 const score = sch.currentScore || 0;
                 const isAssessed = score > 0;
+                const normScore = score > 5 ? score / 20 : score;
                 const badgeColor = !isAssessed
                   ? 'text-slate-400 bg-slate-800/80 border-slate-700'
-                  : score >= 80
+                  : normScore >= 4.0
                   ? 'text-emerald-400 bg-emerald-950/60 border-emerald-800'
-                  : score >= 60
+                  : normScore >= 3.0
                   ? 'text-amber-400 bg-amber-950/60 border-amber-800'
                   : 'text-rose-400 bg-rose-950/60 border-rose-800';
 
@@ -307,7 +308,7 @@ export default function PublicMapPage() {
                       <span
                         className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${badgeColor}`}
                       >
-                        {isAssessed ? `${score} ball` : 'Baholanmagan'}
+                        {isAssessed ? `${(score > 5 ? score / 20 : score).toFixed(1)} ball` : 'Baholanmagan'}
                       </span>
                     </div>
 
@@ -396,27 +397,34 @@ export default function PublicMapPage() {
                 </div>
 
                 <div className="text-right">
-                  <span
-                    className={`text-xs font-mono font-bold px-2 py-0.5 rounded-full border ${
-                      selectedSchool.currentScore >= 80
-                        ? 'text-emerald-400 bg-emerald-950/60 border-emerald-800'
-                        : selectedSchool.currentScore >= 60
-                        ? 'text-amber-400 bg-amber-950/60 border-amber-800'
-                        : selectedSchool.currentScore > 0
-                        ? 'text-rose-400 bg-rose-950/60 border-rose-800'
-                        : 'text-slate-400 bg-slate-800/60 border-slate-700'
-                    }`}
-                  >
-                    {selectedSchool.currentScore > 0
-                      ? `${(selectedSchool.currentScore / 20).toFixed(1)} ★ (${getStarRating(selectedSchool.currentScore).shortLabel})`
-                      : 'Baholanmagan'}
-                  </span>
+                  {(() => {
+                    const sc = selectedSchool.currentScore;
+                    const normSc = sc > 5 ? sc / 20 : sc;
+                    return (
+                      <span
+                        className={`text-xs font-mono font-bold px-2 py-0.5 rounded-full border ${
+                          normSc >= 4.0
+                            ? 'text-emerald-400 bg-emerald-950/60 border-emerald-800'
+                            : normSc >= 3.0
+                            ? 'text-amber-400 bg-amber-950/60 border-amber-800'
+                            : normSc > 0
+                            ? 'text-rose-400 bg-rose-950/60 border-rose-800'
+                            : 'text-slate-400 bg-slate-800/60 border-slate-700'
+                        }`}
+                      >
+                        {sc > 0
+                          ? `${normSc.toFixed(1)} ball (${getStarRating(normSc).shortLabel})`
+                          : 'Baholanmagan'}
+                      </span>
+                    );
+                  })()}
                 </div>
               </div>
 
-              {selectedSchool.currentScore > 0 && selectedSchool.currentScore < 60 && (
+              {selectedSchool.currentScore > 0 && (selectedSchool.currentScore > 5 ? selectedSchool.currentScore / 20 : selectedSchool.currentScore) < 3.0 && (
                 (() => {
                   const cm = getCountermeasureByScore(selectedSchool.currentScore);
+                  const normScore = selectedSchool.currentScore > 5 ? selectedSchool.currentScore / 20 : selectedSchool.currentScore;
                   return (
                     <div className="p-3 rounded-2xl bg-rose-950/60 border border-rose-800/80 text-xs space-y-1">
                       <div className="flex items-center justify-between text-rose-300 font-bold text-[11px]">
@@ -424,7 +432,7 @@ export default function PublicMapPage() {
                           <span>{cm.starIcon}</span>
                           <span>SR4S {cm.title} ({cm.riskLevel})</span>
                         </span>
-                        <span>{selectedSchool.currentScore} ball</span>
+                        <span>{normScore.toFixed(1)} ball</span>
                       </div>
                       <p className="text-[10px] text-slate-300 leading-snug">
                         {cm.proposalText}

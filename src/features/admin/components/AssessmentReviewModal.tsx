@@ -15,6 +15,7 @@ import {
   RotateCcw,
 } from 'lucide-react';
 import { OFFICIAL_SR4S_STAR_LEVELS, Sr4sStarLevel } from '@/lib/sr4sCalculation';
+import { normalizeScore } from '@/lib/scoreRules';
 
 /** Calculate accurate SR4S star rating (1.0–5.0) */
 function getStarVal(ass: Assessment): number {
@@ -30,10 +31,9 @@ function getStarVal(ass: Assessment): number {
       if (!isNaN(parsed) && parsed >= 1.0 && parsed <= 5.0) return parsed;
     }
   }
-  const score = ass.score ?? ass.percentage ?? 0;
+  const score = ass.score ?? 0;
   if (score <= 0) return 1.0;
-  const star = Math.round((score / 20) * 10) / 10;
-  return Math.min(5.0, Math.max(1.0, star));
+  return normalizeScore(score);
 }
 
 /** Get the SR4S level object for a given star score (1.0-1.9 -> 1★, 2.0-2.9 -> 2★, etc.) */
@@ -182,7 +182,7 @@ export function AssessmentReviewModal({
                     {lvl.starCount}★ {lvl.colorName}
                   </span>
                   <span className="text-[11px] text-slate-400 font-mono">
-                    Indeks: {assessment.percentage ?? Math.round(starVal * 20)}%
+                    Indeks: {assessment.percentage ?? Math.round((starVal / 5.0) * 100)}%
                   </span>
                 </div>
               </div>

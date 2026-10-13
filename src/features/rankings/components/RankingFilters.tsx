@@ -23,9 +23,9 @@ export function RankingFilters({
 }: RankingFiltersProps) {
   const statusOptions: Array<{ value: ScoreStatus | 'ALL'; label: string; badgeClass: string }> = [
     { value: 'ALL', label: 'Barcha holatlar', badgeClass: 'border-slate-300 text-slate-700' },
-    { value: ScoreStatus.GREEN, label: 'Yashil (≥80 ball)', badgeClass: 'border-emerald-300 text-emerald-800 bg-emerald-50' },
-    { value: ScoreStatus.YELLOW, label: 'Sariq (50-79 ball)', badgeClass: 'border-amber-300 text-amber-800 bg-amber-50' },
-    { value: ScoreStatus.RED, label: 'Qizil (<50 ball)', badgeClass: 'border-rose-300 text-rose-800 bg-rose-50' },
+    { value: ScoreStatus.GREEN, label: 'Yashil (4.0 - 5.0 ball)', badgeClass: 'border-emerald-300 text-emerald-800 bg-emerald-50' },
+    { value: ScoreStatus.YELLOW, label: 'Sariq (3.0 - 3.9 ball)', badgeClass: 'border-amber-300 text-amber-800 bg-amber-50' },
+    { value: ScoreStatus.RED, label: 'Qizil (<3.0 ball)', badgeClass: 'border-rose-300 text-rose-800 bg-rose-50' },
   ];
 
   return (

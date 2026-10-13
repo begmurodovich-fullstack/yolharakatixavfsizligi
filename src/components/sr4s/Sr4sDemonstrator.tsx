@@ -479,7 +479,7 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
     try {
       const targetSchoolId = school?.id || user?.schoolId || 'sch-3837';
       const starNum = parseFloat(decimalScore) || 4.6;
-      const score100 = Math.round(Math.max(10, Math.min(100, starNum * 20)));
+      const schoolScore = Number(starNum.toFixed(1));
 
       // 40 ta mezon javoblarini shakllantirish
       const answersPayload: Record<string, any> = {};
@@ -521,9 +521,9 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
           schoolId: targetSchoolId,
           periodId: 'period-2026-q1',
           status: 'SUBMITTED',
-          score: score100,
-          maxScore: 100,
-          percentage: score100,
+          score: schoolScore,
+          maxScore: 5.0,
+          percentage: Math.round((schoolScore / 5.0) * 100),
           answers: answersPayload,
           criterionScores: criterionScoresPayload,
           reviewerNotes: `SR4S 40 mezonli baholash: ${decimalScore} Yulduz (SRS: ${srsScore})`,
@@ -540,7 +540,7 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
       await fetch(`/api/schools/${targetSchoolId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ currentScore: score100 }),
+        body: JSON.stringify({ currentScore: schoolScore }),
       }).catch((e) => console.warn('School current score sync warning:', e));
 
       // 3. Shaklni qulflash va retake huquqini yopish
@@ -551,13 +551,13 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
       if (typeof window !== 'undefined') {
         window.dispatchEvent(
           new CustomEvent('school-score-updated', {
-            detail: { score: score100, starScore: starNum, schoolId: targetSchoolId },
+            detail: { score: schoolScore, starScore: starNum, schoolId: targetSchoolId },
           })
         );
       }
 
       if (onSaveSuccess) {
-        onSaveSuccess(score100, starNum);
+        onSaveSuccess(schoolScore, starNum);
       }
 
       success(

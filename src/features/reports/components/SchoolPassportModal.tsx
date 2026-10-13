@@ -36,8 +36,9 @@ export function SchoolPassportModal({
 }: SchoolPassportModalProps) {
   if (!isOpen) return null;
 
-  const totalScore = school.currentScore || 0;
-  const scoreStatus = totalScore >= 80 ? 'GREEN' : totalScore >= 60 ? 'YELLOW' : 'RED';
+  const rawScore = school.currentScore || 0;
+  const totalScore = rawScore > 5 ? Number((rawScore / 20).toFixed(1)) : Number(rawScore.toFixed(1));
+  const scoreStatus = totalScore >= 4.0 ? 'GREEN' : totalScore >= 3.0 ? 'YELLOW' : 'RED';
   const statusLabel =
     scoreStatus === 'GREEN'
       ? 'Yuqori Xavfsizlik Darajasi (Yashil)'
@@ -158,9 +159,9 @@ export function SchoolPassportModal({
             </div>
 
             <div className="text-right">
-              <div className="text-3xl font-black tracking-tight">{totalScore} / 100</div>
+              <div className="text-3xl font-black tracking-tight">{totalScore} ball</div>
               <div className="text-[11px] font-mono text-teal-300 print:text-slate-700">
-                Ballik Milliy Baholash
+                1.0 — 5.0 Yulduzli Shkala
               </div>
             </div>
           </div>
@@ -184,8 +185,8 @@ export function SchoolPassportModal({
                 </thead>
                 <tbody className="divide-y divide-slate-200">
                   {criteria.map((crit, idx) => {
-                    const score = Math.round(crit.maxScore * (totalScore / 100));
-                    const isGood = totalScore >= 70;
+                    const score = Math.round(crit.maxScore * (totalScore / 5.0));
+                    const isGood = totalScore >= 4.0;
                     return (
                       <tr key={crit.id} className="hover:bg-slate-50">
                         <td className="p-2.5 text-center font-mono font-bold text-slate-600">
@@ -241,7 +242,7 @@ export function SchoolPassportModal({
                   ))}
                 </ol>
 
-                {cm.riskFactors.length > 0 && totalScore < 75 && (
+                {cm.riskFactors.length > 0 && totalScore < 4.0 && (
                   <div className="pt-2 border-t border-slate-200 text-[11px] text-slate-600">
                     <span className="font-bold text-slate-700">Aniqlangan asosiy risk omillari: </span>
                     <span>{cm.riskFactors.join('; ')}</span>

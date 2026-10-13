@@ -240,7 +240,7 @@ export function MapPreviewSection() {
                         <div className="text-[10px] text-slate-400 font-mono">SR4S Reytingi:</div>
                         <div className="text-lg font-black text-emerald-400 mt-0.5">
                           {selectedSchool.currentScore > 0
-                            ? `${((selectedSchool.currentScore / 100) * 4 + 1).toFixed(1)} ★ (${selectedSchool.currentScore} ball)`
+                            ? `${(selectedSchool.currentScore > 5 ? selectedSchool.currentScore / 20 : selectedSchool.currentScore).toFixed(1)} ball (${(selectedSchool.currentScore > 5 ? selectedSchool.currentScore / 20 : selectedSchool.currentScore).toFixed(1)} ★)`
                             : 'Baholanmagan'}
                         </div>
                       </div>

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { SchoolRankingOverview } from '@/types';
-import { ScoreStatusBadge } from '@/components/ui/status-badge';
+import { ScoreStatusBadge, getStarRating } from '@/components/ui/status-badge';
 import { Progress } from '@/components/ui/progress';
 import { Trophy, Building2, Map, ShieldCheck } from 'lucide-react';
 
@@ -53,9 +53,16 @@ export function RankingHeroCard({ overview, currentScore }: RankingHeroCardProps
             Xavfsizlik Yulduz Reytingi:
           </div>
           <div className="flex flex-col gap-1.5">
-            <span className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-mono">
-              {score >= 90 ? '⭐️⭐️⭐️⭐️⭐️' : score >= 75 ? '⭐️⭐️⭐️⭐️' : score >= 60 ? '⭐️⭐️⭐️' : score >= 45 ? '⭐️⭐️' : score > 0 ? '⭐️' : 'Baholanmagan'}
-            </span>
+            <div className="flex items-center gap-2">
+              {score > 0 && (
+                <span className="text-xl sm:text-2xl font-black text-amber-500 tracking-tight font-mono">
+                  {(score > 5 ? score / 20 : score).toFixed(1)} ★
+                </span>
+              )}
+              <span className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-mono">
+                {score > 0 ? getStarRating(score).starIcons : 'Baholanmagan'}
+              </span>
+            </div>
             <div className="mt-1">
               <ScoreStatusBadge score={score} />
             </div>

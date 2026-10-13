@@ -122,15 +122,16 @@ export class AssessmentService {
     percentage: number;
   } {
     let totalPoints = 0;
-    const maxScore = 100; // standard maximum points
+    const maxScore = 5.0; // standard 1.0 - 5.0 scale
 
     Object.values(answers).forEach((ans) => {
       totalPoints += ans.pointsAwarded || 0;
     });
 
-    const evalResult = evaluateScore(totalPoints, maxScore);
+    const normalizedScore = totalPoints > 5.0 ? Number((totalPoints / 20).toFixed(1)) : Number(totalPoints.toFixed(1));
+    const evalResult = evaluateScore(normalizedScore, maxScore);
     return {
-      score: totalPoints,
+      score: normalizedScore,
       maxScore,
       percentage: evalResult.percentage,
     };

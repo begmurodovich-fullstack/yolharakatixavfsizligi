@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { getCountermeasureByScore } from '@/data/sr4sCountermeasures';
 import { cn } from '@/lib/cn';
+import { normalizeScore } from '@/lib/scoreRules';
 
 interface SchoolDetailModalProps {
   school: School | null;
@@ -76,8 +77,8 @@ export function SchoolDetailModal({
                 <span className="text-slate-400 text-xs font-sans font-medium">—</span>
               ) : (
                 <div className="flex items-center gap-1.5">
-                  <span className="text-amber-500 font-black">{(school.currentScore / 20).toFixed(1)} ★</span>
-                  <span className="text-xs text-slate-400 font-normal">({school.currentScore}b)</span>
+                  <span className="text-amber-500 font-black">{normalizeScore(school.currentScore).toFixed(1)} ★</span>
+                  <span className="text-xs text-slate-400 font-normal">({normalizeScore(school.currentScore).toFixed(1)} ball)</span>
                 </div>
               )}
             </div>

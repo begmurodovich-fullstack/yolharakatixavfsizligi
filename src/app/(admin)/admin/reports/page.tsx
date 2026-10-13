@@ -101,8 +101,8 @@ export default function AdminReportsPage() {
           `"${s.districtName}"`,
           `"${s.directorName || 'Biriktirilmagan'}"`,
           (s.studentCount || 0).toString(),
-          s.currentScore.toString(),
-          s.currentScore >= 80 ? 'YASHIL' : s.currentScore >= 60 ? 'SARIQ' : 'QIZIL',
+          (s.currentScore > 5 ? (s.currentScore / 20).toFixed(1) : Number(s.currentScore).toFixed(1)),
+          (s.currentScore > 5 ? s.currentScore / 20 : s.currentScore) >= 4.0 ? 'YASHIL' : (s.currentScore > 5 ? s.currentScore / 20 : s.currentScore) >= 3.0 ? 'SARIQ' : 'QIZIL',
           s.coordinateStatus,
         ]);
     } else if (reportType === 'REGIONAL_INDEX') {
@@ -113,10 +113,13 @@ export default function AdminReportsPage() {
           s.regionId === r.id || 
           (s.regionName && (s.regionName || '').trim().toLowerCase().replace(/['`ʻ’‘]/g, "'") === normName)
         );
-        const avg = regSchools.length > 0 ? Math.round(regSchools.reduce((a, b) => a + b.currentScore, 0) / regSchools.length) : 0;
-        const green = regSchools.filter((s) => s.currentScore >= 80).length;
-        const yellow = regSchools.filter((s) => s.currentScore >= 60 && s.currentScore < 80).length;
-        const red = regSchools.filter((s) => s.currentScore < 60).length;
+        const avg = regSchools.length > 0 ? (regSchools.reduce((a, b) => a + (b.currentScore > 5 ? b.currentScore / 20 : b.currentScore), 0) / regSchools.length).toFixed(1) : '0.0';
+        const green = regSchools.filter((s) => (s.currentScore > 5 ? s.currentScore / 20 : s.currentScore) >= 4.0).length;
+        const yellow = regSchools.filter((s) => {
+          const sc = s.currentScore > 5 ? s.currentScore / 20 : s.currentScore;
+          return sc >= 3.0 && sc < 4.0;
+        }).length;
+        const red = regSchools.filter((s) => (s.currentScore > 5 ? s.currentScore / 20 : s.currentScore) < 3.0).length;
         return [`"${r.name}"`, regSchools.length.toString(), avg.toString(), green.toString(), yellow.toString(), red.toString()];
       });
       filename = `hududlar-xavfsizlik-indeksi-${new Date().toISOString().slice(0, 10)}.csv`;
@@ -323,7 +326,7 @@ export default function AdminReportsPage() {
                     </td>
                     <td className="py-3 px-5 text-slate-600">{s.districtName}, {s.regionName}</td>
                     <td className="py-3 px-5 text-slate-700">{s.directorName}</td>
-                    <td className="py-3 px-5 text-right font-mono font-black">{s.currentScore}</td>
+                    <td className="py-3 px-5 text-right font-mono font-black">{(s.currentScore > 5 ? (s.currentScore / 20).toFixed(1) : Number(s.currentScore).toFixed(1))} ball</td>
                     <td className="py-3 px-5 text-center">
                       <ScoreStatusBadge score={s.currentScore} showScore={false} />
                     </td>
@@ -355,16 +358,19 @@ export default function AdminReportsPage() {
                     s.regionId === r.id || 
                     (s.regionName && (s.regionName || '').trim().toLowerCase().replace(/['`ʻ’‘]/g, "'") === normName)
                   );
-                  const avg = regSchools.length > 0 ? Math.round(regSchools.reduce((a, b) => a + b.currentScore, 0) / regSchools.length) : 0;
-                  const green = regSchools.filter((s) => s.currentScore >= 80).length;
-                  const yellow = regSchools.filter((s) => s.currentScore >= 60 && s.currentScore < 80).length;
-                  const red = regSchools.filter((s) => s.currentScore < 60).length;
+                  const avg = regSchools.length > 0 ? (regSchools.reduce((a, b) => a + (b.currentScore > 5 ? b.currentScore / 20 : b.currentScore), 0) / regSchools.length).toFixed(1) : '0.0';
+                  const green = regSchools.filter((s) => (s.currentScore > 5 ? s.currentScore / 20 : s.currentScore) >= 4.0).length;
+                  const yellow = regSchools.filter((s) => {
+                    const sc = s.currentScore > 5 ? s.currentScore / 20 : s.currentScore;
+                    return sc >= 3.0 && sc < 4.0;
+                  }).length;
+                  const red = regSchools.filter((s) => (s.currentScore > 5 ? s.currentScore / 20 : s.currentScore) < 3.0).length;
 
                   return (
                     <tr key={r.id} className="hover:bg-slate-50/70">
                       <td className="py-3 px-5 font-bold text-slate-900">{r.name}</td>
                       <td className="py-3 px-5 text-center font-mono font-bold">{regSchools.length}</td>
-                      <td className="py-3 px-5 text-right font-mono font-black text-teal-800">{avg} / 100</td>
+                      <td className="py-3 px-5 text-right font-mono font-black text-teal-800">{avg} ball</td>
                       <td className="py-3 px-5 text-center font-mono text-emerald-700 font-bold">{green}</td>
                       <td className="py-3 px-5 text-center font-mono text-amber-700 font-bold">{yellow}</td>
                       <td className="py-3 px-5 text-center font-mono text-rose-700 font-bold">{red}</td>

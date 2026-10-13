@@ -17,6 +17,7 @@ import {
   AssessmentStatus,
   EvidenceStatus,
 } from '@/types';
+import { normalizeScore } from '@/lib/scoreRules';
 
 import {
   AssessmentHeader,
@@ -99,8 +100,8 @@ export default function SchoolAssessmentPage() {
         setAnswers(activeAssessment.answers);
       } else {
         // Initialize consistent baseline answers matching the school's verified score
-        const baselineScore = resolvedSchool.currentScore > 0 ? resolvedSchool.currentScore : 88;
-        const ratio = Math.max(0, Math.min(1, baselineScore / 100));
+        const baselineScore = resolvedSchool.currentScore > 0 ? normalizeScore(resolvedSchool.currentScore) : 4.4;
+        const ratio = Math.max(0, Math.min(1, baselineScore / 5.0));
         const initialAnswers: Record<string, AssessmentAnswer> = {};
 
         questList.forEach((q) => {

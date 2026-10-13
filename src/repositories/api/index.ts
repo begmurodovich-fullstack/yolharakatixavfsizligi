@@ -212,8 +212,9 @@ export class ApiCriterionRepository implements ICriterionRepository {
 // 5. ApiRankingRepository — TUZATILGAN: 200 cheklovni olib tashlash, topilmagan maktabga null qaytarish
 export class ApiRankingRepository implements IRankingRepository {
   private calculateScoreStatus(score: number): ScoreStatus {
-    if (score >= 80) return ScoreStatus.GREEN;
-    if (score >= 60) return ScoreStatus.YELLOW;
+    const s = score > 5 ? score / 20 : score;
+    if (s >= 4.0) return ScoreStatus.GREEN;
+    if (s >= 3.0) return ScoreStatus.YELLOW;
     return ScoreStatus.RED;
   }
 
@@ -224,24 +225,27 @@ export class ApiRankingRepository implements IRankingRepository {
     });
     // Ballni kamayish tartibida saralash
     const sorted = [...schools].sort((a, b) => (b.currentScore || 0) - (a.currentScore || 0));
-    return sorted.map((s, index) => ({
-      rank: index + 1,
-      previousRank: index + 1,
-      entityId: s.id,
-      entityName: s.name,
-      schoolNumber: s.schoolNumber,
-      scope: RankingScope.REPUBLIC,
-      regionId: s.regionId,
-      regionName: s.regionName,
-      districtId: s.districtId,
-      districtName: s.districtName,
-      score: s.currentScore,
-      maxScore: 100,
-      percentage: s.currentScore,
-      scoreStatus: this.calculateScoreStatus(s.currentScore),
-      assessmentPeriodId: periodId,
-      schoolCount: sorted.length,
-    }));
+    return sorted.map((s, index) => {
+      const normScore = s.currentScore > 5 ? Number((s.currentScore / 20).toFixed(1)) : Number(s.currentScore);
+      return {
+        rank: index + 1,
+        previousRank: index + 1,
+        entityId: s.id,
+        entityName: s.name,
+        schoolNumber: s.schoolNumber,
+        scope: RankingScope.REPUBLIC,
+        regionId: s.regionId,
+        regionName: s.regionName,
+        districtId: s.districtId,
+        districtName: s.districtName,
+        score: normScore,
+        maxScore: 5.0,
+        percentage: Math.round((normScore / 5.0) * 100),
+        scoreStatus: this.calculateScoreStatus(normScore),
+        assessmentPeriodId: periodId,
+        schoolCount: sorted.length,
+      };
+    });
   }
 
   async getRegionRankings(periodId: string, regionId?: string): Promise<RankingEntry[]> {
@@ -249,24 +253,27 @@ export class ApiRankingRepository implements IRankingRepository {
       params: { regionId: regionId || 'ALL', assessedOnly: 'true', limit: 15000 },
     });
     const sorted = [...schools].sort((a, b) => (b.currentScore || 0) - (a.currentScore || 0));
-    return sorted.map((s, index) => ({
-      rank: index + 1,
-      previousRank: index + 1,
-      entityId: s.id,
-      entityName: s.name,
-      schoolNumber: s.schoolNumber,
-      scope: RankingScope.REGION,
-      regionId: s.regionId,
-      regionName: s.regionName,
-      districtId: s.districtId,
-      districtName: s.districtName,
-      score: s.currentScore,
-      maxScore: 100,
-      percentage: s.currentScore,
-      scoreStatus: this.calculateScoreStatus(s.currentScore),
-      assessmentPeriodId: periodId,
-      schoolCount: sorted.length,
-    }));
+    return sorted.map((s, index) => {
+      const normScore = s.currentScore > 5 ? Number((s.currentScore / 20).toFixed(1)) : Number(s.currentScore);
+      return {
+        rank: index + 1,
+        previousRank: index + 1,
+        entityId: s.id,
+        entityName: s.name,
+        schoolNumber: s.schoolNumber,
+        scope: RankingScope.REGION,
+        regionId: s.regionId,
+        regionName: s.regionName,
+        districtId: s.districtId,
+        districtName: s.districtName,
+        score: normScore,
+        maxScore: 5.0,
+        percentage: Math.round((normScore / 5.0) * 100),
+        scoreStatus: this.calculateScoreStatus(normScore),
+        assessmentPeriodId: periodId,
+        schoolCount: sorted.length,
+      };
+    });
   }
 
   async getDistrictRankings(periodId: string, districtId?: string): Promise<RankingEntry[]> {
@@ -274,24 +281,27 @@ export class ApiRankingRepository implements IRankingRepository {
       params: { districtId: districtId || 'ALL', assessedOnly: 'true', limit: 15000 },
     });
     const sorted = [...schools].sort((a, b) => (b.currentScore || 0) - (a.currentScore || 0));
-    return sorted.map((s, index) => ({
-      rank: index + 1,
-      previousRank: index + 1,
-      entityId: s.id,
-      entityName: s.name,
-      schoolNumber: s.schoolNumber,
-      scope: RankingScope.DISTRICT,
-      regionId: s.regionId,
-      regionName: s.regionName,
-      districtId: s.districtId,
-      districtName: s.districtName,
-      score: s.currentScore,
-      maxScore: 100,
-      percentage: s.currentScore,
-      scoreStatus: this.calculateScoreStatus(s.currentScore),
-      assessmentPeriodId: periodId,
-      schoolCount: sorted.length,
-    }));
+    return sorted.map((s, index) => {
+      const normScore = s.currentScore > 5 ? Number((s.currentScore / 20).toFixed(1)) : Number(s.currentScore);
+      return {
+        rank: index + 1,
+        previousRank: index + 1,
+        entityId: s.id,
+        entityName: s.name,
+        schoolNumber: s.schoolNumber,
+        scope: RankingScope.DISTRICT,
+        regionId: s.regionId,
+        regionName: s.regionName,
+        districtId: s.districtId,
+        districtName: s.districtName,
+        score: normScore,
+        maxScore: 5.0,
+        percentage: Math.round((normScore / 5.0) * 100),
+        scoreStatus: this.calculateScoreStatus(normScore),
+        assessmentPeriodId: periodId,
+        schoolCount: sorted.length,
+      };
+    });
   }
 
   async getSchoolRankingOverview(schoolId: string, periodId: string): Promise<SchoolRankingOverview | null> {
@@ -309,6 +319,8 @@ export class ApiRankingRepository implements IRankingRepository {
     const regIndex = regionList.findIndex((s) => s.entityId === schoolId);
     const repIndex = republicList.findIndex((s) => s.entityId === schoolId);
 
+    const normScore = school.currentScore > 5 ? Number((school.currentScore / 20).toFixed(1)) : Number(school.currentScore);
+
     return {
       schoolId: school.id,
       schoolName: school.name,
@@ -317,10 +329,10 @@ export class ApiRankingRepository implements IRankingRepository {
       districtName: school.districtName || '',
       periodId,
       periodName: "2025\u20132026 o\u2018quv yili (III chorak)",
-      currentScore: school.currentScore,
-      maxScore: 100,
-      percentage: school.currentScore,
-      scoreStatus: this.calculateScoreStatus(school.currentScore),
+      currentScore: normScore,
+      maxScore: 5.0,
+      percentage: Math.round((normScore / 5.0) * 100),
+      scoreStatus: this.calculateScoreStatus(normScore),
       // Topilmasa null qaytarish — 1-o'rin emas
       districtRank: distIndex >= 0 ? distIndex + 1 : null,
       totalDistrictSchools: districtList.length,

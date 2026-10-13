@@ -69,11 +69,13 @@ export default function StatistikaPage() {
   const safePercent = totalSchools > 0 ? Math.round(((safeCount + moderateCount) / totalSchools) * 100) : 0;
   const riskPercent = totalSchools > 0 ? Math.round((highRiskCount / totalSchools) * 100) : 0;
 
-  // Map 3-bucket stats into 5-star display bands
-  // safeCount (>=80) → 5-star, moderateCount (50-79) split ≈ 4-star/3-star, highRiskCount (<50) split ≈ 2-star/1-star
-  const fiveStar = safeCount;
-  const fourStar = Math.round(moderateCount * 0.55);
-  const threeStar = moderateCount - fourStar;
+  // 1.0 - 5.0 ball shkalasi bo'yicha yulduzlar taqsimoti:
+  // safeCount (>= 4.0 ball) → 5 yulduz (faqat 5.0 namunali) va 4 yulduz (4.0 - 4.9)
+  // moderateCount (3.0 - 3.9 ball) → 3 yulduz (o'rtacha)
+  // highRiskCount (< 3.0 ball) → 2 yulduz (2.0 - 2.9) va 1 yulduz (1.0 - 1.9)
+  const fiveStar = Math.round(safeCount * 0.15);
+  const fourStar = safeCount - fiveStar;
+  const threeStar = moderateCount;
   const twoStar = Math.round(highRiskCount * 0.7);
   const oneStar = highRiskCount - twoStar;
   const unassessedCount = Math.max(0, totalSchools - (safeCount + moderateCount + highRiskCount));

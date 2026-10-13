@@ -93,7 +93,7 @@ export function CountermeasuresMatrixCard({
                     </span>
                   </div>
                   <span className="text-xs text-slate-600 font-medium">
-                    Joriy ball: <strong>{schoolScore} / 100</strong>
+                    Joriy ball: <strong>{schoolScore !== undefined ? (schoolScore > 5 ? (schoolScore / 20).toFixed(1) : Number(schoolScore).toFixed(1)) : '—'} ball</strong>
                   </span>
                 </div>
               </div>

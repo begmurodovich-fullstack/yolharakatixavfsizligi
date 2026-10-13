@@ -49,13 +49,25 @@ export default function ReytingPage() {
     let list = [...rankings];
 
     if (filterType === '5star') {
-      list = list.filter((item) => (item.score || 0) >= 90);
+      list = list.filter((item) => {
+        const sc = (item.score || 0) > 5 ? (item.score || 0) / 20 : (item.score || 0);
+        return sc >= 5.0;
+      });
     } else if (filterType === '4star') {
-      list = list.filter((item) => (item.score || 0) >= 75 && (item.score || 0) < 90);
+      list = list.filter((item) => {
+        const sc = (item.score || 0) > 5 ? (item.score || 0) / 20 : (item.score || 0);
+        return sc >= 4.0 && sc < 5.0;
+      });
     } else if (filterType === '3star') {
-      list = list.filter((item) => (item.score || 0) >= 50 && (item.score || 0) < 75);
+      list = list.filter((item) => {
+        const sc = (item.score || 0) > 5 ? (item.score || 0) / 20 : (item.score || 0);
+        return sc >= 3.0 && sc < 4.0;
+      });
     } else if (filterType === 'risk') {
-      list = list.filter((item) => (item.score || 0) < 50);
+      list = list.filter((item) => {
+        const sc = (item.score || 0) > 5 ? (item.score || 0) / 20 : (item.score || 0);
+        return sc < 3.0;
+      });
     }
 
     if (selectedRegionFilter) {
@@ -127,7 +139,7 @@ export default function ReytingPage() {
             </CardHeader>
             <CardContent className="p-5 pt-0">
               <div className="text-2xl sm:text-3xl font-black text-emerald-700">
-                {isLoading ? '...' : `${rankings.filter((r) => (r.score || 0) >= 75).length} ta`}
+                {isLoading ? '...' : `${rankings.filter((r) => ((r.score || 0) > 5 ? (r.score || 0) / 20 : (r.score || 0)) >= 4.0).length} ta`}
               </div>
               <p className="text-xs text-slate-500 mt-1">Xalqaro yuqori xavfsizlik standarti</p>
             </CardContent>
@@ -159,7 +171,7 @@ export default function ReytingPage() {
             </CardHeader>
             <CardContent className="p-5 pt-0">
               <div className="text-2xl sm:text-3xl font-black text-rose-700">
-                {isLoading ? '...' : `${rankings.filter((r) => (r.score || 0) < 50).length} ta`}
+                {isLoading ? '...' : `${rankings.filter((r) => ((r.score || 0) > 5 ? (r.score || 0) / 20 : (r.score || 0)) < 3.0).length} ta`}
               </div>
               <p className="text-xs text-slate-500 mt-1">Yo‘l infratuzilmasini yaxshilash bo‘yicha choralar talab etiladi</p>
             </CardContent>
@@ -334,7 +346,7 @@ export default function ReytingPage() {
                             <span className="text-amber-500 font-extrabold">{scoreToStarRating(score).starRating} ★</span>
                             <span className="text-base">{starInfo.starIcons}</span>
                           </div>
-                          <span className="text-[11px] text-slate-400 font-mono">({score} ball)</span>
+                          <span className="text-[11px] text-slate-400 font-mono">({scoreToStarRating(score).starRating} ball)</span>
                         </div>
                       </TableCell>
 

@@ -5,6 +5,8 @@ import { ComparativeAverages } from '@/services/statisticsService';
 import { Progress } from '@/components/ui/progress';
 import { GitCompare, TrendingUp, CheckCircle, ShieldCheck } from 'lucide-react';
 
+import { normalizeScore } from '@/lib/scoreRules';
+
 interface RankingComparisonProps {
   averages: ComparativeAverages | null;
   schoolName: string;
@@ -18,10 +20,10 @@ export function RankingComparison({
   districtName = 'Qiziltepa tumani',
   regionName = 'Navoiy viloyati',
 }: RankingComparisonProps) {
-  const schoolScore = averages?.schoolScore ?? 0;
-  const districtAvg = averages?.districtAverage ?? 0;
-  const regionAvg = averages?.regionAverage ?? 0;
-  const republicAvg = averages?.republicAverage ?? 0;
+  const schoolScore = normalizeScore(averages?.schoolScore ?? 0);
+  const districtAvg = normalizeScore(averages?.districtAverage ?? 0);
+  const regionAvg = normalizeScore(averages?.regionAverage ?? 0);
+  const republicAvg = normalizeScore(averages?.republicAverage ?? 0);
 
   const comparisonItems = [
     {
@@ -95,10 +97,10 @@ export function RankingComparison({
               </div>
               <div className="text-right">
                 <div className={`font-extrabold font-mono flex items-baseline justify-end gap-1.5 ${item.isPrimary ? 'text-teal-700 text-base' : 'text-slate-800'}`}>
-                  {item.score > 0 ? (
+                    {item.score > 0 ? (
                     <>
-                      <span>{item.score} ball</span>
-                      <span className="text-xs font-semibold text-amber-600">({(item.score / 20).toFixed(1)} ★)</span>
+                      <span>{item.score.toFixed(1)} ball</span>
+                      <span className="text-xs font-semibold text-amber-600">({item.score.toFixed(1)} ★)</span>
                     </>
                   ) : (
                     <span>Baholanmagan</span>
@@ -110,6 +112,7 @@ export function RankingComparison({
 
             <Progress
               value={item.score}
+              max={5.0}
               className={`h-2 ${item.isPrimary ? 'bg-teal-100' : 'bg-slate-200'}`}
             />
           </div>
@@ -121,7 +124,7 @@ export function RankingComparison({
         <span>
           {schoolScore > 0 ? (
             <>
-              Maktabingiz ko‘rsatkichi: <strong>{schoolScore} ball ({(schoolScore / 20).toFixed(1)} ★)</strong>.
+              Maktabingiz ko‘rsatkichi: <strong>{schoolScore.toFixed(1)} ball ({schoolScore.toFixed(1)} ★)</strong>.
             </>
           ) : (
             'Maktabingiz hali o‘z-o‘zini baholashdan o‘tkazilmagan (Baholash kutilmoqda).'

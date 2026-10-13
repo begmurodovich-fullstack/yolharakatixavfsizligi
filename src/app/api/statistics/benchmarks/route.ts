@@ -14,10 +14,10 @@ export async function GET(request: NextRequest) {
     const sql = `
       SELECT
         ROUND(AVG(CASE WHEN district_id = $1 AND $1 <> '' AND current_score > 0
-                       THEN current_score END)) as district_avg,
+                       THEN current_score END)::numeric, 1) as district_avg,
         ROUND(AVG(CASE WHEN region_id = $2 AND $2 <> '' AND current_score > 0
-                       THEN current_score END)) as region_avg,
-        ROUND(AVG(CASE WHEN current_score > 0 THEN current_score END)) as republic_avg
+                       THEN current_score END)::numeric, 1) as region_avg,
+        ROUND(AVG(CASE WHEN current_score > 0 THEN current_score END)::numeric, 1) as republic_avg
       FROM schools;
     `;
 

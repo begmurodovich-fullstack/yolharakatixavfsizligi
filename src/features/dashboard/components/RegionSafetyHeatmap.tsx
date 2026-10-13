@@ -160,7 +160,7 @@ export const RegionSafetyHeatmap: React.FC<RegionSafetyHeatmapProps> = ({
                       <span className="text-emerald-400">★</span>
                     </div>
                     <div className="text-[11px] text-slate-400 font-mono">
-                      {selectedRegion.averageScore} / 100 ball
+                      {selectedRegion.averageScore} ball
                     </div>
                   </div>
                 </div>

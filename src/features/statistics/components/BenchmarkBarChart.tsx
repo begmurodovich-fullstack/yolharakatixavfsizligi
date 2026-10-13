@@ -13,6 +13,8 @@ import {
 } from 'recharts';
 import { BarChart3 } from 'lucide-react';
 
+import { normalizeScore } from '@/lib/scoreRules';
+
 interface BenchmarkBarChartProps {
   averages: ComparativeAverages | null;
   schoolName: string;
@@ -25,10 +27,10 @@ export function BenchmarkBarChart({ averages, schoolName }: BenchmarkBarChartPro
     setMounted(true);
   }, []);
 
-  const schoolScore = averages?.schoolScore ?? 84;
-  const districtAvg = averages?.districtAverage ?? 78;
-  const regionAvg = averages?.regionAverage ?? 74;
-  const republicAvg = averages?.republicAverage ?? 71;
+  const schoolScore = normalizeScore(averages?.schoolScore ?? 4.2);
+  const districtAvg = normalizeScore(averages?.districtAverage ?? 3.9);
+  const regionAvg = normalizeScore(averages?.regionAverage ?? 3.7);
+  const republicAvg = normalizeScore(averages?.republicAverage ?? 3.6);
 
   const data = [
     {
@@ -87,7 +89,7 @@ export function BenchmarkBarChart({ averages, schoolName }: BenchmarkBarChartPro
                 dataKey="shortName"
                 tick={{ fontSize: 11, fill: '#475569', fontWeight: 600 }}
               />
-              <YAxis domain={[0, 100]} unit=" ball" tick={{ fontSize: 10, fill: '#64748b' }} />
+              <YAxis domain={[0, 5]} unit=" ball" tick={{ fontSize: 10, fill: '#64748b' }} />
               <Tooltip
                 formatter={(value: number) => [`${value} ball`, 'Natija']}
                 contentStyle={{

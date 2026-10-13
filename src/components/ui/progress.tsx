@@ -16,7 +16,8 @@ export function Progress({
   ...props
 }: ProgressProps) {
   const percentage = Math.min(100, Math.max(0, Math.round((value / max) * 100)));
-  const evalResult = evaluateScore(value, max);
+  const evalScore = max === 5.0 ? value : (value / max) * 5.0;
+  const evalResult = evaluateScore(evalScore);
 
   const fillColor = showColorByScore ? evalResult.bgClass : 'bg-slate-900';
 

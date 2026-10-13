@@ -160,20 +160,7 @@ export function getCountermeasureByScore(score: number): Sr4sCountermeasureTier 
     return SR4S_COUNTERMEASURES_MATRIX[0];
   }
 
-  // Agar ball 1..5 oralig'idagi yulduz bo'lsa
-  if (score <= 5.0) {
-    return getCountermeasureByStars(score);
-  }
-
-  // 0..100 ball shkalasi
-  if (score >= 75) {
-    return SR4S_COUNTERMEASURES_MATRIX[3]; // 4-5 Yulduz (Namunali / Yaxshi)
-  }
-  if (score >= 60) {
-    return SR4S_COUNTERMEASURES_MATRIX[2]; // 3 Yulduz (O'rtacha)
-  }
-  if (score >= 35) {
-    return SR4S_COUNTERMEASURES_MATRIX[1]; // 2 Yulduz (Xavfli)
-  }
-  return SR4S_COUNTERMEASURES_MATRIX[0]; // 1 Yulduz (O'ta xavfli)
+  // 1.0 - 5.0 shkala bo'yicha
+  const norm = score > 5.0 ? score / 20 : score;
+  return getCountermeasureByStars(norm);
 }

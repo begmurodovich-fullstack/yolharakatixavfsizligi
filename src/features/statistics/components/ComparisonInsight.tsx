@@ -4,6 +4,8 @@ import React from 'react';
 import { CriterionScoreInfo } from '@/features/dashboard/components';
 import { Sparkles, ArrowUpRight, CheckCircle2, AlertCircle } from 'lucide-react';
 
+import { normalizeScore } from '@/lib/scoreRules';
+
 interface ComparisonInsightProps {
   schoolScore: number;
   districtAverage: number;
@@ -15,7 +17,9 @@ export function ComparisonInsight({
   districtAverage,
   weakestCriterion,
 }: ComparisonInsightProps) {
-  const diff = schoolScore - districtAverage;
+  const normSchool = normalizeScore(schoolScore);
+  const normDistrict = normalizeScore(districtAverage);
+  const diff = Number((normSchool - normDistrict).toFixed(1));
   const isAboveAverage = diff >= 0;
 
   return (
@@ -31,12 +35,12 @@ export function ComparisonInsight({
             {isAboveAverage ? (
               <>
                 Sizning maktabingiz tuman o‘rtacha ko‘rsatkichidan{' '}
-                <span className="text-teal-300 font-extrabold font-mono">+{diff} ball</span> yuqori natijaga ega.
+                <span className="text-teal-300 font-extrabold font-mono">+{diff.toFixed(1)} ball</span> yuqori natijaga ega.
               </>
             ) : (
               <>
                 Sizning maktabingiz tuman o‘rtacha ko‘rsatkichidan{' '}
-                <span className="text-amber-300 font-extrabold font-mono">{diff} ball</span> pastroq natijaga ega.
+                <span className="text-amber-300 font-extrabold font-mono">{diff.toFixed(1)} ball</span> pastroq natijaga ega.
               </>
             )}
           </h2>

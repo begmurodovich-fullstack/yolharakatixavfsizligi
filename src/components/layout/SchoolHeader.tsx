@@ -9,6 +9,7 @@ import { assessmentService } from '@/services/assessmentService';
 import { ScoreStatusBadge } from '@/components/ui/status-badge';
 import { Shield, School as SchoolIcon, ChevronRight, LogOut, Calendar, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { normalizeScore } from '@/lib/scoreRules';
 
 export function SchoolHeader() {
   const { user, logout } = useAuth();
@@ -89,7 +90,7 @@ export function SchoolHeader() {
               <ScoreStatusBadge score={school.currentScore} />
               {school.currentScore > 0 && (
                 <span className="text-xs font-mono font-bold text-slate-600 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full">
-                  {(school.currentScore / 20).toFixed(1)} ★ ({school.currentScore}b)
+                  {normalizeScore(school.currentScore).toFixed(1)} ★ ({normalizeScore(school.currentScore).toFixed(1)} ball)
                 </span>
               )}
             </div>

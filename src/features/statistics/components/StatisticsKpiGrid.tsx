@@ -15,6 +15,8 @@ import {
   TrendingDown,
 } from 'lucide-react';
 
+import { normalizeScore } from '@/lib/scoreRules';
+
 interface StatisticsKpiGridProps {
   schoolScore: number;
   averages: ComparativeAverages | null;
@@ -36,9 +38,14 @@ export function StatisticsKpiGrid({
   strongestCriterion,
   weakestCriterion,
 }: StatisticsKpiGridProps) {
-  const districtAvg = averages?.districtAverage ?? 78;
-  const regionAvg = averages?.regionAverage ?? 74;
-  const republicAvg = averages?.republicAverage ?? 71;
+  const normScore = normalizeScore(schoolScore);
+  const districtAvg = averages?.districtAverage ?? 4.0;
+  const regionAvg = averages?.regionAverage ?? 3.9;
+  const republicAvg = averages?.republicAverage ?? 3.8;
+
+  const districtDiff = Number((normScore - districtAvg).toFixed(1));
+  const regionDiff = Number((normScore - regionAvg).toFixed(1));
+  const republicDiff = Number((normScore - republicAvg).toFixed(1));
 
   return (
     <div className="space-y-4">
@@ -54,9 +61,9 @@ export function StatisticsKpiGrid({
           </div>
           <div className="space-y-1.5 pt-1">
             <div className="text-3xl sm:text-4xl font-black text-teal-950 font-mono tracking-tight">
-              {schoolScore} <span className="text-sm text-teal-700 font-normal">/ 100</span>
+              {normScore.toFixed(1)} <span className="text-sm text-teal-700 font-normal">ball</span>
             </div>
-            <ScoreStatusBadge score={schoolScore} className="text-xs py-0.5 px-2.5" />
+            <ScoreStatusBadge score={normScore} className="text-xs py-0.5 px-2.5" />
           </div>
         </div>
 
@@ -70,10 +77,10 @@ export function StatisticsKpiGrid({
           </div>
           <div className="space-y-1.5 pt-1">
             <div className="text-3xl sm:text-4xl font-black text-slate-900 font-mono tracking-tight">
-              {districtAvg} <span className="text-sm text-slate-400 font-normal">ball</span>
+              {districtAvg.toFixed(1)} <span className="text-sm text-slate-400 font-normal">ball</span>
             </div>
-            <span className="text-xs text-emerald-700 font-semibold block">
-              +{schoolScore - districtAvg} ball farq
+            <span className={`text-xs font-semibold block ${districtDiff >= 0 ? 'text-emerald-700' : 'text-rose-600'}`}>
+              {districtDiff >= 0 ? `+${districtDiff}` : districtDiff} ball farq
             </span>
           </div>
         </div>
@@ -88,10 +95,10 @@ export function StatisticsKpiGrid({
           </div>
           <div className="space-y-1.5 pt-1">
             <div className="text-3xl sm:text-4xl font-black text-slate-900 font-mono tracking-tight">
-              {regionAvg} <span className="text-sm text-slate-400 font-normal">ball</span>
+              {regionAvg.toFixed(1)} <span className="text-sm text-slate-400 font-normal">ball</span>
             </div>
-            <span className="text-xs text-emerald-700 font-semibold block">
-              +{schoolScore - regionAvg} ball farq
+            <span className={`text-xs font-semibold block ${regionDiff >= 0 ? 'text-emerald-700' : 'text-rose-600'}`}>
+              {regionDiff >= 0 ? `+${regionDiff}` : regionDiff} ball farq
             </span>
           </div>
         </div>
@@ -106,10 +113,10 @@ export function StatisticsKpiGrid({
           </div>
           <div className="space-y-1.5 pt-1">
             <div className="text-3xl sm:text-4xl font-black text-slate-900 font-mono tracking-tight">
-              {republicAvg} <span className="text-sm text-slate-400 font-normal">ball</span>
+              {republicAvg.toFixed(1)} <span className="text-sm text-slate-400 font-normal">ball</span>
             </div>
-            <span className="text-xs text-emerald-700 font-semibold block">
-              +{schoolScore - republicAvg} ball farq
+            <span className={`text-xs font-semibold block ${republicDiff >= 0 ? 'text-emerald-700' : 'text-rose-600'}`}>
+              {republicDiff >= 0 ? `+${republicDiff}` : republicDiff} ball farq
             </span>
           </div>
         </div>

@@ -87,7 +87,7 @@ export function StrongWeakCriteria({ criterionScores }: StrongWeakCriteriaProps)
                     </span>
                   </div>
                   <span className="font-bold text-emerald-700 font-mono shrink-0">
-                    {((item.percentage / 100) * 4 + 1).toFixed(1)} ★
+                    {((item.percentage / 100) * 5.0).toFixed(1)} ★
                   </span>
                 </div>
                 <Progress value={item.percentage} className="h-1.5 bg-emerald-100" />
@@ -123,7 +123,7 @@ export function StrongWeakCriteria({ criterionScores }: StrongWeakCriteriaProps)
                     </span>
                   </div>
                   <span className="font-bold text-amber-700 font-mono shrink-0">
-                    {((item.percentage / 100) * 4 + 1).toFixed(1)} ★
+                    {((item.percentage / 100) * 5.0).toFixed(1)} ★
                   </span>
                 </div>
                 <Progress value={item.percentage} showColorByScore className="h-1.5 bg-amber-100" />

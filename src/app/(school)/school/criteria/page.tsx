@@ -100,7 +100,8 @@ export default function SchoolCriteriaPage() {
       });
 
       if (critQuestions.length > 0 && Object.keys(answersMap).length === 0 && school) {
-        earned = Math.round((school.currentScore / 100) * maxScore);
+        const normScore = school.currentScore > 5 ? school.currentScore / 20 : school.currentScore;
+        earned = Math.round((normScore / 5.0) * maxScore);
       }
 
       const percentage = maxScore > 0 ? Math.round((earned / maxScore) * 100) : 0;

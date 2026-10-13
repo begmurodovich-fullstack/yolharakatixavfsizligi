@@ -52,7 +52,7 @@ function findRegionalBenchmark(regionName: string, regionId: string) {
   return {
     shortName: regionName.replace(/ viloyati| shahri| shahar| Respublikasi/gi, ''),
     totalSchools: 500,
-    averageScore: 80,
+    averageScore: 4.0,
     totalStudents: 150000,
     safeCount: 350,
     moderateCount: 100,
@@ -90,10 +90,11 @@ export function UzbekistanRegionalHeatmap({ onSelectRegion, selectedRegionId }: 
       const regSchools = schools.filter((s) => s.regionId === r.id);
       
       const totalSch = benchmark.totalSchools;
-      const avgScore = benchmark.averageScore;
-      const avgStar = Number(((avgScore / 100) * 4 + 1).toFixed(1));
+      const rawAvg = benchmark.averageScore;
+      const avgScore = Number((rawAvg > 5 ? rawAvg / 20 : rawAvg).toFixed(1));
+      const avgStar = avgScore;
 
-      const statusLevel: RegionRiskStats['statusLevel'] = avgScore >= 82 ? 'HIGH_SAFETY' : avgScore >= 77 ? 'MODERATE' : 'NEEDS_ATTENTION';
+      const statusLevel: RegionRiskStats['statusLevel'] = avgScore >= 4.0 ? 'HIGH_SAFETY' : avgScore >= 3.0 ? 'MODERATE' : 'NEEDS_ATTENTION';
 
       return {
         id: r.id,
@@ -220,7 +221,7 @@ export function UzbekistanRegionalHeatmap({ onSelectRegion, selectedRegionId }: 
                   {activeRegion.averageStar} ★
                 </span>
                 <div className="text-[10px] text-slate-400 font-mono">
-                  {activeRegion.averageScore} / 100 ball
+                  {activeRegion.averageScore} ball
                 </div>
               </div>
             </div>

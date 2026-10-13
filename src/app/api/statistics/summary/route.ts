@@ -10,10 +10,10 @@ export async function GET() {
       SELECT
         COUNT(*) as total_schools,
         COUNT(CASE WHEN current_score > 0 THEN 1 END) as assessed_count,
-        ROUND(AVG(CASE WHEN current_score > 0 THEN current_score ELSE NULL END)) as average_score,
-        COUNT(CASE WHEN current_score >= 80 THEN 1 END) as safe_count,
-        COUNT(CASE WHEN current_score >= 60 AND current_score < 80 THEN 1 END) as moderate_count,
-        COUNT(CASE WHEN current_score > 0 AND current_score < 60 THEN 1 END) as high_risk_count,
+        ROUND(AVG(CASE WHEN current_score > 0 THEN current_score ELSE NULL END)::numeric, 1) as average_score,
+        COUNT(CASE WHEN current_score >= 4.0 THEN 1 END) as safe_count,
+        COUNT(CASE WHEN current_score >= 3.0 AND current_score < 4.0 THEN 1 END) as moderate_count,
+        COUNT(CASE WHEN current_score > 0 AND current_score < 3.0 THEN 1 END) as high_risk_count,
         COUNT(CASE WHEN coordinate_status = 'VERIFIED' THEN 1 END) as verified_coords,
         COUNT(CASE WHEN coordinate_status = 'PENDING' THEN 1 END) as pending_coords
       FROM schools;

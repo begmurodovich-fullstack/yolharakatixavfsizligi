@@ -136,9 +136,14 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const numericScore = Number(score) || 0;
-    const scoreStatus = numericScore >= 80 ? 'GREEN' : numericScore >= 60 ? 'YELLOW' : 'RED';
-    const finalPercentage = percentage || numericScore;
+    let numericScore = Number(score) || 0;
+    if (numericScore > 5.0) {
+      numericScore = Number((numericScore / 20).toFixed(1));
+    } else {
+      numericScore = Number(numericScore.toFixed(1));
+    }
+    const scoreStatus = numericScore >= 4.0 ? 'GREEN' : numericScore >= 3.0 ? 'YELLOW' : 'RED';
+    const finalPercentage = percentage || Math.round((numericScore / 5.0) * 100);
     const finalStatus = isDraft ? 'IN_PROGRESS' : 'SUBMITTED';
 
     const targetId =
@@ -331,8 +336,9 @@ export async function PATCH(request: NextRequest) {
     const a = rows[0];
 
     if (status === 'VERIFIED') {
+      const verifiedScore = Number(a.total_score) > 5.0 ? Number((Number(a.total_score) / 20).toFixed(1)) : Number(a.total_score);
       await query(`UPDATE schools SET current_score = $1, updated_at = NOW() WHERE id = $2`, [
-        a.total_score,
+        verifiedScore,
         a.school_id,
       ]);
     }

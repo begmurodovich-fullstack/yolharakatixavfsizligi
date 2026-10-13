@@ -17,6 +17,7 @@ import {
   Criterion,
   Question,
 } from '@/types';
+import { normalizeScore } from '@/lib/scoreRules';
 
 import {
   StatisticsKpiGrid,
@@ -122,7 +123,8 @@ export default function SchoolStatisticsPage() {
       });
 
       if (critQuestions.length > 0 && Object.keys(answersMap).length === 0 && school) {
-        earned = Math.round((school.currentScore / 100) * crit.maxScore);
+        const normScore = normalizeScore(school.currentScore);
+        earned = Math.round((normScore / 5.0) * crit.maxScore);
       }
 
       const percentage = crit.maxScore > 0 ? Math.round((earned / crit.maxScore) * 100) : 0;
@@ -224,7 +226,7 @@ export default function SchoolStatisticsPage() {
       {/* 3. Analytical Comparison Insight */}
       <ComparisonInsight
         schoolScore={school.currentScore}
-        districtAverage={averages?.districtAverage ?? 78}
+        districtAverage={averages?.districtAverage ?? 4.0}
         weakestCriterion={weakestCriterion}
       />
 

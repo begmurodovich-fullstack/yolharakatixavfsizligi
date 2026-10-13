@@ -8,6 +8,7 @@ import { schoolService } from '@/services/schoolService';
 import { useAuth } from '@/hooks/useAuth';
 import { MapPin, Activity, ShieldCheck, Loader2, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { normalizeScore } from '@/lib/scoreRules';
 
 // Dynamically import Leaflet Map without SSR to prevent window undefined error
 const RealLeafletMap = dynamic(
@@ -43,7 +44,7 @@ const FALLBACK_VERIFIED_SCHOOLS: School[] = [
       status: CoordinateStatus.VERIFIED,
     },
     coordinateStatus: CoordinateStatus.VERIFIED,
-    currentScore: 84,
+    currentScore: 4.2,
     studentCount: 1150,
   },
   {
@@ -64,7 +65,7 @@ const FALLBACK_VERIFIED_SCHOOLS: School[] = [
       status: CoordinateStatus.VERIFIED,
     },
     coordinateStatus: CoordinateStatus.VERIFIED,
-    currentScore: 92,
+    currentScore: 4.6,
     studentCount: 1420,
   },
   {
@@ -85,7 +86,7 @@ const FALLBACK_VERIFIED_SCHOOLS: School[] = [
       status: CoordinateStatus.VERIFIED,
     },
     coordinateStatus: CoordinateStatus.VERIFIED,
-    currentScore: 88,
+    currentScore: 4.4,
     studentCount: 1280,
   },
   {
@@ -106,7 +107,7 @@ const FALLBACK_VERIFIED_SCHOOLS: School[] = [
       status: CoordinateStatus.VERIFIED,
     },
     coordinateStatus: CoordinateStatus.VERIFIED,
-    currentScore: 82,
+    currentScore: 4.1,
     studentCount: 980,
   },
 ];
@@ -165,8 +166,9 @@ export function UzbekistanSafetyMapVisual() {
     };
   }, [user]);
 
-  const rawScore = selectedSchool?.currentScore || 84;
-  const starVal = ((rawScore / 100) * 4 + 1).toFixed(1);
+  const rawScore = selectedSchool?.currentScore || 4.2;
+  const normScore = normalizeScore(rawScore);
+  const starVal = normScore.toFixed(1);
 
   return (
     <div className="relative w-full max-w-xl mx-auto lg:max-w-none">
@@ -245,7 +247,7 @@ export function UzbekistanSafetyMapVisual() {
                 {starVal} ★
               </span>
               <span className="text-[11px] text-slate-500 font-mono">
-                ({rawScore} ball)
+                ({normScore.toFixed(1)} ball)
               </span>
             </div>
 

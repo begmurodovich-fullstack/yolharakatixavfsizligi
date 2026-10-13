@@ -55,13 +55,13 @@ export function AssessmentReviewDialog({
                 Taxminiy Xavfsizlik Bali
               </div>
               <div className="text-3xl font-black mt-0.5">
-                {calculatedScore} <span className="text-sm font-normal text-slate-400">/ 100</span>
+                {calculatedScore} <span className="text-sm font-normal text-slate-400">ball</span>
               </div>
             </div>
             <ScoreStatusBadge score={calculatedScore} />
           </div>
 
-          <Progress value={calculatedScore} showColorByScore className="h-2" />
+          <Progress value={calculatedScore} max={5.0} showColorByScore className="h-2" />
         </div>
 
         {/* Readiness Checklist */}

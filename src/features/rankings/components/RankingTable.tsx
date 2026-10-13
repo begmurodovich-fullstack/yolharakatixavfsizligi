@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { RankingEntry, RankingScope } from '@/types';
-import { ScoreStatusBadge } from '@/components/ui/status-badge';
+import { ScoreStatusBadge, getStarRating } from '@/components/ui/status-badge';
+import { scoreToStarRating } from '@/lib/scoreRules';
 import { MapPin, School as SchoolIcon } from 'lucide-react';
 import { cn } from '@/lib/cn';
 
@@ -149,9 +150,13 @@ export function RankingTable({ entries, currentSchoolId, scope }: RankingTablePr
                   {/* Star Rating Icons */}
                   <td className="py-4 px-5 text-center font-mono text-sm tracking-wider">
                     {isAssessed ? (
-                      <span className="text-base">
-                        {entry.score >= 90 ? '⭐️⭐️⭐️⭐️⭐️' : entry.score >= 75 ? '⭐️⭐️⭐️⭐️' : entry.score >= 60 ? '⭐️⭐️⭐️' : entry.score >= 45 ? '⭐️⭐️' : '⭐️'}
-                      </span>
+                      <div className="flex flex-col items-center justify-center">
+                        <div className="flex items-center gap-1.5 font-bold text-xs">
+                          <span className="text-amber-500 font-extrabold">{scoreToStarRating(entry.score).starRating} ★</span>
+                          <span className="text-base">{getStarRating(entry.score).starIcons}</span>
+                        </div>
+                        <span className="text-[11px] text-slate-400 font-mono">({scoreToStarRating(entry.score).starRating} ball)</span>
+                      </div>
                     ) : (
                       <span className="text-slate-400 text-xs">-</span>
                     )}

@@ -14,9 +14,11 @@ export const APP_CONFIG = {
 };
 
 export const SCORE_THRESHOLDS = {
-  GREEN_MIN: 80,  // Good / Safe (>= 80%)
-  YELLOW_MIN: 60, // Average / Needs Attention (60% - 79%)
-  // Below 60% is RED / High Risk (0% - 59%) -> 1-2 stars (0.0 - 2.9 ★)
+  GREEN_MIN: 4.0,  // Good / Safe (4.0 - 5.0 ball) -> 4-5 yulduz
+  YELLOW_MIN: 3.0, // Average / Needs Attention (3.0 - 3.9 ball) -> 3 yulduz
+  // Below 3.0 is RED / High Risk (0.1 - 2.9 ball) -> 1-2 yulduz
+  RED_MAX: 2.9,
+  MAX_SCORE: 5.0,
 };
 
 /**

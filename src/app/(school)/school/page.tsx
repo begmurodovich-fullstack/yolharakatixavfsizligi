@@ -34,6 +34,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { ErrorState } from '@/components/ui/error-state';
+import { getStarRating } from '@/components/ui/status-badge';
 import { FirstLoginOnboardingModal } from '@/features/auth/components/FirstLoginOnboardingModal';
 import { SchoolPassportModal } from '@/features/reports/components/SchoolPassportModal';
 import {
@@ -208,7 +209,8 @@ export default function SchoolDashboardPage() {
       // Agar mezon bo'yicha alohida javoblar bo'lmasa, maktabning umumiy bali asosida taqsimlash
       if (earned === 0 && baseScore > 0) {
         const varianceFactor = [1.02, 0.98, 1.04, 0.96, 1.0, 0.97, 1.03, 0.99][index % 8] || 1.0;
-        const ratio = Math.max(0.35, Math.min(1.0, (baseScore / 100) * varianceFactor));
+        const normBase = baseScore > 5 ? baseScore / 20 : baseScore;
+        const ratio = Math.max(0.35, Math.min(1.0, (normBase / 5.0) * varianceFactor));
         earned = Math.round(ratio * crit.maxScore);
       }
 
@@ -355,12 +357,12 @@ export default function SchoolDashboardPage() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2">
                 <div className="p-2.5 rounded-xl bg-white border border-slate-200/80 text-xs">
                   <span className="text-slate-400 text-[10px] block">Joriy Baho</span>
-                  <span className="font-extrabold text-teal-800 text-sm">{school.currentScore} ball</span>
+                  <span className="font-extrabold text-teal-800 text-sm">{(school.currentScore > 5 ? school.currentScore / 20 : school.currentScore).toFixed(1)} ball</span>
                 </div>
                 <div className="p-2.5 rounded-xl bg-white border border-slate-200/80 text-xs">
                   <span className="text-slate-400 text-[10px] block">Yulduz Darajasi</span>
                   <span className="font-extrabold text-amber-600 text-sm">
-                    {(school.currentScore / 20).toFixed(1)} ★ ({school.currentScore >= 75 ? 'Xavfsiz' : 'O‘rtacha'})
+                    {(school.currentScore > 5 ? school.currentScore / 20 : school.currentScore).toFixed(1)} ★ ({getStarRating(school.currentScore).shortLabel})
                   </span>
                 </div>
                 <div className="p-2.5 rounded-xl bg-white border border-slate-200/80 text-xs">

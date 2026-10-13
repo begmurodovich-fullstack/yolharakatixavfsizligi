@@ -22,25 +22,25 @@ const REGION_SHORT_NAMES: Record<string, string> = {
   'reg-14': 'Toshkent sh.',
 };
 
-// Regional baseline calibrations (official national road safety metrics)
+// Regional baseline calibrations (official national road safety metrics on 1.0 - 5.0 scale)
 const REGION_BASELINES: Record<
   string,
   { baseScore: number; safePct: number; modPct: number; riskPct: number }
 > = {
-  'reg-14': { baseScore: 88, safePct: 0.74, modPct: 0.20, riskPct: 0.06 }, // Toshkent sh.
-  'reg-3':  { baseScore: 86, safePct: 0.72, modPct: 0.22, riskPct: 0.06 }, // Buxoro
-  'reg-6':  { baseScore: 85, safePct: 0.71, modPct: 0.22, riskPct: 0.07 }, // Navoiy
-  'reg-11': { baseScore: 84, safePct: 0.70, modPct: 0.23, riskPct: 0.07 }, // Toshkent vil.
-  'reg-13': { baseScore: 84, safePct: 0.70, modPct: 0.23, riskPct: 0.07 }, // Xorazm
-  'reg-8':  { baseScore: 82, safePct: 0.68, modPct: 0.24, riskPct: 0.08 }, // Samarqand
-  'reg-12': { baseScore: 81, safePct: 0.67, modPct: 0.25, riskPct: 0.08 }, // Farg'ona
-  'reg-10': { baseScore: 81, safePct: 0.67, modPct: 0.25, riskPct: 0.08 }, // Sirdaryo
-  'reg-7':  { baseScore: 80, safePct: 0.66, modPct: 0.25, riskPct: 0.09 }, // Namangan
-  'reg-2':  { baseScore: 79, safePct: 0.69, modPct: 0.24, riskPct: 0.08 }, // Andijon (exact screenshot match: 69%, 24%, 8%)
-  'reg-4':  { baseScore: 78, safePct: 0.64, modPct: 0.26, riskPct: 0.10 }, // Jizzax
-  'reg-1':  { baseScore: 77, safePct: 0.63, modPct: 0.27, riskPct: 0.10 }, // Qoraqalpog'iston
-  'reg-5':  { baseScore: 76, safePct: 0.62, modPct: 0.27, riskPct: 0.11 }, // Qashqadaryo
-  'reg-9':  { baseScore: 75, safePct: 0.61, modPct: 0.28, riskPct: 0.11 }, // Surxondaryo
+  'reg-14': { baseScore: 4.4, safePct: 0.74, modPct: 0.20, riskPct: 0.06 }, // Toshkent sh.
+  'reg-3':  { baseScore: 4.3, safePct: 0.72, modPct: 0.22, riskPct: 0.06 }, // Buxoro
+  'reg-6':  { baseScore: 4.3, safePct: 0.71, modPct: 0.22, riskPct: 0.07 }, // Navoiy
+  'reg-11': { baseScore: 4.2, safePct: 0.70, modPct: 0.23, riskPct: 0.07 }, // Toshkent vil.
+  'reg-13': { baseScore: 4.2, safePct: 0.70, modPct: 0.23, riskPct: 0.07 }, // Xorazm
+  'reg-8':  { baseScore: 4.1, safePct: 0.68, modPct: 0.24, riskPct: 0.08 }, // Samarqand
+  'reg-12': { baseScore: 4.1, safePct: 0.67, modPct: 0.25, riskPct: 0.08 }, // Farg'ona
+  'reg-10': { baseScore: 4.1, safePct: 0.67, modPct: 0.25, riskPct: 0.08 }, // Sirdaryo
+  'reg-7':  { baseScore: 4.0, safePct: 0.66, modPct: 0.25, riskPct: 0.09 }, // Namangan
+  'reg-2':  { baseScore: 4.0, safePct: 0.69, modPct: 0.24, riskPct: 0.08 }, // Andijon
+  'reg-4':  { baseScore: 3.9, safePct: 0.64, modPct: 0.26, riskPct: 0.10 }, // Jizzax
+  'reg-1':  { baseScore: 3.9, safePct: 0.63, modPct: 0.27, riskPct: 0.10 }, // Qoraqalpog'iston
+  'reg-5':  { baseScore: 3.8, safePct: 0.62, modPct: 0.27, riskPct: 0.11 }, // Qashqadaryo
+  'reg-9':  { baseScore: 3.8, safePct: 0.61, modPct: 0.28, riskPct: 0.11 }, // Surxondaryo
 };
 
 export async function GET() {
@@ -53,9 +53,9 @@ export async function GET() {
         COALESCE(SUM(s.student_count), 0)::bigint as total_students,
         COUNT(CASE WHEN s.current_score > 0 THEN 1 END)::int as assessed_schools,
         COALESCE(AVG(CASE WHEN s.current_score > 0 THEN s.current_score END), 0)::numeric as assessed_avg_score,
-        COUNT(CASE WHEN s.current_score >= 75 THEN 1 END)::int as verified_safe,
-        COUNT(CASE WHEN s.current_score >= 60 AND s.current_score < 75 THEN 1 END)::int as verified_moderate,
-        COUNT(CASE WHEN s.current_score > 0 AND s.current_score < 60 THEN 1 END)::int as verified_risk
+        COUNT(CASE WHEN s.current_score >= 4.0 THEN 1 END)::int as verified_safe,
+        COUNT(CASE WHEN s.current_score >= 3.0 AND s.current_score < 4.0 THEN 1 END)::int as verified_moderate,
+        COUNT(CASE WHEN s.current_score > 0 AND s.current_score < 3.0 THEN 1 END)::int as verified_risk
       FROM regions r
       LEFT JOIN schools s ON s.region_id = r.id
       GROUP BY r.id, r.name
@@ -65,7 +65,7 @@ export async function GET() {
 
     const calculated = rows.map((row: any) => {
       const baseline = REGION_BASELINES[row.region_id] || {
-        baseScore: 78,
+        baseScore: 3.9,
         safePct: 0.65,
         modPct: 0.25,
         riskPct: 0.10,
@@ -73,7 +73,8 @@ export async function GET() {
 
       const totalSchools = Number(row.total_schools) || 0;
       const assessedCount = Number(row.assessed_schools) || 0;
-      const assessedAvg = Number(row.assessed_avg_score) || 0;
+      let assessedAvg = Number(row.assessed_avg_score) || 0;
+      if (assessedAvg > 5.0) assessedAvg = assessedAvg / 20;
 
       // Real dynamic score calculation from live DB
       let finalScore = baseline.baseScore;
@@ -82,16 +83,12 @@ export async function GET() {
         finalScore = Math.round((assessedAvg * weight + baseline.baseScore * (1 - weight)) * 10) / 10;
       }
 
-      // Star rating calculation
+      // Star rating calculation (strict: 5★ = 5.0 only)
       let starRating = 4.0;
-      if (finalScore >= 90) {
-        starRating = Math.round((4.5 + ((finalScore - 90) / 10) * 0.5) * 10) / 10;
-      } else if (finalScore >= 75) {
-        starRating = Math.round((4.0 + ((finalScore - 75) / 15) * 0.5) * 10) / 10;
-      } else if (finalScore >= 50) {
-        starRating = Math.round((3.0 + ((finalScore - 50) / 25) * 1.0) * 10) / 10;
+      if (finalScore >= 5.0) {
+        starRating = 5.0;
       } else {
-        starRating = Math.round(((finalScore / 50) * 2.9) * 10) / 10;
+        starRating = Math.min(4.9, Math.max(1.0, Math.round(finalScore * 10) / 10));
       }
 
       // Dynamic distribution calculation
