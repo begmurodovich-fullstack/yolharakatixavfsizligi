@@ -17,7 +17,7 @@ import {
 import { rankingService } from '@/services/rankingService';
 import { RankingEntry } from '@/types';
 import { StarRatingBadge, getStarRating } from '@/components/ui/status-badge';
-import { scoreToStarRating, getSchoolDisplayNumber } from '@/lib/scoreRules';
+import { normalizeScore, scoreToStarRating, getSchoolDisplayNumber } from '@/lib/scoreRules';
 import { Sr4sGoldStars } from '@/components/ui/sr4s-icon';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -36,7 +36,7 @@ export default function ReytingPage() {
   const [rankings, setRankings] = useState<RankingEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterType, setFilterType] = useState<'all' | '5star' | '4star' | '3star' | 'risk'>('all');
+  const [filterType, setFilterType] = useState<'all' | '5star' | '4star' | '3star' | '2star' | '1star'>('all');
   const [selectedRegionFilter, setSelectedRegionFilter] = useState<string | null>(null);
 
   useEffect(() => {
@@ -51,23 +51,28 @@ export default function ReytingPage() {
 
     if (filterType === '5star') {
       list = list.filter((item) => {
-        const sc = (item.score || 0) > 5 ? (item.score || 0) / 20 : (item.score || 0);
+        const sc = normalizeScore(item.score);
         return sc >= 5.0;
       });
     } else if (filterType === '4star') {
       list = list.filter((item) => {
-        const sc = (item.score || 0) > 5 ? (item.score || 0) / 20 : (item.score || 0);
+        const sc = normalizeScore(item.score);
         return sc >= 4.0 && sc < 5.0;
       });
     } else if (filterType === '3star') {
       list = list.filter((item) => {
-        const sc = (item.score || 0) > 5 ? (item.score || 0) / 20 : (item.score || 0);
+        const sc = normalizeScore(item.score);
         return sc >= 3.0 && sc < 4.0;
       });
-    } else if (filterType === 'risk') {
+    } else if (filterType === '2star') {
       list = list.filter((item) => {
-        const sc = (item.score || 0) > 5 ? (item.score || 0) / 20 : (item.score || 0);
-        return sc < 3.0;
+        const sc = normalizeScore(item.score);
+        return sc >= 2.0 && sc < 3.0;
+      });
+    } else if (filterType === '1star') {
+      list = list.filter((item) => {
+        const sc = normalizeScore(item.score);
+        return sc > 0 && sc < 2.0;
       });
     }
 
@@ -140,7 +145,7 @@ export default function ReytingPage() {
             </CardHeader>
             <CardContent className="p-5 pt-0">
               <div className="text-2xl sm:text-3xl font-black text-emerald-700">
-                {isLoading ? '...' : `${rankings.filter((r) => ((r.score || 0) > 5 ? (r.score || 0) / 20 : (r.score || 0)) >= 4.0).length} ta`}
+                {isLoading ? '...' : `${rankings.filter((r) => normalizeScore(r.score) >= 4.0).length} ta`}
               </div>
               <p className="text-xs text-slate-500 mt-1">Xalqaro yuqori xavfsizlik standarti</p>
             </CardContent>
@@ -172,7 +177,7 @@ export default function ReytingPage() {
             </CardHeader>
             <CardContent className="p-5 pt-0">
               <div className="text-2xl sm:text-3xl font-black text-rose-700">
-                {isLoading ? '...' : `${rankings.filter((r) => ((r.score || 0) > 5 ? (r.score || 0) / 20 : (r.score || 0)) < 3.0).length} ta`}
+                {isLoading ? '...' : `${rankings.filter((r) => normalizeScore(r.score) > 0 && normalizeScore(r.score) < 3.0).length} ta`}
               </div>
               <p className="text-xs text-slate-500 mt-1">Yo‘l infratuzilmasini yaxshilash bo‘yicha choralar talab etiladi</p>
             </CardContent>
@@ -223,41 +228,51 @@ export default function ReytingPage() {
               onClick={() => setFilterType('5star')}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
                 filterType === '5star'
-                  ? 'bg-emerald-600 text-white font-bold shadow-xs'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  ? 'bg-[#22c55e] text-white font-bold shadow-xs'
+                  : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200'
               }`}
             >
-              5⭐️ Namunali
+              5⭐️ Namunali (Yashil)
             </button>
             <button
               onClick={() => setFilterType('4star')}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
                 filterType === '4star'
-                  ? 'bg-amber-600 text-white font-bold shadow-xs'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  ? 'bg-[#f97316] text-white font-bold shadow-xs'
+                  : 'bg-orange-50 text-orange-800 hover:bg-orange-100 border border-orange-200'
               }`}
             >
-              4⭐️ Yaxshi
+              4⭐️ Yaxshi (Sabzi)
             </button>
             <button
               onClick={() => setFilterType('3star')}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
                 filterType === '3star'
-                  ? 'bg-yellow-600 text-white font-bold shadow-xs'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  ? 'bg-[#eab308] text-slate-950 font-bold shadow-xs'
+                  : 'bg-yellow-50 text-yellow-800 hover:bg-yellow-100 border border-yellow-200'
               }`}
             >
-              3⭐️ O‘rtacha
+              3⭐️ O‘rtacha (Sariq)
             </button>
             <button
-              onClick={() => setFilterType('risk')}
+              onClick={() => setFilterType('2star')}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-                filterType === 'risk'
-                  ? 'bg-rose-600 text-white font-bold shadow-xs'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                filterType === '2star'
+                  ? 'bg-[#ef4444] text-white font-bold shadow-xs'
+                  : 'bg-rose-50 text-rose-800 hover:bg-rose-100 border border-rose-200'
               }`}
             >
-              1-2⭐️ Xavfli
+              2⭐️ Xavfli (Qizil)
+            </button>
+            <button
+              onClick={() => setFilterType('1star')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                filterType === '1star'
+                  ? 'bg-slate-950 text-white font-bold shadow-xs border border-slate-700'
+                  : 'bg-slate-900 text-slate-100 hover:bg-black border border-slate-800'
+              }`}
+            >
+              1⭐️ O‘ta xavfli (Qora)
             </button>
           </div>
         </div>
