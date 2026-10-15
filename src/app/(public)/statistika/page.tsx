@@ -82,11 +82,11 @@ export default function StatistikaPage() {
   const pct = (n: number) => totalSchools > 0 ? `${((n / totalSchools) * 100).toFixed(1)}%` : '0%';
 
   const starDistributionData = [
-    { star: '5 Yulduz (Namunali)', count: fiveStar, percentage: pct(fiveStar), color: '#10b981', barColor: 'bg-emerald-500' },
-    { star: '4 Yulduz (Yaxshi)',   count: fourStar,  percentage: pct(fourStar),  color: '#f59e0b', barColor: 'bg-amber-500' },
+    { star: '5 Yulduz (Namunali)', count: fiveStar, percentage: pct(fiveStar), color: '#22c55e', barColor: 'bg-emerald-500' },
+    { star: '4 Yulduz (Yaxshi)',   count: fourStar,  percentage: pct(fourStar),  color: '#f97316', barColor: 'bg-orange-500' },
     { star: '3 Yulduz (O‘rtacha)', count: threeStar, percentage: pct(threeStar), color: '#eab308', barColor: 'bg-yellow-500' },
     { star: '2 Yulduz (Xavfli)',   count: twoStar,   percentage: pct(twoStar),   color: '#ef4444', barColor: 'bg-rose-500' },
-    { star: '1 Yulduz (O‘ta Xavfli)', count: oneStar, percentage: pct(oneStar), color: '#000000', barColor: 'bg-black' },
+    { star: '1 Yulduz (O‘ta Xavfli)', count: oneStar, percentage: pct(oneStar), color: '#0f172a', barColor: 'bg-slate-950' },
     ...(unassessedCount > 0 ? [
       { star: 'Baholanmagan (Jarayonda)', count: unassessedCount, percentage: pct(unassessedCount), color: '#94a3b8', barColor: 'bg-slate-400' }
     ] : []),

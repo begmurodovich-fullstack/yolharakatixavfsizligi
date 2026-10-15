@@ -366,7 +366,10 @@ export default function SchoolDashboardPage() {
                 </div>
                 <div className="p-2.5 rounded-xl bg-white border border-slate-200/80 text-xs">
                   <span className="text-slate-400 text-[10px] block">Yulduz Darajasi</span>
-                  <span className="font-extrabold text-amber-600 text-sm">
+                  <span
+                    className="font-extrabold text-sm"
+                    style={{ color: getStarRating(school.currentScore).colorHex }}
+                  >
                     {normalizeScore(school.currentScore).toFixed(1)} ★ ({getStarRating(school.currentScore).shortLabel})
                   </span>
                 </div>

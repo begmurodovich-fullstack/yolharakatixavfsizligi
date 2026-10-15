@@ -21,6 +21,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/useAuth';
 import { getStarRating } from '@/components/ui/status-badge';
 import { getCountermeasureByScore } from '@/data/sr4sCountermeasures';
+import { normalizeScore, getStarColorInfo, getSchoolDisplayNumber } from '@/lib/scoreRules';
 
 // Dynamically load Leaflet Map without SSR
 const RealLeafletMap = dynamic(
@@ -384,9 +385,9 @@ export default function PublicMapPage() {
                       <h3 className="text-sm font-black text-white line-clamp-1">
                         {selectedSchool.name}
                       </h3>
-                      {selectedSchool.schoolNumber && (
+                      {getSchoolDisplayNumber(selectedSchool) !== '★' && (
                         <span className="px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-slate-800 text-teal-300 border border-slate-700">
-                          № {selectedSchool.schoolNumber}
+                          № {getSchoolDisplayNumber(selectedSchool)}
                         </span>
                       )}
                     </div>
@@ -399,21 +400,14 @@ export default function PublicMapPage() {
                 <div className="text-right">
                   {(() => {
                     const sc = selectedSchool.currentScore;
-                    const normSc = sc > 5 ? sc / 20 : sc;
+                    const normSc = normalizeScore(sc);
+                    const colorInfo = getStarColorInfo(sc > 0 ? normSc : 0);
                     return (
                       <span
-                        className={`text-xs font-mono font-bold px-2 py-0.5 rounded-full border ${
-                          normSc >= 4.0
-                            ? 'text-emerald-400 bg-emerald-950/60 border-emerald-800'
-                            : normSc >= 3.0
-                            ? 'text-amber-400 bg-amber-950/60 border-amber-800'
-                            : normSc > 0
-                            ? 'text-rose-400 bg-rose-950/60 border-rose-800'
-                            : 'text-slate-400 bg-slate-800/60 border-slate-700'
-                        }`}
+                        className={`text-xs font-mono font-bold px-2 py-0.5 rounded-full border ${colorInfo.darkBadgeClass}`}
                       >
                         {sc > 0
-                          ? `${normSc.toFixed(1)} ball (${getStarRating(normSc).shortLabel})`
+                          ? `${normSc.toFixed(1)} ball (${colorInfo.shortLabel})`
                           : 'Baholanmagan'}
                       </span>
                     );
@@ -421,13 +415,37 @@ export default function PublicMapPage() {
                 </div>
               </div>
 
-              {selectedSchool.currentScore > 0 && (selectedSchool.currentScore > 5 ? selectedSchool.currentScore / 20 : selectedSchool.currentScore) < 3.0 && (
+              {selectedSchool.currentScore > 0 && (
                 (() => {
                   const cm = getCountermeasureByScore(selectedSchool.currentScore);
-                  const normScore = selectedSchool.currentScore > 5 ? selectedSchool.currentScore / 20 : selectedSchool.currentScore;
+                  const normScore = normalizeScore(selectedSchool.currentScore);
+                  const colorInfo = getStarColorInfo(normScore);
+
+                  const cardStyle =
+                    colorInfo.stars === 1
+                      ? 'bg-slate-950/90 border-slate-700 text-slate-200'
+                      : colorInfo.stars === 2
+                      ? 'bg-rose-950/60 border-rose-800/80 text-rose-300'
+                      : colorInfo.stars === 3
+                      ? 'bg-yellow-950/60 border-yellow-800/80 text-yellow-300'
+                      : colorInfo.stars === 4
+                      ? 'bg-orange-950/60 border-orange-800/80 text-orange-300'
+                      : 'bg-emerald-950/60 border-emerald-800/80 text-emerald-300';
+
+                  const titleStyle =
+                    colorInfo.stars === 1
+                      ? 'text-white'
+                      : colorInfo.stars === 2
+                      ? 'text-rose-300'
+                      : colorInfo.stars === 3
+                      ? 'text-yellow-300'
+                      : colorInfo.stars === 4
+                      ? 'text-orange-300'
+                      : 'text-emerald-300';
+
                   return (
-                    <div className="p-3 rounded-2xl bg-rose-950/60 border border-rose-800/80 text-xs space-y-1">
-                      <div className="flex items-center justify-between text-rose-300 font-bold text-[11px]">
+                    <div className={`p-3 rounded-2xl border text-xs space-y-1 ${cardStyle}`}>
+                      <div className={`flex items-center justify-between font-bold text-[11px] ${titleStyle}`}>
                         <span className="flex items-center gap-1">
                           <span>{cm.starIcon}</span>
                           <span>SR4S {cm.title} ({cm.riskLevel})</span>

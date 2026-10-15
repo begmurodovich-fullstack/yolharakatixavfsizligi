@@ -3,7 +3,8 @@
 import React from 'react';
 import { RankingEntry, RankingScope } from '@/types';
 import { ScoreStatusBadge, getStarRating } from '@/components/ui/status-badge';
-import { scoreToStarRating } from '@/lib/scoreRules';
+import { scoreToStarRating, getSchoolDisplayNumber } from '@/lib/scoreRules';
+import { Sr4sGoldStars } from '@/components/ui/sr4s-icon';
 import { MapPin, School as SchoolIcon } from 'lucide-react';
 import { cn } from '@/lib/cn';
 
@@ -120,9 +121,9 @@ export function RankingTable({ entries, currentSchoolId, scope }: RankingTablePr
                             {entry.entityName}
                           </span>
 
-                          {entry.schoolNumber && (
+                          {getSchoolDisplayNumber({ name: entry.entityName, schoolNumber: entry.schoolNumber }) !== '★' && (
                             <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 text-slate-700 border border-slate-200">
-                              № {entry.schoolNumber}
+                              № {getSchoolDisplayNumber({ name: entry.entityName, schoolNumber: entry.schoolNumber })}
                             </span>
                           )}
 
@@ -150,13 +151,22 @@ export function RankingTable({ entries, currentSchoolId, scope }: RankingTablePr
                   {/* Star Rating Icons */}
                   <td className="py-4 px-5 text-center font-mono text-sm tracking-wider">
                     {isAssessed ? (
-                      <div className="flex flex-col items-center justify-center">
-                        <div className="flex items-center gap-1.5 font-bold text-xs">
-                          <span className="text-amber-500 font-extrabold">{scoreToStarRating(entry.score).starRating} ★</span>
-                          <span className="text-base">{getStarRating(entry.score).starIcons}</span>
-                        </div>
-                        <span className="text-[11px] text-slate-400 font-mono">({scoreToStarRating(entry.score).starRating} ball)</span>
-                      </div>
+                      (() => {
+                        const starInfo = getStarRating(entry.score);
+                        return (
+                          <div className="flex flex-col items-center justify-center gap-1">
+                            <div className="flex items-center gap-1.5 font-bold text-xs">
+                              <span className="font-extrabold text-sm" style={{ color: starInfo.colorHex }}>
+                                {scoreToStarRating(entry.score).starRating} ★
+                              </span>
+                              <Sr4sGoldStars stars={starInfo.stars} size={13} />
+                            </div>
+                            <span className="text-[11px] text-slate-400 font-mono">
+                              ({scoreToStarRating(entry.score).starRating} ball)
+                            </span>
+                          </div>
+                        );
+                      })()
                     ) : (
                       <span className="text-slate-400 text-xs">-</span>
                     )}

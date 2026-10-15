@@ -9,77 +9,31 @@ import {
 } from '@/types';
 import { CheckCircle2, Clock, AlertTriangle, XCircle, ShieldCheck, Star } from 'lucide-react';
 import { Sr4sGoldStars } from '@/components/ui/sr4s-icon';
+import { getStarColorInfo } from '@/lib/scoreRules';
 
 export function getStarRating(score: number): {
   stars: number;
   label: string;
   badgeClass: string;
+  darkBadgeClass: string;
   starIcons: string;
   description: string;
   shortLabel: string;
+  colorHex: string;
+  textClass: string;
 } {
-  if (!score || score <= 0) {
-    return {
-      stars: 0,
-      label: 'Baholanmagan',
-      shortLabel: 'Baholanmagan',
-      badgeClass: 'bg-slate-100 text-slate-700 border-slate-300',
-      starIcons: '⚪️',
-      description: 'Baholash hali o‘tkazilmagan',
-    };
-  }
-
-  // 1.0 - 5.0 shkalaga normallashtirish (eski 0-100 kelsa ham xavfsiz)
-  const numScore = Number(score) || 0;
-  const norm = numScore > 5.0 ? Math.min(5.0, Number((numScore / 20).toFixed(1))) : Math.min(5.0, Number(numScore.toFixed(1)));
-
-  if (norm >= 5.0) {
-    return {
-      stars: 5,
-      label: '5 Yulduz (Namunali)',
-      shortLabel: '5★ Namunali',
-      badgeClass: 'bg-emerald-50 text-emerald-800 border-emerald-300 shadow-2xs',
-      starIcons: '⭐️⭐️⭐️⭐️⭐️',
-      description: 'Eng yuqori xavfsizlik darajasi',
-    };
-  }
-  if (norm >= 4.0) {
-    return {
-      stars: 4,
-      label: '4 Yulduz (Yaxshi)',
-      shortLabel: '4★ Yaxshi',
-      badgeClass: 'bg-amber-50 text-amber-900 border-amber-300 shadow-2xs',
-      starIcons: '⭐️⭐️⭐️⭐️',
-      description: 'Yaxshi xavfsizlik darajasi',
-    };
-  }
-  if (norm >= 3.0) {
-    return {
-      stars: 3,
-      label: '3 Yulduz (O‘rtacha)',
-      shortLabel: '3★ O‘rtacha',
-      badgeClass: 'bg-yellow-50 text-yellow-900 border-yellow-300 shadow-2xs',
-      starIcons: '⭐️⭐️⭐️',
-      description: 'BMT minimal talabiga mos',
-    };
-  }
-  if (norm >= 2.0) {
-    return {
-      stars: 2,
-      label: '2 Yulduz (Xavfli)',
-      shortLabel: '2★ Xavfli',
-      badgeClass: 'bg-rose-50 text-rose-800 border-rose-300 shadow-2xs',
-      starIcons: '⭐️⭐️',
-      description: 'Chora ko‘rish talab etiladi',
-    };
-  }
+  const info = getStarColorInfo(score);
+  const starIcons = info.stars === 0 ? '⚪️' : '⭐️'.repeat(info.stars);
   return {
-    stars: 1,
-    label: '1 Yulduz (O‘ta Xavfli)',
-    shortLabel: '1★ O‘ta Xavfli',
-    badgeClass: 'bg-black text-amber-300 border-zinc-900 shadow-2xs',
-    starIcons: '⭐️',
-    description: 'Shoshilinch chora zarur',
+    stars: info.stars,
+    label: info.label,
+    shortLabel: info.shortLabel,
+    badgeClass: info.badgeClass,
+    darkBadgeClass: info.darkBadgeClass,
+    starIcons,
+    description: info.description,
+    colorHex: info.colorHex,
+    textClass: info.textClass,
   };
 }
 

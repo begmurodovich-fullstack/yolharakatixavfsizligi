@@ -198,7 +198,7 @@ export const RegionSafetyHeatmap: React.FC<RegionSafetyHeatmapProps> = ({
                     />
                     <div
                       style={{ width: `${selectedRegion.distribution.moderate.percent}%` }}
-                      className="bg-amber-400 h-full transition-all duration-500"
+                      className="bg-yellow-400 h-full transition-all duration-500"
                       title={`3★ O‘rtacha: ${selectedRegion.distribution.moderate.percent}%`}
                     />
                     <div
@@ -220,9 +220,9 @@ export const RegionSafetyHeatmap: React.FC<RegionSafetyHeatmapProps> = ({
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-between text-amber-300">
+                    <div className="flex items-center justify-between text-yellow-300">
                       <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-amber-400 inline-block"></span>
+                        <span className="w-2 h-2 rounded-full bg-yellow-400 inline-block"></span>
                         <span>3★ O‘rtacha daraja</span>
                       </div>
                       <span className="font-bold">

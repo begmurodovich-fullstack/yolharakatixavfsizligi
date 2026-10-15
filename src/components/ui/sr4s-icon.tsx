@@ -93,6 +93,14 @@ export function Sr4sGoldStars({ stars, size = 18, className }: { stars: number; 
     );
   }
 
+  // Rasmiy 5 yulduz rangi: 1=Qora, 2=Qizil, 3=Sariq, 4=Sabzirang, 5=Yashil
+  const starPalette =
+    stars === 1 ? { fill: '#0f172a', stroke: '#000000' } :
+    stars === 2 ? { fill: '#ef4444', stroke: '#dc2626' } :
+    stars === 3 ? { fill: '#eab308', stroke: '#ca8a04' } :
+    stars === 4 ? { fill: '#f97316', stroke: '#ea580c' } :
+    { fill: '#22c55e', stroke: '#16a34a' };
+
   return (
     <div className={cn('inline-flex items-center gap-1', className)}>
       {[1, 2, 3, 4, 5].map((i) => (
@@ -101,8 +109,8 @@ export function Sr4sGoldStars({ stars, size = 18, className }: { stars: number; 
           width={size}
           height={size}
           viewBox="0 0 24 24"
-          fill={i <= stars ? '#FFC72C' : 'rgba(203, 213, 225, 0.4)'}
-          stroke={i <= stars ? '#D97706' : '#94A3B8'}
+          fill={i <= stars ? starPalette.fill : 'rgba(203, 213, 225, 0.35)'}
+          stroke={i <= stars ? starPalette.stroke : '#94A3B8'}
           strokeWidth="1"
           strokeLinecap="round"
           strokeLinejoin="round"

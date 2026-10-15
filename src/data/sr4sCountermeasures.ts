@@ -13,7 +13,7 @@
 
 export interface Sr4sCountermeasureTier {
   stars: number;
-  tierKey: '1-star' | '2-star' | '3-star' | '4-5-star';
+  tierKey: '1-star' | '2-star' | '3-star' | '4-star' | '5-star' | '4-5-star';
   title: string;
   riskLevel: string;
   starIcon: string;
@@ -53,10 +53,10 @@ export const SR4S_COUNTERMEASURES_MATRIX: Sr4sCountermeasureTier[] = [
     proposalText:
       'SR4S boʻyicha 1 yulduzli (oʻta yuqori xavf) uchastkalarda muhandislik aralashuvi majburiy hisoblanadi. Qarshi chora-tadbirlar: 1. Oʻz DSt 3283 muvofiq 5.16.1/5.16.2 belgilari va 1.14.1 (\'Zebra\') chizigʻini tashkil etish. 2. Harakat tezligini pasaytirish uchun koʻtarilgan piyodalar oʻtish joyini (raised crossing) yoki sun\'iy gʻov va 3.24 (30 km/h) belgisini oʻrnatish. 3. Qatnov qismidan ajratilgan piyodalar trotuari barpo etish va saqlash toʻsiqlarini (fencing) oʻrnatish.',
     urgency: 'CRITICAL',
-    badgeClass: 'bg-black text-amber-300 border-zinc-800',
-    borderClass: 'border-zinc-800',
-    bgClass: 'bg-zinc-100/70',
-    accentColor: '#000000',
+    badgeClass: 'bg-slate-950 text-white border-black',
+    borderClass: 'border-slate-800',
+    bgClass: 'bg-slate-900/10',
+    accentColor: '#0f172a',
   },
   {
     stars: 2,
@@ -108,36 +108,62 @@ export const SR4S_COUNTERMEASURES_MATRIX: Sr4sCountermeasureTier[] = [
     proposalText:
       'SR4S boʻyicha 3 yulduzli (minimal qabul qilinadigan) uchastkalarda mavjud infratuzilmani modernizatsiya qilish amalga oshiriladi. Qarshi chora-tadbirlar: 1. Oʻchgan 1.14.1 (\'Zebra\') va chiziqlarni yuqori chidamlilikka ega termoplastik materiallar bilan yangilash. 2. Maktab darvozasi qarshisida bolalarning yoʻlga toʻsatdan chiqib ketishining oldini oluvchi piyodalar saqlash toʻsigʻini oʻrnatish. 3. Belgilarning nur qaytaruvchanligini (3M plyonkalar) tekshirish va yangilash.',
     urgency: 'STANDARD',
-    badgeClass: 'bg-amber-50 text-amber-900 border-amber-300',
-    borderClass: 'border-amber-400',
-    bgClass: 'bg-amber-50/40',
-    accentColor: '#f59e0b',
+    badgeClass: 'bg-yellow-50 text-yellow-900 border-yellow-300',
+    borderClass: 'border-yellow-400',
+    bgClass: 'bg-yellow-50/40',
+    accentColor: '#eab308',
   },
   {
     stars: 4,
-    tierKey: '4-5-star',
-    title: '4–5 Yulduz',
-    riskLevel: 'Past xavf / Xavfsiz zona',
-    starIcon: '⭐️⭐️⭐️⭐️ / ⭐️⭐️⭐️⭐️⭐️',
-    badgeLabel: '4–5 Yulduz — Xavfsiz zona',
+    tierKey: '4-star',
+    title: '4 Yulduz',
+    riskLevel: 'Past xavf / Yaxshi daraja',
+    starIcon: '⭐️⭐️⭐️⭐️',
+    badgeLabel: '4 Yulduz — Yaxshi zona',
+    riskFactors: [
+      'Tezlik cheklovi (30 km/h) ta\'minlangan.',
+      'Piyodalar oʻtish joylari va toʻsiqlar mavjud.',
+      'Koʻrinuvchanlik yetarli.',
+    ],
+    planText:
+      'SR4S boʻyicha 4 yulduzli uchastkalar yaxshi va xavfsiz hisoblanadi. Tavsiya etiladigan choralar:',
+    actionItems: [
+      'Mavjud yoʻl harakatini tashkillashtirish texnik vositalarini (YHTTV) doimiy texnik nazoratda saqlash.',
+      'Mavsumiy yoʻl chiziqlari va belgilarni yangilab turish.',
+    ],
+    proposalText:
+      'SR4S boʻyicha 4 yulduzli uchastkalar yaxshi xavfsizlik darajasiga ega. Tavsiya etiladigan choralar: 1. Mavjud yoʻl harakatini tashkillashtirish texnik vositalarini (YHTTV) doimiy nazoratda saqlash. 2. Mavsumiy yoʻl chiziqlari va belgilarni muntazam profilaktika qilish.',
+    urgency: 'MAINTENANCE',
+    badgeClass: 'bg-orange-50 text-orange-900 border-orange-300',
+    borderClass: 'border-orange-400',
+    bgClass: 'bg-orange-50/40',
+    accentColor: '#f97316',
+  },
+  {
+    stars: 5,
+    tierKey: '5-star',
+    title: '5 Yulduz',
+    riskLevel: 'Namunali xavfsiz hudud',
+    starIcon: '⭐️⭐️⭐️⭐️⭐️',
+    badgeLabel: '5 Yulduz — Namunali zona',
     riskFactors: [
       'Tezlik cheklovi (30 km/h) toʻliq ta\'minlangan.',
       'Piyodalar ajratilgan, koʻtarilgan oʻtish joylari va toʻsiqlar bor.',
       'Tungi yoritish va koʻrinuvchanlik a\'lo darajada.',
     ],
     planText:
-      'SR4S boʻyicha 4–5 yulduzli uchastkalar xavfsiz hisoblanadi. Qarshi chora-tadbirlar:',
+      'SR4S boʻyicha 5 yulduzli uchastkalar namunali xavfsiz hisoblanadi. Qarshi chora-tadbirlar:',
     actionItems: [
-      'Mavjud yoʻl harakatini tashkillashtirish texnik vositalarini (YHTTV) ishchi holatda saqlash va davriy audit oʻtkazish.',
-      'Yoʻl chiziqlari va yoritish tizimini doimiy ekspluatatsiya qilish va texnik xizmat koʻrsatish.',
+      'Mavjud namunali infratuzilmani ishchi holatda saqlash va davriy audit oʻtkazish.',
+      'Yoʻl chiziqlari va aqlli yoritish tizimini doimiy ekspluatatsiya qilish.',
     ],
     proposalText:
-      'SR4S boʻyicha 4–5 yulduzli uchastkalar xavfsiz hisoblanadi. Qarshi chora-tadbirlar: 1. Mavjud yoʻl harakatini tashkillashtirish texnik vositalarini (YHTTV) ishchi holatda saqlash va davriy audit oʻtkazish. 2. Yoʻl chiziqlari va yoritish tizimini doimiy ekspluatatsiya qilish va texnik xizmat koʻrsatish.',
+      'SR4S boʻyicha 5 yulduzli uchastkalar namunali xavfsiz hisoblanadi. Qarshi chora-tadbirlar: 1. Namunali infratuzilmani mukammal ishchi holatda saqlash va davriy audit oʻtkazish. 2. Innovatsion xavfsizlik texnologiyalarini qoʻllab-quvvatlash.',
     urgency: 'MAINTENANCE',
     badgeClass: 'bg-emerald-50 text-emerald-800 border-emerald-300',
     borderClass: 'border-emerald-400',
     bgClass: 'bg-emerald-50/40',
-    accentColor: '#10b981',
+    accentColor: '#22c55e',
   },
 ];
 
@@ -149,7 +175,8 @@ export function getCountermeasureByStars(stars: number): Sr4sCountermeasureTier 
   if (normalizedStars === 1) return SR4S_COUNTERMEASURES_MATRIX[0];
   if (normalizedStars === 2) return SR4S_COUNTERMEASURES_MATRIX[1];
   if (normalizedStars === 3) return SR4S_COUNTERMEASURES_MATRIX[2];
-  return SR4S_COUNTERMEASURES_MATRIX[3]; // 4 or 5
+  if (normalizedStars === 4) return SR4S_COUNTERMEASURES_MATRIX[3];
+  return SR4S_COUNTERMEASURES_MATRIX[4]; // 5
 }
 
 /**

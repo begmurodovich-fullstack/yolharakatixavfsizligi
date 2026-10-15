@@ -8,37 +8,37 @@
       <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.25"/>
     </filter>
   </defs>
-  <rect x="2" y="2" width="176" height="66" rx="12" fill="url(#sr4sBg)" stroke="#233B66" stroke-width="1.5" filter="url(#shadow)" />
+  <rect x="2" y="2" width="176" height="66" rx="12" fill="url(#sr4sBg)" stroke="#334155" stroke-width="1.5" filter="url(#shadow)" />
   <g>
     
       <g transform="translate(24, 28) scale(0.9)">
-        <!-- Star 1 -->
+        <!-- Star 1: Black with light border -->
         <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"
-                 fill="#FFC72C" stroke="#D99B00" stroke-width="0.5" />
+                 fill="#000000" stroke="#E2E8F0" stroke-width="1.2" />
       </g>
     
       <g transform="translate(52, 28) scale(0.9)">
         <!-- Star 2 -->
         <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"
-                 fill="rgba(255, 199, 44, 0.2)" stroke="none" stroke-width="0.5" />
+                 fill="rgba(255, 255, 255, 0.15)" stroke="none" stroke-width="0.5" />
       </g>
     
       <g transform="translate(80, 28) scale(0.9)">
         <!-- Star 3 -->
         <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"
-                 fill="rgba(255, 199, 44, 0.2)" stroke="none" stroke-width="0.5" />
+                 fill="rgba(255, 255, 255, 0.15)" stroke="none" stroke-width="0.5" />
       </g>
     
       <g transform="translate(108, 28) scale(0.9)">
         <!-- Star 4 -->
         <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"
-                 fill="rgba(255, 199, 44, 0.2)" stroke="none" stroke-width="0.5" />
+                 fill="rgba(255, 255, 255, 0.15)" stroke="none" stroke-width="0.5" />
       </g>
     
       <g transform="translate(136, 28) scale(0.9)">
         <!-- Star 5 -->
         <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"
-                 fill="rgba(255, 199, 44, 0.2)" stroke="none" stroke-width="0.5" />
+                 fill="rgba(255, 255, 255, 0.15)" stroke="none" stroke-width="0.5" />
       </g>
     
   </g>

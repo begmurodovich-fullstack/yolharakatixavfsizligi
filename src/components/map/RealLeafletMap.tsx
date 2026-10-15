@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { School } from '@/types';
 import L from 'leaflet';
 import { Layers, Globe } from 'lucide-react';
-import { normalizeScore } from '@/lib/scoreRules';
+import { normalizeScore, getStarColorInfo, getSchoolDisplayNumber } from '@/lib/scoreRules';
 
 interface RealLeafletMapProps {
   schools: School[];
@@ -44,26 +44,21 @@ function buildMarkerIcon(
   const rawScore = sch.currentScore || 0;
   const isAssessed = rawScore > 0;
   const normScore = normalizeScore(rawScore);
-  const rawNum = sch.schoolNumber || sch.name.match(/\d+/)?.[0] || '★';
+  const rawNum = getSchoolDisplayNumber(sch);
+  const colorInfo = getStarColorInfo(isAssessed ? normScore : 0);
+  const pinColor = isAssessed ? colorInfo.pinColor : '#0d9488';
   const starRating = isAssessed ? normScore.toFixed(1) : '-';
-
-  const pinColor = !isAssessed
-    ? '#0d9488'
-    : normScore >= 4.0
-    ? '#10b981'
-    : normScore >= 3.0
-    ? '#f59e0b'
-    : '#ef4444';
+  const dotColor = colorInfo.stars === 1 ? '#ffffff' : pinColor;
 
   if (isSelected) {
     return L.divIcon({
       className: 'custom-leaflet-pin selected-pin',
       html: `
         <div style="position:relative;width:190px;margin-left:-95px;margin-top:-68px;display:flex;flex-direction:column;align-items:center;pointer-events:none;">
-          <div style="background:#0f172a;color:#fff;padding:4px 10px;border-radius:9999px;font-size:11px;font-weight:800;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.6);border:1.5px solid #14b8a6;margin-bottom:4px;display:flex;align-items:center;gap:5px;">
-            <span style="color:${pinColor};font-size:12px;">●</span>
+          <div style="background:#0f172a;color:#fff;padding:4px 10px;border-radius:9999px;font-size:11px;font-weight:800;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.6);border:1.5px solid ${colorInfo.stars === 1 ? '#ffffff' : pinColor};margin-bottom:4px;display:flex;align-items:center;gap:5px;">
+            <span style="color:${dotColor};font-size:12px;">●</span>
             <span>${sch.name.length > 20 ? `${rawNum}-maktab` : sch.name}</span>
-            <span style="color:#38bdf8;font-size:10px;font-weight:700;">★${starRating} (${normScore.toFixed(1)} ball)</span>
+            <span style="color:${colorInfo.stars === 1 ? '#ffffff' : pinColor};font-size:10px;font-weight:700;">★${starRating} (${normScore.toFixed(1)} ball)</span>
           </div>
           <div style="width:38px;height:38px;background-color:${pinColor};border:3px solid #fff;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 8px 18px rgba(0,0,0,.5),0 0 16px ${pinColor};display:flex;align-items:center;justify-content:center;">
             <span style="transform:rotate(45deg);color:#fff;font-size:12px;font-weight:900;font-family:monospace,sans-serif;">${rawNum}</span>
@@ -95,13 +90,8 @@ function buildPopupContent(sch: School): string {
   const normScore = normalizeScore(rawScore);
   const lat = sch.coordinates!.latitude;
   const lng = sch.coordinates!.longitude;
-  const pinColor = !isAssessed
-    ? '#0d9488'
-    : normScore >= 4.0
-    ? '#10b981'
-    : normScore >= 3.0
-    ? '#f59e0b'
-    : '#ef4444';
+  const colorInfo = getStarColorInfo(isAssessed ? normScore : 0);
+  const pinColor = isAssessed ? colorInfo.pinColor : '#0d9488';
 
   return `
     <div style="font-family:sans-serif;min-width:210px;padding:4px;">
@@ -110,7 +100,7 @@ function buildPopupContent(sch: School): string {
       <div style="font-size:11px;color:#64748b;margin-bottom:6px;">${sch.districtName || ''}, ${sch.regionName || ''}</div>
       <div style="font-size:10px;color:#0f766e;background:#f0fdfa;padding:3px 6px;border-radius:6px;margin-bottom:8px;font-family:monospace;">📍 ${lat.toFixed(6)}, ${lng.toFixed(6)}</div>
       <div style="display:flex;align-items:center;justify-content:space-between;padding-top:6px;border-top:1px solid #e2e8f0;">
-        <span style="font-size:12px;font-weight:800;color:${pinColor};">${isAssessed ? `${normScore.toFixed(1)} ★ / 5.0` : 'Tasdiqlangan'}</span>
+        <span style="font-size:12px;font-weight:800;color:${pinColor};">${isAssessed ? `${normScore.toFixed(1)} ★ (${colorInfo.shortLabel})` : 'Tasdiqlangan'}</span>
         <span style="font-size:10px;font-weight:700;background:#ecfdf5;color:#065f46;padding:2px 8px;border-radius:9999px;">✓ Real Lokatsiya</span>
       </div>
     </div>

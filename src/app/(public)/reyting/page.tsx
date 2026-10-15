@@ -17,7 +17,8 @@ import {
 import { rankingService } from '@/services/rankingService';
 import { RankingEntry } from '@/types';
 import { StarRatingBadge, getStarRating } from '@/components/ui/status-badge';
-import { scoreToStarRating } from '@/lib/scoreRules';
+import { scoreToStarRating, getSchoolDisplayNumber } from '@/lib/scoreRules';
+import { Sr4sGoldStars } from '@/components/ui/sr4s-icon';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -320,9 +321,9 @@ export default function ReytingPage() {
                       <TableCell className="font-semibold text-slate-900">
                         <div className="flex items-center gap-2">
                           <span>{entry.entityName}</span>
-                          {entry.schoolNumber && (
+                          {getSchoolDisplayNumber({ name: entry.entityName, schoolNumber: entry.schoolNumber }) !== '★' && (
                             <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 text-slate-700 border border-slate-200">
-                              № {entry.schoolNumber}
+                              № {getSchoolDisplayNumber({ name: entry.entityName, schoolNumber: entry.schoolNumber })}
                             </span>
                           )}
                           {rank <= 3 && (
@@ -341,10 +342,10 @@ export default function ReytingPage() {
                       </TableCell>
 
                       <TableCell className="text-center font-mono">
-                        <div className="flex flex-col items-center justify-center">
+                        <div className="flex flex-col items-center justify-center gap-1">
                           <div className="flex items-center gap-1.5 font-bold text-xs">
-                            <span className="text-amber-500 font-extrabold">{scoreToStarRating(score).starRating} ★</span>
-                            <span className="text-base">{starInfo.starIcons}</span>
+                            <span className="font-extrabold text-sm" style={{ color: starInfo.colorHex }}>{scoreToStarRating(score).starRating} ★</span>
+                            <Sr4sGoldStars stars={starInfo.stars} size={13} />
                           </div>
                           <span className="text-[11px] text-slate-400 font-mono">({scoreToStarRating(score).starRating} ball)</span>
                         </div>
