@@ -114,7 +114,6 @@ function buildPopupContent(sch: School): string {
       <div style="font-size:10px;font-weight:700;color:#1e293b;background:#f8fafc;border:1px solid #e2e8f0;padding:3px 6px;border-radius:6px;margin-bottom:8px;display:flex;align-items:center;gap:4px;">
         <span>${roadMeta.icon}</span>
         <span>${roadMeta.shortName}</span>
-        <span style="color:#64748b;font-size:9px;margin-left:auto;">${roadMeta.speedLimit.split('(')[0].trim()}</span>
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between;padding-top:6px;border-top:1px solid #e2e8f0;">
         <span style="font-size:12px;font-weight:800;color:${pinColor};">${isAssessed ? `${normScore.toFixed(1)} ★ (${colorInfo.shortLabel})` : 'Tasdiqlangan'}</span>

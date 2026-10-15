@@ -30,15 +30,15 @@ const ROAD_CATEGORIES: Array<{
   },
   {
     id: 'INTERNATIONAL',
-    label: 'Xalqaro ahamiyatdagi yo‘llar (M-39, M-37...)',
+    label: 'Xalqaro ahamiyatdagi yo‘llar',
     shortLabel: 'Xalqaro yo‘llar',
-    description: 'Yuqori tezlikdagi tranzit xalqaro avtomagistrallar',
+    description: 'Xalqaro tranzit avtomobil yo‘llari',
   },
   {
     id: 'NATIONAL',
-    label: 'Davlat ahamiyatidagi yo‘llar (A-373, 4R...)',
+    label: 'Davlat ahamiyatidagi yo‘llar',
     shortLabel: 'Davlat yo‘llari',
-    description: 'Viloyatlararo va respublika ahamiyatidagi magistrallar',
+    description: 'Viloyatlararo va respublika ahamiyatidagi avtomobil yo‘llari',
   },
   {
     id: 'LOCAL',

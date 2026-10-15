@@ -117,13 +117,6 @@ export function RoadTypeSelectionModal({
                   <p className="text-xs text-slate-600 leading-relaxed">
                     {item.description}
                   </p>
-
-                  <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-[11px]">
-                    <span className="text-slate-400 font-medium">Tezlik rejimi:</span>
-                    <span className="font-mono font-bold text-slate-700 bg-white px-2 py-0.5 rounded border border-slate-200">
-                      {item.speedLimit.split('(')[0]}
-                    </span>
-                  </div>
                 </div>
               );
             })}
@@ -132,7 +125,7 @@ export function RoadTypeSelectionModal({
           <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 flex items-start gap-2.5 text-xs">
             <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
             <p className="leading-relaxed">
-              <strong>Eslatma:</strong> Yo‘l toifasi maktab atrofidagi ruxsat etilgan tezlik, xavf koeffitsiyenti va BMT SR4S yulduzli bahosini hisoblash algoritmining muhim poydevori hisoblanadi.
+              <strong>Eslatma:</strong> Yo‘l toifasi maktab atrofidagi xavf koeffitsiyenti va BMT SR4S yulduzli bahosini hisoblash algoritmining muhim poydevori hisoblanadi.
             </p>
           </div>
         </div>

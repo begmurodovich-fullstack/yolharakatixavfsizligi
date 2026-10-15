@@ -156,8 +156,8 @@ export function SchoolPassportModal({
               <div className="text-xs font-bold text-slate-900 flex items-center gap-2">
                 <span>{getRoadTypeMeta(school.roadType).icon}</span>
                 <span>{getRoadTypeMeta(school.roadType).name} ({getRoadTypeMeta(school.roadType).shortName})</span>
-                <span className="text-[10px] font-mono text-slate-500 bg-white px-2 py-0.5 rounded border border-slate-300">
-                  {getRoadTypeMeta(school.roadType).speedLimit}
+                <span className="text-[11px] text-slate-500 font-normal">
+                  — {getRoadTypeMeta(school.roadType).description}
                 </span>
               </div>
             </div>

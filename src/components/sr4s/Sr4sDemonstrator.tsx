@@ -752,7 +752,7 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
                   </span>
                 </div>
                 <p className="text-xs text-slate-600 mt-1">
-                  {roadMeta.description} • Ruxsat etilgan tezlik: <strong className="text-slate-900 font-mono">{roadMeta.speedLimit}</strong>
+                  {roadMeta.description}
                 </p>
               </div>
             </div>

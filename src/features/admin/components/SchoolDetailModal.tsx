@@ -153,7 +153,7 @@ export function SchoolDetailModal({
                     )}
                   </div>
                   <div className="font-bold text-[11px] text-slate-900 truncate">{meta.shortName}</div>
-                  <div className="text-[10px] text-slate-500 truncate">{meta.speedLimit}</div>
+                  <div className="text-[10px] text-slate-500 truncate">{meta.description}</div>
                 </button>
               );
             })}
