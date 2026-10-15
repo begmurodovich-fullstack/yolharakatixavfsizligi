@@ -35,6 +35,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { ErrorState } from '@/components/ui/error-state';
 import { getStarRating } from '@/components/ui/status-badge';
+import { normalizeScore } from '@/lib/scoreRules';
 import { FirstLoginOnboardingModal } from '@/features/auth/components/FirstLoginOnboardingModal';
 import { SchoolPassportModal } from '@/features/reports/components/SchoolPassportModal';
 import {
@@ -127,9 +128,11 @@ export default function SchoolDashboardPage() {
         activeAssessment &&
         activeAssessment.status === 'VERIFIED' &&
         activeAssessment.score !== undefined &&
-        activeAssessment.score > 0
+        Number(activeAssessment.score) > 0
       ) {
-        resolvedSchool.currentScore = activeAssessment.score;
+        resolvedSchool.currentScore = Number(activeAssessment.score);
+      } else {
+        resolvedSchool.currentScore = Number(resolvedSchool.currentScore) || 0;
       }
 
       setSchool({ ...resolvedSchool });
@@ -192,7 +195,7 @@ export default function SchoolDashboardPage() {
     if (!criteria.length) return [];
 
     const answersMap = assessment?.answers || {};
-    const baseScore = school?.currentScore || 80;
+    const baseScore = Number(school?.currentScore) || 0;
 
     return criteria.map((crit, index) => {
       // Find questions for this criterion
@@ -202,7 +205,7 @@ export default function SchoolDashboardPage() {
       critQuestions.forEach((q) => {
         const ans = answersMap[q.id];
         if (ans) {
-          earned += ans.pointsAwarded || 0;
+          earned += Number(ans.pointsAwarded) || 0;
         }
       });
 
@@ -357,12 +360,14 @@ export default function SchoolDashboardPage() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2">
                 <div className="p-2.5 rounded-xl bg-white border border-slate-200/80 text-xs">
                   <span className="text-slate-400 text-[10px] block">Joriy Baho</span>
-                  <span className="font-extrabold text-teal-800 text-sm">{(school.currentScore > 5 ? school.currentScore / 20 : school.currentScore).toFixed(1)} ball</span>
+                  <span className="font-extrabold text-teal-800 text-sm">
+                    {normalizeScore(school.currentScore).toFixed(1)} ball
+                  </span>
                 </div>
                 <div className="p-2.5 rounded-xl bg-white border border-slate-200/80 text-xs">
                   <span className="text-slate-400 text-[10px] block">Yulduz Darajasi</span>
                   <span className="font-extrabold text-amber-600 text-sm">
-                    {(school.currentScore > 5 ? school.currentScore / 20 : school.currentScore).toFixed(1)} ★ ({getStarRating(school.currentScore).shortLabel})
+                    {normalizeScore(school.currentScore).toFixed(1)} ★ ({getStarRating(school.currentScore).shortLabel})
                   </span>
                 </div>
                 <div className="p-2.5 rounded-xl bg-white border border-slate-200/80 text-xs">

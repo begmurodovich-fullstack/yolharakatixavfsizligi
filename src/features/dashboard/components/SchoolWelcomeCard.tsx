@@ -60,7 +60,9 @@ export function SchoolWelcomeCard({ school, currentPeriod }: SchoolWelcomeCardPr
             <div className="flex items-center gap-1.5">
               <MapPin className="w-4 h-4 text-teal-600" />
               <span className="font-mono text-slate-600">
-                {school.coordinates.latitude.toFixed(4)}, {school.coordinates.longitude.toFixed(4)}
+                {school.coordinates?.latitude != null && school.coordinates?.longitude != null
+                  ? `${Number(school.coordinates.latitude).toFixed(4)}, ${Number(school.coordinates.longitude).toFixed(4)}`
+                  : 'Koordinata kiritilmagan'}
               </span>
             </div>
           </div>

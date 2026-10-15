@@ -30,7 +30,8 @@ export function getStarRating(score: number): {
   }
 
   // 1.0 - 5.0 shkalaga normallashtirish (eski 0-100 kelsa ham xavfsiz)
-  const norm = score > 5.0 ? Math.min(5.0, Number((score / 20).toFixed(1))) : Math.min(5.0, Number(score.toFixed(1)));
+  const numScore = Number(score) || 0;
+  const norm = numScore > 5.0 ? Math.min(5.0, Number((numScore / 20).toFixed(1))) : Math.min(5.0, Number(numScore.toFixed(1)));
 
   if (norm >= 5.0) {
     return {

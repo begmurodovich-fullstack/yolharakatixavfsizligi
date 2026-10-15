@@ -24,14 +24,19 @@ export function StatisticsPreview({ criterionScores }: StatisticsPreviewProps) {
     setMounted(true);
   }, []);
 
-  const chartData = criterionScores.map((item) => ({
-    name: item.criterion.title.split(' ')[0] + ' ' + (item.criterion.title.split(' ')[1] || ''),
-    fullName: item.criterion.title,
-    percentage: item.percentage,
-    earned: item.earnedScore,
-    max: item.maxScore,
-    fill: item.percentage >= 80 ? '#10b981' : item.percentage >= 50 ? '#f59e0b' : '#ef4444',
-  }));
+  const chartData = (criterionScores || []).map((item) => {
+    const title = item.criterion?.title || 'Mezon';
+    const words = title.split(' ');
+    const percentage = Number(item.percentage) || 0;
+    return {
+      name: words[0] + (words[1] ? ' ' + words[1] : ''),
+      fullName: title,
+      percentage,
+      earned: Number(item.earnedScore) || 0,
+      max: Number(item.maxScore) || 0,
+      fill: percentage >= 80 ? '#10b981' : percentage >= 50 ? '#f59e0b' : '#ef4444',
+    };
+  });
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-7 shadow-xs">

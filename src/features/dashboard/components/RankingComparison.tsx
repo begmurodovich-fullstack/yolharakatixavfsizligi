@@ -99,8 +99,8 @@ export function RankingComparison({
                 <div className={`font-extrabold font-mono flex items-baseline justify-end gap-1.5 ${item.isPrimary ? 'text-teal-700 text-base' : 'text-slate-800'}`}>
                     {item.score > 0 ? (
                     <>
-                      <span>{item.score.toFixed(1)} ball</span>
-                      <span className="text-xs font-semibold text-amber-600">({item.score.toFixed(1)} ★)</span>
+                      <span>{Number(item.score).toFixed(1)} ball</span>
+                      <span className="text-xs font-semibold text-amber-600">({Number(item.score).toFixed(1)} ★)</span>
                     </>
                   ) : (
                     <span>Baholanmagan</span>

@@ -6,6 +6,7 @@ import { ScoreStatusBadge } from '@/components/ui/status-badge';
 import { Sr4sStarBadge, Sr4sGoldStars } from '@/components/ui/sr4s-icon';
 import { Progress } from '@/components/ui/progress';
 import { Trophy, Medal, Building2, Map, Shield, TrendingUp } from 'lucide-react';
+import { normalizeScore } from '@/lib/scoreRules';
 
 interface LargeRankingCardProps {
   rankingOverview: SchoolRankingOverview | null;
@@ -13,13 +14,21 @@ interface LargeRankingCardProps {
 }
 
 export function LargeRankingCard({ rankingOverview, currentScore }: LargeRankingCardProps) {
-  const score = rankingOverview?.currentScore ?? currentScore;
+  const rawScore = rankingOverview?.currentScore ?? currentScore;
+  const score = normalizeScore(rawScore);
   const republicRank = rankingOverview?.republicRank ?? 34;
   const totalRepublic = rankingOverview?.totalRepublicSchools ?? 36;
   const regionRank = rankingOverview?.regionRank ?? 7;
   const totalRegion = rankingOverview?.totalRegionSchools ?? 14;
   const districtRank = rankingOverview?.districtRank ?? 1;
   const totalDistrict = rankingOverview?.totalDistrictSchools ?? 4;
+
+  let starCount = 0;
+  if (score >= 5.0) starCount = 5;
+  else if (score >= 4.0) starCount = 4;
+  else if (score >= 3.0) starCount = 3;
+  else if (score >= 2.0) starCount = 2;
+  else if (score > 0) starCount = 1;
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-7 shadow-xs flex flex-col justify-between space-y-5">
@@ -51,7 +60,7 @@ export function LargeRankingCard({ rankingOverview, currentScore }: LargeRanking
           </div>
           <div className="space-y-1">
             <div className="pt-1">
-              <Sr4sStarBadge stars={score > 0 ? ((score > 5 ? score / 20 : score) >= 5.0 ? 5 : (score > 5 ? score / 20 : score) >= 4.0 ? 4 : (score > 5 ? score / 20 : score) >= 3.0 ? 3 : (score > 5 ? score / 20 : score) >= 2.0 ? 2 : 1) : 0} size="md" />
+              <Sr4sStarBadge stars={starCount} size="md" />
             </div>
             <div className="pt-1">
               <ScoreStatusBadge score={score} />

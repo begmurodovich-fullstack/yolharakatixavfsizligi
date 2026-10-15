@@ -4,12 +4,13 @@ import { SCORE_THRESHOLDS } from './constants';
 /**
  * Har qanday ballni (jumladan eski 0-100 shkalasini ham) 1.0 - 5.0 shkalaga normallashtirish.
  */
-export function normalizeScore(score: number): number {
-  if (!score || score <= 0) return 0;
-  if (score > 5.0) {
-    return Math.min(5.0, Number((score / 20).toFixed(1)));
+export function normalizeScore(score: number | string | null | undefined): number {
+  const num = Number(score) || 0;
+  if (num <= 0) return 0;
+  if (num > 5.0) {
+    return Math.min(5.0, Number((num / 20).toFixed(1)));
   }
-  return Math.min(5.0, Number(Number(score).toFixed(1)));
+  return Math.min(5.0, Number(num.toFixed(1)));
 }
 
 /**
