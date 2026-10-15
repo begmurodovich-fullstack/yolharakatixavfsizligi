@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Region, District, ScoreStatus, CoordinateStatus } from '@/types';
+import { Region, District, ScoreStatus, CoordinateStatus, RoadType } from '@/types';
+import { ROAD_TYPES, getRoadTypeMeta } from '@/lib/roadTypes';
 import { Input } from '@/components/ui/input';
 import { Search, Filter, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -17,6 +18,8 @@ interface SchoolFilterBarProps {
   onScoreStatusChange: (status: ScoreStatus | 'ALL') => void;
   selectedCoordStatus: CoordinateStatus | 'ALL';
   onCoordStatusChange: (status: CoordinateStatus | 'ALL') => void;
+  selectedRoadType?: RoadType | 'ALL';
+  onRoadTypeChange?: (roadType: RoadType | 'ALL') => void;
   searchQuery: string;
   onSearchChange: (q: string) => void;
   onReset: () => void;
@@ -34,6 +37,8 @@ export function SchoolFilterBar({
   onScoreStatusChange,
   selectedCoordStatus,
   onCoordStatusChange,
+  selectedRoadType = 'ALL',
+  onRoadTypeChange,
   searchQuery,
   onSearchChange,
   onReset,
@@ -82,7 +87,7 @@ export function SchoolFilterBar({
       </div>
 
       {/* Dropdown Selectors & Status Chips */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2 border-t border-slate-100">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 pt-2 border-t border-slate-100">
         {/* Region Selector */}
         <div className="space-y-1">
           <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
@@ -125,6 +130,28 @@ export function SchoolFilterBar({
           </select>
         </div>
 
+        {/* Road Type Selector */}
+        <div className="space-y-1">
+          <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+            Yo‘l toifasi:
+          </label>
+          <select
+            value={selectedRoadType}
+            onChange={(e) => onRoadTypeChange?.(e.target.value as any)}
+            className="w-full h-10 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900"
+          >
+            <option value="ALL">Barcha yo‘llar</option>
+            {ROAD_TYPES.map((rt) => {
+              const meta = getRoadTypeMeta(rt);
+              return (
+                <option key={rt} value={rt}>
+                  {meta.icon} {meta.label}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+
         {/* Score Status Selector */}
         <div className="space-y-1">
           <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
@@ -136,9 +163,9 @@ export function SchoolFilterBar({
             className="w-full h-10 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900"
           >
             <option value="ALL">Barcha darajalar</option>
-            <option value="GREEN">🟢 Yashil (≥80 ball)</option>
-            <option value="YELLOW">🟡 Sariq (50-79 ball)</option>
-            <option value="RED">🔴 Qizil (&lt;50 ball)</option>
+            <option value="GREEN">🟢 Yashil (4.0 - 5.0 ball / 4-5 ★)</option>
+            <option value="YELLOW">🟡 Sariq (3.0 - 3.9 ball / 3 ★)</option>
+            <option value="RED">🔴 Qizil (&lt;3.0 ball / 1-2 ★)</option>
           </select>
         </div>
 

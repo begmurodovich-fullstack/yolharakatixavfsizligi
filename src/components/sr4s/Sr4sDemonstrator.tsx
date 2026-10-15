@@ -35,7 +35,11 @@ import {
   Unlock,
   AlertCircle,
   Info,
+  Compass,
 } from 'lucide-react';
+import { RoadType } from '@/types';
+import { getRoadTypeMeta } from '@/lib/roadTypes';
+import { RoadTypeSelectionModal } from '@/features/criteria/components/RoadTypeSelectionModal';
 
 export type { AttributeDefinition, AttributeOption };
 export { OFFICIAL_SR4S_STAR_LEVELS, OFFICIAL_SR4S_STAR_LEVELS as SR4S_STAR_LEVELS };
@@ -63,6 +67,11 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
   const [isRetakeAllowed, setIsRetakeAllowed] = useState<boolean>(false);
   const [reassessReason, setReassessReason] = useState<string | null>(null);
   const [confirmedAttrIds, setConfirmedAttrIds] = useState<Set<string>>(new Set());
+
+  // Road Type state (Mandatory 4 options before test)
+  const [roadType, setRoadType] = useState<RoadType>((school?.roadType as RoadType) || 'URBAN');
+  const [showRoadTypeModal, setShowRoadTypeModal] = useState<boolean>(false);
+  const [hasConfirmedRoadType, setHasConfirmedRoadType] = useState<boolean>(false);
 
   // Preload previously saved assessment for this school if exists
   useEffect(() => {
@@ -121,6 +130,54 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
       isMounted = false;
     };
   }, [school?.id, school?.canReassess, school?.reassessReason, user?.schoolId]);
+
+  // Synchronize roadType from school prop or session
+  useEffect(() => {
+    if (school?.roadType) {
+      setRoadType(school.roadType as RoadType);
+    }
+    const targetSchoolId = school?.id || user?.schoolId;
+    if (targetSchoolId && typeof window !== 'undefined') {
+      const confirmed = sessionStorage.getItem(`road_type_confirmed_${targetSchoolId}`);
+      if (confirmed) {
+        setHasConfirmedRoadType(true);
+      }
+    }
+  }, [school?.roadType, school?.id, user?.schoolId]);
+
+  // Mandatory prompt: If not locked and road type hasn't been confirmed in this session
+  useEffect(() => {
+    const targetSchoolId = school?.id || user?.schoolId;
+    if (targetSchoolId && !isLocked && !hasConfirmedRoadType) {
+      setShowRoadTypeModal(true);
+    }
+  }, [isLocked, hasConfirmedRoadType, school?.id, user?.schoolId]);
+
+  const handleSelectRoadType = async (selected: RoadType) => {
+    const targetSchoolId = school?.id || user?.schoolId;
+    setRoadType(selected);
+    setHasConfirmedRoadType(true);
+    setShowRoadTypeModal(false);
+
+    if (targetSchoolId) {
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem(`road_type_confirmed_${targetSchoolId}`, selected);
+      }
+      try {
+        await fetch(`/api/schools/${targetSchoolId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ roadType: selected }),
+        });
+        if (school) {
+          school.roadType = selected;
+        }
+        success(`Maktabga yondosh yo‘l toifasi: ${getRoadTypeMeta(selected).shortName} deb belgilandi!`, 'Tasdiqlandi');
+      } catch (e) {
+        console.warn('Could not save roadType immediately:', e);
+      }
+    }
+  };
 
   const handleConfirmAll = () => {
     if (isLocked) return;
@@ -526,7 +583,8 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
           percentage: Math.round((schoolScore / 5.0) * 100),
           answers: answersPayload,
           criterionScores: criterionScoresPayload,
-          reviewerNotes: `SR4S 40 mezonli baholash: ${decimalScore} Yulduz (SRS: ${srsScore})`,
+          roadType,
+          reviewerNotes: `SR4S 40 mezonli baholash: ${decimalScore} Yulduz (SRS: ${srsScore}) - Yo‘l toifasi: ${roadType}`,
           submittedBy: user?.id || null,
         }),
       });
@@ -536,11 +594,11 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
         throw new Error(errData.message || 'Baholashni saqlashda xatolik yuz berdi');
       }
 
-      // 2. Maktab joriy ballini to'g'ridan-to'g'ri yangilash
+      // 2. Maktab joriy ballini va yo'l toifasini to'g'ridan-to'g'ri yangilash
       await fetch(`/api/schools/${targetSchoolId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ currentScore: schoolScore }),
+        body: JSON.stringify({ currentScore: schoolScore, roadType }),
       }).catch((e) => console.warn('School current score sync warning:', e));
 
       // 3. Shaklni qulflash va retake huquqini yopish
@@ -674,6 +732,45 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
           </div>
         </div>
       )}
+
+      {/* Road Category Indicator Banner */}
+      {(() => {
+        const roadMeta = getRoadTypeMeta(roadType);
+        return (
+          <div className="mx-6 mt-4 p-4 sm:p-5 rounded-2xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-gradient-to-r from-slate-50 via-teal-50/20 to-slate-50 border-teal-200/80 shadow-2xs">
+            <div className="flex items-center gap-3.5">
+              <div className="w-12 h-12 rounded-2xl bg-white border border-teal-200 flex items-center justify-center text-2xl shadow-xs shrink-0">
+                {roadMeta.icon}
+              </div>
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                    Yondosh Yo‘l Toifasi:
+                  </span>
+                  <span className={cn('px-2.5 py-0.5 rounded-full text-xs font-black border shadow-2xs', roadMeta.badgeClass)}>
+                    {roadMeta.shortName} ({roadMeta.name})
+                  </span>
+                </div>
+                <p className="text-xs text-slate-600 mt-1">
+                  {roadMeta.description} • Ruxsat etilgan tezlik: <strong className="text-slate-900 font-mono">{roadMeta.speedLimit}</strong>
+                </p>
+              </div>
+            </div>
+
+            {!isLocked && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowRoadTypeModal(true)}
+                className="text-xs font-bold border-teal-400 text-teal-800 hover:bg-teal-50 rounded-xl h-9 px-4 gap-1.5 shrink-0 self-start sm:self-center shadow-2xs"
+              >
+                <Compass className="w-3.5 h-3.5" />
+                <span>Yo‘l toifasini o‘zgartirish</span>
+              </Button>
+            )}
+          </div>
+        );
+      })()}
 
       {/* Main 2-Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 p-6 lg:p-8 items-start">
@@ -1317,6 +1414,16 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
           </div>
         </div>
       )}
+
+      {/* Mandatory Road Type Selection Modal */}
+      <RoadTypeSelectionModal
+        isOpen={showRoadTypeModal}
+        currentRoadType={roadType}
+        schoolName={school?.name}
+        isMandatory={!isLocked && !hasConfirmedRoadType}
+        onSelect={handleSelectRoadType}
+        onClose={() => setShowRoadTypeModal(false)}
+      />
     </div>
   );
 }

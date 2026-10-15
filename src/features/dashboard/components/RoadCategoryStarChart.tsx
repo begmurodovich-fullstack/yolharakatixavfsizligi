@@ -109,17 +109,17 @@ function calculateStarOrUnassessed(score?: number | null): 0 | 1 | 2 | 3 | 4 | 5
   return 1;
 }
 
+// Default national distribution by road category if empty
+const DEFAULT_CATEGORY_DISTRIBUTIONS: Record<string, Record<number, number>> = {
+  ALL: { 5: 2450, 4: 3820, 3: 2340, 2: 1120, 1: 380, 0: 0 },
+  INTERNATIONAL: { 5: 140, 4: 280, 3: 310, 2: 240, 1: 110, 0: 0 },
+  NATIONAL: { 5: 390, 4: 760, 3: 620, 2: 380, 1: 150, 0: 0 },
+  LOCAL: { 5: 820, 4: 1450, 3: 980, 2: 360, 1: 90, 0: 0 },
+  URBAN: { 5: 1100, 4: 1330, 3: 430, 2: 140, 1: 30, 0: 0 },
+};
+
 export function RoadCategoryStarChart({ schools = [] }: RoadCategoryStarChartProps) {
   const [selectedCategory, setSelectedCategory] = useState<'ALL' | RoadType>('ALL');
-
-  // Default national distribution by road category if empty
-  const defaultCategoryDistributions: Record<string, Record<number, number>> = {
-    ALL: { 5: 2450, 4: 3820, 3: 2340, 2: 1120, 1: 380, 0: 0 },
-    INTERNATIONAL: { 5: 140, 4: 280, 3: 310, 2: 240, 1: 110, 0: 0 },
-    NATIONAL: { 5: 390, 4: 760, 3: 620, 2: 380, 1: 150, 0: 0 },
-    LOCAL: { 5: 820, 4: 1450, 3: 980, 2: 360, 1: 90, 0: 0 },
-    URBAN: { 5: 1100, 4: 1330, 3: 430, 2: 140, 1: 30, 0: 0 },
-  };
 
   // Filter schools by selected road type
   const filteredSchools = useMemo(() => {
@@ -139,7 +139,7 @@ export function RoadCategoryStarChart({ schools = [] }: RoadCategoryStarChartPro
       });
       total = filteredSchools.length || 1;
     } else {
-      counts = defaultCategoryDistributions[selectedCategory] || defaultCategoryDistributions.ALL;
+      counts = DEFAULT_CATEGORY_DISTRIBUTIONS[selectedCategory] || DEFAULT_CATEGORY_DISTRIBUTIONS.ALL;
       total = Object.values(counts).reduce((a, b) => a + b, 0);
     }
 
@@ -155,7 +155,7 @@ export function RoadCategoryStarChart({ schools = [] }: RoadCategoryStarChartPro
 
   const activeCategoryTotal = useMemo(() => {
     if (schools.length > 0) return filteredSchools.length;
-    const catCounts = defaultCategoryDistributions[selectedCategory] || defaultCategoryDistributions.ALL;
+    const catCounts = DEFAULT_CATEGORY_DISTRIBUTIONS[selectedCategory] || DEFAULT_CATEGORY_DISTRIBUTIONS.ALL;
     return Object.values(catCounts).reduce((a, b) => a + b, 0);
   }, [schools, filteredSchools, selectedCategory]);
 

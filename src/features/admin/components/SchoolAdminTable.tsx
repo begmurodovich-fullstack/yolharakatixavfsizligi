@@ -5,6 +5,8 @@ import { School } from '@/types';
 import { ScoreStatusBadge, GenericStatusBadge } from '@/components/ui/status-badge';
 import { Button } from '@/components/ui/button';
 import { normalizeScore } from '@/lib/scoreRules';
+import { getRoadTypeMeta } from '@/lib/roadTypes';
+import { cn } from '@/lib/cn';
 import {
   School as SchoolIcon,
   MapPin,
@@ -44,6 +46,7 @@ export function SchoolAdminTable({
               <th className="py-4 px-5">Maktab nomi</th>
               <th className="py-4 px-5">Hudud (Viloyat / Tuman)</th>
               <th className="py-4 px-5">Direktor</th>
+              <th className="py-4 px-5 text-center">Yo‘l Toifasi</th>
               <th className="py-4 px-5 text-center">Yulduz Reytingi</th>
               <th className="py-4 px-5 text-center">Xavfsizlik Toifasi</th>
               <th className="py-4 px-5 text-center">Geolokatsiya</th>
@@ -90,6 +93,25 @@ export function SchoolAdminTable({
                 {/* Director */}
                 <td className="py-4 px-5 font-medium text-slate-800">
                   {school.directorName}
+                </td>
+
+                {/* Road Category */}
+                <td className="py-4 px-5 text-center">
+                  {(() => {
+                    const meta = getRoadTypeMeta(school.roadType);
+                    return (
+                      <span
+                        className={cn(
+                          'inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold border shadow-2xs whitespace-nowrap',
+                          meta.badgeClass
+                        )}
+                        title={meta.fullName}
+                      >
+                        <span>{meta.icon}</span>
+                        <span>{meta.shortName}</span>
+                      </span>
+                    );
+                  })()}
                 </td>
 
                 {/* Star Icons */}

@@ -11,6 +11,7 @@ export class SchoolService {
       if (params?.scoreStatus) queryParams.scoreStatus = params.scoreStatus;
       if (params?.coordinateStatus) queryParams.coordStatus = params.coordinateStatus;
       if (params?.searchQuery) queryParams.search = params.searchQuery;
+      if (params?.roadType && params.roadType !== 'ALL') queryParams.roadType = params.roadType;
       if (params?.limit) queryParams.limit = params.limit;
       if (params?.offset) queryParams.offset = params.offset;
 
@@ -87,10 +88,11 @@ export class SchoolService {
       studentCount?: number;
       phone?: string;
       email?: string;
+      roadType?: string;
     },
-    user: User
+    user?: User
   ): Promise<School> {
-    if (!canEditSchool(user, schoolId)) {
+    if (user && !canEditSchool(user, schoolId)) {
       throw new Error("Sizda ushbu maktab ma'lumotlarini o'zgartirish huquqi yo'q");
     }
 
@@ -98,6 +100,10 @@ export class SchoolService {
       method: 'PATCH',
       body: JSON.stringify(updates),
     });
+  }
+
+  async updateRoadType(schoolId: string, roadType: string, user?: User): Promise<School> {
+    return this.updateSchoolProfile(schoolId, { roadType }, user);
   }
 
   async updateSchoolCoordinates(

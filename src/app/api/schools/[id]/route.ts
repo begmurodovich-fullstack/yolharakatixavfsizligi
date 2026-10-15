@@ -47,6 +47,7 @@ export async function GET(
       studentCount: s.student_count != null ? Number(s.student_count) : 0,
       currentScore: score,
       starRating,
+      roadType: s.road_type || 'URBAN',
       coordinateStatus: s.coordinate_status,
       status: s.status,
       canReassess: Boolean(s.can_reassess),
@@ -76,7 +77,7 @@ export async function PATCH(
   try {
     const { id } = params;
     const body = await request.json();
-    const { directorName, studentCount, latitude, longitude, addressNotes, coordinateStatus, currentScore } = body;
+    const { directorName, studentCount, latitude, longitude, addressNotes, coordinateStatus, currentScore, roadType } = body;
 
     const updated = await query(
       `UPDATE schools
@@ -87,8 +88,9 @@ export async function PATCH(
            address_notes = COALESCE($5, address_notes),
            coordinate_status = COALESCE($6, coordinate_status),
            current_score = COALESCE($7, current_score),
+           road_type = COALESCE($8, road_type),
            updated_at = NOW()
-       WHERE id = $8
+       WHERE id = $9
        RETURNING *`,
       [
         directorName !== undefined ? directorName : null,
@@ -102,6 +104,7 @@ export async function PATCH(
               ? Number((Number(currentScore) / 20).toFixed(1))
               : Number(Number(currentScore).toFixed(1)))
           : null,
+        roadType !== undefined ? roadType : null,
         id,
       ]
     );
@@ -120,11 +123,12 @@ export async function PATCH(
       directorName: s.director_name,
       studentCount: s.student_count,
       currentScore: s.current_score,
+      roadType: s.road_type || 'URBAN',
       coordinateStatus: s.coordinate_status,
       status: s.status,
       coordinates: {
-        latitude: s.latitude,
-        longitude: s.longitude,
+        latitude: s.latitude != null ? Number(s.latitude) : null,
+        longitude: s.longitude != null ? Number(s.longitude) : null,
         addressNotes: s.address_notes,
         status: s.coordinate_status,
       },

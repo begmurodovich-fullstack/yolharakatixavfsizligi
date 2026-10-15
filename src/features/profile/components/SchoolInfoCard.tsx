@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { School } from '@/types';
+import { School, RoadType } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -9,23 +9,27 @@ import {
   UserCheck,
   Users,
   Save,
+  Compass,
 } from 'lucide-react';
+import { ROAD_TYPES_LIST } from '@/lib/roadTypes';
+import { cn } from '@/lib/cn';
 
 interface SchoolInfoCardProps {
   school: School;
-  onUpdateDirector: (directorName: string, studentCount: number) => Promise<void>;
+  onUpdateDirector: (directorName: string, studentCount: number, roadType?: RoadType) => Promise<void>;
 }
 
 export function SchoolInfoCard({ school, onUpdateDirector }: SchoolInfoCardProps) {
   const [directorName, setDirectorName] = useState(school.directorName || '');
   const [studentCount, setStudentCount] = useState(school.studentCount || 840);
+  const [roadType, setRoadType] = useState<RoadType>(school.roadType || 'URBAN');
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
     try {
-      await onUpdateDirector(directorName, Number(studentCount));
+      await onUpdateDirector(directorName, Number(studentCount), roadType);
     } finally {
       setIsSaving(false);
     }
@@ -104,6 +108,46 @@ export function SchoolInfoCard({ school, onUpdateDirector }: SchoolInfoCardProps
             <p className="text-[11px] text-slate-400">
               Maktabdagi umumiy ta’lim oluvchi bolalar soni.
             </p>
+          </div>
+        </div>
+
+        {/* Road Type Selection Cards */}
+        <div className="space-y-2 pt-2">
+          <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+            <Compass className="w-3.5 h-3.5 text-teal-600" />
+            <span>Maktabga yondosh asosiy avtomobil yo‘li toifasi:</span>
+          </label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {ROAD_TYPES_LIST.map((item) => {
+              const isSelected = roadType === item.id;
+              return (
+                <div
+                  key={item.id}
+                  onClick={() => setRoadType(item.id)}
+                  className={cn(
+                    'p-3.5 rounded-xl border-2 transition-all cursor-pointer select-none text-left flex flex-col justify-between space-y-2',
+                    isSelected
+                      ? 'border-teal-600 bg-teal-50/70 shadow-xs'
+                      : 'border-slate-200 bg-slate-50/50 hover:bg-slate-100 hover:border-slate-300'
+                  )}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-xl">{item.icon}</span>
+                    <span className={cn('text-[10px] font-bold px-2 py-0.5 rounded-full border', item.badgeClass)}>
+                      {item.shortName}
+                    </span>
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-900 leading-tight">
+                      {item.name}
+                    </h4>
+                    <p className="text-[11px] text-slate-500 mt-0.5 line-clamp-2">
+                      {item.description}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 

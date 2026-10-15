@@ -74,6 +74,7 @@ export interface SchoolFilterParams {
   coordinateStatus?: CoordinateStatus;
   searchQuery?: string;
   scoreStatus?: 'GREEN' | 'YELLOW' | 'RED';
+  roadType?: RoadType | 'ALL';
   limit?: number;
   offset?: number;
 }

@@ -60,7 +60,7 @@ export default function PublicMapPage() {
         const [schList, regList] = await Promise.all([
           schoolService.getSchools({
             coordinateStatus: 'VERIFIED' as any,
-            limit: 500,
+            limit: 2000,
           }),
           schoolService.getRegions(),
         ]);
@@ -99,7 +99,7 @@ export default function PublicMapPage() {
         scoreStatus: selectedRisk !== 'ALL' ? (selectedRisk as any) : undefined,
         coordinateStatus: selectedCoordStatus !== 'ALL' ? (selectedCoordStatus as any) : undefined,
         searchQuery: searchQuery.trim() || undefined,
-        limit: 500,
+        limit: 2000,
       });
       setSchools(filtered);
       if (filtered.length > 0) {
@@ -220,10 +220,12 @@ export default function PublicMapPage() {
                 onChange={(e) => setSelectedRisk(e.target.value)}
                 className="w-full text-xs h-9 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 px-2.5 focus:outline-none focus:border-teal-500 font-medium"
               >
-                <option value="ALL">Barcha toifalar</option>
-                <option value="GREEN">🟢 Yashil (4.0 - 5.0 ball)</option>
-                <option value="YELLOW">🟡 Sariq (3.0 - 3.9 ball)</option>
-                <option value="RED">🔴 Qizil (1.0 - 2.9 ball)</option>
+                <option value="ALL">Barcha yulduzlar</option>
+                <option value="STAR_5">🟢 5 Yulduz (Yashil, 5.0 ball)</option>
+                <option value="STAR_4">🟠 4 Yulduz (Sabzi rang, 4.0-4.9)</option>
+                <option value="STAR_3">🟡 3 Yulduz (Sariq, 3.0-3.9)</option>
+                <option value="STAR_2">🔴 2 Yulduz (Qizil, 2.0-2.9)</option>
+                <option value="STAR_1">⚫ 1 Yulduz (Qora, 1.0-1.9)</option>
                 <option value="UNASSESSED">⚪ Baholanmagan</option>
               </select>
 
@@ -272,14 +274,8 @@ export default function PublicMapPage() {
                 const isSelected = selectedSchool?.id === sch.id;
                 const score = sch.currentScore || 0;
                 const isAssessed = score > 0;
-                const normScore = score > 5 ? score / 20 : score;
-                const badgeColor = !isAssessed
-                  ? 'text-slate-400 bg-slate-800/80 border-slate-700'
-                  : normScore >= 4.0
-                  ? 'text-emerald-400 bg-emerald-950/60 border-emerald-800'
-                  : normScore >= 3.0
-                  ? 'text-amber-400 bg-amber-950/60 border-amber-800'
-                  : 'text-rose-400 bg-rose-950/60 border-rose-800';
+                const normScore = normalizeScore(score);
+                const colorInfo = getStarColorInfo(isAssessed ? normScore : 0);
 
                 return (
                   <div
@@ -307,9 +303,9 @@ export default function PublicMapPage() {
                       </div>
 
                       <span
-                        className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${badgeColor}`}
+                        className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${colorInfo.darkBadgeClass}`}
                       >
-                        {isAssessed ? `${(score > 5 ? score / 20 : score).toFixed(1)} ball` : 'Baholanmagan'}
+                        {isAssessed ? `${normScore.toFixed(1)} ball (${colorInfo.shortLabel})` : 'Baholanmagan'}
                       </span>
                     </div>
 

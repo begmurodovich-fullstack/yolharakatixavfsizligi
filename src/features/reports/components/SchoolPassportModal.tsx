@@ -18,6 +18,7 @@ import {
   Compass,
 } from 'lucide-react';
 import { getCountermeasureByScore } from '@/data/sr4sCountermeasures';
+import { getRoadTypeMeta } from '@/lib/roadTypes';
 
 interface SchoolPassportModalProps {
   school: School;
@@ -144,6 +145,19 @@ export function SchoolPassportModal({
                 </span>
                 <span className="text-[10px] text-emerald-800 font-bold bg-emerald-100 px-1.5 py-0.2 rounded print:border">
                   (Tasdiqlangan)
+                </span>
+              </div>
+            </div>
+
+            <div className="col-span-2 space-y-1.5 pt-2 border-t border-slate-200">
+              <div className="text-[11px] font-mono text-slate-500 uppercase font-bold">
+                Yondosh Avtomobil Yo‘li Toifasi:
+              </div>
+              <div className="text-xs font-bold text-slate-900 flex items-center gap-2">
+                <span>{getRoadTypeMeta(school.roadType).icon}</span>
+                <span>{getRoadTypeMeta(school.roadType).name} ({getRoadTypeMeta(school.roadType).shortName})</span>
+                <span className="text-[10px] font-mono text-slate-500 bg-white px-2 py-0.5 rounded border border-slate-300">
+                  {getRoadTypeMeta(school.roadType).speedLimit}
                 </span>
               </div>
             </div>

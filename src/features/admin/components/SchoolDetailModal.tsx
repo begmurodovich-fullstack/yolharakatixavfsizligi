@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { School } from '@/types';
+import { School, RoadType } from '@/types';
 import { ScoreStatusBadge, GenericStatusBadge } from '@/components/ui/status-badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -18,12 +18,14 @@ import {
 import { getCountermeasureByScore } from '@/data/sr4sCountermeasures';
 import { cn } from '@/lib/cn';
 import { normalizeScore } from '@/lib/scoreRules';
+import { ROAD_TYPES, getRoadTypeMeta } from '@/lib/roadTypes';
 
 interface SchoolDetailModalProps {
   school: School | null;
   onClose: () => void;
   onResetPassword: (schoolId: string) => Promise<void>;
   onToggleStatus: (schoolId: string) => Promise<void>;
+  onUpdateRoadType?: (schoolId: string, roadType: RoadType) => Promise<void>;
 }
 
 export function SchoolDetailModal({
@@ -31,6 +33,7 @@ export function SchoolDetailModal({
   onClose,
   onResetPassword,
   onToggleStatus,
+  onUpdateRoadType,
 }: SchoolDetailModalProps) {
   if (!school) return null;
 
@@ -109,6 +112,51 @@ export function SchoolDetailModal({
             <div className="font-bold text-slate-900">
               {school.status === 'ACTIVE' ? '🟢 Faol' : '🔴 Nofaol'}
             </div>
+          </div>
+        </div>
+
+        {/* Road Category Selection */}
+        <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 sm:p-5 space-y-2.5 text-xs">
+          <div className="flex items-center justify-between">
+            <span className="font-bold text-slate-900 flex items-center gap-1.5">
+              <span>🛣️</span>
+              <span>Yondosh Avtomobil Yo‘li Toifasi:</span>
+            </span>
+            {onUpdateRoadType && (
+              <span className="text-[10px] text-teal-700 bg-teal-50 px-2 py-0.5 rounded border border-teal-200 font-semibold">
+                Admin sifatida toifani o‘zgartirishingiz mumkin
+              </span>
+            )}
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            {ROAD_TYPES.map((rt) => {
+              const meta = getRoadTypeMeta(rt);
+              const isSelected = (school.roadType || 'URBAN') === rt;
+              return (
+                <button
+                  key={rt}
+                  type="button"
+                  disabled={!onUpdateRoadType}
+                  onClick={() => onUpdateRoadType && onUpdateRoadType(school.id, rt)}
+                  className={cn(
+                    'p-2.5 rounded-xl border text-left transition-all flex flex-col gap-1',
+                    isSelected
+                      ? 'border-teal-500 bg-teal-50/80 shadow-xs ring-2 ring-teal-500/20'
+                      : 'border-slate-200 hover:border-slate-300 bg-white opacity-70 hover:opacity-100',
+                    !onUpdateRoadType ? 'cursor-default' : 'cursor-pointer hover:shadow-xs'
+                  )}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-base">{meta.icon}</span>
+                    {isSelected && (
+                      <CheckCircle2 className="w-3.5 h-3.5 text-teal-600" />
+                    )}
+                  </div>
+                  <div className="font-bold text-[11px] text-slate-900 truncate">{meta.shortName}</div>
+                  <div className="text-[10px] text-slate-500 truncate">{meta.speedLimit}</div>
+                </button>
+              );
+            })}
           </div>
         </div>
 

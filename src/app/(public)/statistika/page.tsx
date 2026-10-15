@@ -51,6 +51,12 @@ export default function StatistikaPage() {
     statisticsService.getNationalSummary().then((s) => {
       if (s) setStats(s);
     });
+    fetch('/api/schools?limit=15000')
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) setSchools(data);
+      })
+      .catch((e) => console.error('Error fetching schools for stats:', e));
   }, []);
 
   const criteriaComplianceData = [
@@ -185,7 +191,7 @@ export default function StatistikaPage() {
         </div>
 
         {/* 1. Road Category Star Rating Breakdown (Real Chart) */}
-        <RoadCategoryStarChart />
+        <RoadCategoryStarChart schools={schools} />
 
         {/* 2. Star Distribution & Criteria Compliance */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">

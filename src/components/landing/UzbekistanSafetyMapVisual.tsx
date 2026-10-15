@@ -8,7 +8,7 @@ import { schoolService } from '@/services/schoolService';
 import { useAuth } from '@/hooks/useAuth';
 import { MapPin, Activity, ShieldCheck, Loader2, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/cn';
-import { normalizeScore } from '@/lib/scoreRules';
+import { normalizeScore, getStarColorInfo } from '@/lib/scoreRules';
 
 // Dynamically import Leaflet Map without SSR to prevent window undefined error
 const RealLeafletMap = dynamic(
@@ -124,7 +124,7 @@ export function UzbekistanSafetyMapVisual() {
       try {
         const list = await schoolService.getSchools({
           coordinateStatus: CoordinateStatus.VERIFIED,
-          limit: 100,
+          limit: 1000,
         });
 
         if (isMounted) {
@@ -141,13 +141,16 @@ export function UzbekistanSafetyMapVisual() {
           const finalSchools = assessedAndVerified.length > 0 ? assessedAndVerified : FALLBACK_VERIFIED_SCHOOLS;
           setSchools(finalSchools);
 
-          // Priority: 1) Logged-in user's school, 2) 24-maktab (Buxoro), 3) First in list
+          // Priority: 1) Logged-in user's school, 2) 1-maktab (Qibray - 1 yulduz qora pin namoyishi uchun), 3) 24-maktab, 4) Birinchi maktab
           if (user?.schoolId) {
             const userSch = finalSchools.find((s) => s.id === user.schoolId || s.schoolNumber === '24');
             setSelectedSchool(userSch || finalSchools[0]);
           } else {
+            const qibray1 = finalSchools.find(
+              (s) => (s.districtName?.includes('Qibray') || s.name.includes('1-maktab')) && s.schoolNumber === '1'
+            );
             const default24 = finalSchools.find((s) => s.schoolNumber === '24' || s.name.includes('24'));
-            setSelectedSchool(default24 || finalSchools[0]);
+            setSelectedSchool(qibray1 || default24 || finalSchools[0]);
           }
         }
       } catch (err) {
@@ -168,6 +171,7 @@ export function UzbekistanSafetyMapVisual() {
 
   const rawScore = selectedSchool?.currentScore || 4.2;
   const normScore = normalizeScore(rawScore);
+  const colorInfo = getStarColorInfo(normScore);
   const starVal = normScore.toFixed(1);
 
   return (
@@ -175,7 +179,7 @@ export function UzbekistanSafetyMapVisual() {
       {/* Background glow and modern frame */}
       <div className="relative rounded-3xl border border-slate-800 bg-slate-950 p-4 sm:p-5 shadow-2xl overflow-hidden text-slate-100 backdrop-blur-sm">
         {/* Header HUD */}
-        <div className="relative z-10 flex items-center justify-between pb-3 mb-3 border-b border-slate-800 text-xs">
+        <div className="relative z-10 flex flex-wrap items-center justify-between gap-2 pb-3 mb-3 border-b border-slate-800 text-xs">
           <div className="flex items-center gap-2">
             <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-400 animate-ping" />
             <span className="font-mono text-teal-400 font-bold tracking-wider">
@@ -183,15 +187,21 @@ export function UzbekistanSafetyMapVisual() {
             </span>
           </div>
 
-          <div className="flex items-center gap-2.5 text-[11px] text-slate-400">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 text-[10px] sm:text-[11px] text-slate-300">
             <span className="flex items-center gap-1">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" /> 4-5★ Xavfsiz
+              <span className="h-2.5 w-2.5 rounded-full bg-[#22c55e]" /> 5★ Yashil
             </span>
             <span className="flex items-center gap-1">
-              <span className="h-2 w-2 rounded-full bg-amber-500" /> 3★ O‘rta
+              <span className="h-2.5 w-2.5 rounded-full bg-[#f97316]" /> 4★ Sabzi
             </span>
             <span className="flex items-center gap-1">
-              <span className="h-2 w-2 rounded-full bg-rose-500" /> 1-2★ Xavfli
+              <span className="h-2.5 w-2.5 rounded-full bg-[#eab308]" /> 3★ Sariq
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="h-2.5 w-2.5 rounded-full bg-[#ef4444]" /> 2★ Qizil
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="h-2.5 w-2.5 rounded-full bg-[#0f172a] border border-white" /> 1★ Qora
             </span>
           </div>
         </div>
@@ -223,7 +233,7 @@ export function UzbekistanSafetyMapVisual() {
                   Tanlangan maktab:
                 </div>
                 <div className="text-sm font-black text-white truncate">
-                  {selectedSchool?.name || '24-maktab'}
+                  {selectedSchool?.name || '1-maktab'}
                 </div>
                 <div className="text-[11px] text-slate-400 truncate">
                   {selectedSchool?.districtName}, {selectedSchool?.regionName}
@@ -243,8 +253,14 @@ export function UzbekistanSafetyMapVisual() {
           <div className="flex items-center justify-between pt-2.5 border-t border-slate-800/80 text-xs">
             <div className="flex items-center gap-1.5">
               <span className="text-slate-400 text-[11px]">SR4S reytingi:</span>
-              <span className="font-mono font-black text-emerald-400">
-                {starVal} ★
+              <span
+                style={{ color: colorInfo.stars === 1 ? '#ffffff' : colorInfo.colorHex }}
+                className={cn(
+                  "font-mono font-black",
+                  colorInfo.stars === 1 && "bg-slate-950 px-1.5 py-0.5 rounded border border-slate-700"
+                )}
+              >
+                {starVal} ★ ({colorInfo.shortLabel})
               </span>
               <span className="text-[11px] text-slate-500 font-mono">
                 ({normScore.toFixed(1)} ball)
@@ -252,7 +268,7 @@ export function UzbekistanSafetyMapVisual() {
             </div>
 
             <div className="text-[11px] font-mono text-teal-400 bg-teal-950/60 px-2 py-0.5 rounded-md border border-teal-800/60">
-              📍 {selectedSchool?.coordinates?.latitude.toFixed(4)}, {selectedSchool?.coordinates?.longitude.toFixed(4)}
+              📍 {selectedSchool?.coordinates?.latitude ? Number(selectedSchool.coordinates.latitude).toFixed(4) : '41.3888'}, {selectedSchool?.coordinates?.longitude ? Number(selectedSchool.coordinates.longitude).toFixed(4) : '69.4630'}
             </div>
           </div>
         </div>

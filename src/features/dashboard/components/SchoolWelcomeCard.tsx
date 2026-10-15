@@ -4,6 +4,8 @@ import React from 'react';
 import { School, AssessmentPeriod } from '@/types';
 import { GenericStatusBadge } from '@/components/ui/status-badge';
 import { School as SchoolIcon, Calendar, MapPin, UserCheck, ShieldCheck } from 'lucide-react';
+import { getRoadTypeMeta } from '@/lib/roadTypes';
+import { cn } from '@/lib/cn';
 
 interface SchoolWelcomeCardProps {
   school: School;
@@ -11,6 +13,7 @@ interface SchoolWelcomeCardProps {
 }
 
 export function SchoolWelcomeCard({ school, currentPeriod }: SchoolWelcomeCardProps) {
+  const roadMeta = getRoadTypeMeta(school.roadType);
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-7 shadow-xs">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
@@ -65,11 +68,28 @@ export function SchoolWelcomeCard({ school, currentPeriod }: SchoolWelcomeCardPr
                   : 'Koordinata kiritilmagan'}
               </span>
             </div>
+            <div className="hidden sm:block text-slate-300">|</div>
+            <div className="flex items-center gap-1.5">
+              <span>{roadMeta.icon}</span>
+              <span className={cn('px-2 py-0.5 rounded-md font-bold text-[11px] border', roadMeta.badgeClass)}>
+                {roadMeta.shortName}
+              </span>
+            </div>
           </div>
         </div>
 
-        {/* Right Column: Coordinate Status Guarantee */}
-        <div className="flex flex-col sm:flex-row lg:flex-col items-start sm:items-center lg:items-end gap-2 shrink-0 border-t lg:border-t-0 lg:border-l border-slate-100 pt-4 lg:pt-0 lg:pl-6">
+        {/* Right Column: Coordinate Status & Road Type */}
+        <div className="flex flex-col sm:flex-row lg:flex-col items-start sm:items-center lg:items-end gap-3 shrink-0 border-t lg:border-t-0 lg:border-l border-slate-100 pt-4 lg:pt-0 lg:pl-6">
+          <div className="text-left lg:text-right">
+            <div className="text-[11px] text-slate-400 font-medium">Yondosh yo‘l toifasi:</div>
+            <div className="mt-1">
+              <span className={cn('inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold border shadow-2xs', roadMeta.badgeClass)}>
+                <span>{roadMeta.icon}</span>
+                <span>{roadMeta.name}</span>
+              </span>
+            </div>
+          </div>
+
           <div className="text-left lg:text-right">
             <div className="text-[11px] text-slate-400 font-medium">Geolokatsiya holati:</div>
             <div className="mt-1">

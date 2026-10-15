@@ -50,17 +50,17 @@ export default function SchoolProfilePage() {
     loadData();
   }, [loadData]);
 
-  // Handle director update
-  const handleUpdateDirector = async (directorName: string, studentCount: number) => {
+  // Handle director & profile update
+  const handleUpdateDirector = async (directorName: string, studentCount: number, roadType?: string) => {
     if (!school || !user) return;
     try {
       const updated = await schoolService.updateSchoolProfile(
         school.id,
-        { directorName, studentCount },
+        { directorName, studentCount, roadType },
         user
       );
       setSchool(updated);
-      success('Maktab ma’lumotlari muvaffaqiyatli saqlandi!', 'Yangilandi');
+      success('Maktab ma’lumotlari va yo‘l toifasi muvaffaqiyatli saqlandi!', 'Yangilandi');
     } catch (err: any) {
       toastError(err?.message || 'Ma’lumotlarni saqlashda xatolik', 'Xatolik');
     }

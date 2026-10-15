@@ -11,7 +11,8 @@ export async function GET(request: NextRequest) {
     const scoreStatus = searchParams.get('scoreStatus');
     const coordStatus = searchParams.get('coordStatus');
     const search = searchParams.get('search');
-    const limit = Math.min(Number(searchParams.get('limit')) || 50, 15000);
+    const defaultLimit = coordStatus === 'VERIFIED' ? 2000 : 50;
+    const limit = Math.min(Number(searchParams.get('limit')) || defaultLimit, 15000);
     const offset = Math.max(Number(searchParams.get('offset')) || 0, 0);
 
     let sql = `
@@ -48,7 +49,17 @@ export async function GET(request: NextRequest) {
     }
 
     if (scoreStatus && scoreStatus !== 'ALL') {
-      if (scoreStatus === 'GREEN') {
+      if (scoreStatus === 'STAR_5') {
+        sql += ` AND s.current_score >= 5.0`;
+      } else if (scoreStatus === 'STAR_4') {
+        sql += ` AND s.current_score >= 4.0 AND s.current_score < 5.0`;
+      } else if (scoreStatus === 'STAR_3') {
+        sql += ` AND s.current_score >= 3.0 AND s.current_score < 4.0`;
+      } else if (scoreStatus === 'STAR_2') {
+        sql += ` AND s.current_score >= 2.0 AND s.current_score < 3.0`;
+      } else if (scoreStatus === 'STAR_1') {
+        sql += ` AND s.current_score > 0 AND s.current_score < 2.0`;
+      } else if (scoreStatus === 'GREEN') {
         sql += ` AND s.current_score >= 4.0`;
       } else if (scoreStatus === 'YELLOW') {
         sql += ` AND s.current_score >= 3.0 AND s.current_score < 4.0`;

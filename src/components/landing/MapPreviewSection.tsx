@@ -21,6 +21,7 @@ import {
   Globe2,
 } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { normalizeScore, getStarColorInfo } from '@/lib/scoreRules';
 
 const RealLeafletMap = dynamic(
   () => import('@/components/map/RealLeafletMap').then((mod) => mod.RealLeafletMap),
@@ -44,7 +45,13 @@ export function MapPreviewSection() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    Promise.all([schoolService.getSchools(), schoolService.getRegions()]).then(
+    Promise.all([
+      schoolService.getSchools({
+        coordinateStatus: CoordinateStatus.VERIFIED,
+        limit: 1000,
+      }),
+      schoolService.getRegions(),
+    ]).then(
       ([schoolList, regionList]) => {
         let verifiedAndAssessed = schoolList.filter(
           (s) =>
@@ -238,9 +245,20 @@ export function MapPreviewSection() {
                     <div className="rounded-2xl bg-slate-900 p-4 border border-slate-800 flex items-center justify-between">
                       <div>
                         <div className="text-[10px] text-slate-400 font-mono">SR4S Reytingi:</div>
-                        <div className="text-lg font-black text-emerald-400 mt-0.5">
+                        <div
+                          style={{
+                            color:
+                              getStarColorInfo(selectedSchool.currentScore).stars === 1
+                                ? '#ffffff'
+                                : getStarColorInfo(selectedSchool.currentScore).colorHex,
+                          }}
+                          className={cn(
+                            "text-lg font-black mt-0.5",
+                            getStarColorInfo(selectedSchool.currentScore).stars === 1 && "bg-slate-950 px-2 py-0.5 rounded border border-slate-700"
+                          )}
+                        >
                           {selectedSchool.currentScore > 0
-                            ? `${(selectedSchool.currentScore > 5 ? selectedSchool.currentScore / 20 : selectedSchool.currentScore).toFixed(1)} ball (${(selectedSchool.currentScore > 5 ? selectedSchool.currentScore / 20 : selectedSchool.currentScore).toFixed(1)} ★)`
+                            ? `${normalizeScore(selectedSchool.currentScore).toFixed(1)} ball (${normalizeScore(selectedSchool.currentScore).toFixed(1)} ★)`
                             : 'Baholanmagan'}
                         </div>
                       </div>

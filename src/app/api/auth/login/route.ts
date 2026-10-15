@@ -116,6 +116,7 @@ export async function POST(request: NextRequest) {
           directorName: s.director_name,
           studentCount: s.student_count != null ? Number(s.student_count) : 0,
           currentScore: Number(s.current_score) || 0,
+          roadType: s.road_type || 'URBAN',
           coordinateStatus: s.coordinate_status,
           status: s.status,
           coordinates: {

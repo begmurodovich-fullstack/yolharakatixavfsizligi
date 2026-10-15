@@ -10,6 +10,7 @@ import { ScoreStatusBadge } from '@/components/ui/status-badge';
 import { Shield, School as SchoolIcon, ChevronRight, LogOut, Calendar, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { normalizeScore } from '@/lib/scoreRules';
+import { getRoadTypeMeta } from '@/lib/roadTypes';
 
 export function SchoolHeader() {
   const { user, logout } = useAuth();
@@ -45,8 +46,16 @@ export function SchoolHeader() {
             <span>{school?.regionName || 'Navoiy viloyati'}</span>
             <ChevronRight className="w-3 h-3 text-slate-500" />
             <span>{school?.districtName || 'Qiziltepa tumani'}</span>
-            <ChevronRight className="w-3 h-3 text-slate-500" />
             <span className="text-white font-semibold">{school?.name || "Umumta'lim maktabi"}</span>
+            {school?.roadType && (
+              <>
+                <ChevronRight className="w-3 h-3 text-slate-500" />
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-teal-300 bg-slate-800 px-2 py-0.5 rounded border border-slate-700">
+                  <span>{getRoadTypeMeta(school.roadType).icon}</span>
+                  <span>{getRoadTypeMeta(school.roadType).shortName}</span>
+                </span>
+              </>
+            )}
           </div>
 
           {/* Test Mode & Current Period Badge */}

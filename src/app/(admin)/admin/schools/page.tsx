@@ -11,6 +11,7 @@ import {
   District,
   ScoreStatus,
   CoordinateStatus,
+  RoadType,
 } from '@/types';
 
 import {
@@ -37,6 +38,7 @@ export default function AdminSchoolsPage() {
   const [selectedDistrictId, setSelectedDistrictId] = useState('ALL');
   const [selectedScoreStatus, setSelectedScoreStatus] = useState<ScoreStatus | 'ALL'>('ALL');
   const [selectedCoordStatus, setSelectedCoordStatus] = useState<CoordinateStatus | 'ALL'>('ALL');
+  const [selectedRoadType, setSelectedRoadType] = useState<RoadType | 'ALL'>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
   // Debounced search: 400ms kechikish bilan so'rov yuboriladi
   const [debouncedSearch, setDebouncedSearch] = useState('');
@@ -91,6 +93,7 @@ export default function AdminSchoolsPage() {
         districtId: selectedDistrictId !== 'ALL' ? selectedDistrictId : undefined,
         scoreStatus: selectedScoreStatus !== 'ALL' ? selectedScoreStatus : undefined,
         coordinateStatus: selectedCoordStatus !== 'ALL' ? selectedCoordStatus : undefined,
+        roadType: selectedRoadType !== 'ALL' ? selectedRoadType : undefined,
         searchQuery: debouncedSearch.trim() || undefined,
         limit: pageSize,
         offset: (page - 1) * pageSize,
@@ -109,6 +112,7 @@ export default function AdminSchoolsPage() {
     selectedDistrictId,
     selectedScoreStatus,
     selectedCoordStatus,
+    selectedRoadType,
     debouncedSearch,
     page,
     pageSize,
@@ -130,8 +134,23 @@ export default function AdminSchoolsPage() {
     setSelectedDistrictId('ALL');
     setSelectedScoreStatus('ALL');
     setSelectedCoordStatus('ALL');
+    setSelectedRoadType('ALL');
     setSearchQuery('');
     setPage(1);
+  };
+
+  // Yo'l toifasini o'zgartirish
+  const handleUpdateRoadType = async (schoolId: string, roadType: RoadType) => {
+    try {
+      await schoolService.updateRoadType(schoolId, roadType);
+      success("Yo‘l toifasi muvaffaqiyatli saqlandi!");
+      setSchools((prev) =>
+        prev.map((s) => (s.id === schoolId ? { ...s, roadType } : s))
+      );
+      setSelectedSchool((prev) => (prev && prev.id === schoolId ? { ...prev, roadType } : prev));
+    } catch (err: any) {
+      console.error('Error updating road type:', err);
+    }
   };
 
   // Parolni tiklash
@@ -209,6 +228,11 @@ export default function AdminSchoolsPage() {
           setSelectedCoordStatus(val);
           setPage(1);
         }}
+        selectedRoadType={selectedRoadType}
+        onRoadTypeChange={(val) => {
+          setSelectedRoadType(val);
+          setPage(1);
+        }}
         searchQuery={searchQuery}
         onSearchChange={(val) => {
           setSearchQuery(val);
@@ -282,6 +306,7 @@ export default function AdminSchoolsPage() {
           onClose={() => setSelectedSchool(null)}
           onResetPassword={handleResetPassword}
           onToggleStatus={handleToggleStatus}
+          onUpdateRoadType={handleUpdateRoadType}
         />
       )}
     </div>

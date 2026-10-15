@@ -5,6 +5,7 @@ import { School } from '@/types';
 import L from 'leaflet';
 import { Layers, Globe } from 'lucide-react';
 import { normalizeScore, getStarColorInfo, getSchoolDisplayNumber } from '@/lib/scoreRules';
+import { getRoadTypeMeta } from '@/lib/roadTypes';
 
 interface RealLeafletMapProps {
   schools: School[];
@@ -46,22 +47,27 @@ function buildMarkerIcon(
   const normScore = normalizeScore(rawScore);
   const rawNum = getSchoolDisplayNumber(sch);
   const colorInfo = getStarColorInfo(isAssessed ? normScore : 0);
-  const pinColor = isAssessed ? colorInfo.pinColor : '#0d9488';
+  const isOneStar = colorInfo.stars === 1;
+  const pinColor = isAssessed ? (isOneStar ? '#0f172a' : colorInfo.pinColor) : '#0d9488';
   const starRating = isAssessed ? normScore.toFixed(1) : '-';
-  const dotColor = colorInfo.stars === 1 ? '#ffffff' : pinColor;
+  const dotColor = isOneStar ? '#ffffff' : pinColor;
 
   if (isSelected) {
+    const selectedGlow = isOneStar
+      ? 'box-shadow: 0 0 22px rgba(255,255,255,0.95), 0 8px 18px rgba(0,0,0,0.9); border: 3px solid #ffffff;'
+      : `box-shadow: 0 8px 18px rgba(0,0,0,.5), 0 0 16px ${pinColor}; border: 3px solid #ffffff;`;
+
     return L.divIcon({
       className: 'custom-leaflet-pin selected-pin',
       html: `
-        <div style="position:relative;width:190px;margin-left:-95px;margin-top:-68px;display:flex;flex-direction:column;align-items:center;pointer-events:none;">
-          <div style="background:#0f172a;color:#fff;padding:4px 10px;border-radius:9999px;font-size:11px;font-weight:800;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.6);border:1.5px solid ${colorInfo.stars === 1 ? '#ffffff' : pinColor};margin-bottom:4px;display:flex;align-items:center;gap:5px;">
+        <div style="position:relative;width:200px;margin-left:-100px;margin-top:-72px;display:flex;flex-direction:column;align-items:center;pointer-events:none;">
+          <div style="background:#0f172a;color:#fff;padding:4px 10px;border-radius:9999px;font-size:11px;font-weight:800;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.6);border:1.5px solid ${isOneStar ? '#ffffff' : pinColor};margin-bottom:4px;display:flex;align-items:center;gap:5px;">
             <span style="color:${dotColor};font-size:12px;">●</span>
             <span>${sch.name.length > 20 ? `${rawNum}-maktab` : sch.name}</span>
-            <span style="color:${colorInfo.stars === 1 ? '#ffffff' : pinColor};font-size:10px;font-weight:700;">★${starRating} (${normScore.toFixed(1)} ball)</span>
+            <span style="color:${isOneStar ? '#ffffff' : pinColor};font-size:10px;font-weight:700;">★${starRating} (${normScore.toFixed(1)} ball)</span>
           </div>
-          <div style="width:38px;height:38px;background-color:${pinColor};border:3px solid #fff;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 8px 18px rgba(0,0,0,.5),0 0 16px ${pinColor};display:flex;align-items:center;justify-content:center;">
-            <span style="transform:rotate(45deg);color:#fff;font-size:12px;font-weight:900;font-family:monospace,sans-serif;">${rawNum}</span>
+          <div style="width:38px;height:38px;background-color:${pinColor};${selectedGlow}border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;">
+            <span style="transform:rotate(45deg);color:#fff;font-size:12px;font-weight:900;font-family:monospace,sans-serif;text-shadow:0 1px 2px rgba(0,0,0,0.8);">${rawNum}</span>
           </div>
         </div>
       `,
@@ -71,15 +77,20 @@ function buildMarkerIcon(
     });
   }
 
+  const unselectedBorder = isOneStar ? '2.5px solid #ffffff' : '2px solid #ffffff';
+  const unselectedGlow = isOneStar
+    ? 'box-shadow: 0 0 12px rgba(255,255,255,0.95), 0 3px 8px rgba(0,0,0,0.9);'
+    : `box-shadow: 0 3px 8px rgba(0,0,0,.4), 0 0 6px ${pinColor};`;
+
   return L.divIcon({
     className: 'custom-leaflet-pin',
     html: `
-      <div style="width:30px;height:30px;background-color:${pinColor};border:2px solid #fff;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 3px 8px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;cursor:pointer;">
-        <span style="transform:rotate(45deg);color:#fff;font-size:10px;font-weight:900;font-family:monospace,sans-serif;">${rawNum}</span>
+      <div style="width:32px;height:32px;background-color:${pinColor};border:${unselectedBorder};border-radius:50% 50% 50% 0;transform:rotate(-45deg);${unselectedGlow}display:flex;align-items:center;justify-content:center;cursor:pointer;">
+        <span style="transform:rotate(45deg);color:#fff;font-size:11px;font-weight:900;font-family:monospace,sans-serif;text-shadow:0 1px 2px rgba(0,0,0,0.8);">${rawNum}</span>
       </div>
     `,
-    iconSize: [30, 30],
-    iconAnchor: [15, 30],
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
     popupAnchor: [0, -30],
   });
 }
@@ -92,13 +103,19 @@ function buildPopupContent(sch: School): string {
   const lng = sch.coordinates!.longitude;
   const colorInfo = getStarColorInfo(isAssessed ? normScore : 0);
   const pinColor = isAssessed ? colorInfo.pinColor : '#0d9488';
+  const roadMeta = getRoadTypeMeta(sch.roadType);
 
   return `
-    <div style="font-family:sans-serif;min-width:210px;padding:4px;">
+    <div style="font-family:sans-serif;min-width:215px;padding:4px;">
       <div style="font-size:10px;font-weight:800;color:#0d9488;text-transform:uppercase;margin-bottom:2px;font-family:monospace;">🛰️ Tasdiqlangan Geolokatsiya</div>
       <div style="font-size:13px;font-weight:800;color:#0f172a;margin-bottom:3px;">${sch.name}</div>
       <div style="font-size:11px;color:#64748b;margin-bottom:6px;">${sch.districtName || ''}, ${sch.regionName || ''}</div>
-      <div style="font-size:10px;color:#0f766e;background:#f0fdfa;padding:3px 6px;border-radius:6px;margin-bottom:8px;font-family:monospace;">📍 ${lat.toFixed(6)}, ${lng.toFixed(6)}</div>
+      <div style="font-size:10px;color:#0f766e;background:#f0fdfa;padding:3px 6px;border-radius:6px;margin-bottom:6px;font-family:monospace;">📍 ${lat.toFixed(6)}, ${lng.toFixed(6)}</div>
+      <div style="font-size:10px;font-weight:700;color:#1e293b;background:#f8fafc;border:1px solid #e2e8f0;padding:3px 6px;border-radius:6px;margin-bottom:8px;display:flex;align-items:center;gap:4px;">
+        <span>${roadMeta.icon}</span>
+        <span>${roadMeta.shortName}</span>
+        <span style="color:#64748b;font-size:9px;margin-left:auto;">${roadMeta.speedLimit.split('(')[0].trim()}</span>
+      </div>
       <div style="display:flex;align-items:center;justify-content:space-between;padding-top:6px;border-top:1px solid #e2e8f0;">
         <span style="font-size:12px;font-weight:800;color:${pinColor};">${isAssessed ? `${normScore.toFixed(1)} ★ (${colorInfo.shortLabel})` : 'Tasdiqlangan'}</span>
         <span style="font-size:10px;font-weight:700;background:#ecfdf5;color:#065f46;padding:2px 8px;border-radius:9999px;">✓ Real Lokatsiya</span>

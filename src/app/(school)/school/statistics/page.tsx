@@ -18,6 +18,8 @@ import {
   Question,
 } from '@/types';
 import { normalizeScore } from '@/lib/scoreRules';
+import { getRoadTypeMeta } from '@/lib/roadTypes';
+import { cn } from '@/lib/cn';
 
 import {
   StatisticsKpiGrid,
@@ -189,13 +191,25 @@ export default function SchoolStatisticsPage() {
       {/* 1. Header Banner */}
       <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+          <div className="flex items-center gap-2 text-xs text-slate-500 font-medium flex-wrap">
             <SchoolIcon className="w-3.5 h-3.5 text-teal-600" />
             <span className="font-semibold text-slate-800">{school.name}</span>
             <span>•</span>
             <span>{school.districtName}</span>
             <span>•</span>
             <span>{school.regionName}</span>
+            {school.roadType && (() => {
+              const meta = getRoadTypeMeta(school.roadType);
+              return (
+                <>
+                  <span>•</span>
+                  <span className={cn('inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold border shadow-2xs', meta.badgeClass)}>
+                    <span>{meta.icon}</span>
+                    <span>{meta.shortName}</span>
+                  </span>
+                </>
+              );
+            })()}
           </div>
 
           <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
