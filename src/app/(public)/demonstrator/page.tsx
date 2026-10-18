@@ -81,8 +81,8 @@ export default function DemonstratorPage() {
           </div>
         </div>
 
-        {/* SR4S 1-to-1 Demonstrator Component */}
-        <Sr4sDemonstrator />
+        {/* SR4S 1-to-1 Demonstrator Component (Public unassessed mode) */}
+        <Sr4sDemonstrator isCabinetMode={false} />
       </main>
     </div>
   );

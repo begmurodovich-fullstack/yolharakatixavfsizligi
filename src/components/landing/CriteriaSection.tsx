@@ -23,7 +23,7 @@ export function CriteriaSection() {
         </div>
 
         {/* Embedded Interactive SR4S Demonstrator / Calculator */}
-        <Sr4sDemonstrator />
+        <Sr4sDemonstrator isCabinetMode={false} />
       </div>
     </section>
   );

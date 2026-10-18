@@ -153,6 +153,7 @@ export default function SchoolCriteriaPage() {
       <div className="space-y-2">
         <Sr4sDemonstrator
           school={school}
+          isCabinetMode={true}
           onSaveSuccess={(updatedScore) => {
             if (school) {
               setSchool({ ...school, currentScore: updatedScore });

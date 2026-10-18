@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { cn } from '@/lib/cn';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/components/ui/toast';
@@ -36,6 +37,7 @@ import {
   AlertCircle,
   Info,
   Compass,
+  LayoutDashboard,
 } from 'lucide-react';
 import { RoadType } from '@/types';
 import { getRoadTypeMeta } from '@/lib/roadTypes';
@@ -48,9 +50,11 @@ export type { Sr4sStarLevel };
 export interface Sr4sDemonstratorProps {
   school?: School | null;
   onSaveSuccess?: (updatedScore: number, starScore: number) => void;
+  isCabinetMode?: boolean;
 }
 
-export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProps = {}) {
+export function Sr4sDemonstrator({ school, onSaveSuccess, isCabinetMode }: Sr4sDemonstratorProps = {}) {
+  const isCabinet = Boolean(isCabinetMode ?? Boolean(school));
   const { user } = useAuth();
   const { success, error, info } = useToast();
 
@@ -73,9 +77,11 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
   const [showRoadTypeModal, setShowRoadTypeModal] = useState<boolean>(false);
   const [hasConfirmedRoadType, setHasConfirmedRoadType] = useState<boolean>(false);
 
-  // Preload previously saved assessment for this school if exists
+  // Preload previously saved assessment for this school if exists (ONLY in Cabinet mode)
   useEffect(() => {
-    const targetSchoolId = school?.id || user?.schoolId;
+    if (!isCabinet) return;
+
+    const targetSchoolId = school?.id;
     if (!targetSchoolId) return;
 
     let isMounted = true;
@@ -129,37 +135,39 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
     return () => {
       isMounted = false;
     };
-  }, [school?.id, school?.canReassess, school?.reassessReason, user?.schoolId]);
+  }, [isCabinet, school?.id, school?.canReassess, school?.reassessReason]);
 
-  // Synchronize roadType from school prop or session
+  // Synchronize roadType from school prop or session (Cabinet mode only)
   useEffect(() => {
     if (school?.roadType) {
       setRoadType(school.roadType as RoadType);
     }
-    const targetSchoolId = school?.id || user?.schoolId;
+    if (!isCabinet) return;
+    const targetSchoolId = school?.id;
     if (targetSchoolId && typeof window !== 'undefined') {
       const confirmed = sessionStorage.getItem(`road_type_confirmed_${targetSchoolId}`);
       if (confirmed) {
         setHasConfirmedRoadType(true);
       }
     }
-  }, [school?.roadType, school?.id, user?.schoolId]);
+  }, [school?.roadType, school?.id, isCabinet]);
 
-  // Mandatory prompt: If not locked and road type hasn't been confirmed in this session
+  // Mandatory prompt: ONLY in Cabinet mode if road type hasn't been confirmed in this session
   useEffect(() => {
-    const targetSchoolId = school?.id || user?.schoolId;
+    if (!isCabinet) return;
+    const targetSchoolId = school?.id;
     if (targetSchoolId && !isLocked && !hasConfirmedRoadType) {
       setShowRoadTypeModal(true);
     }
-  }, [isLocked, hasConfirmedRoadType, school?.id, user?.schoolId]);
+  }, [isCabinet, isLocked, hasConfirmedRoadType, school?.id]);
 
   const handleSelectRoadType = async (selected: RoadType) => {
-    const targetSchoolId = school?.id || user?.schoolId;
     setRoadType(selected);
     setHasConfirmedRoadType(true);
     setShowRoadTypeModal(false);
 
-    if (targetSchoolId) {
+    if (isCabinet && school?.id) {
+      const targetSchoolId = school.id;
       if (typeof window !== 'undefined') {
         sessionStorage.setItem(`road_type_confirmed_${targetSchoolId}`, selected);
       }
@@ -514,6 +522,11 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
   };
 
   const handleSaveAssessment = async () => {
+    if (!isCabinet || !school?.id) {
+      info('Maktab bahosini saqlash faqat Shaxsiy Kabinetda amalga oshiriladi.', 'Ma’lumot');
+      return;
+    }
+
     if (isLocked) {
       error(
         'Baholash allaqachon topshirilgan va qulflangan. Qayta baholash uchun administrator ruxsati zarur.',
@@ -534,7 +547,7 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
 
     setIsSaving(true);
     try {
-      const targetSchoolId = school?.id || user?.schoolId || 'sch-3837';
+      const targetSchoolId = school.id;
       const starNum = parseFloat(decimalScore) || 4.6;
       const schoolScore = Number(starNum.toFixed(1));
 
@@ -907,8 +920,8 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
             </div>
           </div>
 
-          {/* Save Button for Authenticated School Users */}
-          {(user || school) && (
+          {/* Save Button for Cabinet Mode */}
+          {isCabinet && (
             <div className="w-full space-y-2">
               <Button
                 onClick={handleSaveAssessment}
@@ -956,6 +969,33 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
               )}
             </div>
           )}
+
+          {/* Public / Demonstrator Mode Navigation */}
+          {!isCabinet && (
+            <div className="w-full space-y-2 pt-1">
+              {user ? (
+                <Link
+                  href="/school/criteria"
+                  className="w-full inline-flex items-center justify-center gap-2 font-bold text-xs py-2.5 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white shadow-xs transition-colors"
+                >
+                  <LayoutDashboard className="w-3.5 h-3.5" />
+                  <span>Shaxsiy kabinetda baholash</span>
+                </Link>
+              ) : (
+                <Link
+                  href="/login"
+                  className="w-full inline-flex items-center justify-center gap-2 font-bold text-xs py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white shadow-xs transition-colors"
+                >
+                  <span>Maktab baholash tizimiga kirish</span>
+                </Link>
+              )}
+              <div className="p-2 rounded-xl bg-slate-50 border border-slate-200 text-center">
+                <span className="text-[11px] text-slate-500 font-medium">
+                  💡 Bu ochiq demonstrator kalkulyatori (Boshlang‘ich 4.6★)
+                </span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Right Column: The 40 Interactive Official SR4S Attributes Grid */}
@@ -980,6 +1020,10 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
                     <span className="text-emerald-700 font-extrabold flex items-center gap-1">
                       <Check className="w-3.5 h-3.5 stroke-[3]" /> To‘liq belgilandi
                     </span>
+                  ) : confirmedAttrIds.size === 0 ? (
+                    <span className="text-slate-600 font-bold">
+                      Baholanmagan (Boshlang‘ich 4.6★)
+                    </span>
                   ) : (
                     <span className="text-amber-800 font-semibold">
                       Yana {40 - confirmedAttrIds.size} ta mezon qoldi
@@ -987,7 +1031,9 @@ export function Sr4sDemonstrator({ school, onSaveSuccess }: Sr4sDemonstratorProp
                   )}
                 </div>
                 <p className="text-[11px] text-slate-500">
-                  Rasmiy nizomga muvofiq, barcha 40 ta piktogramma ko‘rib chiqilishi va tasdiqlanishi shart.
+                  {isCabinet
+                    ? 'Rasmiy nizomga muvofiq, barcha 40 ta piktogramma ko‘rib chiqilishi va tasdiqlanishi shart.'
+                    : 'Piktogrammani tanlab, uning qiymatini o‘zgartiring va iRAP yulduzli bahoga ta’sirini kuzating.'}
                 </p>
               </div>
             </div>
