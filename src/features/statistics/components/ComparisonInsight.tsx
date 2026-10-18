@@ -1,21 +1,18 @@
 'use client';
 
 import React from 'react';
-import { CriterionScoreInfo } from '@/features/dashboard/components';
-import { Sparkles, ArrowUpRight, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Sparkles, CheckCircle2 } from 'lucide-react';
 
 import { normalizeScore } from '@/lib/scoreRules';
 
 interface ComparisonInsightProps {
   schoolScore: number;
   districtAverage: number;
-  weakestCriterion?: CriterionScoreInfo;
 }
 
 export function ComparisonInsight({
   schoolScore,
   districtAverage,
-  weakestCriterion,
 }: ComparisonInsightProps) {
   const normSchool = normalizeScore(schoolScore);
   const normDistrict = normalizeScore(districtAverage);
@@ -45,13 +42,7 @@ export function ComparisonInsight({
             )}
           </h2>
 
-          {weakestCriterion ? (
-            <p className="text-xs text-slate-300 leading-relaxed">
-              Natijani yaxshilash va xavfsizlik darajasini oshirish uchun asosiy imkoniyat nuqtasi:{' '}
-              <strong className="text-white font-semibold">{weakestCriterion.criterion.title}</strong>{' '}
-              ({weakestCriterion.percentage}% bajarilgan).
-            </p>
-          ) : normSchool < 3.0 ? (
+          {normSchool < 3.0 ? (
             <p className="text-xs text-slate-300 leading-relaxed">
               BMT va iRAP tavsiyasiga ko‘ra, maktab hududi xavfsizlik darajasi kamida <strong className="text-white font-semibold">3 Yulduz (≥3.0 ball)</strong> bo‘lishi lozim. 40 ta parametr tahlili asosida tezlikni cheklash va xavfsiz piyodalar o‘tish joyini tashkil etish talab etiladi.
             </p>

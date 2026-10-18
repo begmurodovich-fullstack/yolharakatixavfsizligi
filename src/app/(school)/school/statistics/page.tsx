@@ -161,12 +161,10 @@ export default function SchoolStatisticsPage() {
         )}
       </div>
 
-      {/* 2. Top KPI Grid: 40 Parameters & Benchmark Metrics */}
+      {/* 2. Top KPI Grid: Benchmark Metrics */}
       <StatisticsKpiGrid
         schoolScore={school.currentScore}
         averages={averages}
-        totalQuestions={40}
-        answeredQuestions={40}
       />
 
       {/* 3. Analytical Comparison Insight */}
