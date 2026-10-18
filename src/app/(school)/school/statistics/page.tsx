@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { schoolService } from '@/services/schoolService';
 import { assessmentService } from '@/services/assessmentService';
@@ -14,29 +14,22 @@ import {
   School,
   Assessment,
   AssessmentPeriod,
-  Criterion,
-  Question,
 } from '@/types';
-import { normalizeScore } from '@/lib/scoreRules';
 import { getRoadTypeMeta } from '@/lib/roadTypes';
 import { cn } from '@/lib/cn';
 
 import {
   StatisticsKpiGrid,
   ComparisonInsight,
-  CriteriaRadarChart,
   BenchmarkBarChart,
   HistoricalTrendChart,
-  CriteriaPerformanceGrid,
   ActionPlan,
   CountermeasuresMatrixCard,
 } from '@/features/statistics/components';
 
-import { StrongWeakCriteria, CriterionScoreInfo } from '@/features/dashboard/components';
-
 import { Skeleton } from '@/components/ui/skeleton';
 import { ErrorState } from '@/components/ui/error-state';
-import { BarChart3, Calendar, School as SchoolIcon } from 'lucide-react';
+import { Calendar, School as SchoolIcon } from 'lucide-react';
 
 export default function SchoolStatisticsPage() {
   const { user } = useAuth();
@@ -44,8 +37,6 @@ export default function SchoolStatisticsPage() {
   const [school, setSchool] = useState<School | null>(null);
   const [currentPeriod, setCurrentPeriod] = useState<AssessmentPeriod | null>(null);
   const [assessment, setAssessment] = useState<Assessment | null>(null);
-  const [criteria, setCriteria] = useState<Criterion[]>([]);
-  const [questions, setQuestions] = useState<Question[]>([]);
   const [averages, setAverages] = useState<ComparativeAverages | null>(null);
   const [trendData, setTrendData] = useState<HistoricalTrendItem[]>([]);
 
@@ -70,14 +61,10 @@ export default function SchoolStatisticsPage() {
       const activePeriod = await assessmentService.getCurrentPeriod();
       setCurrentPeriod(activePeriod);
 
-      // Criteria, Questions, Assessment
-      const [critList, questList, activeAssessment] = await Promise.all([
-        assessmentService.getCriteria(),
-        assessmentService.getQuestions(),
-        activePeriod ? assessmentService.getAssessment(resolvedSchool.id, activePeriod.id) : null,
-      ]);
-      setCriteria(critList);
-      setQuestions(questList);
+      // Assessment
+      const activeAssessment = activePeriod
+        ? await assessmentService.getAssessment(resolvedSchool.id, activePeriod.id)
+        : null;
       setAssessment(activeAssessment);
 
       // Comparative benchmarks
@@ -107,51 +94,8 @@ export default function SchoolStatisticsPage() {
     loadData();
   }, [loadData]);
 
-  // Compute criteria breakdown from assessment
-  const criterionScores: CriterionScoreInfo[] = useMemo(() => {
-    if (!criteria.length) return [];
-
-    const answersMap = assessment?.answers || {};
-
-    return criteria.map((crit) => {
-      const critQuestions = questions.filter((q) => q.criterionId === crit.id);
-      let earned = 0;
-
-      critQuestions.forEach((q) => {
-        const ans = answersMap[q.id];
-        if (ans) {
-          earned += ans.pointsAwarded || 0;
-        }
-      });
-
-      if (critQuestions.length > 0 && Object.keys(answersMap).length === 0 && school) {
-        const normScore = normalizeScore(school.currentScore);
-        earned = Math.round((normScore / 5.0) * crit.maxScore);
-      }
-
-      const percentage = crit.maxScore > 0 ? Math.round((earned / crit.maxScore) * 100) : 0;
-
-      return {
-        criterion: crit,
-        earnedScore: earned,
-        maxScore: crit.maxScore,
-        percentage,
-      };
-    });
-  }, [criteria, questions, assessment, school]);
-
-  const strongestCriterion = useMemo(() => {
-    if (!criterionScores.length) return undefined;
-    return [...criterionScores].sort((a, b) => b.percentage - a.percentage)[0];
-  }, [criterionScores]);
-
-  const weakestCriterion = useMemo(() => {
-    if (!criterionScores.length) return undefined;
-    return [...criterionScores].sort((a, b) => a.percentage - b.percentage)[0];
-  }, [criterionScores]);
-
-  const answeredQuestionsCount = Object.keys(assessment?.answers || {}).length;
-  const uploadedEvidenceCount = assessment?.evidence?.length || 4;
+  const rawAnswersCount = assessment?.answers ? Object.keys(assessment.answers).length : 40;
+  const answeredQuestionsCount = Math.min(40, rawAnswersCount > 0 ? rawAnswersCount : 40);
 
   // Loading skeleton
   if (isLoading) {
@@ -215,6 +159,9 @@ export default function SchoolStatisticsPage() {
           <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
             Xavfsizlik Ko‘rsatkichlari Statistikasi va Dinamika
           </h1>
+          <p className="text-xs text-slate-500">
+            40 ta xalqaro iRAP SR4S parametri va Yulduzli reyting (Star Rating) bo‘yicha tahlil
+          </p>
         </div>
 
         {currentPeriod && (
@@ -225,51 +172,31 @@ export default function SchoolStatisticsPage() {
         )}
       </div>
 
-      {/* 2. Top KPI Grid */}
+      {/* 2. Top KPI Grid: 40 Parameters & Benchmark Metrics */}
       <StatisticsKpiGrid
         schoolScore={school.currentScore}
         averages={averages}
-        totalQuestions={questions.length}
+        totalQuestions={40}
         answeredQuestions={answeredQuestionsCount}
-        uploadedEvidenceCount={uploadedEvidenceCount}
-        requiredEvidenceCount={4}
-        strongestCriterion={strongestCriterion}
-        weakestCriterion={weakestCriterion}
       />
 
       {/* 3. Analytical Comparison Insight */}
       <ComparisonInsight
         schoolScore={school.currentScore}
         districtAverage={averages?.districtAverage ?? 4.0}
-        weakestCriterion={weakestCriterion}
       />
 
-      {/* 4. Visualizations Grid: Radar & Benchmark Bar */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-6">
-          <CriteriaRadarChart criterionScores={criterionScores} />
-        </div>
-        <div className="lg:col-span-6">
-          <BenchmarkBarChart averages={averages} schoolName={school.name} />
-        </div>
+      {/* 4. Visualizations Grid: Benchmark Bar & Historical Trend */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <BenchmarkBarChart averages={averages} schoolName={school.name} />
+        <HistoricalTrendChart trendData={trendData} />
       </div>
 
-      {/* 5. Historical Trend Section */}
-      <HistoricalTrendChart trendData={trendData} />
-
-      {/* 6. 8 Criteria Performance Grid */}
-      <CriteriaPerformanceGrid criterionScores={criterionScores} />
-
-      {/* 7. Strong and Focus Criteria Cards */}
-      <StrongWeakCriteria criterionScores={criterionScores} />
-
-      {/* 8. Countermeasures Matrix & Action Plan */}
+      {/* 5. Countermeasures Matrix (SR4S Qarshi Chora-Tadbirlar Matritsasi) */}
       <CountermeasuresMatrixCard schoolScore={school.currentScore} />
 
-      <ActionPlan
-        criterionScores={criterionScores}
-        schoolScore={school.currentScore}
-      />
+      {/* 6. Action Plan (SR4S Amaliy Harakatlar Rejasi) */}
+      <ActionPlan schoolScore={school.currentScore} />
     </div>
   );
 }

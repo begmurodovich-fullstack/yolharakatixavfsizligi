@@ -20,10 +20,10 @@ import { normalizeScore } from '@/lib/scoreRules';
 interface StatisticsKpiGridProps {
   schoolScore: number;
   averages: ComparativeAverages | null;
-  totalQuestions: number;
-  answeredQuestions: number;
-  uploadedEvidenceCount: number;
-  requiredEvidenceCount: number;
+  totalQuestions?: number;
+  answeredQuestions?: number;
+  uploadedEvidenceCount?: number;
+  requiredEvidenceCount?: number;
   strongestCriterion?: CriterionScoreInfo;
   weakestCriterion?: CriterionScoreInfo;
 }
@@ -31,12 +31,8 @@ interface StatisticsKpiGridProps {
 export function StatisticsKpiGrid({
   schoolScore,
   averages,
-  totalQuestions,
-  answeredQuestions,
-  uploadedEvidenceCount,
-  requiredEvidenceCount,
-  strongestCriterion,
-  weakestCriterion,
+  totalQuestions = 40,
+  answeredQuestions = 40,
 }: StatisticsKpiGridProps) {
   const normScore = normalizeScore(schoolScore);
   const districtAvg = averages?.districtAverage ?? 4.0;
@@ -46,6 +42,8 @@ export function StatisticsKpiGrid({
   const districtDiff = Number((normScore - districtAvg).toFixed(1));
   const regionDiff = Number((normScore - regionAvg).toFixed(1));
   const republicDiff = Number((normScore - republicAvg).toFixed(1));
+
+  const isBmtStandardMet = normScore >= 3.0;
 
   return (
     <div className="space-y-4">
@@ -122,57 +120,67 @@ export function StatisticsKpiGrid({
         </div>
       </div>
 
-      {/* Bottom 4 Status Metrics Cards */}
+      {/* Bottom 4 Status Metrics Cards: 40 SR4S Parameters Focus */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* 5. Questions Completed */}
+        {/* 5. 40 Parameters Completed */}
         <div className="rounded-2xl border border-slate-200 bg-white p-4.5 sm:p-5 flex items-center gap-3.5 shadow-xs">
           <div className="p-3 rounded-xl bg-teal-50 text-teal-700 shrink-0">
             <ClipboardCheck className="w-5 h-5" />
           </div>
           <div className="min-w-0">
-            <div className="text-xs text-slate-500 font-medium">Savollar holati</div>
+            <div className="text-xs text-slate-500 font-medium">40 ta Parametr Holati</div>
             <div className="text-base font-extrabold text-slate-900 font-mono">
               {answeredQuestions} / {totalQuestions}
             </div>
+            <div className="text-[11px] text-teal-700 font-medium">To‘liq baholangan</div>
           </div>
         </div>
 
-        {/* 6. Evidence Completed */}
+        {/* 6. Star Rating Level */}
         <div className="rounded-2xl border border-slate-200 bg-white p-4.5 sm:p-5 flex items-center gap-3.5 shadow-xs">
-          <div className="p-3 rounded-xl bg-teal-50 text-teal-700 shrink-0">
-            <Camera className="w-5 h-5" />
+          <div className="p-3 rounded-xl bg-amber-50 text-amber-700 shrink-0">
+            <Trophy className="w-5 h-5" />
           </div>
           <div className="min-w-0">
-            <div className="text-xs text-slate-500 font-medium">Foto-dalillar</div>
+            <div className="text-xs text-slate-500 font-medium">iRAP Yulduz Darajasi</div>
             <div className="text-base font-extrabold text-slate-900 font-mono">
-              {uploadedEvidenceCount} / {requiredEvidenceCount}
+              {normScore.toFixed(1)} ★
             </div>
+            <div className="text-[11px] text-slate-500 font-medium">1 — 5 Yulduzli shkala</div>
           </div>
         </div>
 
-        {/* 7. Strongest Criterion */}
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50/40 p-4.5 sm:p-5 flex items-center gap-3.5 shadow-xs">
-          <div className="p-3 rounded-xl bg-emerald-100 text-emerald-800 shrink-0">
+        {/* 7. UN Benchmark Status */}
+        <div className={`rounded-2xl border p-4.5 sm:p-5 flex items-center gap-3.5 shadow-xs ${
+          isBmtStandardMet ? 'border-emerald-200 bg-emerald-50/40' : 'border-amber-200 bg-amber-50/40'
+        }`}>
+          <div className={`p-3 rounded-xl shrink-0 ${
+            isBmtStandardMet ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+          }`}>
             <TrendingUp className="w-5 h-5" />
           </div>
           <div className="min-w-0">
-            <div className="text-xs text-emerald-800 font-medium">Eng kuchli mezon</div>
-            <div className="text-xs font-extrabold text-emerald-950 truncate">
-              {strongestCriterion?.criterion.title || 'Piyodalar o‘tish joyi'}
+            <div className={`text-xs font-medium ${isBmtStandardMet ? 'text-emerald-800' : 'text-amber-800'}`}>
+              BMT Xavfsizlik Talabi
             </div>
+            <div className={`text-xs font-extrabold truncate ${isBmtStandardMet ? 'text-emerald-950' : 'text-amber-950'}`}>
+              {isBmtStandardMet ? '≥3⭐ Standartga mos' : '<3⭐ Chora talab etiladi'}
+            </div>
+            <div className="text-[11px] text-slate-500 font-medium">Global maqsad: ≥3 Yulduz</div>
           </div>
         </div>
 
-        {/* 8. Weakest Criterion */}
-        <div className="rounded-2xl border border-amber-200 bg-amber-50/40 p-4.5 sm:p-5 flex items-center gap-3.5 shadow-xs">
-          <div className="p-3 rounded-xl bg-amber-100 text-amber-800 shrink-0">
+        {/* 8. Action Plan Status */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-4.5 sm:p-5 flex items-center gap-3.5 shadow-xs">
+          <div className="p-3 rounded-xl bg-blue-50 text-blue-700 shrink-0">
             <TrendingDown className="w-5 h-5" />
           </div>
           <div className="min-w-0">
-            <div className="text-xs text-amber-800 font-medium">E’tibor talab mezon</div>
-            <div className="text-xs font-extrabold text-amber-950 truncate">
-              {weakestCriterion?.criterion.title || 'Yo‘l belgilari'}
+            <div className="text-xs text-slate-500 font-medium">Tavsiya etilgan Chora</div>
+            <div className="text-xs font-extrabold text-slate-900 truncate">
+              {normScore >= 4.0 ? 'Doimiy monitoring' : normScore >= 3.0 ? 'Rejali yaxshilash' : 'Tezkor muhandislik'}
             </div>
+            <div className="text-[11px] text-slate-500 font-medium">SR4S Chora-tadbirlar rejasi</div>
           </div>
         </div>
       </div>

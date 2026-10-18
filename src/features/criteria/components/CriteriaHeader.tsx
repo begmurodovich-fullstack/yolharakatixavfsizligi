@@ -37,8 +37,8 @@ export function CriteriaHeader({
             Xalqaro iRAP SR4S Standarti Mezonlari
           </h1>
           <p className="text-xs text-slate-500 max-w-2xl leading-relaxed">
-            BMT va iRAP (Star Rating for Schools v1.7) standarti asosida maktab atrofi infratuzilmasini
-            7 ta asosiy mezon va 40 ta xalqaro parametr bo‘yicha kompleks baholash rubrikasi.
+            BMT va iRAP (Star Rating for Schools v3.10) standarti asosida maktab atrofi infratuzilmasini
+            40 ta xalqaro parametr bo‘yicha kompleks baholash rubrikasi.
           </p>
         </div>
 
@@ -60,21 +60,21 @@ export function CriteriaHeader({
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
         <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center gap-2.5">
           <div className="p-2 rounded-lg bg-teal-50 text-teal-700 font-bold font-mono">
-            {totalCriteria || 7}
+            40
           </div>
           <div>
-            <div className="font-bold text-slate-900">7 ta Mezon</div>
-            <div className="text-[11px] text-slate-500">Asosiy yo‘nalishlar</div>
+            <div className="font-bold text-slate-900">40 ta Parametr</div>
+            <div className="text-[11px] text-slate-500">iRAP SR4S ko‘rsatkichlari</div>
           </div>
         </div>
 
         <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center gap-2.5">
           <div className="p-2 rounded-lg bg-blue-50 text-blue-700 font-bold font-mono">
-            {totalQuestions || 40}
+            168+
           </div>
           <div>
-            <div className="font-bold text-slate-900">40 ta Parametr</div>
-            <div className="text-[11px] text-slate-500">SR4S ko‘rsatkichlari</div>
+            <div className="font-bold text-slate-900">168+ Variant</div>
+            <div className="text-[11px] text-slate-500">Rasmiy kalibratsiya</div>
           </div>
         </div>
 
@@ -94,7 +94,7 @@ export function CriteriaHeader({
           </div>
           <div>
             <div className="font-bold text-slate-900">&ge;3 Yulduz Talabi</div>
-            <div className="text-[11px] text-slate-500">Maqsadli xavfsizlik darajasi</div>
+            <div className="text-[11px] text-slate-500">BMT maqsadli standarti</div>
           </div>
         </div>
       </div>

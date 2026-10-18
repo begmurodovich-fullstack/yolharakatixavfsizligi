@@ -33,10 +33,10 @@ export const SR4S_COUNTERMEASURES_MATRIX: Sr4sCountermeasureTier[] = [
   {
     stars: 1,
     tierKey: '1-star',
-    title: '1 Yulduz',
-    riskLevel: 'Oʻta yuqori xavf / Kiritilishi shart',
+    title: '1 Yulduz (Qora)',
+    riskLevel: 'Oʻta xavfli / Shoshilinch chora zarur',
     starIcon: '⭐️',
-    badgeLabel: '1 Yulduz — Oʻta yuqori xavf (Kiritilishi shart)',
+    badgeLabel: '1 Yulduz (Qora) — Oʻta xavfli',
     riskFactors: [
       'Harakat tezligi 50 km/h va undan yuqori.',
       'Piyodalar oʻtish joyi, "Zebra" va belgilari mutlaqo yoʻq.',
@@ -61,10 +61,10 @@ export const SR4S_COUNTERMEASURES_MATRIX: Sr4sCountermeasureTier[] = [
   {
     stars: 2,
     tierKey: '2-star',
-    title: '2 Yulduz',
-    riskLevel: 'Yuqori xavf / Tezkor aralashuv',
+    title: '2 Yulduz (Qizil)',
+    riskLevel: 'Xavfli / Tezkor aralashuv',
     starIcon: '⭐️⭐️',
-    badgeLabel: '2 Yulduz — Yuqori xavf (Tezkor aralashuv)',
+    badgeLabel: '2 Yulduz (Qizil) — Xavfli daraja',
     riskFactors: [
       'Piyodalar oʻtish joyi bor, lekin tezlik yuqori (40-50 km/h).',
       'Yoʻl 2 va undan ortiq tasmali, xavfsizlik orolchasi yoʻq.',
@@ -89,10 +89,10 @@ export const SR4S_COUNTERMEASURES_MATRIX: Sr4sCountermeasureTier[] = [
   {
     stars: 3,
     tierKey: '3-star',
-    title: '3 Yulduz',
-    riskLevel: 'Oʻrta xavf / Standart daraja',
+    title: '3 Yulduz (Sariq)',
+    riskLevel: 'Oʻrtacha / BMT standarti',
     starIcon: '⭐️⭐️⭐️',
-    badgeLabel: '3 Yulduz — Oʻrta xavf (Standart daraja)',
+    badgeLabel: '3 Yulduz (Sariq) — Oʻrtacha daraja',
     riskFactors: [
       'Yoʻl belgilari va "Zebra" mavjud, lekin chiziqlar oʻchgan.',
       'Tezlik 30-40 km/h atrofida.',
@@ -116,10 +116,10 @@ export const SR4S_COUNTERMEASURES_MATRIX: Sr4sCountermeasureTier[] = [
   {
     stars: 4,
     tierKey: '4-star',
-    title: '4 Yulduz',
-    riskLevel: 'Past xavf / Yaxshi daraja',
+    title: '4 Yulduz (Sabzi rang)',
+    riskLevel: 'Yaxshi xavfsizlik darajasi',
     starIcon: '⭐️⭐️⭐️⭐️',
-    badgeLabel: '4 Yulduz — Yaxshi zona',
+    badgeLabel: '4 Yulduz (Sabzi rang) — Yaxshi zona',
     riskFactors: [
       'Tezlik cheklovi (30 km/h) ta\'minlangan.',
       'Piyodalar oʻtish joylari va toʻsiqlar mavjud.',
@@ -142,10 +142,10 @@ export const SR4S_COUNTERMEASURES_MATRIX: Sr4sCountermeasureTier[] = [
   {
     stars: 5,
     tierKey: '5-star',
-    title: '5 Yulduz',
+    title: '5 Yulduz (Yashil)',
     riskLevel: 'Namunali xavfsiz hudud',
     starIcon: '⭐️⭐️⭐️⭐️⭐️',
-    badgeLabel: '5 Yulduz — Namunali zona',
+    badgeLabel: '5 Yulduz (Yashil) — Namunali zona',
     riskFactors: [
       'Tezlik cheklovi (30 km/h) toʻliq ta\'minlangan.',
       'Piyodalar ajratilgan, koʻtarilgan oʻtish joylari va toʻsiqlar bor.',

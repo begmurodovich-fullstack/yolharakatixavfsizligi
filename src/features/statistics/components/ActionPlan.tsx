@@ -5,40 +5,77 @@ import { cn } from '@/lib/cn';
 import { getCountermeasureByScore } from '@/data/sr4sCountermeasures';
 
 interface ActionPlanProps {
-  criterionScores: CriterionScoreInfo[];
+  criterionScores?: CriterionScoreInfo[];
   schoolScore?: number;
 }
 
-export function ActionPlan({ criterionScores, schoolScore }: ActionPlanProps) {
+export function ActionPlan({ criterionScores = [], schoolScore }: ActionPlanProps) {
   const cm = schoolScore !== undefined ? getCountermeasureByScore(schoolScore) : null;
-  // Sort ascending to target weak criteria
-  const sortedAsc = [...criterionScores].sort((a, b) => a.percentage - b.percentage);
-  const focusCriteria = sortedAsc.slice(0, 3);
+  const normSchool = schoolScore !== undefined ? (schoolScore > 5 ? schoolScore / 20 : schoolScore) : 4.0;
+  
+  // If criterionScores provided, use them; otherwise use 40 SR4S core directions
+  const planItems = (criterionScores && criterionScores.length > 0)
+    ? [...criterionScores]
+        .sort((a, b) => a.percentage - b.percentage)
+        .slice(0, 3)
+        .map((item) => {
+          let priority: 'HIGH' | 'MEDIUM' | 'LOW' = 'MEDIUM';
+          let problem = `${item.criterion.title} bo‘yicha talablar ${item.percentage}% bajarilgan.`;
+          let recommendation = `Hududiy mas’ul inspeksiya va tuman obodonlashtirish bo‘limi bilan birgalikda standart talablariga moslashtirish lozim.`;
 
-  const planItems = focusCriteria.map((item) => {
-    let priority: 'HIGH' | 'MEDIUM' | 'LOW' = 'MEDIUM';
-    let problem = `${item.criterion.title} bo‘yicha talablar ${item.percentage}% bajarilgan.`;
-    let recommendation = `Hududiy mas’ul inspeksiya va tuman obodonlashtirish bo‘limi bilan birgalikda standart talablariga moslashtirish lozim.`;
+          if (item.percentage < 60) {
+            priority = 'HIGH';
+            problem = `Xavfsizlik darajasi past (${item.percentage}%). Maktab atrofida xavfli nuqtalar mavjud.`;
+            recommendation = `Shoshilinch ravishda tuman komissiyasiga murojaat qilish va infratuzilmani yangilash talab etiladi.`;
+          } else if (item.percentage >= 80) {
+            priority = 'LOW';
+            problem = `Ko‘rsatkich qoniqarli (${item.percentage}%).`;
+            recommendation = `Mavjud holatni muntazam saqlab turish va o‘quvchilar bilan profilaktika ishlarini davom ettirish.`;
+          }
 
-    if (item.percentage < 60) {
-      priority = 'HIGH';
-      problem = `Xavfsizlik darajasi past (${item.percentage}%). Maktab atrofida xavfli nuqtalar mavjud.`;
-      recommendation = `Shoshilinch ravishda tuman komissiyasiga murojaat qilish va infratuzilmani yangilash talab etiladi.`;
-    } else if (item.percentage >= 80) {
-      priority = 'LOW';
-      problem = `Ko‘rsatkich qoniqarli (${item.percentage}%).`;
-      recommendation = `Mavjud holatni muntazam saqlab turish va o‘quvchilar bilan profilaktika ishlarini davom ettirish.`;
-    }
-
-    return {
-      id: item.criterion.id,
-      title: item.criterion.title,
-      score: `${item.earnedScore}/${item.maxScore} ball (${item.percentage}%)`,
-      problem,
-      recommendation,
-      priority,
-    };
-  });
+          return {
+            id: item.criterion.id,
+            title: item.criterion.title,
+            score: `${item.earnedScore}/${item.maxScore} ball (${item.percentage}%)`,
+            problem,
+            recommendation,
+            priority,
+          };
+        })
+    : [
+        {
+          id: 'sr4s-speed',
+          title: 'Harakat tezligi va tezlikni boshqarish',
+          score: '40 parametrli tahlil',
+          problem: normSchool < 3.0 ? 'Harakat tezligi 30 km/h dan yuqori, xavfsizlik vositalari zarur.' : 'Harakat tezligi nazoratda.',
+          recommendation: normSchool < 3.0 ? '3.24 (30 km/h) yo‘l belgisi va ko‘tarilgan piyodalar o‘tish joyi o‘rnatish.' : 'Mavjud tezlik rejimini saqlash.',
+          priority: normSchool < 3.0 ? ('HIGH' as const) : ('LOW' as const),
+        },
+        {
+          id: 'sr4s-crossing',
+          title: 'Piyodalar o‘tish joyi va "Zebra"',
+          score: '40 parametrli tahlil',
+          problem: normSchool < 3.0 ? 'Piyodalar o‘tish joyi ko‘rinuvchanligi yoki chiziqlar talabga javob bermaydi.' : 'O‘tish joyi me’yorda.',
+          recommendation: normSchool < 3.0 ? '5.16.1/5.16.2 yo‘l belgilari va yorug‘lik qaytaruvchi 1.14.1 ("Zebra") chizig‘ini yangilash.' : 'Belgilar holatini nazorat qilish.',
+          priority: normSchool < 3.0 ? ('HIGH' as const) : ('LOW' as const),
+        },
+        {
+          id: 'sr4s-sidewalk',
+          title: 'Piyodalar yo‘lagi (Trotuarlar) va to‘siqlar',
+          score: '40 parametrli tahlil',
+          problem: normSchool < 3.5 ? 'Trotuar kengligi yoki himoya to‘siqlari yetarli emas.' : 'Trotuar holati qoniqarli.',
+          recommendation: normSchool < 3.5 ? 'Qatnov qismidan ajratilgan xavfsiz trotuar barpo etish va piyodalar panjaralarini o‘rnatish.' : 'Trotuarlarni toza va xavfsiz saqlash.',
+          priority: normSchool < 3.5 ? ('MEDIUM' as const) : ('LOW' as const),
+        },
+        {
+          id: 'sr4s-warning',
+          title: 'Maktab ogohlantirish belgilari va patrul nazorati',
+          score: '40 parametrli tahlil',
+          problem: normSchool < 4.0 ? 'Tig‘iz vaqtlarda maktab atrofida xavfsizlik nazorati talab etiladi.' : 'Nazorat yo‘lga qo‘yilgan.',
+          recommendation: 'Maktab oldi ogohlantirish tizimi va dars boshlanish/tugash vaqtlarida patrul nazoratini kuchaytirish.',
+          priority: normSchool < 4.0 ? ('MEDIUM' as const) : ('LOW' as const),
+        },
+      ];
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-7 shadow-xs space-y-6">

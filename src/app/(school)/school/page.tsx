@@ -36,6 +36,7 @@ import { Button } from '@/components/ui/button';
 import { ErrorState } from '@/components/ui/error-state';
 import { getStarRating } from '@/components/ui/status-badge';
 import { normalizeScore } from '@/lib/scoreRules';
+import { calculateCriterionScores } from '@/lib/criteriaScoreMapper';
 import { FirstLoginOnboardingModal } from '@/features/auth/components/FirstLoginOnboardingModal';
 import { SchoolPassportModal } from '@/features/reports/components/SchoolPassportModal';
 import {
@@ -190,43 +191,10 @@ export default function SchoolDashboardPage() {
     };
   }, [loadDashboardData]);
 
-  // Compute 8 criteria performances based on assessment answers
+  // Compute criteria performances based on 40 SR4S attributes and assessment
   const criterionScores: CriterionScoreInfo[] = useMemo(() => {
-    if (!criteria.length) return [];
-
-    const answersMap = assessment?.answers || {};
-    const baseScore = Number(school?.currentScore) || 0;
-
-    return criteria.map((crit, index) => {
-      // Find questions for this criterion
-      const critQuestions = questions.filter((q) => q.criterionId === crit.id);
-      let earned = 0;
-
-      critQuestions.forEach((q) => {
-        const ans = answersMap[q.id];
-        if (ans) {
-          earned += Number(ans.pointsAwarded) || 0;
-        }
-      });
-
-      // Agar mezon bo'yicha alohida javoblar bo'lmasa, maktabning umumiy bali asosida taqsimlash
-      if (earned === 0 && baseScore > 0) {
-        const varianceFactor = [1.02, 0.98, 1.04, 0.96, 1.0, 0.97, 1.03, 0.99][index % 8] || 1.0;
-        const normBase = baseScore > 5 ? baseScore / 20 : baseScore;
-        const ratio = Math.max(0.35, Math.min(1.0, (normBase / 5.0) * varianceFactor));
-        earned = Math.round(ratio * crit.maxScore);
-      }
-
-      const percentage = crit.maxScore > 0 ? Math.round((earned / crit.maxScore) * 100) : 0;
-
-      return {
-        criterion: crit,
-        earnedScore: earned,
-        maxScore: crit.maxScore,
-        percentage,
-      };
-    });
-  }, [criteria, questions, assessment, school]);
+    return calculateCriterionScores(criteria, assessment, school, questions);
+  }, [criteria, assessment, school, questions]);
 
   // Loading skeleton state
   if (isLoading) {

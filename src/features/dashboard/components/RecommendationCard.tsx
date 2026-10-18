@@ -12,7 +12,9 @@ interface RecommendationCardProps {
 }
 
 export function RecommendationCard({ criterionScores, schoolScore, hasMissingEvidence }: RecommendationCardProps) {
-  const hasAnyAssessed = criterionScores.some((c) => c.earnedScore > 0);
+  const hasAnyAssessed =
+    criterionScores.some((c) => (c.earnedScore ?? 0) > 0 || (c.percentage ?? 0) > 0) ||
+    (schoolScore !== undefined && Number(schoolScore) > 0);
   const cm = schoolScore !== undefined ? getCountermeasureByScore(schoolScore) : null;
 
   const recommendations: Array<{
@@ -27,7 +29,7 @@ export function RecommendationCard({ criterionScores, schoolScore, hasMissingEvi
     recommendations.push({
       id: 'rec-start',
       title: 'Maktab yo‘l harakati xavfsizligi monitoringini boshlang',
-      description: 'Maktab atrofidagi piyodalar o‘tish joyi, yo‘l belgilari va trotuarlar holati bo‘yicha 7 ta asosiy mezon parametrlariga javob bering.',
+      description: 'Maktab atrofidagi piyodalar o‘tish joyi, yo‘l belgilari va trotuarlar holati bo‘yicha 40 ta rasmiy iRAP SR4S parametrlariga javob bering.',
       severity: 'LOW',
       actionText: 'Baholashni boshlash',
     });

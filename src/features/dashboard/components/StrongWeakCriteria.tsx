@@ -8,6 +8,8 @@ import { Sr4sPictogram, Sr4sPictoType } from '@/components/ui/sr4s-icon';
 
 interface StrongWeakCriteriaProps {
   criterionScores: CriterionScoreInfo[];
+  schoolScore?: number;
+  hasAssessment?: boolean;
 }
 
 const MODULE_PICTO_MAP: Record<number, Sr4sPictoType> = {
@@ -20,8 +22,15 @@ const MODULE_PICTO_MAP: Record<number, Sr4sPictoType> = {
   7: 'lighting',
 };
 
-export function StrongWeakCriteria({ criterionScores }: StrongWeakCriteriaProps) {
-  const hasAnyAssessed = criterionScores.some((c) => c.earnedScore > 0);
+export function StrongWeakCriteria({
+  criterionScores,
+  schoolScore,
+  hasAssessment,
+}: StrongWeakCriteriaProps) {
+  const hasAnyAssessed =
+    criterionScores.some((c) => (c.earnedScore ?? 0) > 0 || (c.percentage ?? 0) > 0) ||
+    (schoolScore !== undefined && Number(schoolScore) > 0) ||
+    Boolean(hasAssessment);
 
   if (!hasAnyAssessed) {
     return (
@@ -49,17 +58,20 @@ export function StrongWeakCriteria({ criterionScores }: StrongWeakCriteriaProps)
     );
   }
 
-  // Sort descending for strong criteria (only >= 50%)
-  const strongCriteria = [...criterionScores]
-    .filter((c) => c.percentage >= 50)
-    .sort((a, b) => b.percentage - a.percentage)
-    .slice(0, 3);
+  // Sort descending by percentage
+  const sorted = [...criterionScores].sort((a, b) => (b.percentage ?? 0) - (a.percentage ?? 0));
 
-  // Sort ascending for weak criteria (only < 50%)
-  const weakCriteria = [...criterionScores]
-    .filter((c) => c.percentage < 50)
-    .sort((a, b) => a.percentage - b.percentage)
-    .slice(0, 3);
+  // Strong criteria: prefer >= 50%, fallback to top 3
+  let strongCriteria = sorted.filter((c) => (c.percentage ?? 0) >= 50).slice(0, 3);
+  if (strongCriteria.length === 0 && sorted.length > 0) {
+    strongCriteria = sorted.slice(0, 3);
+  }
+
+  // Weak criteria / Focus areas: prefer < 50%, fallback to lowest 3
+  let weakCriteria = [...sorted].reverse().filter((c) => (c.percentage ?? 0) < 50).slice(0, 3);
+  if (weakCriteria.length === 0 && sorted.length > 0) {
+    weakCriteria = [...sorted].reverse().slice(0, 3);
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
