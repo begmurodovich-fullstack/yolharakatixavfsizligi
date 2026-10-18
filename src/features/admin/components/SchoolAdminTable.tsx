@@ -4,7 +4,7 @@ import React from 'react';
 import { School } from '@/types';
 import { ScoreStatusBadge, GenericStatusBadge } from '@/components/ui/status-badge';
 import { Button } from '@/components/ui/button';
-import { normalizeScore } from '@/lib/scoreRules';
+import { normalizeScore, getStarColorInfo } from '@/lib/scoreRules';
 import { getRoadTypeMeta } from '@/lib/roadTypes';
 import { cn } from '@/lib/cn';
 import {
@@ -119,10 +119,22 @@ export function SchoolAdminTable({
                   {school.currentScore === 0 ? (
                     <span className="text-slate-400 text-xs font-sans font-medium">—</span>
                   ) : (
-                    <div className="flex flex-col items-center justify-center">
-                      <span className="text-amber-500 font-bold text-xs">{normalizeScore(school.currentScore).toFixed(1)} ★</span>
-                      <span className="text-[10px] text-slate-400 font-mono">({normalizeScore(school.currentScore).toFixed(1)} ball)</span>
-                    </div>
+                    (() => {
+                      const info = getStarColorInfo(school.currentScore);
+                      return (
+                        <div className="flex flex-col items-center justify-center">
+                          <span
+                            className="font-bold text-xs"
+                            style={{ color: info.stars === 1 ? '#0f172a' : info.colorHex }}
+                          >
+                            {normalizeScore(school.currentScore).toFixed(1)} ★
+                          </span>
+                          <span className="text-[10px] text-slate-400 font-mono">
+                            ({normalizeScore(school.currentScore).toFixed(1)} ball)
+                          </span>
+                        </div>
+                      );
+                    })()
                   )}
                 </td>
 

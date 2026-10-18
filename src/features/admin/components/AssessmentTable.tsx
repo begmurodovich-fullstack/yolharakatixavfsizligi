@@ -8,6 +8,7 @@ import { School as SchoolIcon, MapPin, Eye, Star } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { OFFICIAL_SR4S_STAR_LEVELS, Sr4sStarLevel } from '@/lib/sr4sCalculation';
 import { normalizeScore } from '@/lib/scoreRules';
+import { Sr4sGoldStars } from '@/components/ui/sr4s-icon';
 
 /** Calculate accurate SR4S star rating (1.0–5.0) */
 function getStarVal(ass: Assessment): number {
@@ -133,21 +134,12 @@ export function AssessmentTable({
 
                   {/* SR4S Star Rating */}
                   <td className="py-4 px-5 text-center">
-                    <div className="flex flex-col items-center gap-1">
-                      <div className="flex items-center gap-0.5">
-                        {[1, 2, 3, 4, 5].map((s) => (
-                          <Star
-                            key={s}
-                            className={cn(
-                              'w-4 h-4 transition-colors',
-                              s <= filledStars
-                                ? lvl.starFillClass
-                                : 'fill-slate-200 text-slate-200'
-                            )}
-                          />
-                        ))}
-                      </div>
-                      <span className={cn('text-[11px] font-black font-mono', lvl.starTextClass)}>
+                    <div className="flex flex-col items-center gap-1.5">
+                      <Sr4sGoldStars stars={filledStars} size={15} />
+                      <span
+                        className="text-[11px] font-black font-mono"
+                        style={{ color: lvl.colorHex }}
+                      >
                         {starVal.toFixed(1)} / 5.0
                       </span>
                     </div>
@@ -157,7 +149,7 @@ export function AssessmentTable({
                   <td className="py-4 px-5 text-center">
                     <span
                       className={cn(
-                        'inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold border',
+                        'inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-bold border whitespace-nowrap shadow-2xs',
                         lvl.badgeClass
                       )}
                     >

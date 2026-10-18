@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { OFFICIAL_SR4S_STAR_LEVELS, Sr4sStarLevel } from '@/lib/sr4sCalculation';
 import { normalizeScore } from '@/lib/scoreRules';
+import { Sr4sGoldStars } from '@/components/ui/sr4s-icon';
 
 /** Calculate accurate SR4S star rating (1.0–5.0) */
 function getStarVal(ass: Assessment): number {
@@ -151,17 +152,12 @@ export function AssessmentReviewModal({
                   <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
                     SR4S Yo&apos;l Xavfsizligi Reytingi:
                   </span>
-                  <div className="flex items-center gap-1">
-                    {[1, 2, 3, 4, 5].map((s) => (
-                      <Star
-                        key={s}
-                        className={cn(
-                          'w-7 h-7 transition-colors',
-                          s <= filledStars ? lvl.starFillClass : 'fill-slate-200 text-slate-200'
-                        )}
-                      />
-                    ))}
-                    <span className={cn('ml-2 text-2xl font-black font-mono', lvl.starTextClass)}>
+                  <div className="flex items-center gap-2">
+                    <Sr4sGoldStars stars={filledStars} size={24} />
+                    <span
+                      className="ml-2 text-2xl font-black font-mono"
+                      style={{ color: lvl.colorHex }}
+                    >
                       {starVal.toFixed(1)}
                     </span>
                     <span className="text-sm text-slate-400 font-mono ml-0.5">/ 5.0</span>
@@ -175,7 +171,7 @@ export function AssessmentReviewModal({
                   <GenericStatusBadge status={assessment.status} />
                   <span
                     className={cn(
-                      'inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold border',
+                      'inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold border shadow-2xs',
                       lvl.badgeClass
                     )}
                   >
