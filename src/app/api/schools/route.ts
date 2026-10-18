@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const scoreStatus = searchParams.get('scoreStatus');
     const coordStatus = searchParams.get('coordStatus');
     const search = searchParams.get('search');
-    const defaultLimit = coordStatus === 'VERIFIED' ? 2000 : 50;
+    const defaultLimit = 2000;
     const limit = Math.min(Number(searchParams.get('limit')) || defaultLimit, 15000);
     const offset = Math.max(Number(searchParams.get('offset')) || 0, 0);
 

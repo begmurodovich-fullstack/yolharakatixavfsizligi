@@ -194,10 +194,9 @@ export function RealLeafletMap({ schools, selectedSchool, onSelectSchool }: Real
     const markersLayer = markersLayerRef.current;
     if (!map || !markersLayer) return;
 
-    // Faqat tasdiqlangan va koordinatali maktablar
+    // Koordinatalari mavjud bo'lgan barcha maktablar
     const verifiedSchools = schools.filter(
       (sch) =>
-        (sch.coordinateStatus === 'VERIFIED' || sch.coordinates?.status === 'VERIFIED') &&
         sch.coordinates?.latitude !== undefined &&
         sch.coordinates?.latitude !== null &&
         !isNaN(Number(sch.coordinates.latitude)) &&

@@ -46,20 +46,19 @@ export default function PublicMapPage() {
   const [selectedRegionId, setSelectedRegionId] = useState<string>('ALL');
   const [selectedDistrictId, setSelectedDistrictId] = useState<string>('ALL');
   const [selectedRisk, setSelectedRisk] = useState<string>('ALL');
-  const [selectedCoordStatus, setSelectedCoordStatus] = useState<string>('VERIFIED');
+  const [selectedCoordStatus, setSelectedCoordStatus] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   const [selectedSchool, setSelectedSchool] = useState<School | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // Load regions & verified schools from PostgreSQL
+  // Load regions & schools from PostgreSQL
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
       try {
         const [schList, regList] = await Promise.all([
           schoolService.getSchools({
-            coordinateStatus: 'VERIFIED' as any,
             limit: 2000,
           }),
           schoolService.getRegions(),
